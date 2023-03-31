@@ -8,13 +8,11 @@ using UnityEngine.UI;
 
 public class CustomCharacterManager : MonoBehaviour
 {
-    [SerializeField] List<Toggle> ListToggle;
-
     public void ToggleValueChanged(Toggle Toggle)
     {
         if (Toggle.isOn)
         {
-            /*switch (ToggleValue) 
+            switch (Toggle.gameObject.name)
             {
                 case "Melee":
                     Debug.Log("Player selected Melee");
@@ -28,7 +26,7 @@ public class CustomCharacterManager : MonoBehaviour
                 default:
                     Debug.Log("Somethings Wrong!");
                     break;
-            }*/
+            }
 
 
         }
