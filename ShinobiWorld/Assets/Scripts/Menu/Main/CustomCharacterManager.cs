@@ -27,8 +27,6 @@ public class CustomCharacterManager : MonoBehaviour
                     Debug.Log("Somethings Wrong!");
                     break;
             }
-
-
         }
     }
 
