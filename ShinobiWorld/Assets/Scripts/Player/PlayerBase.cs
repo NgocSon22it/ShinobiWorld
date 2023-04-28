@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 using Cinemachine;
 using UnityEngine.Rendering;
+using UnityEngine.EventSystems;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
@@ -75,7 +76,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         {
             Debug.Log("Attack");
         }
-
         animator.SetFloat("Horizontal", MoveDirection.x);
         animator.SetFloat("Vertical", MoveDirection.y);
         animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
@@ -95,7 +95,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
             //Update remote player
             transform.position = Vector3.Lerp(positionAtLastPacket, realPosition, (float)(currentTime / timeToReachGoal));
-            //transform.rotation = Quaternion.Lerp(rotationAtLastPacket, realRotation, (float)(currentTime / timeToReachGoal));
 
         }
     }
@@ -122,12 +121,12 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
-            //stream.SendNext(transform.rotation);
+            stream.SendNext(MoveDirection);
         }
         else
         {
             realPosition = (Vector3)stream.ReceiveNext();
-            //realRotation = (Quaternion)stream.ReceiveNext();
+            MoveDirection = (Vector2)stream.ReceiveNext();
 
             //Lag compensation
             currentTime = 0.0f;
