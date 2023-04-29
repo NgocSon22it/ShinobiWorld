@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,8 +26,6 @@ public class CustomCharacterManager : MonoBehaviour
                     Debug.Log("Somethings Wrong!");
                     break;
             }
-
-
         }
     }
 
