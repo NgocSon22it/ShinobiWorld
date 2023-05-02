@@ -1,16 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    [SerializeField]
-    private GameObject loginPanel;
+    public GameObject loginPanel;
 
-    [SerializeField]
-    private GameObject registrationPanel;
+    public GameObject registrationPanel;
+
+    public GameObject emailVerificationPanel;
+
+    public TMP_Text message;
 
     private void Awake()
     {
@@ -27,13 +31,35 @@ public class UIManager : MonoBehaviour
 
     public void OpenLoginPanel()
     {
+        ClearUI();
         loginPanel.SetActive(true);
-        registrationPanel.SetActive(false);
     }
 
     public void OpenRegistrationPanel()
     {
+        ClearUI();
         registrationPanel.SetActive(true);
+    }
+
+    void ClearUI()
+    {
         loginPanel.SetActive(false);
+        registrationPanel.SetActive(false);
+        emailVerificationPanel.SetActive(false);
+    }
+
+    public void ShowEmailVerificationPanel(bool isEmailSent, string emailId, string errorMessage)
+    {
+        ClearUI();
+        emailVerificationPanel.SetActive(true);
+
+        if(isEmailSent)
+        {
+            message.text = $"Please verify your email address \n Verification email has been sent to {emailId}";    
+        }
+        else
+        {
+            message.text = $"Couldn't sent email : {errorMessage}";
+        }
     }
 }

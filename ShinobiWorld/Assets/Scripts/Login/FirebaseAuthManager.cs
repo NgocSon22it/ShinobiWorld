@@ -27,23 +27,35 @@ public class FirebaseAuthManager : MonoBehaviour
     public TMP_InputField passwordRegisterField;
     public TMP_InputField confirmPasswordRegisterField;
 
-    private void Awake()
+    private void Start()
     {
-        // Check that all of the necessary dependencies for firebase are present on the system
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
-        {
-            dependencyStatus = task.Result;
-
-            if (dependencyStatus == DependencyStatus.Available)
-            {
-                InitializeFirebase();
-            }
-            else
-            {
-                Debug.LogError("Could not resolve all firebase dependencies: " + dependencyStatus);
-            }
-        });
+        StartCoroutine(CheckAndFixDependenciesAsync());
     }
+
+
+    private IEnumerator CheckAndFixDependenciesAsync()
+    {
+        var dependencyTask = FirebaseApp.CheckAndFixDependenciesAsync();
+
+
+        yield return new WaitUntil(() => dependencyTask.IsCompleted);
+
+        dependencyStatus = dependencyTask.Result;
+
+        if (dependencyStatus == DependencyStatus.Available)
+        {
+            InitializeFirebase();
+
+            yield return new WaitForEndOfFrame();
+
+            StartCoroutine(CheckForAutoLogin());
+        }
+        else
+        {
+            Debug.LogError("Could not resolve all firebase dependencies: " + dependencyStatus);
+        }
+    }
+
 
     void InitializeFirebase()
     {
@@ -54,6 +66,44 @@ public class FirebaseAuthManager : MonoBehaviour
         AuthStateChanged(this, null);
     }
 
+    private IEnumerator CheckForAutoLogin()
+    {
+        if(user != null)
+        {
+            var reloadUserTask = user.ReloadAsync();
+
+            yield return new WaitUntil(() => reloadUserTask.IsCompleted);
+
+            AutoLogin();
+        } else
+        {
+            UIManager.Instance.OpenLoginPanel();
+
+        }
+    }
+
+    private void AutoLogin()
+    {
+        if(user != null)
+        {
+            if (user.IsEmailVerified)
+            {
+                References.Username = user.DisplayName;
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+                Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
+            }
+            else
+            {
+                SendEmailForVerification();
+            } 
+        }
+        else
+        {
+            UIManager.Instance.OpenLoginPanel();
+        }
+    }
+
+
     // Track state changes of the auth object.
     void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
@@ -63,14 +113,14 @@ public class FirebaseAuthManager : MonoBehaviour
 
             if (!signedIn && user != null)
             {
-                Debug.Log("Signed out " + user.UserId);
+                Debug.Log("Signed out " + user.DisplayName);
             }
 
             user = auth.CurrentUser;
 
             if (signedIn)
             {
-                Debug.Log("Signed in " + user.UserId);
+                Debug.Log("Signed in " + user.DisplayName);
             }
         }
     }
@@ -123,7 +173,16 @@ public class FirebaseAuthManager : MonoBehaviour
 
             Debug.LogFormat("{0} You Are Successfully Logged In", user.DisplayName);
 
-            //UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+            if (user.IsEmailVerified)
+            {
+                References.Username = user.DisplayName;
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+            }
+            else
+            {
+                SendEmailForVerification();
+            }
+            
         }
     }
 
@@ -228,8 +287,60 @@ public class FirebaseAuthManager : MonoBehaviour
                 else
                 {
                     Debug.Log("Registration Sucessful Welcome " + user.DisplayName);
-                    UIManager.Instance.OpenLoginPanel();
+                    if(user.IsEmailVerified)
+                    {
+                        UIManager.Instance.OpenLoginPanel();
+                    }else
+                    {
+                        SendEmailForVerification();
+                    }
+                    
                 }
+            }
+        }
+    }
+
+    public void SendEmailForVerification()
+    {
+        StartCoroutine(SendEmailForVerificatioAsync());
+    }
+
+    private IEnumerator SendEmailForVerificatioAsync()
+    {
+        if(user != null)
+        {
+            var sendEmailTask = user.SendEmailVerificationAsync();
+
+            yield return new WaitUntil(() => sendEmailTask.IsCompleted);
+
+            if(sendEmailTask.Exception != null)
+            {
+                FirebaseException firebaseException = sendEmailTask.Exception.GetBaseException() as FirebaseException;
+
+                AuthError error = (AuthError) firebaseException.ErrorCode;
+
+                string errorMessage = "Unknow Error: Please try again later";
+
+                switch (error)
+                {
+                    case AuthError.Cancelled:
+                        errorMessage = "Email verification was canceled";
+                        break;
+                    case AuthError.TooManyRequests:
+                        errorMessage = "Too Many Requests";
+                        break;
+                    case AuthError.InvalidRecipientEmail:
+                        errorMessage = "Your email is invalid";
+                        break;
+                }
+
+                UIManager.Instance.ShowEmailVerificationPanel(false, user.Email, errorMessage);
+            }
+            else
+            {
+                Debug.Log("Email has successfully sent");
+                UIManager.Instance.ShowEmailVerificationPanel(true, user.Email, null);
+
             }
         }
     }
