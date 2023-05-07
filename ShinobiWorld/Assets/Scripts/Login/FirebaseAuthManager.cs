@@ -13,20 +13,6 @@ public class FirebaseAuthManager : MonoBehaviour
     public FirebaseAuth auth;
     public FirebaseUser user;
 
-    // Login Variables
-    [Space]
-    [Header("Login")]
-    public TMP_InputField emailLoginField;
-    public TMP_InputField passwordLoginField;
-
-    // Registration Variables
-    [Space]
-    [Header("Registration")]
-    public TMP_InputField nameRegisterField;
-    public TMP_InputField emailRegisterField;
-    public TMP_InputField passwordRegisterField;
-    public TMP_InputField confirmPasswordRegisterField;
-
     private void Start()
     {
         StartCoroutine(CheckAndFixDependenciesAsync());
@@ -115,7 +101,6 @@ public class FirebaseAuthManager : MonoBehaviour
             if (!signedIn && user != null)
             {
                 Debug.Log("Signed out " + user.DisplayName);
-                ClearLoginInputFieldText();
                 UIManager.Instance.OpenLoginPanel();
             }
 
@@ -130,83 +115,130 @@ public class FirebaseAuthManager : MonoBehaviour
 
     public void Login()
     {
-        StartCoroutine(LoginAsync(emailLoginField.text, passwordLoginField.text));
+        var email = UIManager.Instance.emailLoginField.text;
+        var password = UIManager.Instance.passwordLoginField.text;
+        StartCoroutine(LoginAsync(email, password));
     }
 
     private IEnumerator LoginAsync(string email, string password)
     {
-        var loginTask = auth.SignInWithEmailAndPasswordAsync(email, password);
-
-        yield return new WaitUntil(() => loginTask.IsCompleted);
-
-        if (loginTask.Exception != null)
+        if (email == "")
         {
-            Debug.LogError(loginTask.Exception);
+            Debug.LogError("ShinobiWorld " + Message.EmailEmpty);
+            UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
+        }
+        else if (password == "")
+        {
+            Debug.LogError("ShinobiWorld " + Message.PasswordEmpty);
+            UIManager.Instance.OpenPopupPanel(Message.PasswordEmpty);
 
-            FirebaseException firebaseException = loginTask.Exception.GetBaseException() as FirebaseException;
-            AuthError authError = (AuthError)firebaseException.ErrorCode;
-
-
-            string failedMessage = "Login Failed! Because ";
-
-            switch (authError)
-            {
-                case AuthError.InvalidEmail:
-                    failedMessage += "Email is invalid";
-                    break;
-                case AuthError.WrongPassword:
-                    failedMessage += "Wrong Password";
-                    break;
-                case AuthError.MissingEmail:
-                    failedMessage += "Email is missing";
-                    break;
-                case AuthError.MissingPassword:
-                    failedMessage += "Password is missing";
-                    break;
-                default:
-                    failedMessage = "Login Failed";
-                    break;
-            }
-
-            Debug.Log(failedMessage);
         }
         else
         {
-            user = loginTask.Result;
+            var loginTask = auth.SignInWithEmailAndPasswordAsync(email, password);
 
-            Debug.LogFormat("{0} You Are Successfully Logged In", user.DisplayName);
+            yield return new WaitUntil(() => loginTask.IsCompleted);
 
-            if (user.IsEmailVerified)
+            if (loginTask.Exception != null)
             {
-                References.Username = user.DisplayName;
-                UIManager.Instance.OpenGamePanel();
+                Debug.LogError("ShinobiWorld " + loginTask.Exception);
+
+                FirebaseException firebaseException = loginTask.Exception.GetBaseException() as FirebaseException;
+                AuthError authError = (AuthError)firebaseException.ErrorCode;
+
+
+                string failedMessage = "Login Failed! Because ";
+
+                switch (authError)
+                {
+                    case AuthError.InvalidEmail:
+                        failedMessage += Message.EmailInvalid;
+                        break;
+                    case AuthError.WrongPassword:
+                        failedMessage += Message.PasswordWrong;
+                        break;
+                    case AuthError.MissingEmail:
+                        failedMessage += Message.EmailEmpty;
+                        break;
+                    case AuthError.MissingPassword:
+                        failedMessage += Message.PasswordEmpty;
+                        break;
+                    case AuthError.UserNotFound:
+                        failedMessage += Message.EmailNotExist;
+                        break;
+                    default:
+                        Debug.Log(failedMessage += authError.ToString() + "default");
+                        failedMessage = Message.ErrorSystem;
+                        break;
+                }
+
+                UIManager.Instance.OpenPopupPanel(failedMessage);
+
             }
             else
             {
-                SendEmailForVerification();
+                user = loginTask.Result;
+
+                Debug.LogFormat("{0} You Are Successfully Logged In", user.DisplayName);
+
+                if (user.IsEmailVerified)
+                {
+                    References.Username = user.DisplayName;
+                    UIManager.Instance.OpenGamePanel();
+                }
+                else
+                {
+                    SendEmailForVerification();
+                }
+
             }
-            
         }
     }
 
     public void Register()
     {
-        StartCoroutine(RegisterAsync(nameRegisterField.text, emailRegisterField.text, passwordRegisterField.text, confirmPasswordRegisterField.text));
+        var name = UIManager.Instance.nameRegisterField.text;
+        var email = UIManager.Instance.emailRegisterField.text;
+        var password = UIManager.Instance.passwordRegisterField.text;
+        var confirmPassword = UIManager.Instance.confirmPasswordRegisterField.text;
+
+        StartCoroutine(RegisterAsync(name, email, password, confirmPassword));
     }
 
     private IEnumerator RegisterAsync(string name, string email, string password, string confirmPassword)
     {
         if (name == "")
         {
-            Debug.LogError("User Name is empty");
+            Debug.LogError("ShinobiWorld " + Message.NameEmpty);
+            UIManager.Instance.OpenPopupPanel(Message.NameEmpty);
         }
         else if (email == "")
         {
-            Debug.LogError("Email field is empty");
+            Debug.LogError("ShinobiWorld " + Message.EmailEmpty);
+            UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
+
         }
-        else if (passwordRegisterField.text != confirmPasswordRegisterField.text)
+        else if (password == "")
         {
-            Debug.LogError("Password does not match");
+            Debug.LogError("ShinobiWorld " + Message.PasswordEmpty);
+            UIManager.Instance.OpenPopupPanel(Message.PasswordEmpty);
+
+        }
+        else if (password.Length < 8)
+        {
+            Debug.LogError("ShinobiWorld " + "Password must be at least 8 characters");
+            UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
+
+        }
+        else if (password.Contains(" "))
+        {
+            Debug.LogError("ShinobiWorld " + "Password mustn't be space");
+            UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
+        }
+        else if (password != confirmPassword)
+        {
+            Debug.LogError("ShinobiWorld " + Message.PasswordNotMatch);
+            UIManager.Instance.OpenPopupPanel(Message.PasswordNotMatch);
         }
         else
         {
@@ -216,7 +248,7 @@ public class FirebaseAuthManager : MonoBehaviour
 
             if (registerTask.Exception != null)
             {
-                Debug.LogError(registerTask.Exception);
+                Debug.LogError("ShinobiWorld " + registerTask.Exception);
 
                 FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
                 AuthError authError = (AuthError)firebaseException.ErrorCode;
@@ -225,23 +257,28 @@ public class FirebaseAuthManager : MonoBehaviour
                 switch (authError)
                 {
                     case AuthError.InvalidEmail:
-                        failedMessage += "Email is invalid";
+                        failedMessage += Message.EmailInvalid;
                         break;
                     case AuthError.WrongPassword:
-                        failedMessage += "Wrong Password";
+                        failedMessage += Message.PasswordWrong;
                         break;
                     case AuthError.MissingEmail:
-                        failedMessage += "Email is missing";
+                        failedMessage += Message.EmailEmpty;
                         break;
                     case AuthError.MissingPassword:
-                        failedMessage += "Password is missing";
+                        failedMessage += Message.PasswordEmpty;
+                        break;
+                    case AuthError.EmailAlreadyInUse:
+                        failedMessage += Message.EmailAlready;
                         break;
                     default:
-                        failedMessage = "Registration Failed";
+                        Debug.Log(failedMessage += authError.ToString() + "default");
+                        failedMessage = Message.ErrorSystem;
                         break;
                 }
 
-                Debug.Log(failedMessage);
+                UIManager.Instance.OpenPopupPanel(failedMessage);
+
             }
             else
             {
@@ -259,7 +296,7 @@ public class FirebaseAuthManager : MonoBehaviour
                     // Delete the user if user update failed
                     user.DeleteAsync();
 
-                    Debug.LogError(updateProfileTask.Exception);
+                    Debug.LogError("ShinobiWorld " + updateProfileTask.Exception);
 
                     FirebaseException firebaseException = updateProfileTask.Exception.GetBaseException() as FirebaseException;
                     AuthError authError = (AuthError)firebaseException.ErrorCode;
@@ -286,6 +323,8 @@ public class FirebaseAuthManager : MonoBehaviour
                     }
 
                     Debug.Log(failedMessage);
+                    UIManager.Instance.OpenPopupPanel(Message.ErrorSystem);
+
                 }
                 else
                 {
@@ -322,27 +361,32 @@ public class FirebaseAuthManager : MonoBehaviour
 
                 AuthError error = (AuthError) firebaseException.ErrorCode;
 
-                string errorMessage = "Unknow Error: Please try again later";
+                string errorMessage = Message.ErrorSystem;
 
                 switch (error)
                 {
                     case AuthError.Cancelled:
-                        errorMessage = "Email verification was canceled";
+                        errorMessage = Message.VerifyEmailCanceled;
                         break;
                     case AuthError.TooManyRequests:
-                        errorMessage = "Too Many Requests";
+                        errorMessage = Message.VerifyEmailTooManyRequests;
                         break;
                     case AuthError.InvalidRecipientEmail:
-                        errorMessage = "Your email is invalid";
+                        errorMessage = Message.EmailInvalid;
                         break;
                 }
 
-                UIManager.Instance.ShowEmailVerificationPanel(false, user.Email, errorMessage);
+                //UIManager.Instance.ShowEmailVerificationPanel(false, user.Email, errorMessage);
+                UIManager.Instance.OpenPopupPanel(errorMessage);
+
+
             }
             else
             {
                 Debug.Log("Email has successfully sent");
-                UIManager.Instance.ShowEmailVerificationPanel(true, user.Email, null);
+                UIManager.Instance.OpenLoginPanel();
+                UIManager.Instance.OpenPopupPanel(string.Format(Message.EmailMessage, user.Email));
+                //UIManager.Instance.ShowEmailVerificationPanel(true, user.Email, null);
 
             }
         }
@@ -359,11 +403,5 @@ public class FirebaseAuthManager : MonoBehaviour
         {
             auth.SignOut();
         }
-    }
-
-    private void ClearLoginInputFieldText()
-    {
-        passwordLoginField.text = "";
-        emailLoginField.text = "";
     }
 }
