@@ -1,20 +1,38 @@
 using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 using Cinemachine;
 using UnityEngine.Rendering;
-using UnityEngine.EventSystems;
+
+using System;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
+    [Header("Player Instance")]
+    [SerializeField] GameObject PlayerControlPrefabs;
+    [SerializeField] GameObject PlayerCameraPrefabs;
+    GameObject PlayerControlInstance;
+    GameObject PlayerCameraInstance;
 
-    [SerializeField] GameObject PlayerControl;
-    [SerializeField] GameObject PlayerCamera;
+    //Skill
+    public float SkillOneCooldown_Total;
+    public float SkillOneCooldown_Current;
 
-    GameObject Enemy;
+    public float SkillTwoCooldown_Total;
+    public float SkillTwoCooldown_Current;
+
+    public float SkillThreeCooldown_Total;
+    public float SkillThreeCooldown_Current;
+
+    //Take Damage
+    private bool Hurting;
+
+    //Common 
+    public int CurrentHealth;
+
+    //Enemy
+    protected GameObject Enemy;
 
     //Component
     public Animator animator;
@@ -57,12 +75,13 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         SetUpInput();
         SetUpComponent();
-        
+        CurrentHealth = 3;
         if (PV.IsMine)
         {
-            Instantiate(PlayerControl);
-            GameObject Camera = Instantiate(PlayerCamera);
-            Camera.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
+            PlayerControlInstance = Instantiate(PlayerControlPrefabs);
+            PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
+            PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
+            PlayerControlInstance.GetComponent<PlayerUI>().SetUpPlayer(this.gameObject);
             sortingGroup.sortingLayerName = "Me";
         }
     }
@@ -72,14 +91,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         MoveDirection = context.ReadValue<Vector2>();
     }
 
-    public void OnSkillOne(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
-            Debug.Log(Enemy.name);
-        }
-    }
+    
 
     public void Update()
     {
@@ -104,6 +116,33 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             transform.position = Vector3.Lerp(positionAtLastPacket, realPosition, (float)(currentTime / timeToReachGoal));
 
         }
+    }
+
+    public void TakeDamage(int Damage)
+    {
+        if (Hurting) { return; }
+        CurrentHealth -= Damage;
+        StartCoroutine(DamageAnimation());
+        PlayerCameraInstance.GetComponent<PlayerCamera>().StartShakeScreen(3, 3, 1);
+        if (CurrentHealth <= 0)
+        {
+            Debug.Log("Die");
+        }
+    }
+
+    public IEnumerator DamageAnimation()
+    {
+        Hurting = true;
+        for (int i = 0; i < 10; i++)
+        {
+            spriteRenderer.color = Color.red;
+
+            yield return new WaitForSeconds(.1f);
+
+            spriteRenderer.color = Color.white;
+            yield return new WaitForSeconds(.1f);
+        }
+        Hurting = false;
     }
 
     [PunRPC]
