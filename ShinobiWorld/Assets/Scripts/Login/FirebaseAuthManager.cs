@@ -89,8 +89,9 @@ public class FirebaseAuthManager : MonoBehaviour
             if (user.IsEmailVerified)
             {
                 References.Username = user.DisplayName;
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
+                UIManager.Instance.OpenGamePanel();
+                
             }
             else
             {
@@ -114,6 +115,8 @@ public class FirebaseAuthManager : MonoBehaviour
             if (!signedIn && user != null)
             {
                 Debug.Log("Signed out " + user.DisplayName);
+                ClearLoginInputFieldText();
+                UIManager.Instance.OpenLoginPanel();
             }
 
             user = auth.CurrentUser;
@@ -176,7 +179,7 @@ public class FirebaseAuthManager : MonoBehaviour
             if (user.IsEmailVerified)
             {
                 References.Username = user.DisplayName;
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+                UIManager.Instance.OpenGamePanel();
             }
             else
             {
@@ -343,5 +346,24 @@ public class FirebaseAuthManager : MonoBehaviour
 
             }
         }
+    }
+
+    public void OpenGameScene()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(Scenes.Game);
+    }
+
+    public void Logout()
+    {
+        if(auth != null && user != null)
+        {
+            auth.SignOut();
+        }
+    }
+
+    private void ClearLoginInputFieldText()
+    {
+        passwordLoginField.text = "";
+        emailLoginField.text = "";
     }
 }

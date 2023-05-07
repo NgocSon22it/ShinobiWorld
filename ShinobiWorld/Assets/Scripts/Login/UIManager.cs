@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
 
     public GameObject emailVerificationPanel;
 
+    public GameObject gamePanel;
+
     public TMP_Text message;
 
     private void Awake()
@@ -41,11 +43,18 @@ public class UIManager : MonoBehaviour
         registrationPanel.SetActive(true);
     }
 
+    public void OpenGamePanel()
+    {
+        ClearUI();
+        gamePanel.SetActive(true);
+    }
+
     void ClearUI()
     {
         loginPanel.SetActive(false);
         registrationPanel.SetActive(false);
         emailVerificationPanel.SetActive(false);
+        gamePanel.SetActive(false);
     }
 
     public void ShowEmailVerificationPanel(bool isEmailSent, string emailId, string errorMessage)
