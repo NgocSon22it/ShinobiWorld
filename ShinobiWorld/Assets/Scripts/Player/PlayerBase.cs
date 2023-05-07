@@ -11,8 +11,10 @@ using UnityEngine.EventSystems;
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
 
-    [SerializeField] GameObject ControlUI;
-    [SerializeField] GameObject Camera;
+    [SerializeField] GameObject PlayerControl;
+    [SerializeField] GameObject PlayerCamera;
+
+    GameObject Enemy;
 
     //Component
     public Animator animator;
@@ -23,9 +25,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     //Player Input
     PlayerInput playerInput;
-    private InputAction Input_AttackAction;
-    private InputAction Input_MoveAction;
-    private InputAction Input_Skill1;
     [SerializeField] float Speed;
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
@@ -42,9 +41,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public void SetUpInput()
     {
         playerInput = GetComponent<PlayerInput>();
-        Input_AttackAction = playerInput.actions["Attack"];
-        Input_MoveAction = playerInput.actions["Move"];
-        //Input_Skill1 = playerInput.actions["Skill 1"];
+
     }
 
     public void SetUpComponent()
@@ -63,19 +60,29 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
         if (PV.IsMine)
         {
-            Instantiate(ControlUI);
-            GameObject PlayerCamera = Instantiate(Camera);
-            PlayerCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
+            Instantiate(PlayerControl);
+            GameObject Camera = Instantiate(PlayerCamera);
+            Camera.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
             sortingGroup.sortingLayerName = "Me";
+        }
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        MoveDirection = context.ReadValue<Vector2>();
+    }
+
+    public void OnSkillOne(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
+            Debug.Log(Enemy.name);
         }
     }
 
     public void Update()
     {
-        if (Input_AttackAction.triggered)
-        {
-            Debug.Log("Attack");
-        }
         animator.SetFloat("Horizontal", MoveDirection.x);
         animator.SetFloat("Vertical", MoveDirection.y);
         animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
@@ -99,9 +106,32 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         }
     }
 
+    [PunRPC]
+    public void FindClostestEnemy()
+    {
+        float distanceToClosestEnemy = Mathf.Infinity;
+        GameObject closestEnemy = null;
+        GameObject[] allEnemy = GameObject.FindGameObjectsWithTag("Enemy");
+
+
+        foreach (GameObject currentEnemy in allEnemy)
+        {
+            float distanceToEnemy = (currentEnemy.transform.position - this.transform.position).sqrMagnitude;
+            if (distanceToEnemy < distanceToClosestEnemy)
+            {
+                distanceToClosestEnemy = distanceToEnemy;
+                closestEnemy = currentEnemy;
+            }
+        }
+        if (closestEnemy != null)
+        {
+            Enemy = closestEnemy;
+        }
+    }
+
     public void Walk()
     {
-        MoveDirection = Input_MoveAction.ReadValue<Vector2>();
+        
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
         transform.Translate(Movement * Speed * Time.fixedDeltaTime);
 
