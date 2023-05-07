@@ -57,7 +57,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         SetUpInput();
         SetUpComponent();
-
+        
         if (PV.IsMine)
         {
             Instantiate(PlayerControl);
