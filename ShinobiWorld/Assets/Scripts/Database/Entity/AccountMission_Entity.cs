@@ -8,8 +8,8 @@ namespace Assets.Scripts.Database.Entity
 {
     public class AccountMission_Entity
     {
-        public string AccountId;
-        public int MissionId;
+        public string AccountID;
+        public int MissionID;
         public int Current;
         public bool Status;
 

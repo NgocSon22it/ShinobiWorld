@@ -8,7 +8,7 @@ namespace Assets.Scripts.Database.Entity
 {
     public class TypeBoss_Entity
     {
-        public int Id;
+        public int ID;
         public string Name;
         public bool Delete;
 

@@ -5,11 +5,11 @@ using System.Data.SqlClient;
 using System.Data;
 using UnityEngine;
 
-public class Eye_DAO 
+public static class Eye_DAO 
 {
-    string ConnectionStr = new ShinobiWorldConnect().GetConnectShinobiWorld();
+    static string ConnectionStr = new ShinobiWorldConnect().GetConnectShinobiWorld();
 
-    public Eye_Enity GetEyeByID(int EyeID)
+    public static Eye_Enity GetEyeByID(int EyeID)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
