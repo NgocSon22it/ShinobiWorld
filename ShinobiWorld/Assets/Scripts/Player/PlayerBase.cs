@@ -9,6 +9,8 @@ using System;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
+
+
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerControlPrefabs;
     [SerializeField] GameObject PlayerCameraPrefabs;
@@ -98,6 +100,11 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         animator.SetFloat("Horizontal", MoveDirection.x);
         animator.SetFloat("Vertical", MoveDirection.y);
         animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Attack();
+        }
     }
 
     public void FixedUpdate()
@@ -205,5 +212,10 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             rotationAtLastPacket = transform.rotation;
 
         }
+    }
+
+    void Attack()
+    {
+
     }
 }
