@@ -2,21 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public GameObject loginPanel;
+    [Header("Panel")]
 
-    public GameObject registrationPanel;
-
-    public GameObject emailVerificationPanel;
+    //public GameObject emailVerificationPanel;
 
     public GameObject gamePanel;
 
-    public TMP_Text message;
+    public GameObject popupPanel;
+
+    //public TMP_Text message;
+
+    public TMP_Text messagePopup;
+
+    // Login Variables
+    [Space]
+    [Header("Login")]
+    public TMP_InputField emailLoginField;
+    public TMP_InputField passwordLoginField;
+    public GameObject loginPanel;
+
+    // Registration Variables
+    [Space]
+    [Header("Registration")]
+    public TMP_InputField nameRegisterField;
+    public TMP_InputField emailRegisterField;
+    public TMP_InputField passwordRegisterField;
+    public TMP_InputField confirmPasswordRegisterField;
+    public GameObject registrationPanel;
+
 
     private void Awake()
     {
@@ -49,26 +69,46 @@ public class UIManager : MonoBehaviour
         gamePanel.SetActive(true);
     }
 
+    public void OpenPopupPanel(string message)
+    {
+        popupPanel.SetActive(true);
+        messagePopup.text = message;
+    }
+
+    public void ClosePopupPanel()
+    {
+        popupPanel.SetActive(false);
+    }
+
     void ClearUI()
     {
         loginPanel.SetActive(false);
         registrationPanel.SetActive(false);
-        emailVerificationPanel.SetActive(false);
+        //emailVerificationPanel.SetActive(false);
         gamePanel.SetActive(false);
+        popupPanel.SetActive(false);
+
+        //clear input
+        passwordLoginField.text = "";
+        emailLoginField.text = "";
+        confirmPasswordRegisterField.text = "";
+        passwordRegisterField.text = "";
+        emailRegisterField.text = "";
+        nameRegisterField.text = "";
     }
 
-    public void ShowEmailVerificationPanel(bool isEmailSent, string emailId, string errorMessage)
-    {
-        ClearUI();
-        emailVerificationPanel.SetActive(true);
+    //public void ShowEmailVerificationPanel(bool isEmailSent, string emailId, string errorMessage)
+    //{
+    //    ClearUI();
+    //    emailVerificationPanel.SetActive(true);
 
-        if(isEmailSent)
-        {
-            message.text = $"Please verify your email address \n Verification email has been sent to {emailId}";    
-        }
-        else
-        {
-            message.text = $"Couldn't sent email : {errorMessage}";
-        }
-    }
+    //    if(isEmailSent)
+    //    {
+    //        message.text = $"Please verify your email address \n Verification email has been sent to {emailId}";    
+    //    }
+    //    else
+    //    {
+    //        message.text = $"Couldn't sent email : {errorMessage}";
+    //    }
+    //}
 }
