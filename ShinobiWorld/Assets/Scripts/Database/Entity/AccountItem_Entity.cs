@@ -8,8 +8,8 @@ namespace Assets.Scripts.Database.Entity
 {
     public class AccountItem_Entity
     {
-        public string AccountId;
-        public int ItemId;
+        public string AccountID;
+        public int ItemID;
         public int Amount;
         public bool Limit;
         public bool Delete;

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Account_Entity
 {
-    public string Id;
-    public int RoleInGameId;
-    public int TrophiesId;
+    public string ID;
+    public int RoleInGameID;
+    public int TrophiesID;
     public int Level;
     public int Health;
     public int Charka;
@@ -15,11 +15,11 @@ public class Account_Entity
     public int Coin;
     public int Power;
     public int Strength;
-    public int EyeId;
-    public int HairId;
-    public int FaceId;
-    public int SkinId;
-    public int ColorId;
+    public int EyeID;
+    public int HairID;
+    public int FaceID;
+    public int SkinID;
+    public int ColorID;
     public bool IsDead;
     public bool IsOnline;
     public bool IsTicket;
