@@ -92,8 +92,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         MoveDirection = context.ReadValue<Vector2>();
     }
-
-    
+ 
 
     public void Update()
     {
