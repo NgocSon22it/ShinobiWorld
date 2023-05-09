@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [Shinobi]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Database [Shinobi]    Script Date: 2023/05/09 15:01:04 ******/
 CREATE DATABASE [Shinobi]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -82,16 +82,13 @@ ALTER DATABASE [Shinobi] SET QUERY_STORE = OFF
 GO
 USE [Shinobi]
 GO
-/****** Object:  Table [dbo].[Account]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Account]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Account](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Email] [nvarchar](50) NOT NULL,
-	[Password] [nvarchar](50) NOT NULL,
-	[Name] [nvarchar](50) NOT NULL,
+	[ID] [nvarchar](50) NOT NULL,
 	[RoleInGameID] [int] NOT NULL,
 	[TrophiesID] [int] NOT NULL,
 	[Level] [int] NULL,
@@ -110,8 +107,6 @@ CREATE TABLE [dbo].[Account](
 	[IsDead] [bit] NULL,
 	[IsOnline] [bit] NULL,
 	[IsTicket] [bit] NULL,
-	[WinCount] [int] NULL,
-	[LooseCount] [int] NULL,
 	[Delete] [bit] NULL,
 PRIMARY KEY CLUSTERED 
 (
@@ -119,13 +114,13 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AccountEquipment]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[AccountEquipment]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AccountEquipment](
-	[AccountID] [int] NOT NULL,
+	[AccountID] [nvarchar](50) NOT NULL,
 	[EquipmentID] [int] NOT NULL,
 	[Level] [int] NULL,
 	[Health] [int] NULL,
@@ -140,13 +135,13 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AccountItem]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[AccountItem]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AccountItem](
-	[AccountID] [int] NOT NULL,
+	[AccountID] [nvarchar](50) NOT NULL,
 	[ItemID] [int] NOT NULL,
 	[Amount] [int] NULL,
 	[Limit] [bit] NULL,
@@ -158,13 +153,13 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AccountMailBox]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[AccountMailBox]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AccountMailBox](
-	[AccountID] [int] NOT NULL,
+	[AccountID] [nvarchar](50) NOT NULL,
 	[MailBoxID] [int] NOT NULL,
 	[RankID] [int] NOT NULL,
 	[Rank] [int] NULL,
@@ -178,13 +173,13 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AccountMission]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[AccountMission]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AccountMission](
-	[AccountID] [int] NOT NULL,
+	[AccountID] [nvarchar](50) NOT NULL,
 	[MissionID] [int] NOT NULL,
 	[Current] [int] NULL,
 	[Status] [bit] NULL,
@@ -195,30 +190,13 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AccountPet]    Script Date: 2023/04/29 10:16:19 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[AccountPet](
-	[AccountID] [int] NOT NULL,
-	[PetID] [int] NOT NULL,
-	[IsUsing] [int] NULL,
-	[Delete] [bit] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[AccountID] ASC,
-	[PetID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[AccountSkill]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[AccountSkill]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AccountSkill](
-	[AccountID] [int] NOT NULL,
+	[AccountID] [nvarchar](50) NOT NULL,
 	[SkillID] [int] NOT NULL,
 	[Level] [int] NULL,
 	[Cooldown] [float] NULL,
@@ -232,13 +210,13 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AccountWeapon]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[AccountWeapon]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AccountWeapon](
-	[AccountID] [int] NOT NULL,
+	[AccountID] [nvarchar](50) NOT NULL,
 	[WeaponID] [int] NOT NULL,
 	[Level] [int] NULL,
 	[Damage] [int] NULL,
@@ -250,7 +228,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Boss]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Boss]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -272,7 +250,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Color]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Color]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -287,7 +265,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Equipment]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Equipment]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -310,7 +288,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Event]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Event]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -328,7 +306,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Eye]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Eye]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -344,7 +322,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Face]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Face]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -360,7 +338,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Hair]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Hair]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -376,7 +354,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Item]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Item]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -398,7 +376,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MailBox]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[MailBox]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -415,7 +393,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Mission]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Mission]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -435,26 +413,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Pet]    Script Date: 2023/04/29 10:16:19 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Pet](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[TypePetID] [int] NOT NULL,
-	[Name] [nvarchar](50) NOT NULL,
-	[Speed] [int] NULL,
-	[Image] [nvarchar](100) NOT NULL,
-	[Description] [nvarchar](max) NULL,
-	[Delete] [bit] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Rank]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Rank]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -473,7 +432,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RoleInGame]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[RoleInGame]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -489,7 +448,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Skill]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Skill]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -505,7 +464,6 @@ CREATE TABLE [dbo].[Skill](
 	[LevelUnlock] [int] NULL,
 	[UpgradeCost] [int] NULL,
 	[BuyCost] [int] NULL,
-	[AbilityIndicators] [nvarchar](100) NOT NULL,
 	[Image] [nvarchar](100) NOT NULL,
 	[Description] [nvarchar](max) NULL,
 	[Delete] [bit] NULL,
@@ -515,7 +473,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SkillBoss]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[SkillBoss]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -534,7 +492,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Skin]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Skin]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -550,7 +508,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Trophies]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Trophies]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -570,7 +528,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TypeBoss]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[TypeBoss]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -585,7 +543,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TypeEquipment]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[TypeEquipment]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -600,24 +558,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TypePet]    Script Date: 2023/04/29 10:16:19 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[TypePet](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](50) NOT NULL,
-	[Image] [nvarchar](100) NOT NULL,
-	[Description] [nvarchar](max) NULL,
-	[Delete] [bit] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[Weapon]    Script Date: 2023/04/29 10:16:19 ******/
+/****** Object:  Table [dbo].[Weapon]    Script Date: 2023/05/09 15:01:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -636,6 +577,82 @@ PRIMARY KEY CLUSTERED
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+INSERT [dbo].[Account] ([ID], [RoleInGameID], [TrophiesID], [Level], [Health], [Charka], [Exp], [Speed], [Coin], [Power], [Strength], [EyeID], [HairID], [FaceID], [SkinID], [ColorID], [IsDead], [IsOnline], [IsTicket], [Delete]) VALUES (N'1', 1, 1, 1, 100, 100, 0, 5, 0, 0, 100, 1, 1, 1, 1, 1, 0, 0, 0, 0)
+GO
+INSERT [dbo].[Account] ([ID], [RoleInGameID], [TrophiesID], [Level], [Health], [Charka], [Exp], [Speed], [Coin], [Power], [Strength], [EyeID], [HairID], [FaceID], [SkinID], [ColorID], [IsDead], [IsOnline], [IsTicket], [Delete]) VALUES (N'lwaAbDTEY1csQPYa4MNIh4GYT333', 1, 1, 1, 100, 100, 0, 5, 0, 0, 100, 1, 1, 1, 1, 1, 0, 0, 0, 0)
+GO
+SET IDENTITY_INSERT [dbo].[Boss] ON 
+GO
+INSERT [dbo].[Boss] ([ID], [TypeBossID], [Name], [Health], [Speed], [CoinBonus], [ExpBonus], [Image], [Description], [Delete]) VALUES (1, 2, N'Kakashi', 100, 5, 100, 100, N'Image', N'Description', 0)
+GO
+SET IDENTITY_INSERT [dbo].[Boss] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Color] ON 
+GO
+INSERT [dbo].[Color] ([ID], [Name], [Delete]) VALUES (1, N'Color1', 0)
+GO
+SET IDENTITY_INSERT [dbo].[Color] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Eye] ON 
+GO
+INSERT [dbo].[Eye] ([ID], [Name], [Image], [Delete]) VALUES (1, N'Eye1', N'Eye1', 0)
+GO
+SET IDENTITY_INSERT [dbo].[Eye] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Face] ON 
+GO
+INSERT [dbo].[Face] ([ID], [Name], [Image], [Delete]) VALUES (1, N'Face1', N'Face1', 0)
+GO
+SET IDENTITY_INSERT [dbo].[Face] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Hair] ON 
+GO
+INSERT [dbo].[Hair] ([ID], [Name], [Image], [Delete]) VALUES (1, N'Hair1', N'Hair1', 0)
+GO
+SET IDENTITY_INSERT [dbo].[Hair] OFF
+GO
+SET IDENTITY_INSERT [dbo].[RoleInGame] ON 
+GO
+INSERT [dbo].[RoleInGame] ([ID], [WeaponID], [Name], [Delete]) VALUES (1, 1, N'Cận chiến', 0)
+GO
+INSERT [dbo].[RoleInGame] ([ID], [WeaponID], [Name], [Delete]) VALUES (2, 2, N'Viễn chiến', 0)
+GO
+INSERT [dbo].[RoleInGame] ([ID], [WeaponID], [Name], [Delete]) VALUES (3, 3, N'Hỗ trợ', 0)
+GO
+SET IDENTITY_INSERT [dbo].[RoleInGame] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Skin] ON 
+GO
+INSERT [dbo].[Skin] ([ID], [Name], [Image], [Delete]) VALUES (1, N'Skin1', N'Skin1', 0)
+GO
+SET IDENTITY_INSERT [dbo].[Skin] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Trophies] ON 
+GO
+INSERT [dbo].[Trophies] ([ID], [BossID], [Name], [ContraitLevelAccount], [Cost], [Image], [Description], [Delete]) VALUES (1, 1, N'Trung đẳng', 10, 100, N'Image', N'Description', 0)
+GO
+SET IDENTITY_INSERT [dbo].[Trophies] OFF
+GO
+SET IDENTITY_INSERT [dbo].[TypeBoss] ON 
+GO
+INSERT [dbo].[TypeBoss] ([ID], [Name], [Delete]) VALUES (1, N'Sự kiện', 0)
+GO
+INSERT [dbo].[TypeBoss] ([ID], [Name], [Delete]) VALUES (2, N'Đấu trường', 0)
+GO
+INSERT [dbo].[TypeBoss] ([ID], [Name], [Delete]) VALUES (3, N'Quái thường', 0)
+GO
+SET IDENTITY_INSERT [dbo].[TypeBoss] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Weapon] ON 
+GO
+INSERT [dbo].[Weapon] ([ID], [Name], [Damage], [Uppercent], [UpgradeCost], [Image], [Description], [Delete]) VALUES (1, N'Kiếm', 100, 5, 100, N'Image', N'Kiếm', 0)
+GO
+INSERT [dbo].[Weapon] ([ID], [Name], [Damage], [Uppercent], [UpgradeCost], [Image], [Description], [Delete]) VALUES (2, N'Phi tiêu', 100, 5, 100, N'Image', N'Phi tiêu', 0)
+GO
+INSERT [dbo].[Weapon] ([ID], [Name], [Damage], [Uppercent], [UpgradeCost], [Image], [Description], [Delete]) VALUES (3, N'Bao tay', 100, 5, 100, N'Image', N'Bao tay', 0)
+GO
+SET IDENTITY_INSERT [dbo].[Weapon] OFF
 GO
 ALTER TABLE [dbo].[Account]  WITH CHECK ADD FOREIGN KEY([ColorID])
 REFERENCES [dbo].[Color] ([ID])
@@ -685,12 +702,6 @@ GO
 ALTER TABLE [dbo].[AccountMission]  WITH CHECK ADD FOREIGN KEY([MissionID])
 REFERENCES [dbo].[Mission] ([ID])
 GO
-ALTER TABLE [dbo].[AccountPet]  WITH CHECK ADD FOREIGN KEY([AccountID])
-REFERENCES [dbo].[Account] ([ID])
-GO
-ALTER TABLE [dbo].[AccountPet]  WITH CHECK ADD FOREIGN KEY([PetID])
-REFERENCES [dbo].[Pet] ([ID])
-GO
 ALTER TABLE [dbo].[AccountSkill]  WITH CHECK ADD FOREIGN KEY([AccountID])
 REFERENCES [dbo].[Account] ([ID])
 GO
@@ -711,9 +722,6 @@ REFERENCES [dbo].[TypeEquipment] ([ID])
 GO
 ALTER TABLE [dbo].[Event]  WITH CHECK ADD FOREIGN KEY([BossID])
 REFERENCES [dbo].[Boss] ([ID])
-GO
-ALTER TABLE [dbo].[Pet]  WITH CHECK ADD FOREIGN KEY([TypePetID])
-REFERENCES [dbo].[TypePet] ([ID])
 GO
 ALTER TABLE [dbo].[Rank]  WITH CHECK ADD FOREIGN KEY([EquipmentIDBonus])
 REFERENCES [dbo].[Equipment] ([ID])

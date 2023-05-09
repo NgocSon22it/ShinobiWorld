@@ -1,18 +1,40 @@
 using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 using Cinemachine;
 using UnityEngine.Rendering;
-using UnityEngine.EventSystems;
+
+using System;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
 
-    [SerializeField] GameObject ControlUI;
-    [SerializeField] GameObject Camera;
+
+    [Header("Player Instance")]
+    [SerializeField] GameObject PlayerControlPrefabs;
+    [SerializeField] GameObject PlayerCameraPrefabs;
+    GameObject PlayerControlInstance;
+    GameObject PlayerCameraInstance;
+
+    //Skill
+    public float SkillOneCooldown_Total;
+    public float SkillOneCooldown_Current;
+
+    public float SkillTwoCooldown_Total;
+    public float SkillTwoCooldown_Current;
+
+    public float SkillThreeCooldown_Total;
+    public float SkillThreeCooldown_Current;
+
+    //Take Damage
+    private bool Hurting;
+
+    //Common 
+    public int CurrentHealth;
+
+    //Enemy
+    protected GameObject Enemy;
 
     //Component
     public Animator animator;
@@ -23,9 +45,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     //Player Input
     PlayerInput playerInput;
-    private InputAction Input_AttackAction;
-    private InputAction Input_MoveAction;
-    private InputAction Input_Skill1;
     [SerializeField] float Speed;
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
@@ -42,9 +61,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public void SetUpInput()
     {
         playerInput = GetComponent<PlayerInput>();
-        Input_AttackAction = playerInput.actions["Attack"];
-        Input_MoveAction = playerInput.actions["Move"];
-        //Input_Skill1 = playerInput.actions["Skill 1"];
+
     }
 
     public void SetUpComponent()
@@ -60,25 +77,32 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         SetUpInput();
         SetUpComponent();
-
+        CurrentHealth = 3;
         if (PV.IsMine)
         {
-            Instantiate(ControlUI);
-            GameObject PlayerCamera = Instantiate(Camera);
-            PlayerCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
+            PlayerControlInstance = Instantiate(PlayerControlPrefabs);
+            PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
+            PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
+            PlayerControlInstance.GetComponent<PlayerUI>().SetUpPlayer(this.gameObject);
             sortingGroup.sortingLayerName = "Me";
         }
     }
 
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        MoveDirection = context.ReadValue<Vector2>();
+    }
+ 
+
     public void Update()
     {
-        if (Input_AttackAction.triggered)
-        {
-            Debug.Log("Attack");
-        }
+
+
+
         animator.SetFloat("Horizontal", MoveDirection.x);
         animator.SetFloat("Vertical", MoveDirection.y);
         animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
+
     }
 
     public void FixedUpdate()
@@ -99,9 +123,59 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         }
     }
 
+    public void TakeDamage(int Damage)
+    {
+        if (Hurting) { return; }
+        CurrentHealth -= Damage;
+        StartCoroutine(DamageAnimation());
+        PlayerCameraInstance.GetComponent<PlayerCamera>().StartShakeScreen(3, 3, 1);
+        if (CurrentHealth <= 0)
+        {
+            Debug.Log("Die");
+        }
+    }
+
+    public IEnumerator DamageAnimation()
+    {
+        Hurting = true;
+        for (int i = 0; i < 10; i++)
+        {
+            spriteRenderer.color = Color.red;
+
+            yield return new WaitForSeconds(.1f);
+
+            spriteRenderer.color = Color.white;
+            yield return new WaitForSeconds(.1f);
+        }
+        Hurting = false;
+    }
+
+    [PunRPC]
+    public void FindClostestEnemy()
+    {
+        float distanceToClosestEnemy = Mathf.Infinity;
+        GameObject closestEnemy = null;
+        GameObject[] allEnemy = GameObject.FindGameObjectsWithTag("Enemy");
+
+
+        foreach (GameObject currentEnemy in allEnemy)
+        {
+            float distanceToEnemy = (currentEnemy.transform.position - this.transform.position).sqrMagnitude;
+            if (distanceToEnemy < distanceToClosestEnemy)
+            {
+                distanceToClosestEnemy = distanceToEnemy;
+                closestEnemy = currentEnemy;
+            }
+        }
+        if (closestEnemy != null)
+        {
+            Enemy = closestEnemy;
+        }
+    }
+
     public void Walk()
     {
-        MoveDirection = Input_MoveAction.ReadValue<Vector2>();
+        
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
         transform.Translate(Movement * Speed * Time.fixedDeltaTime);
 
@@ -137,4 +211,5 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
         }
     }
+    
 }
