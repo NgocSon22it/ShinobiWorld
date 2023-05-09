@@ -6,6 +6,7 @@ using UnityEngine;
 public class Message 
 {
     public static string NameEmpty = "Name is empty";
+    public static string NameInvalid = "Name must have 4-16 character";
 
     public static string EmailEmpty = "Email is empty";
     public static string EmailInvalid = "Email is invalid";

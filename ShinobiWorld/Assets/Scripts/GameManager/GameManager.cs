@@ -36,11 +36,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.Instantiate("Player/"+Path.Combine(Player.name), new(0,0,0), Quaternion.identity);
         Debug.Log("Successfully joined room S1!");
+        
     }
 
 
     public void GoToMenu()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(Scenes.Login);
+        PhotonNetwork.LoadLevel(Scenes.Login);
+        PhotonNetwork.LeaveRoom();
     }
 }
