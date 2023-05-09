@@ -6,8 +6,9 @@ using Firebase.Auth;
 using TMPro;
 using Assets.Scripts.Database.DAO;
 using Photon.Pun;
+using Photon.Realtime;
 
-public class FirebaseAuthManager : MonoBehaviour
+public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
     // Firebase variable
     [Header("Firebase")]
@@ -76,8 +77,9 @@ public class FirebaseAuthManager : MonoBehaviour
             if (user.IsEmailVerified)
             {
                 References.Username = user.DisplayName;
+                PhotonNetwork.NickName = user.DisplayName;
+                PhotonNetwork.ConnectUsingSettings();
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
-                UIManager.Instance.OpenGamePanel();
             }
             else
             {
@@ -185,7 +187,9 @@ public class FirebaseAuthManager : MonoBehaviour
                 {
                     References.Username = user.DisplayName;
                     References.UserID = user.UserId;
-                    UIManager.Instance.OpenGamePanel();
+                 
+                    PhotonNetwork.NickName = user.DisplayName; //Set name user
+                    PhotonNetwork.ConnectUsingSettings(); //Connect server photon
                 }
                 else
                 {
@@ -391,11 +395,16 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
+    public override void OnConnectedToMaster()
+    {
+        UIManager.Instance.OpenGamePanel();
+    }
+
     public void OpenGameScene()
     {
         PhotonNetwork.LoadLevel(Scenes.Game);
     }
-
+    
     public void Logout()
     {
         if(auth != null && user != null)
