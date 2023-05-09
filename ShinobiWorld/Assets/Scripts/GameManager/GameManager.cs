@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void GoToMenu()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(Scenes.Login);
+        PhotonNetwork.LoadLevel(Scenes.Login);
+        PhotonNetwork.LeaveRoom();
     }
 }

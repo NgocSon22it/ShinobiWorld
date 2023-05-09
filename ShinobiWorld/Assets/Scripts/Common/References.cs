@@ -5,4 +5,5 @@ using UnityEngine;
 public class References
 {
     public static string Username = "";
+    public static string UserID = "";
 }
