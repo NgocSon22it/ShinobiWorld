@@ -80,7 +80,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.NickName = user.DisplayName;
                 PhotonNetwork.ConnectUsingSettings();
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
-                UIManager.Instance.OpenGamePanel();
             }
             else
             {
@@ -188,11 +187,9 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 {
                     References.Username = user.DisplayName;
                     References.UserID = user.UserId;
-                    UIManager.Instance.OpenGamePanel();
-
-                    PhotonNetwork.NickName = user.DisplayName;
-                    PhotonNetwork.ConnectUsingSettings();
-
+                 
+                    PhotonNetwork.NickName = user.DisplayName; //Set name user
+                    PhotonNetwork.ConnectUsingSettings(); //Connect server photon
                 }
                 else
                 {
@@ -400,12 +397,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
-        roomOptions.IsOpen = true;
-        roomOptions.BroadcastPropsChangeToAll = true;
-        PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
-        Debug.Log("Ok");
+        UIManager.Instance.OpenGamePanel();
     }
 
     public void OpenGameScene()
@@ -413,7 +405,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(Scenes.Game);
     }
     
-
     public void Logout()
     {
         if(auth != null && user != null)
