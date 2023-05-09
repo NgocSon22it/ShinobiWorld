@@ -1,12 +1,9 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class MeleeChacracter : PlayerBase
+public class RangeCharacter : PlayerBase
 {
-    // Start is called before the first frame update
     new void Start()
     {
         base.Start();
@@ -15,11 +12,11 @@ public class MeleeChacracter : PlayerBase
     // Update is called once per frame
     new void Update()
     {
-        base.Update();      
+        base.Update();
     }
 
     new void FixedUpdate()
     {
         base.FixedUpdate();
-    } 
+    }
 }
