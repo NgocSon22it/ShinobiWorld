@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using Firebase;
 using Firebase.Auth;
 using TMPro;
+using Assets.Scripts.Database.DAO;
+using Photon.Pun;
 
 public class FirebaseAuthManager : MonoBehaviour
 {
@@ -64,7 +66,6 @@ public class FirebaseAuthManager : MonoBehaviour
         } else
         {
             UIManager.Instance.OpenLoginPanel();
-
         }
     }
 
@@ -77,7 +78,6 @@ public class FirebaseAuthManager : MonoBehaviour
                 References.Username = user.DisplayName;
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
                 UIManager.Instance.OpenGamePanel();
-                
             }
             else
             {
@@ -184,6 +184,7 @@ public class FirebaseAuthManager : MonoBehaviour
                 if (user.IsEmailVerified)
                 {
                     References.Username = user.DisplayName;
+                    References.UserID = user.UserId;
                     UIManager.Instance.OpenGamePanel();
                 }
                 else
@@ -211,6 +212,11 @@ public class FirebaseAuthManager : MonoBehaviour
         {
             Debug.LogError("ShinobiWorld " + Message.NameEmpty);
             UIManager.Instance.OpenPopupPanel(Message.NameEmpty);
+        }
+        else if (name.Length < 4 || name.Length > 16)
+        {
+            Debug.LogError("ShinobiWorld " + Message.NameInvalid);
+            UIManager.Instance.OpenPopupPanel(Message.NameInvalid);
         }
         else if (email == "")
         {
@@ -324,7 +330,6 @@ public class FirebaseAuthManager : MonoBehaviour
 
                     Debug.Log(failedMessage);
                     UIManager.Instance.OpenPopupPanel(Message.ErrorSystem);
-
                 }
                 else
                 {
@@ -334,9 +339,9 @@ public class FirebaseAuthManager : MonoBehaviour
                         UIManager.Instance.OpenLoginPanel();
                     }else
                     {
+                        Account_DAO.CreateAccount(user.UserId);
                         SendEmailForVerification();
                     }
-                    
                 }
             }
         }
@@ -375,26 +380,20 @@ public class FirebaseAuthManager : MonoBehaviour
                         errorMessage = Message.EmailInvalid;
                         break;
                 }
-
-                //UIManager.Instance.ShowEmailVerificationPanel(false, user.Email, errorMessage);
                 UIManager.Instance.OpenPopupPanel(errorMessage);
-
-
             }
             else
             {
                 Debug.Log("Email has successfully sent");
                 UIManager.Instance.OpenLoginPanel();
                 UIManager.Instance.OpenPopupPanel(string.Format(Message.EmailMessage, user.Email));
-                //UIManager.Instance.ShowEmailVerificationPanel(true, user.Email, null);
-
             }
         }
     }
 
     public void OpenGameScene()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(Scenes.Game);
+        PhotonNetwork.LoadLevel(Scenes.Game);
     }
 
     public void Logout()
@@ -402,6 +401,7 @@ public class FirebaseAuthManager : MonoBehaviour
         if(auth != null && user != null)
         {
             auth.SignOut();
+            PhotonNetwork.Disconnect();
         }
     }
 }
