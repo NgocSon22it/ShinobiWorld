@@ -108,14 +108,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1279341850592074531}
-  m_LocalRotation: {x: -0, y: -0, z: 0.81396747, w: 0.58091056}
-  m_LocalPosition: {x: -0.054, y: 0.721, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: 0.7800983, w: 0.625657}
+  m_LocalPosition: {x: 0.159, y: 0.512, z: 0}
+  m_LocalScale: {x: 0.55, y: 0.55, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1279341852266036991}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 108.971}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 102.539}
 --- !u!212 &1279341850592074529
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -157,15 +157,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e678e79efa0f3964ab2dd610e5c59283, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.72, y: 0.54}
+  m_Size: {x: 5.94, y: 4.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1279341850644047415
@@ -181,12 +181,12 @@ GameObject:
   - component: {fileID: 1279341850644047413}
   - component: {fileID: 1279341850644047412}
   - component: {fileID: 7064220701377856494}
+  - component: {fileID: 3251223019406442410}
   - component: {fileID: 8916884001489051343}
   - component: {fileID: 156649074218110970}
   - component: {fileID: 7765997010309911789}
   - component: {fileID: 9202841333967612896}
   - component: {fileID: 1753595671280059618}
-  - component: {fileID: 3251223019406442410}
   m_Layer: 0
   m_Name: Player_Range
   m_TagString: Untagged
@@ -339,7 +339,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3417184116348443872, guid: 37d03c402cf253d48b05e7e17dbce415, type: 3}
+      - m_Target: {fileID: 3251223019406442410}
         m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
@@ -355,8 +355,8 @@ MonoBehaviour:
     m_ActionName: Player/Move
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3417184116348443872, guid: 37d03c402cf253d48b05e7e17dbce415, type: 3}
-        m_TargetAssemblyTypeName: MeleeChacracter, Assembly-CSharp
+      - m_Target: {fileID: 3251223019406442410}
+        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
         m_MethodName: Attack
         m_Mode: 0
         m_Arguments:
@@ -371,8 +371,8 @@ MonoBehaviour:
     m_ActionName: Player/Attack
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3417184116348443872, guid: 37d03c402cf253d48b05e7e17dbce415, type: 3}
-        m_TargetAssemblyTypeName: MeleeChacracter, Assembly-CSharp
+      - m_Target: {fileID: 3251223019406442410}
+        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
         m_MethodName: OnSkillOne
         m_Mode: 0
         m_Arguments:
@@ -387,8 +387,8 @@ MonoBehaviour:
     m_ActionName: Player/SkillOne
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3417184116348443872, guid: 37d03c402cf253d48b05e7e17dbce415, type: 3}
-        m_TargetAssemblyTypeName: MeleeChacracter, Assembly-CSharp
+      - m_Target: {fileID: 3251223019406442410}
+        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
         m_MethodName: OnSkillTwo
         m_Mode: 0
         m_Arguments:
@@ -403,8 +403,8 @@ MonoBehaviour:
     m_ActionName: Player/SkillTwo
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3417184116348443872, guid: 37d03c402cf253d48b05e7e17dbce415, type: 3}
-        m_TargetAssemblyTypeName: MeleeChacracter, Assembly-CSharp
+      - m_Target: {fileID: 3251223019406442410}
+        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
         m_MethodName: OnSkillThree
         m_Mode: 0
         m_Arguments:
@@ -422,6 +422,34 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &3251223019406442410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279341850644047415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60210efbceb4b1445986ea2ea47facb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
+  PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
+  SkillOneCooldown_Total: 0
+  SkillOneCooldown_Current: 0
+  SkillTwoCooldown_Total: 0
+  SkillTwoCooldown_Current: 0
+  SkillThreeCooldown_Total: 0
+  SkillThreeCooldown_Current: 0
+  CurrentHealth: 0
+  animator: {fileID: 0}
+  PV: {fileID: 0}
+  rigidbody2d: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  sortingGroup: {fileID: 0}
+  Speed: 5
+  MoveDirection: {x: 0, y: 0}
 --- !u!114 &8916884001489051343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,9 +469,9 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 3251223019406442410}
   - {fileID: 156649074218110970}
   - {fileID: 7765997010309911789}
-  - {fileID: 3251223019406442410}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -489,7 +517,13 @@ MonoBehaviour:
     Name: Speed
   - Type: 9
     SynchronizeType: 0
-    Name: Attack
+    Name: Attack_Melee
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack_Range
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack_Support
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -525,34 +559,6 @@ SortingGroup:
   m_SortingLayerID: -203460989
   m_SortingLayer: 1
   m_SortingOrder: 0
---- !u!114 &3251223019406442410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1279341850644047415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60210efbceb4b1445986ea2ea47facb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
-  PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
-  SkillOneCooldown_Total: 0
-  SkillOneCooldown_Current: 0
-  SkillTwoCooldown_Total: 0
-  SkillTwoCooldown_Current: 0
-  SkillThreeCooldown_Total: 0
-  SkillThreeCooldown_Current: 0
-  CurrentHealth: 0
-  animator: {fileID: 0}
-  PV: {fileID: 0}
-  rigidbody2d: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  sortingGroup: {fileID: 0}
-  Speed: 5
-  MoveDirection: {x: 0, y: 0}
 --- !u!1 &1279341850719893980
 GameObject:
   m_ObjectHideFlags: 0
