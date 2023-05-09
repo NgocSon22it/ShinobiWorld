@@ -25,6 +25,14 @@ public class MeleeChacracter : PlayerBase
     {
         base.FixedUpdate();
     }
+    public void Attack(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            animator.SetTrigger("Attack");
+            Debug.Log("NormalAttack");
+        }
+    }
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {

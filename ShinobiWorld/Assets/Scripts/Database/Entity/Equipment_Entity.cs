@@ -8,8 +8,8 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Equipment_Entity
     {
-        public int Id;
-        public int TypeEquipmentId;
+        public int ID;
+        public int TypeEquipmentID;
         public string Name;
         public int Health;
         public int Damage;
