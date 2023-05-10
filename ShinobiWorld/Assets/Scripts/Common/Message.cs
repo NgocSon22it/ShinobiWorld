@@ -1,29 +1,31 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Message 
 {
-    public static string NameEmpty = "Name is empty";
-    public static string NameInvalid = "Name must have 4-16 character";
+    public static string NameEmpty = "Tên trống";
+    public static string NameInvalid = "Tên phải có 4-16 ký tự";
 
-    public static string EmailEmpty = "Email is empty";
-    public static string EmailInvalid = "Email is invalid";
-    public static string EmailAlready = "Email is already";
-    public static string EmailNotExist = "Email is not exist";
-    public static string EmailMessage = "Please verify your email address \n Verification email has been sent to {0}";
+    public static string EmailEmpty = "Email trống";
+    public static string EmailInvalid = "Email không hợp lệ";
+    public static string EmailAlready = "Email đã tồn tại";
+    public static string EmailNotExist = "Email không tồn tại";
+    public static string EmailMessage = "Vui lòng xác nhận địa chỉ email \n Email xác minh đã được gửi đến {0}";
 
 
 
-    public static string PasswordEmpty = "Password is empty";
-    public static string PasswordInvalid = "Password must be at least 8 characters and mustn't be space";
-    public static string PasswordNotMatch = "Password does not match";
+    public static string PasswordEmpty = "Mật khẩu trống";
+    public static string PasswordInvalid = "Mật khẩu phải có ít nhất 8 ký tự và không được có khoảng trắng";
+    public static string PasswordNotMatch = "Mật khẩu không khớp";
 
-    public static string PasswordWrong = "Password is wrong";
+    public static string PasswordWrong = "Sai mật khẩu";
 
-    public static string VerifyEmailCanceled = "Email verification was canceled";
-    public static string VerifyEmailTooManyRequests = "TooManyRequests";
+    public static string VerifyEmailCanceled = "Xác minh email đã bị hủy";
+    public static string VerifyEmailTooManyRequests = "Quá nhiều yêu cầu";
 
-    public static string ErrorSystem = "Error system";
+    public static string ErrorSystem = "Lỗi hệ thống";
+    public static string Maxplayer = "Server quá tải!";
+    public static string Logined= "Tài khoản đang được đăng nhập trên thiết bị khác";
 
 }
