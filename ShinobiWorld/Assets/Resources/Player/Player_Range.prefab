@@ -180,8 +180,8 @@ GameObject:
   - component: {fileID: 1279341850644047402}
   - component: {fileID: 1279341850644047413}
   - component: {fileID: 1279341850644047412}
-  - component: {fileID: 7064220701377856494}
   - component: {fileID: 3251223019406442410}
+  - component: {fileID: 7064220701377856494}
   - component: {fileID: 8916884001489051343}
   - component: {fileID: 156649074218110970}
   - component: {fileID: 7765997010309911789}
@@ -312,6 +312,34 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3251223019406442410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279341850644047415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60210efbceb4b1445986ea2ea47facb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
+  PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
+  SkillOneCooldown_Total: 0
+  SkillOneCooldown_Current: 0
+  SkillTwoCooldown_Total: 0
+  SkillTwoCooldown_Current: 0
+  SkillThreeCooldown_Total: 0
+  SkillThreeCooldown_Current: 0
+  CurrentHealth: 0
+  animator: {fileID: 0}
+  PV: {fileID: 0}
+  rigidbody2d: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  sortingGroup: {fileID: 0}
+  Speed: 5
+  MoveDirection: {x: 0, y: 0}
 --- !u!114 &7064220701377856494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -372,7 +400,7 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3251223019406442410}
-        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
+        m_TargetAssemblyTypeName: RangeCharacter, Assembly-CSharp
         m_MethodName: OnSkillOne
         m_Mode: 0
         m_Arguments:
@@ -422,34 +450,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &3251223019406442410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1279341850644047415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60210efbceb4b1445986ea2ea47facb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
-  PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
-  SkillOneCooldown_Total: 0
-  SkillOneCooldown_Current: 0
-  SkillTwoCooldown_Total: 0
-  SkillTwoCooldown_Current: 0
-  SkillThreeCooldown_Total: 0
-  SkillThreeCooldown_Current: 0
-  CurrentHealth: 0
-  animator: {fileID: 0}
-  PV: {fileID: 0}
-  rigidbody2d: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  sortingGroup: {fileID: 0}
-  Speed: 5
-  MoveDirection: {x: 0, y: 0}
 --- !u!114 &8916884001489051343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,6 +524,15 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 0
     Name: Attack_Support
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill1_Melee
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill2_Melee
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill3_Melee
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
