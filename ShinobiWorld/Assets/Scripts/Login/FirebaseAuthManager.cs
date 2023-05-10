@@ -413,7 +413,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         playerCount = PhotonNetwork.CountOfPlayersOnMaster;
         Debug.Log("Number of players on master server: " + playerCount);
-
         UIManager.Instance.OpenGamePanel();
     }
    

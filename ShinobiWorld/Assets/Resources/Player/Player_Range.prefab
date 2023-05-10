@@ -324,15 +324,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60210efbceb4b1445986ea2ea47facb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TotalHealth: 0
+  CurrentHealth: 0
+  TotalChakra: 0
+  CurrentChakra: 0
   PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
+  PlayerNickName: {fileID: 0}
+  PlayerCommonUI: {fileID: 0}
   SkillOneCooldown_Total: 0
   SkillOneCooldown_Current: 0
   SkillTwoCooldown_Total: 0
   SkillTwoCooldown_Current: 0
   SkillThreeCooldown_Total: 0
   SkillThreeCooldown_Current: 0
-  CurrentHealth: 0
   animator: {fileID: 0}
   PV: {fileID: 0}
   rigidbody2d: {fileID: 0}
@@ -533,6 +538,24 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 0
     Name: Skill3_Melee
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill1_Range
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill2_Range
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill3_Range
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill1_Support
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill2_Support
+  - Type: 9
+    SynchronizeType: 0
+    Name: Skill3_Support
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -960,7 +983,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1279341851715079294}
   m_LocalRotation: {x: 0, y: 0, z: -0.0076447623, w: 0.9999708}
-  m_LocalPosition: {x: 0.29139793, y: -0.000000042944784, z: 0}
+  m_LocalPosition: {x: 0.2913979, y: -0.00000004294478, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
