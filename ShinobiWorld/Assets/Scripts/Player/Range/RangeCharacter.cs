@@ -29,7 +29,7 @@ public class RangeCharacter : PlayerBase
     {
         if (context.started)
         {
-            animator.SetTrigger("Attack_Range");
+            CallSyncAnimation("Attack_Range");
         }
     }
 

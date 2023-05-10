@@ -397,13 +397,17 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
+
         UIManager.Instance.OpenGamePanel();
     }
 
     public void OpenGameScene()
     {
+        
         PhotonNetwork.LoadLevel(Scenes.Game);
     }
+
+
     
     public void Logout()
     {
