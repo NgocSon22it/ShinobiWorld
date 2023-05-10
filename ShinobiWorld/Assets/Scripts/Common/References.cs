@@ -6,4 +6,6 @@ public class References
 {
     public static string Username = "";
     public static string UserID = "";
+
+    public static int Maxserver = 20;
 }
