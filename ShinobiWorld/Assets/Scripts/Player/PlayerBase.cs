@@ -6,14 +6,22 @@ using Cinemachine;
 using UnityEngine.Rendering;
 
 using System;
+using TMPro;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
 
+    [Header("Player Common Value")]
+    public int TotalHealth;
+    public int CurrentHealth;
+    public int TotalChakra;
+    public int CurrentChakra;
 
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerControlPrefabs;
     [SerializeField] GameObject PlayerCameraPrefabs;
+    [SerializeField] TMP_Text PlayerNickName;
+    [SerializeField] GameObject PlayerCommonUI;
     GameObject PlayerControlInstance;
     GameObject PlayerCameraInstance;
 
@@ -29,9 +37,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     //Take Damage
     private bool Hurting;
-
-    //Common 
-    public int CurrentHealth;
 
     //Enemy
     protected GameObject Enemy;
@@ -77,7 +82,10 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         SetUpInput();
         SetUpComponent();
-        CurrentHealth = 3;
+        CurrentHealth = TotalHealth;
+        CurrentChakra = TotalChakra;
+        PlayerNickName.text = PV.Owner.NickName;
+
         if (PV.IsMine)
         {
             PlayerControlInstance = Instantiate(PlayerControlPrefabs);
@@ -85,6 +93,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
             PlayerControlInstance.GetComponent<PlayerUI>().SetUpPlayer(this.gameObject);
             sortingGroup.sortingLayerName = "Me";
+            PlayerCommonUI.GetComponent<Canvas>().sortingLayerName = "Me";
         }
     }
 
@@ -92,17 +101,13 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         MoveDirection = context.ReadValue<Vector2>();
     }
- 
+
 
     public void Update()
     {
-
-
-
         animator.SetFloat("Horizontal", MoveDirection.x);
         animator.SetFloat("Vertical", MoveDirection.y);
         animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
-
     }
 
     public void FixedUpdate()
@@ -175,19 +180,32 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     public void Walk()
     {
-        
+
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
         transform.Translate(Movement * Speed * Time.fixedDeltaTime);
 
         if (Movement.x > 0)
         {
             transform.localScale = new Vector3(1, 1, 1);
+            PlayerCommonUI.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         }
         else if (Movement.x < 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
+            PlayerCommonUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
 
+    }
+
+    [PunRPC]
+    public void TriggerAnimator(string TriggerName)
+    {
+        animator.SetTrigger(TriggerName);
+    }
+
+    public void CallSyncAnimation(string TriggerName)
+    {
+        PV.RPC(nameof(TriggerAnimator), RpcTarget.AllBuffered, TriggerName);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -196,11 +214,15 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         {
             stream.SendNext(transform.position);
             stream.SendNext(MoveDirection);
+            stream.SendNext(PlayerCommonUI.GetComponent<RectTransform>().localScale);
+
+
         }
         else
         {
             realPosition = (Vector3)stream.ReceiveNext();
             MoveDirection = (Vector2)stream.ReceiveNext();
+            PlayerCommonUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
 
             //Lag compensation
             currentTime = 0.0f;
@@ -208,8 +230,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             currentPacketTime = info.SentServerTime;
             positionAtLastPacket = transform.position;
             rotationAtLastPacket = transform.rotation;
-
         }
     }
-    
+
 }

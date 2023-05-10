@@ -16,9 +16,12 @@ public class MeleeChacracter : PlayerBase
     new void Update()
     {
         base.Update();
-        SkillOne();
-        SkillTwo();
-        SkillThree();
+        if (PV.IsMine)
+        {
+            SkillOne();
+            SkillTwo();
+            SkillThree();
+        }
     }
 
     new void FixedUpdate()
@@ -28,42 +31,42 @@ public class MeleeChacracter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && PV.IsMine)
         {
-            animator.SetTrigger("Attack_Melee");
+            CallSyncAnimation("Attack_Melee");
         }
     }
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
-        if (context.started && SkillOneCooldown_Current <= 0f)
+        if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
         {
             PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillOneCooldown_Current = SkillOneCooldown_Total;
-            animator.SetTrigger("Skill1_Melee");
-
+            CallSyncAnimation("Skill1_Melee");
             Debug.Log(Enemy.name);
         }
     }
 
     public void OnSkillTwo(InputAction.CallbackContext context)
     {
-        if (context.started && SkillTwoCooldown_Current <= 0f)
+        if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
         {
             PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            animator.SetTrigger("Skill2_Melee");
+            CallSyncAnimation("Skill2_Melee");
+
             Debug.Log(Enemy.name);
         }
     }
 
     public void OnSkillThree(InputAction.CallbackContext context)
     {
-        if (context.started && SkillThreeCooldown_Current <= 0f)
+        if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
         {
             PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            animator.SetTrigger("Skill3_Melee");
+            CallSyncAnimation("Skill3_Melee");
             Debug.Log(Enemy.name);
         }
     }
