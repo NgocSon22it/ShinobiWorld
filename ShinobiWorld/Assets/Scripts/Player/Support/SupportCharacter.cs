@@ -39,6 +39,7 @@ public class SupportCharacter : PlayerBase
         {
             PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillOneCooldown_Current = SkillOneCooldown_Total;
+            animator.SetTrigger("Skill1_Support");
             Debug.Log(Enemy.name);
         }
     }
@@ -49,6 +50,7 @@ public class SupportCharacter : PlayerBase
         {
             PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
+            animator.SetTrigger("Skill2_Support");
             Debug.Log(Enemy.name);
         }
     }
@@ -59,6 +61,7 @@ public class SupportCharacter : PlayerBase
         {
             PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
+            animator.SetTrigger("Skill3_Support");
             Debug.Log(Enemy.name);
         }
     }
