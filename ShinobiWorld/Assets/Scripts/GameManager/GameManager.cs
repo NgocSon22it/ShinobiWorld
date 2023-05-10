@@ -14,6 +14,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
+        roomOptions.IsOpen = true;
+        roomOptions.BroadcastPropsChangeToAll = true;
+        PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
+    }
+
+    public override void OnJoinedRoom()
+    {
         if (PlayerManager == null && PhotonNetwork.IsConnectedAndReady)
         {
             PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerPrefabs.name), new(0, 0, 0), Quaternion.identity);
