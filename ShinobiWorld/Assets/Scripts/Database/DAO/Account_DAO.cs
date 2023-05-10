@@ -36,5 +36,51 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+        public static void ChangeStateOnline(string UserID, bool stateOnline)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE [dbo].[Account] SET [IsOnline] = @stateOnline WHERE Account.ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@stateOnline", stateOnline);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public static bool StateOnline(string UserID)
+        {
+            var isOnline = false;
+
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT [IsOnline] FROM [dbo].[Account] WHERE Account.ID = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        isOnline = Convert.ToBoolean(dr["IsOnline"]);
+                        connection.Close();
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+
+            return isOnline;
+        }
     }
 }
