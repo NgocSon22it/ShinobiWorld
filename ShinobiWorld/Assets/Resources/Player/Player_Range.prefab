@@ -331,6 +331,9 @@ MonoBehaviour:
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
   PlayerNickName: {fileID: 1095610849295450110}
   PlayerCommonUI: {fileID: 6079572822389883176}
+  AttackableLayer:
+    serializedVersion: 2
+    m_Bits: 8
   AttackPoint: {fileID: 3492982990349116334}
   SkillOneCooldown_Total: 0
   SkillOneCooldown_Current: 0
@@ -347,7 +350,10 @@ MonoBehaviour:
   playerPool: {fileID: 0}
   Speed: 5
   MoveDirection: {x: 0, y: 0}
+  CurrentHealth_UI: {fileID: 1759890541930018490}
+  CurrentChakra_UI: {fileID: 2326932750198650974}
   NormalAttackPrefabs: {fileID: 4593264165139950441, guid: c12536a09cb569e4f8cbb0e0f33145b1, type: 3}
+  AttackRange: 5
 --- !u!114 &7064220701377856494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1714,7 +1720,7 @@ GameObject:
   - component: {fileID: 8199682053695887379}
   - component: {fileID: 2326932750198650974}
   m_Layer: 0
-  m_Name: CurrentHealth
+  m_Name: CurrentChakra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1790,7 +1796,7 @@ GameObject:
   - component: {fileID: 6767288535655915078}
   - component: {fileID: 2296620274241626119}
   m_Layer: 0
-  m_Name: TotalHealth
+  m_Name: TotalChakra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

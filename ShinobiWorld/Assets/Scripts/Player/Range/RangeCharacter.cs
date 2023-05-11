@@ -4,11 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 public class RangeCharacter : PlayerBase
 {
     [SerializeField] GameObject NormalAttackPrefabs;
 
+    [SerializeField] float AttackRange;
+    bool IsDetectEnemy;
     new void Start()
     {
         base.Start();
@@ -90,22 +93,38 @@ public class RangeCharacter : PlayerBase
     public void Spawn_Darts()
     {
         GameObject normalAttack = playerPool.GetNormalAttackFromPool();
-        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
 
-        Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
-        direction.Normalize();
+        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
 
-        if (normalAttack != null)
+        if (Enemy != null)
         {
-            normalAttack.transform.position = AttackPoint.position;
-            normalAttack.transform.rotation = AttackPoint.rotation;
-            normalAttack.SetActive(true);
-            normalAttack.GetComponent<Rigidbody2D>().AddForce(direction * 500);
+            FlipToEnemy();
+            Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
+            direction.Normalize();
+
+            if (normalAttack != null)
+            {
+                normalAttack.transform.position = AttackPoint.position;
+                normalAttack.transform.rotation = AttackPoint.rotation;
+                normalAttack.SetActive(true);
+                normalAttack.GetComponent<Rigidbody2D>().AddForce(direction * 500);
+            }
         }
-
-
-
-
+        else
+        {
+            if (normalAttack != null)
+            {
+                normalAttack.transform.position = AttackPoint.position;
+                normalAttack.transform.rotation = AttackPoint.rotation;
+                normalAttack.SetActive(true);
+                normalAttack.GetComponent<Rigidbody2D>().AddForce(500 * new Vector2(transform.localScale.x,0));
+            }
+        }
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, AttackRange);
+    }
 }

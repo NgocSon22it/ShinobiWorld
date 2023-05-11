@@ -1,11 +1,14 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class MeleeChacracter : PlayerBase
 {
+
+    [SerializeField] float AttackRange;
     // Start is called before the first frame update
     new void Start()
     {
@@ -88,5 +91,26 @@ public class MeleeChacracter : PlayerBase
         {
             SkillThreeCooldown_Current -= Time.deltaTime;
         }
+    }
+    public void DamageNormalAttack()
+    {
+        Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, AttackableLayer);
+
+        if (HitEnemy != null)
+        {
+            foreach (Collider2D Enemy in HitEnemy)
+            {
+                if (Enemy.gameObject.CompareTag("Enemy"))
+                {
+                    Debug.Log(Enemy.name);
+                }
+            }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(AttackPoint.position, AttackRange);
     }
 }
