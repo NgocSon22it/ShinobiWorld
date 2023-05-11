@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 
 public class SupportCharacter : PlayerBase
 {
+    [SerializeField] protected Vector2 DetectGroundVector;
+
+
     new void Start()
     {
         base.Start();
@@ -37,10 +40,8 @@ public class SupportCharacter : PlayerBase
     {
         if (context.started && SkillOneCooldown_Current <= 0f)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillOneCooldown_Current = SkillOneCooldown_Total;
             animator.SetTrigger("Skill1_Support");
-            Debug.Log(Enemy.name);
         }
     }
 
@@ -48,10 +49,8 @@ public class SupportCharacter : PlayerBase
     {
         if (context.started && SkillTwoCooldown_Current <= 0f)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
             animator.SetTrigger("Skill2_Support");
-            Debug.Log(Enemy.name);
         }
     }
 
@@ -59,10 +58,8 @@ public class SupportCharacter : PlayerBase
     {
         if (context.started && SkillThreeCooldown_Current <= 0f)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
             animator.SetTrigger("Skill3_Support");
-            Debug.Log(Enemy.name);
         }
     }
 
@@ -88,5 +85,29 @@ public class SupportCharacter : PlayerBase
         {
             SkillThreeCooldown_Current -= Time.deltaTime;
         }
+    }
+
+    public void NormalAttackDamage()
+    {
+        RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
+
+        if (HitEnemy != null)
+        {
+            foreach (RaycastHit2D Enemy in HitEnemy)
+            {
+                if (Enemy.transform.CompareTag("Enemy"))
+                {
+                    Debug.Log(Enemy.transform.name);
+                }
+            }
+        }
+    }
+
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawCube(AttackPoint.position - AttackPoint.up * 0, DetectGroundVector);
     }
 }

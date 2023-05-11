@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &523658245179995300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8699623757859872075}
+  m_Layer: 0
+  m_Name: AttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8699623757859872075
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523658245179995300}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.924, y: -0.213, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1231443374405932950}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1113039578690195481
 GameObject:
   m_ObjectHideFlags: 0
@@ -1169,6 +1200,7 @@ Transform:
   m_Children:
   - {fileID: 1231443372386269981}
   - {fileID: 8295204215578915360}
+  - {fileID: 8699623757859872075}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1286,14 +1318,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fffd9395a75a9044864014850e37da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TotalHealth: 0
-  CurrentHealth: 0
-  TotalChakra: 0
-  CurrentChakra: 0
   PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
   PlayerNickName: {fileID: 3132869706471276629}
   PlayerCommonUI: {fileID: 7415619858307498309}
+  AttackableLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  AttackPoint: {fileID: 8699623757859872075}
   SkillOneCooldown_Total: 0
   SkillOneCooldown_Current: 0
   SkillTwoCooldown_Total: 0
@@ -1305,8 +1337,13 @@ MonoBehaviour:
   rigidbody2d: {fileID: 0}
   spriteRenderer: {fileID: 0}
   sortingGroup: {fileID: 0}
+  playerInput: {fileID: 0}
+  playerPool: {fileID: 0}
   Speed: 5
   MoveDirection: {x: 0, y: 0}
+  CurrentHealth_UI: {fileID: 2045323604761823287}
+  CurrentChakra_UI: {fileID: 6878412624691589832}
+  DetectGroundVector: {x: 2, y: 1}
 --- !u!114 &7124398666399494739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1550,8 +1587,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1231443374405932938}
   m_Enabled: 1
-  m_SortingLayerID: -203460989
-  m_SortingLayer: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!1 &1586681474361565068
 GameObject:
@@ -1687,7 +1724,7 @@ GameObject:
   - component: {fileID: 498432197792618629}
   - component: {fileID: 6878412624691589832}
   m_Layer: 0
-  m_Name: CurrentHealth
+  m_Name: CurrentChakra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1877,7 +1914,7 @@ GameObject:
   - component: {fileID: 4759855784493769036}
   - component: {fileID: 721993236887174725}
   m_Layer: 0
-  m_Name: TotalHealth
+  m_Name: TotalChakra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

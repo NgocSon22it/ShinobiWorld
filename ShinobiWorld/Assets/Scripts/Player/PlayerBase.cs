@@ -4,18 +4,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using UnityEngine.Rendering;
-
-using System;
 using TMPro;
+using UnityEngine.UI;
+using Photon.Realtime;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
 
-    [Header("Player Common Value")]
-    public int TotalHealth;
-    public int CurrentHealth;
-    public int TotalChakra;
-    public int CurrentChakra;
+    [Header("Player Entity")]
+    public Account_Entity PlayerEntity = new Account_Entity();
+    int CurrentHealth, CurrentChakra;
 
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerControlPrefabs;
@@ -24,6 +22,11 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     [SerializeField] GameObject PlayerCommonUI;
     GameObject PlayerControlInstance;
     GameObject PlayerCameraInstance;
+
+    [SerializeField] public LayerMask AttackableLayer;
+
+    //Attack
+    [SerializeField] public Transform AttackPoint;
 
     //Skill
     public float SkillOneCooldown_Total;
@@ -47,12 +50,20 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public Rigidbody2D rigidbody2d;
     public SpriteRenderer spriteRenderer;
     public SortingGroup sortingGroup;
+    public PlayerInput playerInput;
+
+    //Script Component
+    public PlayerPool playerPool;
 
     //Player Input
-    PlayerInput playerInput;
     [SerializeField] float Speed;
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
+    bool FacingRight = true;
+
+    //Health UI
+    [SerializeField] Image CurrentHealth_UI;
+    [SerializeField] Image CurrentChakra_UI;
 
 
     Vector3 realPosition;
@@ -63,11 +74,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     Vector3 positionAtLastPacket = Vector3.zero;
     Quaternion rotationAtLastPacket = Quaternion.identity;
 
-    public void SetUpInput()
-    {
-        playerInput = GetComponent<PlayerInput>();
-
-    }
 
     public void SetUpComponent()
     {
@@ -76,14 +82,23 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         rigidbody2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         sortingGroup = GetComponent<SortingGroup>();
+        playerInput = GetComponent<PlayerInput>();
+        playerPool = GetComponent<PlayerPool>();
     }
 
     public void Start()
     {
-        SetUpInput();
         SetUpComponent();
-        CurrentHealth = TotalHealth;
-        CurrentChakra = TotalChakra;
+        PlayerEntity.Health = 10;
+        PlayerEntity.Charka= 10;
+        CurrentChakra = 1;
+        CurrentHealth = 5;
+
+        LoadPlayerUI();
+
+        InvokeRepeating(nameof(RegenHealth), 1f, 2f);
+        InvokeRepeating(nameof(RegenChakra), 1f, 2f);
+
         PlayerNickName.text = PV.Owner.NickName;
 
         if (PV.IsMine)
@@ -95,13 +110,40 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             sortingGroup.sortingLayerName = "Me";
             PlayerCommonUI.GetComponent<Canvas>().sortingLayerName = "Me";
         }
+        else
+        {
+            sortingGroup.sortingLayerName = "Other";
+            PlayerCommonUI.GetComponent<Canvas>().sortingLayerName = "Other";
+        }
+    }
+
+    public void RegenHealth()
+    {
+        if(CurrentHealth < PlayerEntity.Health)
+        {
+            CurrentHealth += 1;
+            LoadPlayerUI();
+        }
+    }
+    public void RegenChakra()
+    {
+        if (CurrentChakra < PlayerEntity.Charka)
+        {
+            CurrentChakra += 1;
+            LoadPlayerUI();
+        }
+    }
+
+    public void LoadPlayerUI()
+    {
+        CurrentChakra_UI.fillAmount = (float)CurrentChakra / (float)PlayerEntity.Charka;
+        CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)PlayerEntity.Health;
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
         MoveDirection = context.ReadValue<Vector2>();
     }
-
 
     public void Update()
     {
@@ -134,6 +176,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         CurrentHealth -= Damage;
         StartCoroutine(DamageAnimation());
         PlayerCameraInstance.GetComponent<PlayerCamera>().StartShakeScreen(3, 3, 1);
+
         if (CurrentHealth <= 0)
         {
             Debug.Log("Die");
@@ -156,7 +199,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     }
 
     [PunRPC]
-    public void FindClostestEnemy()
+    public void FindClostestEnemy(int Range)
     {
         float distanceToClosestEnemy = Mathf.Infinity;
         GameObject closestEnemy = null;
@@ -166,36 +209,61 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         foreach (GameObject currentEnemy in allEnemy)
         {
             float distanceToEnemy = (currentEnemy.transform.position - this.transform.position).sqrMagnitude;
-            if (distanceToEnemy < distanceToClosestEnemy)
+            if (distanceToEnemy < distanceToClosestEnemy && Vector2.Distance(currentEnemy.transform.position, transform.position) <= Range)
             {
                 distanceToClosestEnemy = distanceToEnemy;
                 closestEnemy = currentEnemy;
             }
         }
-        if (closestEnemy != null)
-        {
-            Enemy = closestEnemy;
-        }
+
+        Enemy = closestEnemy;
     }
 
     public void Walk()
     {
-
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
         transform.Translate(Movement * Speed * Time.fixedDeltaTime);
 
-        if (Movement.x > 0)
+        if (Movement.x > 0 && !FacingRight)
+        {
+            Flip();
+        }
+        else if (Movement.x < 0 && FacingRight)
+        {
+            Flip();
+        }
+    }
+    public void Flip()
+    {
+        FacingRight = !FacingRight;
+        if (FacingRight)
         {
             transform.localScale = new Vector3(1, 1, 1);
             PlayerCommonUI.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         }
-        else if (Movement.x < 0)
+        else
         {
             transform.localScale = new Vector3(-1, 1, 1);
             PlayerCommonUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
-
     }
+
+
+    public void FlipToEnemy()
+    {
+        if (Enemy != null)
+        {
+            if (Enemy.transform.position.x > AttackPoint.position.x && !FacingRight)
+            {
+                Flip();
+            }
+            else if (Enemy.transform.position.x < AttackPoint.position.x && FacingRight)
+            {
+                Flip();
+            }
+        }
+    }
+
 
     [PunRPC]
     public void TriggerAnimator(string TriggerName)
@@ -215,8 +283,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             stream.SendNext(transform.position);
             stream.SendNext(MoveDirection);
             stream.SendNext(PlayerCommonUI.GetComponent<RectTransform>().localScale);
-
-
         }
         else
         {
