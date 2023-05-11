@@ -41,10 +41,9 @@ public class MeleeChacracter : PlayerBase
     {
         if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
+
             SkillOneCooldown_Current = SkillOneCooldown_Total;
             CallSyncAnimation("Skill1_Melee");
-            Debug.Log(Enemy.name);
         }
     }
 
@@ -52,11 +51,9 @@ public class MeleeChacracter : PlayerBase
     {
         if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
             CallSyncAnimation("Skill2_Melee");
 
-            Debug.Log(Enemy.name);
         }
     }
 
@@ -64,10 +61,8 @@ public class MeleeChacracter : PlayerBase
     {
         if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
             CallSyncAnimation("Skill3_Melee");
-            Debug.Log(Enemy.name);
         }
     }
 
