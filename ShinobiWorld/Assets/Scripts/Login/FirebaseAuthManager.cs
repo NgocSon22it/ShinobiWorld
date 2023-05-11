@@ -7,6 +7,7 @@ using TMPro;
 using Assets.Scripts.Database.DAO;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -15,6 +16,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     public DependencyStatus dependencyStatus;
     public FirebaseAuth auth;
     public FirebaseUser user;
+
+    private int playerCount;
 
     private void Start()
     {
@@ -189,6 +192,17 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     References.UserID = user.UserId;
                  
                     PhotonNetwork.NickName = user.DisplayName; //Set name user
+
+                    var isOnline = Account_DAO.StateOnline(user.UserId);
+
+                    if (isOnline)
+                    {
+                        UIManager.Instance.OpenPopupPanel(Message.Logined);
+                    } else
+                    {
+                        Account_DAO.ChangeStateOnline(user.UserId, true);
+                    }
+
                     PhotonNetwork.ConnectUsingSettings(); //Connect server photon
                 }
                 else
@@ -397,23 +411,27 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-
+        playerCount = PhotonNetwork.CountOfPlayersOnMaster;
+        Debug.Log("Number of players on master server: " + playerCount);
         UIManager.Instance.OpenGamePanel();
     }
-
+   
     public void OpenGameScene()
-    {
-        
-        PhotonNetwork.LoadLevel(Scenes.Game);
+    {  
+        if(playerCount > 0 && playerCount < 20 )
+        {
+            PhotonNetwork.LoadLevel(Scenes.Game);
+        } else {
+            UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
+        }
     }
-
-
     
     public void Logout()
     {
         if(auth != null && user != null)
         {
             auth.SignOut();
+            Account_DAO.ChangeStateOnline(user.UserId, true);
             PhotonNetwork.Disconnect();
         }
     }
