@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine.InputSystem;
 
 public class RangeCharacter : PlayerBase
 {
+    [SerializeField] GameObject NormalAttackPrefabs;
+
     new void Start()
     {
         base.Start();
@@ -27,7 +30,7 @@ public class RangeCharacter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && PV.IsMine)
         {
             CallSyncAnimation("Attack_Range");
         }
@@ -35,34 +38,28 @@ public class RangeCharacter : PlayerBase
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
-        if (context.started && SkillOneCooldown_Current <= 0f)
+        if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillOneCooldown_Current = SkillOneCooldown_Total;
             animator.SetTrigger("Skill1_Range");
-            Debug.Log(Enemy.name);
         }
     }
 
     public void OnSkillTwo(InputAction.CallbackContext context)
     {
-        if (context.started && SkillTwoCooldown_Current <= 0f)
+        if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
             animator.SetTrigger("Skill2_Range");
-            Debug.Log(Enemy.name);
         }
     }
 
     public void OnSkillThree(InputAction.CallbackContext context)
     {
-        if (context.started && SkillThreeCooldown_Current <= 0f)
+        if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
             animator.SetTrigger("Skill3_Range");
-            Debug.Log(Enemy.name);
         }
     }
 
@@ -88,6 +85,27 @@ public class RangeCharacter : PlayerBase
         {
             SkillThreeCooldown_Current -= Time.deltaTime;
         }
+    }
+
+    public void Spawn_Darts()
+    {
+        GameObject normalAttack = playerPool.GetNormalAttackFromPool();
+        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
+
+        Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
+        direction.Normalize();
+
+        if (normalAttack != null)
+        {
+            normalAttack.transform.position = AttackPoint.position;
+            normalAttack.transform.rotation = AttackPoint.rotation;
+            normalAttack.SetActive(true);
+            normalAttack.GetComponent<Rigidbody2D>().AddForce(direction * 500);
+        }
+
+
+
+
     }
 
 }
