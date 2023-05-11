@@ -4,18 +4,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using UnityEngine.Rendering;
-
-using System;
 using TMPro;
-using static UnityEngine.EventSystems.EventTrigger;
+using UnityEngine.UI;
+using Photon.Realtime;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
 
     [Header("Player Entity")]
-    public Account_Entity PlayerEntity;
+    public Account_Entity PlayerEntity = new Account_Entity();
     int CurrentHealth, CurrentChakra;
-
 
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerControlPrefabs;
@@ -24,6 +22,8 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     [SerializeField] GameObject PlayerCommonUI;
     GameObject PlayerControlInstance;
     GameObject PlayerCameraInstance;
+
+    [SerializeField] public LayerMask AttackableLayer;
 
     //Attack
     [SerializeField] public Transform AttackPoint;
@@ -61,6 +61,10 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     Vector3 Movement;
     bool FacingRight = true;
 
+    //Health UI
+    [SerializeField] Image CurrentHealth_UI;
+    [SerializeField] Image CurrentChakra_UI;
+
 
     Vector3 realPosition;
     Quaternion realRotation;
@@ -85,6 +89,15 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public void Start()
     {
         SetUpComponent();
+        PlayerEntity.Health = 10;
+        PlayerEntity.Charka= 10;
+        CurrentChakra = 1;
+        CurrentHealth = 5;
+
+        LoadPlayerUI();
+
+        InvokeRepeating(nameof(RegenHealth), 1f, 2f);
+        InvokeRepeating(nameof(RegenChakra), 1f, 2f);
 
         PlayerNickName.text = PV.Owner.NickName;
 
@@ -102,6 +115,29 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             sortingGroup.sortingLayerName = "Other";
             PlayerCommonUI.GetComponent<Canvas>().sortingLayerName = "Other";
         }
+    }
+
+    public void RegenHealth()
+    {
+        if(CurrentHealth < PlayerEntity.Health)
+        {
+            CurrentHealth += 1;
+            LoadPlayerUI();
+        }
+    }
+    public void RegenChakra()
+    {
+        if (CurrentChakra < PlayerEntity.Charka)
+        {
+            CurrentChakra += 1;
+            LoadPlayerUI();
+        }
+    }
+
+    public void LoadPlayerUI()
+    {
+        CurrentChakra_UI.fillAmount = (float)CurrentChakra / (float)PlayerEntity.Charka;
+        CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)PlayerEntity.Health;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -163,7 +199,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     }
 
     [PunRPC]
-    public void FindClostestEnemy()
+    public void FindClostestEnemy(int Range)
     {
         float distanceToClosestEnemy = Mathf.Infinity;
         GameObject closestEnemy = null;
@@ -173,16 +209,14 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         foreach (GameObject currentEnemy in allEnemy)
         {
             float distanceToEnemy = (currentEnemy.transform.position - this.transform.position).sqrMagnitude;
-            if (distanceToEnemy < distanceToClosestEnemy)
+            if (distanceToEnemy < distanceToClosestEnemy && Vector2.Distance(currentEnemy.transform.position, transform.position) <= Range)
             {
                 distanceToClosestEnemy = distanceToEnemy;
                 closestEnemy = currentEnemy;
             }
         }
-        if (closestEnemy != null)
-        {
-            Enemy = closestEnemy;
-        }
+
+        Enemy = closestEnemy;
     }
 
     public void Walk()
@@ -213,6 +247,8 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             PlayerCommonUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
     }
+
+
     public void FlipToEnemy()
     {
         if (Enemy != null)
@@ -227,6 +263,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             }
         }
     }
+
 
     [PunRPC]
     public void TriggerAnimator(string TriggerName)

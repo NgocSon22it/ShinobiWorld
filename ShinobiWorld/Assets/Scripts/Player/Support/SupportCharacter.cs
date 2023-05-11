@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 
 public class SupportCharacter : PlayerBase
 {
+    [SerializeField] protected Vector2 DetectGroundVector;
+
+
     new void Start()
     {
         base.Start();
@@ -82,5 +85,29 @@ public class SupportCharacter : PlayerBase
         {
             SkillThreeCooldown_Current -= Time.deltaTime;
         }
+    }
+
+    public void NormalAttackDamage()
+    {
+        RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
+
+        if (HitEnemy != null)
+        {
+            foreach (RaycastHit2D Enemy in HitEnemy)
+            {
+                if (Enemy.transform.CompareTag("Enemy"))
+                {
+                    Debug.Log(Enemy.transform.name);
+                }
+            }
+        }
+    }
+
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawCube(AttackPoint.position - AttackPoint.up * 0, DetectGroundVector);
     }
 }
