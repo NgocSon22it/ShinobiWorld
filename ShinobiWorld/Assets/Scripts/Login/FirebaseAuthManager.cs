@@ -81,6 +81,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             {
                 References.Username = user.DisplayName;
                 PhotonNetwork.NickName = user.DisplayName;
+                Account_DAO.ChangeStateOnline(user.UserId, true);
                 PhotonNetwork.ConnectUsingSettings();
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
             }
@@ -200,10 +201,9 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                         UIManager.Instance.OpenPopupPanel(Message.Logined);
                     } else
                     {
-                        Account_DAO.ChangeStateOnline(user.UserId, true);
-                    }
-
-                    PhotonNetwork.ConnectUsingSettings(); //Connect server photon
+                        Account_DAO.ChangeStateOnline(user.UserId, true); 
+                        PhotonNetwork.ConnectUsingSettings(); //Connect server photon
+                    } 
                 }
                 else
                 {
