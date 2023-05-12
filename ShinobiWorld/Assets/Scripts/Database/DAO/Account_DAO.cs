@@ -19,17 +19,16 @@ namespace Assets.Scripts.Database.DAO
             {
                 SqlCommand cmd = connection.CreateCommand();
                 cmd.CommandText =   "INSERT INTO [Account] ([ID],[RoleInGameID],[TrophiesID],[Level],[Health],[Charka],[Exp],[Speed],[Coin],[Power],[Strength]," +
-                                                            "[EyeID],[HairID],[FaceID],[SkinID],[ColorID],[IsDead],[IsOnline],[IsTicket],[Delete])" +
+                                                            "[EyeID],[HairID],[MouthID],[SkinID],[IsDead],[IsOnline],[IsTicket],[Delete])" +
                                     "VALUES (@UserID,@RoleInGameID,@TrophiesID,1,100,100,0,5,0,0,100," +
-                                            "@EyeID,@HairID,@FaceID,@SkinID,@ColorID,0,0,0,0)";
+                                            "@EyeID,@HairID,@MouthID,@SkinID,0,0,0,0)";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@RoleInGameID", 1);
                 cmd.Parameters.AddWithValue("@TrophiesID", 1);
                 cmd.Parameters.AddWithValue("@EyeID", 1);
                 cmd.Parameters.AddWithValue("@HairID", 1);
-                cmd.Parameters.AddWithValue("@FaceID", 1);
+                cmd.Parameters.AddWithValue("@MouthID", 1);
                 cmd.Parameters.AddWithValue("@SkinID", 1);
-                cmd.Parameters.AddWithValue("@ColorID", 1);
 
                 connection.Open();
                 cmd.ExecuteNonQuery();
