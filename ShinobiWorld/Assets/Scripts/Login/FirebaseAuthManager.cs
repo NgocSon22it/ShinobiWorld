@@ -6,14 +6,18 @@ using Firebase.Auth;
 using TMPro;
 using Assets.Scripts.Database.DAO;
 using Photon.Pun;
+using Photon.Realtime;
+using System.Collections.Generic;
 
-public class FirebaseAuthManager : MonoBehaviour
+public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
     // Firebase variable
     [Header("Firebase")]
     public DependencyStatus dependencyStatus;
     public FirebaseAuth auth;
     public FirebaseUser user;
+
+    private int playerCount;
 
     private void Start()
     {
@@ -76,8 +80,10 @@ public class FirebaseAuthManager : MonoBehaviour
             if (user.IsEmailVerified)
             {
                 References.Username = user.DisplayName;
+                PhotonNetwork.NickName = user.DisplayName;
+                Account_DAO.ChangeStateOnline(user.UserId, true);
+                PhotonNetwork.ConnectUsingSettings();
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
-                UIManager.Instance.OpenGamePanel();
             }
             else
             {
@@ -185,7 +191,19 @@ public class FirebaseAuthManager : MonoBehaviour
                 {
                     References.Username = user.DisplayName;
                     References.UserID = user.UserId;
-                    UIManager.Instance.OpenGamePanel();
+                 
+                    PhotonNetwork.NickName = user.DisplayName; //Set name user
+
+                    var isOnline = Account_DAO.StateOnline(user.UserId);
+
+                    if (isOnline)
+                    {
+                        UIManager.Instance.OpenPopupPanel(Message.Logined);
+                    } else
+                    {
+                        Account_DAO.ChangeStateOnline(user.UserId, true); 
+                        PhotonNetwork.ConnectUsingSettings(); //Connect server photon
+                    } 
                 }
                 else
                 {
@@ -391,16 +409,29 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
-    public void OpenGameScene()
+    public override void OnConnectedToMaster()
     {
-        PhotonNetwork.LoadLevel(Scenes.Game);
+        playerCount = PhotonNetwork.CountOfPlayersOnMaster;
+        Debug.Log("Number of players on master server: " + playerCount);
+        UIManager.Instance.OpenGamePanel();
     }
-
+   
+    public void OpenGameScene()
+    {  
+        if(playerCount > 0 && playerCount < 20 )
+        {
+            PhotonNetwork.LoadLevel(Scenes.Game);
+        } else {
+            UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
+        }
+    }
+    
     public void Logout()
     {
         if(auth != null && user != null)
         {
             auth.SignOut();
+            Account_DAO.ChangeStateOnline(user.UserId, true);
             PhotonNetwork.Disconnect();
         }
     }

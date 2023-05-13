@@ -1,11 +1,14 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class MeleeChacracter : PlayerBase
 {
+
+    [SerializeField] float AttackRange;
     // Start is called before the first frame update
     new void Start()
     {
@@ -16,9 +19,12 @@ public class MeleeChacracter : PlayerBase
     new void Update()
     {
         base.Update();
-        SkillOne();
-        SkillTwo();
-        SkillThree();
+        if (PV.IsMine)
+        {
+            SkillOne();
+            SkillTwo();
+            SkillThree();
+        }
     }
 
     new void FixedUpdate()
@@ -28,39 +34,38 @@ public class MeleeChacracter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && PV.IsMine)
         {
-            animator.SetTrigger("Attack_Melee");
+            CallSyncAnimation("Attack_Melee");
         }
     }
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
-        if (context.started && SkillOneCooldown_Current <= 0f)
+        if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
+
             SkillOneCooldown_Current = SkillOneCooldown_Total;
-            Debug.Log(Enemy.name);
+            CallSyncAnimation("Skill1_Melee");
         }
     }
 
     public void OnSkillTwo(InputAction.CallbackContext context)
     {
-        if (context.started && SkillTwoCooldown_Current <= 0f)
+        if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            Debug.Log(Enemy.name);
+            CallSyncAnimation("Skill2_Melee");
+
         }
     }
 
     public void OnSkillThree(InputAction.CallbackContext context)
     {
-        if (context.started && SkillThreeCooldown_Current <= 0f)
+        if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
         {
-            PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered);
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            Debug.Log(Enemy.name);
+            CallSyncAnimation("Skill3_Melee");
         }
     }
 
@@ -86,5 +91,26 @@ public class MeleeChacracter : PlayerBase
         {
             SkillThreeCooldown_Current -= Time.deltaTime;
         }
+    }
+    public void DamageNormalAttack()
+    {
+        Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, AttackableLayer);
+
+        if (HitEnemy != null)
+        {
+            foreach (Collider2D Enemy in HitEnemy)
+            {
+                if (Enemy.gameObject.CompareTag("Enemy"))
+                {
+                    Enemy.GetComponent<Enemy>().TakeDamage(10);
+                }
+            }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(AttackPoint.position, AttackRange);
     }
 }
