@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.Entity
 {
-    public class Face_Entity
+    public class Mouth_Entity
     {
         public int ID;
         public string Name;
         public string Image;
         public bool Delete;
 
-        public Face_Entity()
+        public Mouth_Entity()
         {
         }
     }
