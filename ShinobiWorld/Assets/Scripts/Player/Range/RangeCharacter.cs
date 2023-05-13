@@ -44,7 +44,7 @@ public class RangeCharacter : PlayerBase
         if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
         {
             SkillOneCooldown_Current = SkillOneCooldown_Total;
-            animator.SetTrigger("Skill1_Range");
+            CallSyncAnimation("Skill1_Range");
         }
     }
 
@@ -53,7 +53,7 @@ public class RangeCharacter : PlayerBase
         if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
         {
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            animator.SetTrigger("Skill2_Range");
+            CallSyncAnimation("Skill2_Range");
         }
     }
 
@@ -62,7 +62,7 @@ public class RangeCharacter : PlayerBase
         if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
         {
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            animator.SetTrigger("Skill3_Range");
+            CallSyncAnimation("Skill3_Range");
         }
     }
 
@@ -119,6 +119,75 @@ public class RangeCharacter : PlayerBase
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().AddForce(500 * new Vector2(transform.localScale.x,0));
             }
+        }
+    }
+
+    public void SpawnBigDarts()
+    {
+        GameObject skillOne = playerPool.GetSkillOneFromPool();
+
+        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+
+        if (Enemy != null)
+        {
+            FlipToEnemy();
+            Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
+            direction.Normalize();
+
+            if (skillOne != null)
+            {
+                skillOne.transform.position = AttackPoint.position;
+                skillOne.transform.rotation = AttackPoint.rotation;
+                skillOne.SetActive(true);
+                skillOne.GetComponent<Rigidbody2D>().AddForce(direction * 500);
+            }
+        }
+        else
+        {
+            if (skillOne != null)
+            {
+                skillOne.transform.position = AttackPoint.position;
+                skillOne.transform.rotation = AttackPoint.rotation;
+                skillOne.SetActive(true);
+                skillOne.GetComponent<Rigidbody2D>().AddForce(500 * new Vector2(transform.localScale.x, 0));
+            }
+        }
+    }
+
+    public void SpawnThreeDarts()
+    {
+
+        List<GameObject> list = new List<GameObject>();
+
+        for(int i = 0; i < 3; i++)
+        {
+            list[i] = playerPool.GetSkillTwoFromPool();
+        }
+
+        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+
+        if (Enemy != null)
+        {
+            FlipToEnemy();
+            Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
+            direction.Normalize();
+
+            if (list.Count == 3)
+            {
+                foreach(GameObject obj in list)
+                {
+                    obj.transform.position = AttackPoint.position;
+                    obj.transform.rotation = AttackPoint.rotation;
+                    obj.SetActive(true);
+                }
+
+                list[0].GetComponent<Rigidbody2D>().AddForce(direction * 500);
+
+            }
+        }
+        else
+        {
+
         }
     }
 
