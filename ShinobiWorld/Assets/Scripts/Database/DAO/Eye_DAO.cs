@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class Eye_DAO 
 {
-    static string ConnectionStr = new ShinobiWorldConnect().GetConnectShinobiWorld();
+    static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
     public static Eye_Enity GetEyeByID(int EyeID)
     {
@@ -22,18 +22,15 @@ public static class Eye_DAO
                 DataTable dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-
                 foreach (DataRow dr in dataTable.Rows)
                 {
-                    Eye_Enity a = new Eye_Enity
+                    var obj = new Eye_Enity
                     {
                         ID = Convert.ToInt32(dr["ID"]),
-                        Name = dr["Name"].ToString(),
-                        Image = dr["Image"].ToString(),
-                        Delete = Convert.ToBoolean(dr["Delete"])
+                        Image = dr["Image"].ToString()
                     };
                     connection.Close();
-                    return a;
+                    return obj;
                 }
             }
             finally
@@ -44,5 +41,39 @@ public static class Eye_DAO
         }
 
         return null;
+    }
+
+    public static List<Eye_Enity> GetAll()
+    {
+        var list = new List<Eye_Enity>();
+        using (SqlConnection connection = new SqlConnection(ConnectionStr))
+        {
+            try
+            {
+                connection.Open();
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Select * from Eye where [Delete] = 0";
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dataTable = new DataTable();
+                adapter.Fill(dataTable);
+
+
+                foreach (DataRow dr in dataTable.Rows)
+                {
+                    var obj = new Eye_Enity
+                    {
+                        ID = Convert.ToInt32(dr["ID"]),
+                        Image = dr["Image"].ToString()
+                    };
+                    list.Add(obj);
+                }
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        return list;
     }
 }
