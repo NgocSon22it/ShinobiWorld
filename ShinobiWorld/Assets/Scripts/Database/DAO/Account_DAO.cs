@@ -11,7 +11,7 @@ namespace Assets.Scripts.Database.DAO
 {
     public static class Account_DAO
     {
-        static string ConnectionStr = new ShinobiWorldConnect().GetConnectShinobiWorld();
+        static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
         public static void CreateAccount(string UserID)
         {
