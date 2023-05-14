@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using static UnityEngine.InputManagerEntry;
 
 namespace Assets.Scripts.Database.DAO
 {
@@ -78,8 +79,84 @@ namespace Assets.Scripts.Database.DAO
                 }
 
             }
-
             return isOnline;
+        }
+
+        public static void SaveLayout(string UserID, int RoleInGameID, int EyeID, int HairID, int MouthID, int SkinID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText =   "UPDATE [dbo].[Account]   " +
+                                    "SET [RoleInGameID] = @RoleInGameID," +
+                                    "[EyeID]   = @EyeID," +
+                                    "[HairID]  = @HairID," +
+                                    "[MouthID] = @MouthID," +
+                                    "[SkinID]  = @SkinID " +
+                                    "WHERE ID  = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@RoleInGameID", RoleInGameID);
+                cmd.Parameters.AddWithValue("@EyeID", EyeID);
+                cmd.Parameters.AddWithValue("@HairID", HairID);
+                cmd.Parameters.AddWithValue("@MouthID", MouthID);
+                cmd.Parameters.AddWithValue("@SkinID", SkinID);
+
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public static Account_Entity GetAccountByID(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM [dbo].[Account] WHERE ID = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        var obj = new Account_Entity
+                        {
+                            ID = dr["ID"].ToString(),
+                            RoleInGameID    = Convert.ToInt32(dr["RoleInGameID"]),
+                            TrophiesID      = Convert.ToInt32(dr["TrophiesID"]),
+                            Level           = Convert.ToInt32(dr["Level"]),
+                            Health          = Convert.ToInt32(dr["Health"]),
+                            Charka          = Convert.ToInt32(dr["Charka"]),
+                            Exp             = Convert.ToInt32(dr["Exp"]),
+                            Speed           = Convert.ToInt32(dr["Speed"]),
+                            Coin            = Convert.ToInt32(dr["Coin"]),
+                            Power           = Convert.ToInt32(dr["Power"]),
+                            Strength        = Convert.ToInt32(dr["Strength"]),
+                            EyeID           = Convert.ToInt32(dr["EyeID"]),
+                            HairID          = Convert.ToInt32(dr["HairID"]),
+                            MouthID         = Convert.ToInt32(dr["MouthID"]),
+                            SkinID          = Convert.ToInt32(dr["SkinID"]),
+                            IsDead          = Convert.ToBoolean(dr["IsDead"]),
+                            IsOnline        = Convert.ToBoolean(dr["IsOnline"]),
+                            IsTicket        = Convert.ToBoolean(dr["IsTicket"]),
+                            Delete          = Convert.ToBoolean(dr["Delete"])
+                        };
+                        connection.Close();
+                        return obj;
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+
+            return null;
         }
     }
 }
