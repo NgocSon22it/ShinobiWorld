@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Scenes 
 {
-    public static string Game = "Game";
-    public static string Login = "Login";
-    public static string MainMenu = "MainMenu";
+    public static string Game       = "Game";
+    public static string Login      = "Login";
+    public static string MainMenu   = "MainMenu";
+    public static string Creator    = "Creator";
 }
