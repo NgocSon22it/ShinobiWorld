@@ -21,9 +21,9 @@ namespace Assets.Scripts.Database.DAO
             {
                 SqlCommand cmd = connection.CreateCommand();
                 cmd.CommandText =   "INSERT INTO [Account] ([ID],[RoleInGameID],[TrophiesID],[Level],[Health],[Charka],[Exp],[Speed],[Coin],[Power],[Strength]," +
-                                                            "[EyeID],[HairID],[MouthID],[SkinID],[IsDead],[IsOnline],[IsTicket],[Delete])" +
+                                                            "[EyeID],[HairID],[MouthID],[SkinID],[IsDead],[IsOnline],[IsTicket],[IsFirst])" +
                                     "VALUES (@UserID,@RoleInGameID,@TrophiesID,1,100,100,0,5,0,0,100," +
-                                            "@EyeID,@HairID,@MouthID,@SkinID,0,0,0,0)";
+                                            "@EyeID,@HairID,@MouthID,@SkinID,0,0,0,1)";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@RoleInGameID", 1);
                 cmd.Parameters.AddWithValue("@TrophiesID", 1);
@@ -93,7 +93,8 @@ namespace Assets.Scripts.Database.DAO
                                     "[EyeID]   = @EyeID," +
                                     "[HairID]  = @HairID," +
                                     "[MouthID] = @MouthID," +
-                                    "[SkinID]  = @SkinID " +
+                                    "[SkinID]  = @SkinID, " +
+                                    "[IsFirst] = 0 " +
                                     "WHERE ID  = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@RoleInGameID", RoleInGameID);
@@ -144,7 +145,7 @@ namespace Assets.Scripts.Database.DAO
                             IsDead          = Convert.ToBoolean(dr["IsDead"]),
                             IsOnline        = Convert.ToBoolean(dr["IsOnline"]),
                             IsTicket        = Convert.ToBoolean(dr["IsTicket"]),
-                            Delete          = Convert.ToBoolean(dr["Delete"])
+                            IsFirst         = Convert.ToBoolean(dr["IsFirst"])
                         };
                         connection.Close();
                         return obj;
@@ -158,6 +159,37 @@ namespace Assets.Scripts.Database.DAO
             }
 
             return null;
+        }
+
+        public static bool IsFirstLogin(string UserID)
+        {
+            var IsFirst = false;
+
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT [IsFirst] FROM [dbo].[Account] WHERE Account.ID = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        IsFirst = Convert.ToBoolean(dr["IsFirst"]);
+                        connection.Close();
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+            return IsFirst;
         }
     }
 }

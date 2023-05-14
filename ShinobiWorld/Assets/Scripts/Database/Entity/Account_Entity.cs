@@ -22,7 +22,7 @@ public class Account_Entity
     public bool IsDead;
     public bool IsOnline;
     public bool IsTicket;
-    public bool Delete;
+    public bool IsFirst;
 
     public Account_Entity() { }
 }

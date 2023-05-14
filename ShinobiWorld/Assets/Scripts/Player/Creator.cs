@@ -1,4 +1,5 @@
 using Assets.Scripts.Database.DAO;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,8 @@ public class Creator : MonoBehaviour
     {
         Account_DAO.SaveLayout(References.UserID, roles[roleNr].ID, 
             eyes[eyeNr].ID, hairs[hairNr].ID, mouths[mouthNr].ID, skins[skinNr].ID);
+
+        PhotonNetwork.LoadLevel(Scenes.Game);
     }
 
     void LateUpdate()
