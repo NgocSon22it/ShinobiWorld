@@ -97,7 +97,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     public void Start()
     {
-        Debug.Log(References.UserID + " 222");
         AccountEntity = Account_DAO.GetAccountByID(References.UserID);
         
 
