@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPool : MonoBehaviour
+public class Player_Pool : MonoBehaviour
 {
     [Header("Projectile Amount")]
     int Amount = 20;
