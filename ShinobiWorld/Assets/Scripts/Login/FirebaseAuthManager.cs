@@ -80,11 +80,13 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         {
             if (user.IsEmailVerified)
             {
+                References.UserID = user.UserId;
                 References.Username = user.DisplayName;
                 PhotonNetwork.NickName = user.DisplayName;
                 Account_DAO.ChangeStateOnline(user.UserId, true);
                 PhotonNetwork.ConnectUsingSettings();
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
+                Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
             }
             else
             {
@@ -439,7 +441,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         if(auth != null && user != null)
         {
             auth.SignOut();
-            Account_DAO.ChangeStateOnline(user.UserId, true);
+            Account_DAO.ChangeStateOnline(user.UserId, false);
             PhotonNetwork.Disconnect();
         }
     }
