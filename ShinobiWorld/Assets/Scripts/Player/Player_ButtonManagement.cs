@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerUI : MonoBehaviour
+public class Player_ButtonManagement : MonoBehaviour
 {
 
     [SerializeField] GameObject SkillOneCooldown;
@@ -11,8 +11,6 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] GameObject SkillThreeCooldown;
 
     PlayerBase Player;
-
-
 
     private void Update()
     {
