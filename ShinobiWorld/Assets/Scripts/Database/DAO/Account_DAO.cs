@@ -36,7 +36,18 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
-
+        public static void UpdateAccountCoin(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set Coin = Coin + 100 where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
         public static void ChangeStateOnline(string UserID, bool stateOnline)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
@@ -50,7 +61,6 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
-
         public static bool StateOnline(string UserID)
         {
             var isOnline = false;

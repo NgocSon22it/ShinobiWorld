@@ -7,6 +7,13 @@ public class Dart : MonoBehaviour
 {
     [SerializeField] List<string> ListTag = new List<string>();
 
+    string PlayerID;
+
+    public void SetUpPlayerID(string ID)
+    {
+        PlayerID = ID;
+    }
+
     private void OnEnable()
     {
         Invoke(nameof(TurnOff), 5f);
@@ -26,6 +33,10 @@ public class Dart : MonoBehaviour
     {
         if (ListTag.Contains(collision.gameObject.tag))
         {
+            if(collision.gameObject.tag == "Enemy")
+            {
+                collision.GetComponent<Enemy>().TakeDamage(PlayerID, 10);
+            }
             TurnOff();
         }
     }

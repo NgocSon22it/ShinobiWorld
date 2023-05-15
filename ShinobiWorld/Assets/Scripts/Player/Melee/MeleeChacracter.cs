@@ -9,6 +9,7 @@ public class MeleeChacracter : PlayerBase
 {
 
     [SerializeField] float AttackRange;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -26,7 +27,6 @@ public class MeleeChacracter : PlayerBase
             SkillThree();
         }
     }
-
     new void FixedUpdate()
     {
         base.FixedUpdate();
@@ -102,11 +102,25 @@ public class MeleeChacracter : PlayerBase
             {
                 if (Enemy.gameObject.CompareTag("Enemy"))
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(10);
+                    Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID , 10); 
                 }
             }
         }
     }
+
+    public void ExecuteSkillTwo()
+    {
+        GameObject skillTwo = playerPool.GetSkillTwoFromPool();
+
+        if (skillTwo != null)
+        {
+            skillTwo.transform.position = AttackPoint.position;
+            skillTwo.transform.rotation = AttackPoint.rotation;
+            skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
+            skillTwo.SetActive(true);
+        }
+    }
+
 
     private void OnDrawGizmosSelected()
     {
