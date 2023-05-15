@@ -107,6 +107,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
+                normalAttack.GetComponent<Dart>().SetUpPlayerID(AccountEntity.ID);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
             }
@@ -117,6 +118,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
+                normalAttack.GetComponent<Dart>().SetUpPlayerID(AccountEntity.ID);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = 10 * new Vector2(transform.localScale.x, 0);
             }

@@ -27,7 +27,6 @@ public class MeleeChacracter : PlayerBase
             SkillThree();
         }
     }
-
     new void FixedUpdate()
     {
         base.FixedUpdate();
@@ -103,7 +102,7 @@ public class MeleeChacracter : PlayerBase
             {
                 if (Enemy.gameObject.CompareTag("Enemy"))
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(10);
+                    Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID , 10); 
                 }
             }
         }
@@ -119,7 +118,6 @@ public class MeleeChacracter : PlayerBase
             skillTwo.transform.rotation = AttackPoint.rotation;
             skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
-
         }
     }
 
