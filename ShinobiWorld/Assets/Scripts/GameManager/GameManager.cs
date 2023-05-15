@@ -12,7 +12,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] GameObject PlayerMelee;
     [SerializeField] GameObject PlayerRange;
-    [SerializeField] GameObject PlayerSupport;
+    [SerializeField] GameObject PlayerSupport;  
+
+    public static GameManager Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
