@@ -17,13 +17,12 @@ public class Account_Entity
     public int Strength;
     public int EyeID;
     public int HairID;
-    public int FaceID;
+    public int MouthID;
     public int SkinID;
-    public int ColorID;
     public bool IsDead;
     public bool IsOnline;
     public bool IsTicket;
-    public bool Delete;
+    public bool IsFirst;
 
     public Account_Entity() { }
 }

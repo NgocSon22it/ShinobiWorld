@@ -12,6 +12,7 @@ namespace Assets.Scripts.Database.Entity
         public int WeaponID;
         public string Name;
         public bool Delete;
+        public string Image;
 
         public RoleInGame_Entity()
         {

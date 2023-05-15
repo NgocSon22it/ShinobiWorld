@@ -11,6 +11,7 @@ public class RangeCharacter : PlayerBase
     [SerializeField] GameObject NormalAttackPrefabs;
 
     [SerializeField] float AttackRange;
+    [SerializeField] float EndAngle = 25f;
     bool IsDetectEnemy;
     new void Start()
     {
@@ -44,7 +45,7 @@ public class RangeCharacter : PlayerBase
         if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
         {
             SkillOneCooldown_Current = SkillOneCooldown_Total;
-            animator.SetTrigger("Skill1_Range");
+            CallSyncAnimation("Skill1_Range");
         }
     }
 
@@ -53,7 +54,7 @@ public class RangeCharacter : PlayerBase
         if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
         {
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            animator.SetTrigger("Skill2_Range");
+            CallSyncAnimation("Skill2_Range");
         }
     }
 
@@ -62,7 +63,7 @@ public class RangeCharacter : PlayerBase
         if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
         {
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            animator.SetTrigger("Skill3_Range");
+            CallSyncAnimation("Skill3_Range");
         }
     }
 
@@ -107,7 +108,7 @@ public class RangeCharacter : PlayerBase
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
                 normalAttack.SetActive(true);
-                normalAttack.GetComponent<Rigidbody2D>().AddForce(direction * 500);
+                normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
             }
         }
         else
@@ -117,8 +118,88 @@ public class RangeCharacter : PlayerBase
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
                 normalAttack.SetActive(true);
-                normalAttack.GetComponent<Rigidbody2D>().AddForce(500 * new Vector2(transform.localScale.x,0));
+                normalAttack.GetComponent<Rigidbody2D>().velocity = 10 * new Vector2(transform.localScale.x, 0);
             }
+        }
+    }
+
+    public void SpawnBigDarts()
+    {
+        GameObject skillOne = playerPool.GetSkillOneFromPool();
+
+        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+
+        if (Enemy != null)
+        {
+            FlipToEnemy();
+            Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
+            direction.Normalize();
+
+            if (skillOne != null)
+            {
+                skillOne.transform.position = AttackPoint.position;
+                skillOne.transform.rotation = AttackPoint.rotation;
+                skillOne.SetActive(true);
+                skillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
+            }
+        }
+        else
+        {
+            if (skillOne != null)
+            {
+                skillOne.transform.position = AttackPoint.position;
+                skillOne.transform.rotation = AttackPoint.rotation;
+                skillOne.SetActive(true);
+                skillOne.GetComponent<Rigidbody2D>().velocity = (10 * new Vector2(transform.localScale.x, 0));
+            }
+        }
+    }
+
+    public void SpawnThreeDarts()
+    {
+        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+
+        if (Enemy != null)
+        {
+            FlipToEnemy();
+            Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
+            direction.Normalize();
+
+            ExecuteThreeDarts(10 * direction);
+
+        }
+        else
+        {
+            ExecuteThreeDarts(10 * new Vector2(transform.localScale.x, 0));
+        }
+
+    }
+
+    public void ExecuteThreeDarts(Vector2 direction)
+    {
+        GameObject centerDarts = playerPool.GetSkillTwoFromPool();
+        if (centerDarts != null)
+        {
+            centerDarts.transform.position = transform.position;
+            centerDarts.transform.rotation = Quaternion.identity;
+            centerDarts.SetActive(true);
+            centerDarts.GetComponent<Rigidbody2D>().velocity = direction;
+        }
+
+        GameObject leftDarts = playerPool.GetSkillTwoFromPool();
+        if (leftDarts != null)
+        {
+            leftDarts.transform.position = transform.position;
+            leftDarts.SetActive(true);
+            leftDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
+        }
+
+        GameObject rightDarts = playerPool.GetSkillTwoFromPool();
+        if (rightDarts != null)
+        {
+            rightDarts.transform.position = transform.position;
+            rightDarts.SetActive(true);
+            rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
     }
 
