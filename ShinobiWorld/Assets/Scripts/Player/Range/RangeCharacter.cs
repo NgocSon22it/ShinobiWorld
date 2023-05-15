@@ -203,6 +203,27 @@ public class RangeCharacter : PlayerBase
         }
     }
 
+    public void Ultimate()
+    {
+        StartCoroutine(EnhanceDamageNSpeed());
+    }
+
+    IEnumerator EnhanceDamageNSpeed()
+    {
+        int DamageBonus = 70;
+        int SpeedBonus = 5;
+
+        AccountEntity.Strength += DamageBonus;
+        AccountEntity.Speed += SpeedBonus;
+
+
+        yield return new WaitForSeconds(10f);
+        AccountEntity.Strength -= DamageBonus;
+        AccountEntity.Speed -= SpeedBonus;
+
+
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
