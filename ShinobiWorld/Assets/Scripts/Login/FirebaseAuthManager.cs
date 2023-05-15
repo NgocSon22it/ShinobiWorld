@@ -80,10 +80,10 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         {
             if (user.IsEmailVerified)
             {
-                References.UserID = user.UserId;
-                References.Username = user.DisplayName;
+                References.accountRefer.ID = user.UserId;
                 PhotonNetwork.NickName = user.DisplayName;
                 Account_DAO.ChangeStateOnline(user.UserId, true);
+                References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
                 PhotonNetwork.ConnectUsingSettings();
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
@@ -192,8 +192,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                 if (user.IsEmailVerified)
                 {
-                    References.Username = user.DisplayName;
-                    References.UserID = user.UserId;
+                    References.accountRefer.ID = user.UserId;
                  
                     PhotonNetwork.NickName = user.DisplayName; //Set name user
 
@@ -205,6 +204,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     } else
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
+                        References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
                         PhotonNetwork.ConnectUsingSettings(); //Connect server photon
                     } 
                 }
