@@ -8,6 +8,7 @@ using Assets.Scripts.Database.DAO;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -79,11 +80,13 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         {
             if (user.IsEmailVerified)
             {
+                References.UserID = user.UserId;
                 References.Username = user.DisplayName;
                 PhotonNetwork.NickName = user.DisplayName;
                 Account_DAO.ChangeStateOnline(user.UserId, true);
                 PhotonNetwork.ConnectUsingSettings();
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
+                Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
             }
             else
             {
@@ -201,7 +204,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                         UIManager.Instance.OpenPopupPanel(Message.Logined);
                     } else
                     {
-                        Account_DAO.ChangeStateOnline(user.UserId, true); 
+                        Account_DAO.ChangeStateOnline(user.UserId, true);
                         PhotonNetwork.ConnectUsingSettings(); //Connect server photon
                     } 
                 }
@@ -418,9 +421,16 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
    
     public void OpenGameScene()
     {  
-        if(playerCount > 0 && playerCount < 20 )
+        if(playerCount > 0 && playerCount < References.Maxserver )
         {
-            PhotonNetwork.LoadLevel(Scenes.Game);
+            if (Account_DAO.IsFirstLogin(user.UserId))
+            {
+                PhotonNetwork.LoadLevel(Scenes.Creator);
+            }
+            else
+            {
+                PhotonNetwork.LoadLevel(Scenes.Game);
+            }
         } else {
             UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
         }
@@ -431,7 +441,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         if(auth != null && user != null)
         {
             auth.SignOut();
-            Account_DAO.ChangeStateOnline(user.UserId, true);
+            Account_DAO.ChangeStateOnline(user.UserId, false);
             PhotonNetwork.Disconnect();
         }
     }
