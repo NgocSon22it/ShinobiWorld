@@ -9,8 +9,8 @@ namespace Assets.Scripts.Database.Entity
     public class AccountMailBox_Entity
     {
         public string AccountID;
-        public int MailBoxID;
-        public int RankID;
+        public string MailBoxID;
+        public string RankID;
         public int Rank;
         public bool IsClaim;
         public bool IsRead;
