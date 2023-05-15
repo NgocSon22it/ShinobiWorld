@@ -8,6 +8,8 @@ using TMPro;
 using UnityEngine.UI;
 using Photon.Realtime;
 using Assets.Scripts.Database.DAO;
+using static UnityEditor.Progress;
+using Photon.Pun.UtilityScripts;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
@@ -73,6 +75,20 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     [SerializeField] Image CurrentChakra_UI;
 
 
+    //Sprite layout
+    //Skin
+    public SpriteRenderer Shirt;
+    public SpriteRenderer RightFoot;
+    public SpriteRenderer LeftFoot;
+    public SpriteRenderer RightHand;
+    public SpriteRenderer LeftHand;
+    //Eye
+    public SpriteRenderer Eye;
+    //Hair
+    public SpriteRenderer Hair;
+    //Mouth
+    public SpriteRenderer Mouth;
+
     Vector3 realPosition;
     Quaternion realRotation;
     float currentTime = 0;
@@ -95,14 +111,38 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         playerPool = GetComponent<Player_Pool>();
     }
 
+    public void LoadLayout()
+    {
+        //Eye
+        var image = References.listEye.Find(obj => obj.ID == AccountEntity.EyeID).Image;
+        Eye.sprite = Resources.Load<Sprite>(image);
+
+        //Hair
+        image = References.listHair.Find(obj => obj.ID == AccountEntity.HairID).Image;
+        Hair.sprite = Resources.Load<Sprite>(image);
+
+        //Mouth
+        image = References.listMouth.Find(obj => obj.ID == AccountEntity.EyeID).Image;
+        Mouth.sprite = Resources.Load<Sprite>(image);
+
+        //Skin
+        image = References.listSkin.Find(obj => obj.ID == AccountEntity.SkinID).Image;
+        Shirt.sprite = Resources.Load<Sprite>(image + "_Shirt");
+        LeftHand.sprite = Resources.Load<Sprite>(image + "_LeftHand");
+        RightHand.sprite = Resources.Load<Sprite>(image + "_RightHand");
+        LeftFoot.sprite = Resources.Load<Sprite>(image + "_LeftFoot");
+        RightFoot.sprite = Resources.Load<Sprite>(image + "_RightFoot");
+    }
+
     public void Start()
     {
-        AccountEntity = Account_DAO.GetAccountByID(References.UserID);
-        
+        Debug.Log(References.accountRefer.ID + " 222");
+        AccountEntity = References.accountRefer;
 
         if (AccountEntity != null)
         {
             SetUpComponent();
+            LoadLayout();
 
             CurrentHealth = AccountEntity.Health;
             CurrentChakra = AccountEntity.Charka;

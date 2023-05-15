@@ -13,8 +13,7 @@ namespace Assets.Scripts.Database.DAO
     public static class Account_DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
-
-
+      
         public static void CreateAccount(string UserID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
@@ -127,7 +126,7 @@ namespace Assets.Scripts.Database.DAO
                     {
                         var obj = new Account_Entity
                         {
-                            ID = dr["ID"].ToString(),
+                            ID              = dr["ID"].ToString(),
                             RoleInGameID    = Convert.ToInt32(dr["RoleInGameID"]),
                             TrophiesID      = Convert.ToInt32(dr["TrophiesID"]),
                             Level           = Convert.ToInt32(dr["Level"]),

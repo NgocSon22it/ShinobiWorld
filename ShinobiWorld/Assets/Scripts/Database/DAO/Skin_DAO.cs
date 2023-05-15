@@ -13,9 +13,9 @@ namespace Assets.Scripts.Database.DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-        public static List<Mouth_Entity> GetAll()
+        public static List<Skin_Entity> GetAll()
         {
-            var list = new List<Mouth_Entity>();
+            var list = new List<Skin_Entity>();
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 try
@@ -29,7 +29,7 @@ namespace Assets.Scripts.Database.DAO
 
                     foreach (DataRow dr in dataTable.Rows)
                     {
-                        var obj = new Mouth_Entity
+                        var obj = new Skin_Entity
                         {
                             ID = Convert.ToInt32(dr["ID"]),
                             Image = dr["Image"].ToString()
