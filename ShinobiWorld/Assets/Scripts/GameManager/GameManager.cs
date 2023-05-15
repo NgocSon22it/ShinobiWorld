@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     private GameObject PlayerManager;
 
-    [SerializeField] GameObject PlayerPrefabs;
+    [SerializeField] GameObject PlayerMelee;
+    [SerializeField] GameObject PlayerRange;
+    [SerializeField] GameObject PlayerSupport;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +27,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PlayerManager == null && PhotonNetwork.IsConnectedAndReady)
         {
-            PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerPrefabs.name), new(0, 0, 0), Quaternion.identity);
+            switch (References.accountRefer.RoleInGameID)
+            {
+                case 1:
+                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerMelee.name), new(0, 0, 0), Quaternion.identity);
+                    break;
+                case 2:
+                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerRange.name), new(0, 0, 0), Quaternion.identity);
+                    break;
+                case 3:
+                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerSupport.name), new(0, 0, 0), Quaternion.identity);
+                    break;
+            }
+
+          
             Debug.Log("Successfully joined room S1!");
         }
     }

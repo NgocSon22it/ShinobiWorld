@@ -8,6 +8,8 @@ using TMPro;
 using UnityEngine.UI;
 using Photon.Realtime;
 using Assets.Scripts.Database.DAO;
+using static UnityEditor.Progress;
+using Photon.Pun.UtilityScripts;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
@@ -15,7 +17,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
 
-    int CurrentHealth, CurrentChakra;
+    public int CurrentHealth, CurrentChakra;
 
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerControlPrefabs;
@@ -63,7 +65,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public Player_Pool playerPool;
 
     //Player Input
-    [SerializeField] float Speed;
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
     bool FacingRight = true;
@@ -72,6 +73,20 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     [SerializeField] Image CurrentHealth_UI;
     [SerializeField] Image CurrentChakra_UI;
 
+
+    //Sprite layout
+    //Skin
+    public SpriteRenderer Shirt;
+    public SpriteRenderer RightFoot;
+    public SpriteRenderer LeftFoot;
+    public SpriteRenderer RightHand;
+    public SpriteRenderer LeftHand;
+    //Eye
+    public SpriteRenderer Eye;
+    //Hair
+    public SpriteRenderer Hair;
+    //Mouth
+    public SpriteRenderer Mouth;
 
     Vector3 realPosition;
     Quaternion realRotation;
@@ -95,24 +110,37 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         playerPool = GetComponent<Player_Pool>();
     }
 
+    public void LoadLayout()
+    {
+        //Eye
+        var image = References.listEye.Find(obj => obj.ID == AccountEntity.EyeID).Image;
+        Eye.sprite = Resources.Load<Sprite>(image);
+
+        //Hair
+        image = References.listHair.Find(obj => obj.ID == AccountEntity.HairID).Image;
+        Hair.sprite = Resources.Load<Sprite>(image);
+
+        //Mouth
+        image = References.listMouth.Find(obj => obj.ID == AccountEntity.EyeID).Image;
+        Mouth.sprite = Resources.Load<Sprite>(image);
+
+        //Skin
+        image = References.listSkin.Find(obj => obj.ID == AccountEntity.SkinID).Image;
+        Shirt.sprite = Resources.Load<Sprite>(image + "_Shirt");
+        LeftHand.sprite = Resources.Load<Sprite>(image + "_LeftHand");
+        RightHand.sprite = Resources.Load<Sprite>(image + "_RightHand");
+        LeftFoot.sprite = Resources.Load<Sprite>(image + "_LeftFoot");
+        RightFoot.sprite = Resources.Load<Sprite>(image + "_RightFoot");
+    }
+
     public void Start()
     {
-        AccountEntity = Account_DAO.GetAccountByID(References.UserID);
-        
+        Debug.Log(References.accountRefer.ID + " 222");
+        AccountEntity = References.accountRefer;
 
         if (AccountEntity != null)
         {
-            SetUpComponent();
-
-            CurrentHealth = AccountEntity.Health;
-            CurrentChakra = AccountEntity.Charka;
-
-            LoadPlayerHealthNChakraUI();
-
-            InvokeRepeating(nameof(RegenHealth), 1f, 2f);
-            InvokeRepeating(nameof(RegenChakra), 1f, 2f);
-
-            PlayerNickName.text = PV.Owner.NickName;
+            SetUpComponent();        
 
             if (PV.IsMine)
             {
@@ -124,8 +152,10 @@ public class PlayerBase : MonoBehaviour, IPunObservable
                 PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
                 PlayerControlInstance.GetComponent<Player_ButtonManagement>().SetUpPlayer(this.gameObject);
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpNameUI(PV.Owner.NickName);
 
                 sortingGroup.sortingLayerName = "Me";
+                PlayerHealthChakraUI.SetActive(false);
                 PlayerHealthChakraUI.GetComponent<Canvas>().sortingLayerName = "Me";
             }
             else
@@ -133,6 +163,16 @@ public class PlayerBase : MonoBehaviour, IPunObservable
                 sortingGroup.sortingLayerName = "Other";
                 PlayerHealthChakraUI.GetComponent<Canvas>().sortingLayerName = "Other";
             }
+
+            CurrentHealth = AccountEntity.Health;
+            CurrentChakra = AccountEntity.Charka;
+
+            InvokeRepeating(nameof(RegenHealth), 1f, 2f);
+            InvokeRepeating(nameof(RegenChakra), 1f, 2f);
+
+            PlayerNickName.text = PV.Owner.NickName;
+
+            LoadPlayerHealthNChakraUI();
 
         }
     }
@@ -159,6 +199,8 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         CurrentChakra_UI.fillAmount = (float)CurrentChakra / (float)AccountEntity.Charka;
         CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)AccountEntity.Health;
+        PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
+        SetUpHealthNChakraUI((float)CurrentHealth / (float)AccountEntity.Health, (float)CurrentChakra / (float)AccountEntity.Charka);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -243,7 +285,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public void Walk()
     {
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
-        transform.Translate(Movement * Speed * Time.fixedDeltaTime);
+        transform.Translate(Movement * AccountEntity.Speed * Time.fixedDeltaTime);
 
         if (Movement.x > 0 && !FacingRight)
         {

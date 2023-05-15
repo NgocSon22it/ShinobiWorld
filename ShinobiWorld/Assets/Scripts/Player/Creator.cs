@@ -71,7 +71,7 @@ public class Creator : MonoBehaviour
 
     public void OnSaveBtnClick()
     {
-        Account_DAO.SaveLayout(References.UserID, roles[roleNr].ID, 
+        Account_DAO.SaveLayout(References.accountRefer.ID, roles[roleNr].ID, 
             eyes[eyeNr].ID, hairs[hairNr].ID, mouths[mouthNr].ID, skins[skinNr].ID);
 
         PhotonNetwork.LoadLevel(Scenes.Game);
@@ -84,7 +84,7 @@ public class Creator : MonoBehaviour
 
     public void Start()
     {
-        foreach (var item in Hair_DAO.GetAll())
+        foreach (var item in References.listHair)
         {
             var obj = new Layout();
             obj.ID = item.ID;
@@ -92,7 +92,7 @@ public class Creator : MonoBehaviour
             hairs.Add(obj);
         }
        
-        foreach (var item in Eye_DAO.GetAll())
+        foreach (var item in References.listEye)
         {
             var obj = new Layout();
             obj.ID = item.ID;
@@ -100,7 +100,7 @@ public class Creator : MonoBehaviour
             eyes.Add(obj);
         }
              
-        foreach (var item in Mouth_DAO.GetAll())
+        foreach (var item in References.listMouth)
         {
             var obj = new Layout();
             obj.ID = item.ID;
@@ -108,7 +108,7 @@ public class Creator : MonoBehaviour
             mouths.Add(obj);
         }
 
-        foreach (var item in Skin_DAO.GetAll())
+        foreach (var item in References.listSkin)
         {
             var skin = new Skins();
             skin.ID = item.ID;
@@ -120,15 +120,7 @@ public class Creator : MonoBehaviour
             skins.Add(skin);
         }
 
-        foreach (var item in Mouth_DAO.GetAll())
-        {
-            var obj = new Layout();
-            obj.ID = item.ID;
-            obj.Sprite = Resources.Load<Sprite>(item.Image);
-            mouths.Add(obj);
-        }
-
-        foreach (var item in RoleInGame_DAO.GetAll())
+        foreach (var item in References.listRole)
         {
             var role = new Role();
             role.ID = item.ID;
