@@ -8,8 +8,8 @@ namespace Assets.Scripts.Database.Entity
 {
     public class SkillBoss_Entity
     {
-        public int ID;
-        public int BossID;
+        public string ID;
+        public string BossID;
         public string Name;
         public int Damage;
         public string Image;

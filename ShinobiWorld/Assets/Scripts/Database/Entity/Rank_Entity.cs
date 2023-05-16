@@ -8,8 +8,8 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Rank_Entity
     {
-        public int ID;
-        public int EquipmentIDbonus;
+        public string ID;
+        public string EquipmentIDbonus;
         public bool IsEvent;
         public int Rank;
         public int CoinBonus;
