@@ -7,9 +7,8 @@ public class Bat : Enemy
     // Start is called before the first frame update
     new void Start()
     {
-        boss_Entity.ID = "3";
+        boss_Entity.ID = "Boss_Bat";
         base.Start();
-
     }
 
     // Update is called once per frame

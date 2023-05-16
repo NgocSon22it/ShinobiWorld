@@ -27,13 +27,13 @@ public class Enemy : MonoBehaviour
         CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)boss_Entity.Health;
     }
 
-    public void TakeDamage(string PlayerID, int Damage)
+    public void TakeDamage(PlayerBase playerBase, int Damage)
     {
         CurrentHealth -= Damage;
         LoadHealthUI();
         if(CurrentHealth <= 0)
         {
-            Account_DAO.UpdateAccountCoin(PlayerID);
+            playerBase.HealAmountOfHealth(10);
         }
     }
 

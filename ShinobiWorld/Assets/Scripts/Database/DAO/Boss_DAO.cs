@@ -19,7 +19,8 @@ public static class Boss_DAO
             {
                 connection.Open();
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "select * from Boss where ID = " + BossID;
+                cmd.CommandText = "select * from Boss where ID = @BossID";
+                cmd.Parameters.AddWithValue("@BossID", BossID);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dataTable = new DataTable();
                 adapter.Fill(dataTable);

@@ -10,12 +10,14 @@ using Photon.Realtime;
 using Assets.Scripts.Database.DAO;
 using static UnityEditor.Progress;
 using Photon.Pun.UtilityScripts;
+using Assets.Scripts.Database.Entity;
 
 public class PlayerBase : MonoBehaviour, IPunObservable
 {
 
     [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
+    public Weapon_Entity WeaponEntity = new Weapon_Entity();    
 
     public int CurrentHealth, CurrentChakra;
 
@@ -186,21 +188,34 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     public void RegenHealth()
     {
-        if (CurrentHealth < AccountEntity.Health)
-        {
-            CurrentHealth += 1;
-            LoadPlayerHealthNChakraUI();
-        }
+        HealAmountOfHealth(1);
     }
 
     public void RegenChakra()
     {
-        if (CurrentChakra < AccountEntity.Charka)
-        {
-            CurrentChakra += 1;
-            LoadPlayerHealthNChakraUI();
-        }
+        HealAmountOfChakra(1);
     }
+    
+    public void HealAmountOfHealth(int Amount)
+    {
+        CurrentHealth += Amount;
+        if(CurrentHealth >= AccountEntity.Health)
+        {
+            CurrentHealth = AccountEntity.Health;
+        }
+        LoadPlayerHealthNChakraUI();
+    }
+
+    public void HealAmountOfChakra(int Amount)
+    {
+        CurrentChakra += Amount;
+        if (CurrentChakra >= AccountEntity.Charka)
+        {
+            CurrentChakra = AccountEntity.Charka;
+        }
+        LoadPlayerHealthNChakraUI();
+    }
+
 
     public void LoadPlayerHealthNChakraUI()
     {
