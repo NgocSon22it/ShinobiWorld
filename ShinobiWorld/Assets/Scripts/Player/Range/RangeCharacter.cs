@@ -107,6 +107,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
+                normalAttack.GetComponent<Dart>().SetUpPlayerID(AccountEntity.ID);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
             }
@@ -117,6 +118,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
+                normalAttack.GetComponent<Dart>().SetUpPlayerID(AccountEntity.ID);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = 10 * new Vector2(transform.localScale.x, 0);
             }
@@ -201,6 +203,27 @@ public class RangeCharacter : PlayerBase
             rightDarts.SetActive(true);
             rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
+    }
+
+    public void Ultimate()
+    {
+        StartCoroutine(EnhanceDamageNSpeed());
+    }
+
+    IEnumerator EnhanceDamageNSpeed()
+    {
+        int DamageBonus = 70;
+        int SpeedBonus = 5;
+
+        AccountEntity.Strength += DamageBonus;
+        AccountEntity.Speed += SpeedBonus;
+
+
+        yield return new WaitForSeconds(10f);
+        AccountEntity.Strength -= DamageBonus;
+        AccountEntity.Speed -= SpeedBonus;
+
+
     }
 
     private void OnDrawGizmosSelected()

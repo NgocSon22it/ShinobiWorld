@@ -327,6 +327,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60210efbceb4b1445986ea2ea47facb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentHealth: 0
+  CurrentChakra: 0
   PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
   PlayerAllUIPrefabs: {fileID: 4182973934900452979, guid: bb173a98f7a86ba4c81c986cc2ac0c96, type: 3}
@@ -349,7 +351,7 @@ MonoBehaviour:
   sortingGroup: {fileID: 0}
   playerInput: {fileID: 0}
   playerPool: {fileID: 0}
-  Speed: 5
+  player_LevelManagement: {fileID: 0}
   MoveDirection: {x: 0, y: 0}
   CurrentHealth_UI: {fileID: 3552120919829914991}
   CurrentChakra_UI: {fileID: 6563202592029557458}
@@ -363,7 +365,7 @@ MonoBehaviour:
   Mouth: {fileID: 1279341852296999978}
   NormalAttackPrefabs: {fileID: 4593264165139950441, guid: c12536a09cb569e4f8cbb0e0f33145b1, type: 3}
   AttackRange: 5
-  EndAngle: 45
+  EndAngle: 25
 --- !u!114 &7064220701377856494
 MonoBehaviour:
   m_ObjectHideFlags: 0

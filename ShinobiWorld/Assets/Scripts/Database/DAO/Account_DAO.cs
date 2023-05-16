@@ -36,7 +36,18 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
-
+        public static void UpdateAccountCoin(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set Coin = Coin + 100 where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
         public static void ChangeStateOnline(string UserID, bool stateOnline)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
@@ -50,7 +61,6 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
-
         public static bool StateOnline(string UserID)
         {
             var isOnline = false;
@@ -82,7 +92,7 @@ namespace Assets.Scripts.Database.DAO
             return isOnline;
         }
 
-        public static void SaveLayout(string UserID, int RoleInGameID, int EyeID, int HairID, int MouthID, int SkinID)
+        public static void SaveLayout(string UserID, string RoleInGameID, string EyeID, string HairID, string MouthID, string SkinID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
@@ -127,8 +137,8 @@ namespace Assets.Scripts.Database.DAO
                         var obj = new Account_Entity
                         {
                             ID              = dr["ID"].ToString(),
-                            RoleInGameID    = Convert.ToInt32(dr["RoleInGameID"]),
-                            TrophiesID      = Convert.ToInt32(dr["TrophiesID"]),
+                            RoleInGameID    = dr["RoleInGameID"].ToString(),
+                            TrophiesID      = dr["TrophiesID"].ToString(),
                             Level           = Convert.ToInt32(dr["Level"]),
                             Health          = Convert.ToInt32(dr["Health"]),
                             Charka          = Convert.ToInt32(dr["Charka"]),
@@ -137,10 +147,10 @@ namespace Assets.Scripts.Database.DAO
                             Coin            = Convert.ToInt32(dr["Coin"]),
                             Power           = Convert.ToInt32(dr["Power"]),
                             Strength        = Convert.ToInt32(dr["Strength"]),
-                            EyeID           = Convert.ToInt32(dr["EyeID"]),
-                            HairID          = Convert.ToInt32(dr["HairID"]),
-                            MouthID         = Convert.ToInt32(dr["MouthID"]),
-                            SkinID          = Convert.ToInt32(dr["SkinID"]),
+                            EyeID           = dr["EyeID"].ToString(),
+                            HairID          = dr["HairID"].ToString(),
+                            MouthID         = dr["MouthID"].ToString(),
+                            SkinID          = dr["SkinID"].ToString(),
                             IsDead          = Convert.ToBoolean(dr["IsDead"]),
                             IsOnline        = Convert.ToBoolean(dr["IsOnline"]),
                             IsTicket        = Convert.ToBoolean(dr["IsTicket"]),

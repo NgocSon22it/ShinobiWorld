@@ -16,4 +16,6 @@ public static class References
     public static List<Mouth_Entity>listMouth  = Mouth_DAO.GetAll();
 
     public static List<RoleInGame_Entity>listRole = RoleInGame_DAO.GetAll();
+
+    public static List<Item_Entity>listItem = Item_DAO.GetAll();
 }
