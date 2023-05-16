@@ -9,7 +9,7 @@ namespace Assets.Scripts.Database.Entity
     public class AccountSkill_Entity
     {
         public string AccountID;
-        public string SkillID;
+        public int SkillID;
         public int Level;
         public double Cooldown;
         public int Damage;

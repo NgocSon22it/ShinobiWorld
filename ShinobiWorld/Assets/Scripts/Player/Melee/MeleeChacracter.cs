@@ -102,7 +102,7 @@ public class MeleeChacracter : PlayerBase
             {
                 if (Enemy.gameObject.CompareTag("Enemy"))
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID , 10); 
+                    Enemy.GetComponent<Enemy>().TakeDamage(this , 10); 
                 }
             }
         }

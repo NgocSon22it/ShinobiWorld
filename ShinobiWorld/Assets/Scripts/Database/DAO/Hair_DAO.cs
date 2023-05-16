@@ -31,7 +31,7 @@ namespace Assets.Scripts.Database.DAO
                     {
                         var obj = new Hair_Entity
                         {
-                            ID = dr["ID"].ToString(),
+                            ID = Convert.ToInt32(dr["ID"]),
                             Image = dr["Image"].ToString()
                         };
                         list.Add(obj);

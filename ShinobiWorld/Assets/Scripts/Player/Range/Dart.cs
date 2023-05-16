@@ -1,3 +1,4 @@
+using Assets.Scripts.Database.Entity;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -7,11 +8,14 @@ public class Dart : MonoBehaviour
 {
     [SerializeField] List<string> ListTag = new List<string>();
 
-    string PlayerID;
+    PlayerBase playerBase;
+    Weapon_Entity Weapon;
+    
 
-    public void SetUpPlayerID(string ID)
+    public void SetUpDart(PlayerBase playerBase, Weapon_Entity Weapon)
     {
-        PlayerID = ID;
+        this.playerBase = playerBase;
+        this.Weapon = Weapon;
     }
 
     private void OnEnable()
@@ -35,7 +39,7 @@ public class Dart : MonoBehaviour
         {
             if(collision.gameObject.tag == "Enemy")
             {
-                collision.GetComponent<Enemy>().TakeDamage(PlayerID, 10);
+                collision.GetComponent<Enemy>().TakeDamage(playerBase, Weapon.Damage);
             }
             TurnOff();
         }
