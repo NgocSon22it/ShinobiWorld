@@ -13,9 +13,12 @@ public class RangeCharacter : PlayerBase
     [SerializeField] float AttackRange;
     [SerializeField] float EndAngle = 25f;
     bool IsDetectEnemy;
+
+
     new void Start()
     {
         base.Start();
+        WeaponEntity = Weapon_DAO.GetWeaponByID("Weapon_Dart");
     }
 
     // Update is called once per frame
@@ -107,7 +110,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
-                normalAttack.GetComponent<Dart>().SetUpPlayerID(AccountEntity.ID);
+                normalAttack.GetComponent<Dart>().SetUpDart(this, WeaponEntity);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
             }
@@ -118,7 +121,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
-                normalAttack.GetComponent<Dart>().SetUpPlayerID(AccountEntity.ID);
+                normalAttack.GetComponent<Dart>().SetUpDart(this, WeaponEntity);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = 10 * new Vector2(transform.localScale.x, 0);
             }
