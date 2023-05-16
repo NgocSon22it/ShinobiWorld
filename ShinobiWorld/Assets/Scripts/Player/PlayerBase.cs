@@ -17,7 +17,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
-    public Weapon_Entity WeaponEntity = new Weapon_Entity();
+    public Weapon_Entity WeaponEntity = new Weapon_Entity();    
 
     public int CurrentHealth, CurrentChakra;
 
@@ -195,7 +195,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         HealAmountOfChakra(1);
     }
-
+    
     public void HealAmountOfHealth(int Amount)
     {
         CurrentHealth += Amount;
@@ -215,6 +215,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         }
         LoadPlayerHealthNChakraUI();
     }
+
 
     public void LoadPlayerHealthNChakraUI()
     {
