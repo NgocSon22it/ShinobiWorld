@@ -1,17 +1,16 @@
-using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
 using UnityEngine;
+using Assets.Scripts.Database.Entity;
 
-public static class Boss_DAO
+public static class Weapon_DAO 
 {
-
     static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-    public static Boss_Entity GetBossByID(string BossID)
+    public static Weapon_Entity GetWeaponByID(string WeaponID)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
@@ -19,28 +18,25 @@ public static class Boss_DAO
             {
                 connection.Open();
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "select * from Boss where ID = @BossID";
-                cmd.Parameters.AddWithValue("@BossID", BossID);
+                cmd.CommandText = "Select * from Weapon where ID = @WeaponID";
+                cmd.Parameters.AddWithValue("@WeaponID", WeaponID);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
                 foreach (DataRow dr in dataTable.Rows)
                 {
-                    var obj = new Boss_Entity
+                    var obj = new Weapon_Entity
                     {
                         ID = dr["ID"].ToString(),
-                        TypeBossID = dr["TypeBossID"].ToString(),
                         Name = dr["Name"].ToString(),
-                        Health = Convert.ToInt32(dr["Health"]),
-                        Speed = Convert.ToInt32(dr["Speed"]),
-                        CoinBonus = Convert.ToInt32(dr["CoinBonus"]),
-                        ExpBonus = Convert.ToInt32(dr["ExpBonus"]),
+                        Damage = Convert.ToInt32(dr["Damage"]),
+                        Uppercent = Convert.ToInt32(dr["Uppercent"]),
+                        UpgradeCost = Convert.ToInt32(dr["UpgradeCost"]),
                         Image = dr["Image"].ToString(),
                         Description = dr["Description"].ToString(),
-                        Delete = Convert.ToBoolean(dr["Delete"])
-
-
+                        Delete = Convert.ToBoolean(dr["Delete"]),
+  
                     };
                     connection.Close();
                     return obj;
@@ -55,4 +51,6 @@ public static class Boss_DAO
 
         return null;
     }
+
+
 }
