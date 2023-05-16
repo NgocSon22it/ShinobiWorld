@@ -17,8 +17,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
-    public Weapon_Entity Weapon_Entity = new Weapon_Entity();
-    public string WeaponName;
+    public Weapon_Entity WeaponEntity = new Weapon_Entity();
 
     public int CurrentHealth, CurrentChakra;
 
@@ -190,7 +189,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public void RegenHealth()
     {
         HealAmountOfHealth(1);
-
     }
 
     public void RegenChakra()

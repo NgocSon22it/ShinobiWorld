@@ -6,7 +6,7 @@ using System.Data;
 using UnityEngine;
 using Assets.Scripts.Database.Entity;
 
-public static class Weapon_DAO 
+public static class Weapon_DAO
 {
     static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 

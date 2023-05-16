@@ -36,13 +36,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             switch (References.accountRefer.RoleInGameID)
             {
-                case 1:
+                case "Role_Melee":
                     PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerMelee.name), new(0, 0, 0), Quaternion.identity);
                     break;
-                case 2:
+                case "Role_Range":
                     PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerRange.name), new(0, 0, 0), Quaternion.identity);
                     break;
-                case 3:
+                case "Role_Support":
                     PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerSupport.name), new(0, 0, 0), Quaternion.identity);
                     break;
             }
