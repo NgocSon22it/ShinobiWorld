@@ -8,8 +8,8 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Event_Entity
     {
-        public int ID;
-        public int BossID;
+        public string ID;
+        public string BossID;
         public string Name;
         public int Weekday;
         public string Description;

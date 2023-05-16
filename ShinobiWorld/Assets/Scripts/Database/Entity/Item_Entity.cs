@@ -8,7 +8,7 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Item_Entity
     {
-        public int ID;
+        public string ID;
         public string Name;
         public int HealthBonus;
         public int ChakraBonus;

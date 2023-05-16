@@ -26,7 +26,7 @@ public static class Eye_DAO
                 {
                     var obj = new Eye_Enity
                     {
-                        ID = Convert.ToInt32(dr["ID"]),
+                        ID = dr["ID"].ToString(),
                         Image = dr["Image"].ToString()
                     };
                     connection.Close();
@@ -62,7 +62,7 @@ public static class Eye_DAO
                 {
                     var obj = new Eye_Enity
                     {
-                        ID = Convert.ToInt32(dr["ID"]),
+                        ID = dr["ID"].ToString(),
                         Image = dr["Image"].ToString()
                     };
                     list.Add(obj);
