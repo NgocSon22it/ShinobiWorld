@@ -11,7 +11,7 @@ public static class Boss_DAO
 
     static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-    public static Boss_Entity GetBossByID(string BossID)
+    public static Boss_Entity GetBossByID(int BossID)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
@@ -29,8 +29,8 @@ public static class Boss_DAO
                 {
                     var obj = new Boss_Entity
                     {
-                        ID = dr["ID"].ToString(),
-                        TypeBossID = dr["TypeBossID"].ToString(),
+                        ID = Convert.ToInt32(dr["ID"]),
+                        TypeBossID = Convert.ToInt32(dr["TypeBossID"]),
                         Name = dr["Name"].ToString(),
                         Health = Convert.ToInt32(dr["Health"]),
                         Speed = Convert.ToInt32(dr["Speed"]),

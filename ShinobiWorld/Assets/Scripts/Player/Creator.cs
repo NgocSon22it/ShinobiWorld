@@ -205,7 +205,7 @@ public class Creator : MonoBehaviour
 [System.Serializable]
 public struct Skins
 {
-    public string ID;
+    public int ID;
     public Sprite Shirt;
     public Sprite RightFoot;
     public Sprite LeftFoot;
@@ -216,14 +216,14 @@ public struct Skins
 [System.Serializable]
 public struct Layout
 {
-    public string ID;
+    public int ID;
     public Sprite Sprite;
 }
 
 [System.Serializable]
 public struct Role
 {
-    public string ID;
+    public int ID;
     public Sprite Weapon;
     public string Name;
 }

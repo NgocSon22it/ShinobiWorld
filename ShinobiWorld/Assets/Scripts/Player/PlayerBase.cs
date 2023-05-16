@@ -19,7 +19,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public Account_Entity AccountEntity = new Account_Entity();
     public Weapon_Entity WeaponEntity = new Weapon_Entity();
 
-
     public int CurrentHealth, CurrentChakra;
 
     [Header("Player Instance")]

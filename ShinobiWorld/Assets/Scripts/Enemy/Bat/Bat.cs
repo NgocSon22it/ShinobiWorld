@@ -9,7 +9,6 @@ public class Bat : Enemy
     {
         boss_Entity.ID = "Boss_Bat";
         base.Start();
-
     }
 
     // Update is called once per frame
