@@ -32,7 +32,7 @@ public class SupportCharacter : PlayerBase
     {
         if (context.started)
         {
-            animator.SetTrigger("Attack_Support");
+            CallSyncAnimation("Attack_Support");
         }
     }
 
@@ -41,7 +41,7 @@ public class SupportCharacter : PlayerBase
         if (context.started && SkillOneCooldown_Current <= 0f)
         {
             SkillOneCooldown_Current = SkillOneCooldown_Total;
-            animator.SetTrigger("Skill1_Support");
+            CallSyncAnimation("Skill1_Support");
         }
     }
 
@@ -50,7 +50,7 @@ public class SupportCharacter : PlayerBase
         if (context.started && SkillTwoCooldown_Current <= 0f)
         {
             SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            animator.SetTrigger("Skill2_Support");
+            CallSyncAnimation("Skill2_Support");
         }
     }
 
@@ -59,7 +59,7 @@ public class SupportCharacter : PlayerBase
         if (context.started && SkillThreeCooldown_Current <= 0f)
         {
             SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            animator.SetTrigger("Skill3_Support");
+            CallSyncAnimation("Skill3_Support");
         }
     }
 
@@ -103,7 +103,41 @@ public class SupportCharacter : PlayerBase
         }
     }
 
+    public void ExecuteSkillOne()
+    {
+        StartCoroutine(EnhanceDamage());
+    }
 
+    public void ExecuteSkillTwo()
+    {
+        StartCoroutine(EnhanceSpeedNHeal());
+
+    }
+
+    IEnumerator EnhanceSpeedNHeal()
+    {
+        int SpeedeBonus = 60;
+        int HealAmount = 200;
+
+        AccountEntity.Speed += SpeedeBonus;
+        CurrentHealth += HealAmount;
+
+        yield return new WaitForSeconds(10f);
+
+
+        AccountEntity.Speed -= SpeedeBonus;
+    }
+
+    IEnumerator EnhanceDamage()
+    {
+        int DamageBonus = 60;
+
+        AccountEntity.Strength += DamageBonus;
+
+
+        yield return new WaitForSeconds(10f);
+        AccountEntity.Strength -= DamageBonus;
+    }
 
     private void OnDrawGizmos()
     {

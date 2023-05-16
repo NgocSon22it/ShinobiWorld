@@ -1240,8 +1240,8 @@ MonoBehaviour:
   - {fileID: 1231443372838735682}
   - {fileID: 1231443372483742837}
   m_Bounds:
-    m_Center: {x: -0.40214217, y: 0.17107058, z: 0}
-    m_Extent: {x: 1.0815613, y: 1.3157613, z: 0}
+    m_Center: {x: -0.0878039, y: 0.25197494, z: 0}
+    m_Extent: {x: 0.9550001, y: 1.3089716, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -1278,10 +1278,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fffd9395a75a9044864014850e37da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentHealth: 0
+  CurrentChakra: 0
   PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
+  PlayerAllUIPrefabs: {fileID: 4182973934900452979, guid: bb173a98f7a86ba4c81c986cc2ac0c96, type: 3}
   PlayerNickName: {fileID: 4297340223795960367}
-  PlayerCommonUI: {fileID: 5378524188282478473}
+  PlayerHealthChakraUI: {fileID: 5378524188282478473}
   AttackableLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -1299,10 +1302,17 @@ MonoBehaviour:
   sortingGroup: {fileID: 0}
   playerInput: {fileID: 0}
   playerPool: {fileID: 0}
-  Speed: 5
   MoveDirection: {x: 0, y: 0}
   CurrentHealth_UI: {fileID: 2228142697893722469}
   CurrentChakra_UI: {fileID: 7065326554227410012}
+  Shirt: {fileID: 1231443373997991441}
+  RightFoot: {fileID: 1231443372969031119}
+  LeftFoot: {fileID: 1231443373196502184}
+  RightHand: {fileID: 1231443374396377199}
+  LeftHand: {fileID: 1231443373756932685}
+  Eye: {fileID: 1231443374213555307}
+  Hair: {fileID: 1231443372577791272}
+  Mouth: {fileID: 1231443372752192919}
   DetectGroundVector: {x: 2, y: 1}
 --- !u!114 &7124398666399494739
 MonoBehaviour:
@@ -1791,7 +1801,7 @@ GameObject:
   - component: {fileID: 5782387832993526486}
   - component: {fileID: 672942300893045255}
   m_Layer: 0
-  m_Name: PlayerUI
+  m_Name: PlayerHealthChakraUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,4 +1,5 @@
 using Assets.Scripts.Database.DAO;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,17 +23,17 @@ public class Creator : MonoBehaviour
 
     [Header("Hair")]
     public int hairNr;
-    public List<Sprite> hairs;
+    public List<Layout> hairs;
     public SpriteRenderer Hair;
 
     [Header("Eye")]
     public int eyeNr;
-    public List<Sprite> eyes;
+    public List<Layout> eyes;
     public SpriteRenderer Eye;
 
     [Header("Mouth")]
     public int mouthNr;
-    public List<Sprite> mouths;
+    public List<Layout> mouths;
     public SpriteRenderer Mouth;
 
     [Header("Role")]
@@ -68,6 +69,14 @@ public class Creator : MonoBehaviour
         layout = "Mouth";
     }
 
+    public void OnSaveBtnClick()
+    {
+        Account_DAO.SaveLayout(References.accountRefer.ID, roles[roleNr].ID, 
+            eyes[eyeNr].ID, hairs[hairNr].ID, mouths[mouthNr].ID, skins[skinNr].ID);
+
+        PhotonNetwork.LoadLevel(Scenes.Game);
+    }
+
     void LateUpdate()
     {
         LayoutChoice();
@@ -75,24 +84,34 @@ public class Creator : MonoBehaviour
 
     public void Start()
     {
-        foreach (var item in Hair_DAO.GetAll())
+        foreach (var item in References.listHair)
         {
-            hairs.Add(Resources.Load<Sprite>(item.Image));
+            var obj = new Layout();
+            obj.ID = item.ID;
+            obj.Sprite = Resources.Load<Sprite>(item.Image);
+            hairs.Add(obj);
         }
        
-        foreach (var item in Eye_DAO.GetAll())
+        foreach (var item in References.listEye)
         {
-            eyes.Add(Resources.Load<Sprite>(item.Image));
+            var obj = new Layout();
+            obj.ID = item.ID;
+            obj.Sprite = Resources.Load<Sprite>(item.Image);
+            eyes.Add(obj);
         }
              
-        foreach (var item in Mouth_DAO.GetAll())
+        foreach (var item in References.listMouth)
         {
-            mouths.Add(Resources.Load<Sprite>(item.Image));
+            var obj = new Layout();
+            obj.ID = item.ID;
+            obj.Sprite = Resources.Load<Sprite>(item.Image);
+            mouths.Add(obj);
         }
 
-        foreach (var item in Skin_DAO.GetAll())
+        foreach (var item in References.listSkin)
         {
             var skin = new Skins();
+            skin.ID = item.ID;
             skin.Shirt      = Resources.Load<Sprite>(item.Image+ "_Shirt");
             skin.LeftHand   = Resources.Load<Sprite>(item.Image+ "_LeftHand");
             skin.RightHand  = Resources.Load<Sprite>(item.Image+ "_RightHand");
@@ -101,14 +120,10 @@ public class Creator : MonoBehaviour
             skins.Add(skin);
         }
 
-        foreach (var item in Mouth_DAO.GetAll())
-        {
-            mouths.Add(Resources.Load<Sprite>(item.Image));
-        }
-
-        foreach (var item in RoleInGame_DAO.GetAll())
+        foreach (var item in References.listRole)
         {
             var role = new Role();
+            role.ID = item.ID;
             role.Weapon = Resources.Load<Sprite>(item.Image);
             role.Name = item.Name;
             roles.Add(role);
@@ -120,13 +135,13 @@ public class Creator : MonoBehaviour
         switch (layout)
         {
             case "Hair":
-                Hair.sprite = hairs[hairNr];
+                Hair.sprite = hairs[hairNr].Sprite;
                 break;
             case "Eye":
-                Eye.sprite = eyes[eyeNr];
+                Eye.sprite = eyes[eyeNr].Sprite;
                 break;
             case "Mouth":
-                Mouth.sprite = mouths[mouthNr];
+                Mouth.sprite = mouths[mouthNr].Sprite;
                 break;
             case "Skin":
                 Shirt.sprite = skins[skinNr].Shirt;
@@ -190,6 +205,7 @@ public class Creator : MonoBehaviour
 [System.Serializable]
 public struct Skins
 {
+    public int ID;
     public Sprite Shirt;
     public Sprite RightFoot;
     public Sprite LeftFoot;
@@ -198,8 +214,16 @@ public struct Skins
 }
 
 [System.Serializable]
+public struct Layout
+{
+    public int ID;
+    public Sprite Sprite;
+}
+
+[System.Serializable]
 public struct Role
 {
+    public int ID;
     public Sprite Weapon;
     public string Name;
 }

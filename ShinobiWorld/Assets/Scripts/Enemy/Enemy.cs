@@ -1,3 +1,4 @@
+using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,11 +27,14 @@ public class Enemy : MonoBehaviour
         CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)boss_Entity.Health;
     }
 
-
-    public void TakeDamage(int Damage)
+    public void TakeDamage(PlayerBase playerBase, int Damage)
     {
         CurrentHealth -= Damage;
         LoadHealthUI();
+        if(CurrentHealth <= 0)
+        {
+            playerBase.HealAmountOfHealth(10);
+        }
     }
 
 }

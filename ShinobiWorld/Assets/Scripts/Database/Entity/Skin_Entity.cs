@@ -8,7 +8,7 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Skin_Entity
     {
-        public int ID;
+        public string ID;
         public string Name;
         public string Image;
         public bool Delete;
