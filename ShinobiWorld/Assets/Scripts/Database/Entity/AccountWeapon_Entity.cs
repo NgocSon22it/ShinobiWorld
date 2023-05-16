@@ -9,7 +9,7 @@ namespace Assets.Scripts.Database.Entity
     public class AccountWeapon_Entity
     {
         public string AccountID;
-        public int WeaponID;
+        public string WeaponID;
         public int Level;
         public int Damage;
         public bool Delete;

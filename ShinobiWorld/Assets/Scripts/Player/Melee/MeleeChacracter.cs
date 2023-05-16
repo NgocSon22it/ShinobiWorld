@@ -14,6 +14,7 @@ public class MeleeChacracter : PlayerBase
     new void Start()
     {
         base.Start();
+        WeaponEntity = Weapon_DAO.GetWeaponByID("Weapon_Sword");
     }
 
     // Update is called once per frame
@@ -102,7 +103,7 @@ public class MeleeChacracter : PlayerBase
             {
                 if (Enemy.gameObject.CompareTag("Enemy"))
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(this , 10); 
+                    Enemy.GetComponent<Enemy>().TakeDamage(this , WeaponEntity.Damage); 
                 }
             }
         }
