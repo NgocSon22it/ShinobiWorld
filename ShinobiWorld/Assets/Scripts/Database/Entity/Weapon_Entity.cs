@@ -8,7 +8,7 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Weapon_Entity
     {
-        public string ID;
+        public int ID;
         public string Name;
         public int Damage;
         public int Uppercent;
