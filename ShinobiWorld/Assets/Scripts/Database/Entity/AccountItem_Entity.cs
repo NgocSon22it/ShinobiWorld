@@ -9,7 +9,7 @@ namespace Assets.Scripts.Database.Entity
     public class AccountItem_Entity
     {
         public string AccountID;
-        public string ItemID;
+        public int ItemID;
         public int Amount;
         public bool Limit;
         public bool Delete;

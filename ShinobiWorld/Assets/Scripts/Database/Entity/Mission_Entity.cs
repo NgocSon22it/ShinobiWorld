@@ -8,7 +8,7 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Mission_Entity
     {
-        public string ID;
+        public int ID;
         public string Content;
         public int Level;
         public int Target;
