@@ -8,7 +8,7 @@ namespace Assets.Scripts.Database.Entity
 {
     public class TypeEquipment_Entity
     {
-        public int ID;
+        public string ID;
         public string Name;
         public bool Delete;
 

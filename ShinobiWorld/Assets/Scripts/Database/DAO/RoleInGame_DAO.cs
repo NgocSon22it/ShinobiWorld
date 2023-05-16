@@ -31,8 +31,8 @@ namespace Assets.Scripts.Database.DAO
                     {
                         var obj = new RoleInGame_Entity
                         {
-                            ID = Convert.ToInt32(dr["ID"]),
-                            WeaponID = Convert.ToInt32(dr["WeaponID"]),
+                            ID = dr["ID"].ToString(),
+                            WeaponID = dr["WeaponID"].ToString(),
                             Name = dr["Name"].ToString(),
                             Image = dr["Image"].ToString(),
                             Delete = Convert.ToBoolean(dr["Delete"])
