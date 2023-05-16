@@ -8,7 +8,7 @@ namespace Assets.Scripts.Database.Entity
 {
     public class MailBox_Entity
     {
-        public string ID;
+        public int ID;
         public string Title;
         public string Content;
         public bool IsRank;

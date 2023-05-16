@@ -8,8 +8,8 @@ namespace Assets.Scripts.Database.Entity
 {
     public class RoleInGame_Entity
     {
-        public string ID;
-        public string WeaponID;
+        public int ID;
+        public int WeaponID;
         public string Name;
         public bool Delete;
         public string Image;
