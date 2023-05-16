@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Eye_Enity 
 {
-    public int ID;
+    public string ID;
     public string Name;
     public string Image;
     public bool Delete;
