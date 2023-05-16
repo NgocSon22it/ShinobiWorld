@@ -6,7 +6,8 @@ using System.Data;
 using UnityEngine;
 using Assets.Scripts.Database.Entity;
 
-public static class Weapon_DAO 
+
+public static class Weapon_DAO
 {
     static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
@@ -36,7 +37,6 @@ public static class Weapon_DAO
                         Image = dr["Image"].ToString(),
                         Description = dr["Description"].ToString(),
                         Delete = Convert.ToBoolean(dr["Delete"]),
-  
                     };
                     connection.Close();
                     return obj;
@@ -51,6 +51,5 @@ public static class Weapon_DAO
 
         return null;
     }
-
 
 }

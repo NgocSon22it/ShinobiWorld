@@ -8,8 +8,8 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Skill_Entity
     {
-        public string ID;
-        public string RoleInGameID;
+        public int ID;
+        public int RoleInGameID;
         public string Name;
         public double Cooldown;
         public int Damage;

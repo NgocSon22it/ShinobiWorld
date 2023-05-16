@@ -13,6 +13,8 @@ public class RangeCharacter : PlayerBase
     [SerializeField] float AttackRange;
     [SerializeField] float EndAngle = 25f;
     bool IsDetectEnemy;
+
+
     new void Start()
     {
         base.Start();

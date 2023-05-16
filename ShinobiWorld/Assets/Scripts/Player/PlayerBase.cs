@@ -195,8 +195,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         HealAmountOfChakra(1);
     }
-
-
+    
     public void HealAmountOfHealth(int Amount)
     {
         CurrentHealth += Amount;
