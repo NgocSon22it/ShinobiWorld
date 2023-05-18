@@ -21,12 +21,10 @@ public class MeleeChacracter : PlayerBase
     new void Update()
     {
         base.Update();
-        if (PV.IsMine)
-        {
-            SkillOne();
-            SkillTwo();
-            SkillThree();
-        }
+        SkillOne();
+        SkillTwo();
+        SkillThree();
+
     }
     new void FixedUpdate()
     {
@@ -45,7 +43,6 @@ public class MeleeChacracter : PlayerBase
     {
         if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
         {
-
             SkillOneCooldown_Current = SkillOneCooldown_Total;
             CallSyncAnimation("Skill1_Melee");
         }
@@ -103,13 +100,18 @@ public class MeleeChacracter : PlayerBase
             {
                 if (Enemy.gameObject.CompareTag("Enemy"))
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(this , WeaponEntity.Damage); 
+                    Enemy.GetComponent<Enemy>().TakeDamage(this, WeaponEntity.Damage);
                 }
             }
         }
     }
 
-    public void ExecuteSkillTwo()
+    public void Animation_SkillOne()
+    {
+        StartCoroutine(RighteousSword());
+    }
+
+    public void Animation_SkillTwo()
     {
         GameObject skillTwo = playerPool.GetSkillTwoFromPool();
 
@@ -117,9 +119,21 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
+            skillTwo.GetComponent<SwingSword>().SetUpSwingSword(this, WeaponEntity);
             skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
         }
+    }
+
+
+
+
+    public IEnumerator RighteousSword()
+    {
+        int DamageBonus = 50;
+        WeaponEntity.Damage += DamageBonus;
+        yield return new WaitForSeconds(5f);
+        WeaponEntity.Damage -= DamageBonus;
     }
 
 

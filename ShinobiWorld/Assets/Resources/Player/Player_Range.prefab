@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 9202841333967612896}
   - component: {fileID: 1753595671280059618}
   - component: {fileID: -950656005346357845}
+  - component: {fileID: -6190039234915761932}
   m_Layer: 0
   m_Name: Player_Range
   m_TagString: Untagged
@@ -334,6 +335,9 @@ MonoBehaviour:
   PlayerAllUIPrefabs: {fileID: 4182973934900452979, guid: bb173a98f7a86ba4c81c986cc2ac0c96, type: 3}
   PlayerNickName: {fileID: 7389634413770532880}
   PlayerHealthChakraUI: {fileID: 8182716103278543108}
+  PlayerControlInstance: {fileID: 0}
+  PlayerCameraInstance: {fileID: 0}
+  PlayerAllUIInstance: {fileID: 0}
   AttackableLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -363,6 +367,7 @@ MonoBehaviour:
   Eye: {fileID: 1279341850554357206}
   Hair: {fileID: 1279341852525767829}
   Mouth: {fileID: 1279341852296999978}
+  CanWalking: 0
   NormalAttackPrefabs: {fileID: 4593264165139950441, guid: c12536a09cb569e4f8cbb0e0f33145b1, type: 3}
   AttackRange: 5
   EndAngle: 25
@@ -628,6 +633,18 @@ MonoBehaviour:
   SkillOne: {fileID: 9140504639790244634, guid: dad2879ce2e9e8e469e97094edf127c3, type: 3}
   SkillTwo: {fileID: 3326273127931828948, guid: c2a12fe6c67f25f48b695d6b954c4a27, type: 3}
   SkillThree: {fileID: 0}
+--- !u!114 &-6190039234915761932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279341850644047415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1268cfb93420c8d428f8db85402bde73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1279341850719893980
 GameObject:
   m_ObjectHideFlags: 0
