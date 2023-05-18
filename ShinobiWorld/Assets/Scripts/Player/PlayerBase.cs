@@ -17,7 +17,7 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
-    public Weapon_Entity WeaponEntity = new Weapon_Entity();    
+    public Weapon_Entity WeaponEntity = new Weapon_Entity();
 
     public int CurrentHealth, CurrentChakra;
 
@@ -30,9 +30,9 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     [SerializeField] GameObject PlayerHealthChakraUI;
 
 
-    GameObject PlayerControlInstance;
-    GameObject PlayerCameraInstance;
-    GameObject PlayerAllUIInstance;
+    public GameObject PlayerControlInstance;
+    public GameObject PlayerCameraInstance;
+    public GameObject PlayerAllUIInstance;
 
     [SerializeField] public LayerMask AttackableLayer;
 
@@ -91,6 +91,10 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     //Mouth
     public SpriteRenderer Mouth;
 
+    //Walk Interaction
+    public bool CanWalking;
+
+    // Lag
     Vector3 realPosition;
     Quaternion realRotation;
     float currentTime = 0;
@@ -157,11 +161,13 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
                 PlayerControlInstance.GetComponent<Player_ButtonManagement>().SetUpPlayer(this.gameObject);
 
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpNameUI(PV.Owner.NickName);
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(PV.Owner.NickName);
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpStrengthUI(AccountEntity.Strength);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpPowerUI(AccountEntity.Power);
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength);
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(AccountEntity.Power);
+
+                player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
 
                 sortingGroup.sortingLayerName = "Me";
                 PlayerHealthChakraUI.SetActive(false);
@@ -195,11 +201,11 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         HealAmountOfChakra(1);
     }
-    
+
     public void HealAmountOfHealth(int Amount)
     {
         CurrentHealth += Amount;
-        if(CurrentHealth >= AccountEntity.Health)
+        if (CurrentHealth >= AccountEntity.Health)
         {
             CurrentHealth = AccountEntity.Health;
         }
@@ -216,22 +222,36 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         LoadPlayerHealthNChakraUI();
     }
 
+    public void EarnAmountOfExperience(int Amount)
+    {
+        player_LevelManagement.AddExperience(Amount);
+        PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
+    }
+
+
 
     public void LoadPlayerHealthNChakraUI()
     {
         CurrentChakra_UI.fillAmount = (float)CurrentChakra / (float)AccountEntity.Charka;
         CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)AccountEntity.Health;
         PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-        SetUpHealthNChakraUI((float)AccountEntity.Health, (float)CurrentHealth, (float)AccountEntity.Charka, (float)CurrentChakra);
+        LoadHealthNChakraUI((float)AccountEntity.Health, (float)CurrentHealth, (float)AccountEntity.Charka, (float)CurrentChakra);
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        MoveDirection = context.ReadValue<Vector2>();
+        if (CanWalking)
+        {
+            MoveDirection = context.ReadValue<Vector2>();
+        }
     }
 
     public void Update()
     {
+        if (!CanWalking)
+        {
+            MoveDirection = Vector2.zero;
+        }
         animator.SetFloat("Horizontal", MoveDirection.x);
         animator.SetFloat("Vertical", MoveDirection.y);
         animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
@@ -360,6 +380,12 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     {
         PV.RPC(nameof(TriggerAnimator), RpcTarget.AllBuffered, TriggerName);
     }
+
+    public void Animation_SetUpWalking(bool value)
+    {
+        CanWalking = value;
+    }
+
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

@@ -35,29 +35,29 @@ public class Player_AllUIManagement : MonoBehaviour
         CoinTxt.text = Coin.ToString();
     }
 
-    public void SetUpPowerUI(int Power)
+    public void LoadPowerUI(int Power)
     {
         PowerTxt.text = Power.ToString();
     }
 
-    public void SetUpStrengthUI(int Strength)
+    public void LoadStrengthUI(int Strength)
     {
         StrengthTxt.text = Strength.ToString() + " / 100";
     }
 
-    public void SetUpExperienceUI(int Level, int CurrentExp, int NextLevelExp)
+    public void LoadExperienceUI(int Level, int CurrentExp, int NextLevelExp)
     {
         CurrentLevel.text = Level.ToString();
         ExperienceTxt.text = CurrentExp.ToString() + " / " + NextLevelExp.ToString();
         CurrentExpBar.fillAmount = (float)CurrentExp / (float)NextLevelExp;
     }
 
-    public void SetUpNameUI(string Name)
+    public void LoadNameUI(string Name)
     {
         NickNameTxt.text = Name;
     }
 
-    public void SetUpHealthNChakraUI(float TotalHealth, float CurrentHealth, float TotalChakra, float CurrentChakra)
+    public void LoadHealthNChakraUI(float TotalHealth, float CurrentHealth, float TotalChakra, float CurrentChakra)
     {
         CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)TotalHealth;
         CurrentChakra_UI.fillAmount = (float)CurrentChakra / (float)TotalChakra;
