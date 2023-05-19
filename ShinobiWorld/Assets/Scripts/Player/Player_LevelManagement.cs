@@ -1,3 +1,4 @@
+using Assets.Scripts.Database.DAO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ public class Player_LevelManagement : MonoBehaviour
 
     public void AddExperience(int Amount)
     {
-        if (AccountEntity != null)
+        if (AccountEntity != null && AccountEntity.Level < 30)
         {
             AccountEntity.Exp += Amount;
             while (AccountEntity.Exp >= ExpercienceToNextLevel)
@@ -32,6 +33,6 @@ public class Player_LevelManagement : MonoBehaviour
 
     public void LevelUpReward()
     {
-
+        Account_DAO.BonusLevelUp(AccountEntity.ID, AccountEntity.Uppercent);
     }
 }
