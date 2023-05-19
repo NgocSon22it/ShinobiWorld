@@ -17,17 +17,19 @@ public class SwingSword : MonoBehaviour
     public float angularSpeed = 2f;
 
     PlayerBase playerBase;
-    Weapon_Entity weaponEntity;
+    AccountWeapon_Entity accountWeapon_Entity;
+
+    float DamageSeconds = 0.2f;
 
     private void Awake()
     {
         collider2 = GetComponent<Collider2D>();
     }
 
-    public void SetUpSwingSword(PlayerBase playerBase, Weapon_Entity weaponEntity)
+    public void SetUpSwingSword(PlayerBase playerBase, AccountWeapon_Entity accountWeapon_Entity)
     {
         this.playerBase = playerBase;
-        this.weaponEntity = weaponEntity;
+        this.accountWeapon_Entity = accountWeapon_Entity;
     }
 
     private void OnEnable()
@@ -75,7 +77,7 @@ public class SwingSword : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(DamageSeconds);
             List<Collider2D> colliders = new List<Collider2D>();
             Physics2D.OverlapCollider(collider2, new ContactFilter2D(), colliders);
 
@@ -85,7 +87,7 @@ public class SwingSword : MonoBehaviour
                 {
                     if (collider.gameObject.tag == "Enemy")
                     {
-                        collider.GetComponent<Enemy>().TakeDamage(playerBase, 10);
+                        collider.GetComponent<Enemy>().TakeDamage(playerBase, (accountWeapon_Entity.Damage / 2));
                     }
                 }
             }

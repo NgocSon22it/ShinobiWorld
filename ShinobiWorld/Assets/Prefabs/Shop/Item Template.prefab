@@ -146,8 +146,8 @@ GameObject:
   - component: {fileID: 1841329699556635221}
   - component: {fileID: 1841329699556635208}
   - component: {fileID: 1841329699556635222}
-  - component: {fileID: 2362212594957998923}
   - component: {fileID: 4677949571859437335}
+  - component: {fileID: 1167184423864465122}
   m_Layer: 5
   m_Name: Item Template
   m_TagString: Untagged
@@ -231,8 +231,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2362212594957998923}
-        m_TargetAssemblyTypeName: Assets.Scripts.Shop.BtnManager, Assembly-CSharp
+      - m_Target: {fileID: 1167184423864465122}
+        m_TargetAssemblyTypeName: Assets.Scripts.Shop.ItemManager, Assembly-CSharp
         m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
@@ -243,22 +243,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &2362212594957998923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1841329699556635220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33a595b164a2ae74a910a623067818a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ID: Item_Health
-  Image: {fileID: 1841329700476374220}
-  Name: {fileID: 5723271784219190505}
-  Cost: {fileID: 1501602306137230830}
 --- !u!114 &4677949571859437335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +273,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1167184423864465122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841329699556635220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6b50ea6dd8db7140b1758cb3110e88d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 
+  Image: {fileID: 1841329700476374220}
+  Name: {fileID: 5723271784219190505}
+  Cost: {fileID: 1501602306137230830}
 --- !u!1 &1841329700476374218
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,7 +355,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2054992777994c54fa9b8ac2b97fdd6a, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 22eab8ef3911f6841a62c58072de7b11, type: 2}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

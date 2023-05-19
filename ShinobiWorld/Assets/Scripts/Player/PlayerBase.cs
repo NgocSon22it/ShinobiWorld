@@ -8,7 +8,6 @@ using TMPro;
 using UnityEngine.UI;
 using Photon.Realtime;
 using Assets.Scripts.Database.DAO;
-using static UnityEditor.Progress;
 using Photon.Pun.UtilityScripts;
 using Assets.Scripts.Database.Entity;
 
@@ -17,9 +16,13 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
-    public Weapon_Entity WeaponEntity = new Weapon_Entity();
+    public AccountWeapon_Entity AccountWeapon_Entity = new AccountWeapon_Entity();
 
-    public int CurrentHealth, CurrentChakra;
+    public AccountSkill_Entity SkillOne_Entity = new AccountSkill_Entity();
+    public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
+    public AccountSkill_Entity SkillThree_Entity = new AccountSkill_Entity();
+
+    public string WeaponName;
 
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerControlPrefabs;
@@ -35,7 +38,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     public GameObject PlayerAllUIInstance;
 
     [SerializeField] public LayerMask AttackableLayer;
-
     //Attack
     [SerializeField] public Transform AttackPoint;
 
@@ -76,6 +78,8 @@ public class PlayerBase : MonoBehaviour, IPunObservable
     [SerializeField] Image CurrentHealth_UI;
     [SerializeField] Image CurrentChakra_UI;
 
+    [SerializeField] TMP_Text CurrentHealth_NumberUI;
+    [SerializeField] TMP_Text CurrentChakra_NumberUI;
 
     //Sprite layout
     //Skin
@@ -113,7 +117,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         sortingGroup = GetComponent<SortingGroup>();
         playerInput = GetComponent<PlayerInput>();
 
-
         playerPool = GetComponent<Player_Pool>();
         player_LevelManagement = GetComponent<Player_LevelManagement>();
     }
@@ -143,7 +146,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     public void Start()
     {
-        Debug.Log(References.accountRefer.ID + " 222");
         AccountEntity = References.accountRefer;
 
         if (AccountEntity != null)
@@ -156,7 +158,6 @@ public class PlayerBase : MonoBehaviour, IPunObservable
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
-
                 PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
 
                 PlayerControlInstance.GetComponent<Player_ButtonManagement>().SetUpPlayer(this.gameObject);
@@ -164,31 +165,29 @@ public class PlayerBase : MonoBehaviour, IPunObservable
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(PV.Owner.NickName);
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(AccountEntity.Power);
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
                 player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
+
 
                 sortingGroup.sortingLayerName = "Me";
                 PlayerHealthChakraUI.SetActive(false);
                 PlayerHealthChakraUI.GetComponent<Canvas>().sortingLayerName = "Me";
+
+
             }
             else
             {
                 sortingGroup.sortingLayerName = "Other";
                 PlayerHealthChakraUI.GetComponent<Canvas>().sortingLayerName = "Other";
+
             }
 
-            CurrentHealth = AccountEntity.Health;
-            CurrentChakra = AccountEntity.Charka;
-
-            InvokeRepeating(nameof(RegenHealth), 1f, 2f);
-            InvokeRepeating(nameof(RegenChakra), 1f, 2f);
 
             PlayerNickName.text = PV.Owner.NickName;
-
-            LoadPlayerHealthNChakraUI();
-
+            InvokeRepeating(nameof(RegenHealth), 1f, 2f);
+            InvokeRepeating(nameof(RegenChakra), 1f, 2f);
         }
     }
 
@@ -204,22 +203,22 @@ public class PlayerBase : MonoBehaviour, IPunObservable
 
     public void HealAmountOfHealth(int Amount)
     {
-        CurrentHealth += Amount;
-        if (CurrentHealth >= AccountEntity.Health)
+        AccountEntity.CurrentHealth += Amount;
+        if (AccountEntity.CurrentHealth >= AccountEntity.Health)
         {
-            CurrentHealth = AccountEntity.Health;
+            AccountEntity.CurrentHealth = AccountEntity.Health;
         }
-        LoadPlayerHealthNChakraUI();
+        LoadPlayerHealthUI();
     }
 
     public void HealAmountOfChakra(int Amount)
     {
-        CurrentChakra += Amount;
-        if (CurrentChakra >= AccountEntity.Charka)
+        AccountEntity.CurrentCharka += Amount;
+        if (AccountEntity.CurrentCharka >= AccountEntity.Charka)
         {
-            CurrentChakra = AccountEntity.Charka;
+            AccountEntity.CurrentCharka = AccountEntity.Charka;
         }
-        LoadPlayerHealthNChakraUI();
+        LoadPlayerChakraUI();
     }
 
     public void EarnAmountOfExperience(int Amount)
@@ -228,14 +227,26 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
     }
 
-
-
-    public void LoadPlayerHealthNChakraUI()
+    public void LoadPlayerChakraUI()
     {
-        CurrentChakra_UI.fillAmount = (float)CurrentChakra / (float)AccountEntity.Charka;
-        CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)AccountEntity.Health;
-        PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-        LoadHealthNChakraUI((float)AccountEntity.Health, (float)CurrentHealth, (float)AccountEntity.Charka, (float)CurrentChakra);
+        CurrentChakra_UI.fillAmount = (float)AccountEntity.CurrentCharka / (float)AccountEntity.Charka;
+        CurrentChakra_NumberUI.text = (float)AccountEntity.CurrentCharka + " / " + (float)AccountEntity.Charka;
+        if (PV.IsMine)
+        {
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
+            LoadChakraUI((float)AccountEntity.Charka, (float)AccountEntity.CurrentCharka);
+        }
+    }
+
+    public void LoadPlayerHealthUI()
+    {
+        CurrentHealth_UI.fillAmount = (float)AccountEntity.CurrentHealth / (float)AccountEntity.Health;
+        CurrentHealth_NumberUI.text = (float)AccountEntity.CurrentHealth + " / " + (float)AccountEntity.Health;
+        if (PV.IsMine)
+        {
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
+            LoadHealthUI((float)AccountEntity.Health, (float)AccountEntity.CurrentHealth);
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -275,14 +286,15 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         }
     }
 
+    [PunRPC]
     public void TakeDamage(int Damage)
     {
         if (Hurting) { return; }
-        CurrentHealth -= Damage;
+        AccountEntity.CurrentHealth -= Damage;
         StartCoroutine(DamageAnimation());
-        PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(3, 3, 1);
+        PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 2, 1);
 
-        if (CurrentHealth <= 0)
+        if (AccountEntity.CurrentHealth <= 0)
         {
             Debug.Log("Die");
         }
@@ -386,6 +398,43 @@ public class PlayerBase : MonoBehaviour, IPunObservable
         CanWalking = value;
     }
 
+    public bool CanExecuteSkill(float CurrentCooldown, int Chakra)
+    {
+        if (CurrentCooldown <= 0 && AccountEntity.CurrentCharka >= Chakra && PV.IsMine)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void SkillOne_Resources()
+    {
+        SkillOneCooldown_Current = SkillOneCooldown_Total;
+        AccountEntity.CurrentCharka -= SkillOne_Entity.Chakra;
+        LoadPlayerChakraUI();
+
+
+    }
+
+    public void SkillTwo_Resources()
+    {
+        SkillTwoCooldown_Current = SkillTwoCooldown_Total;
+        AccountEntity.CurrentCharka -= SkillTwo_Entity.Chakra;
+        LoadPlayerChakraUI();
+
+
+    }
+
+    public void SkillThree_Resources()
+    {
+        SkillThreeCooldown_Current = SkillThreeCooldown_Total;
+        AccountEntity.CurrentCharka -= SkillThree_Entity.Chakra;
+        LoadPlayerChakraUI();
+
+
+    }
+
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -394,12 +443,22 @@ public class PlayerBase : MonoBehaviour, IPunObservable
             stream.SendNext(transform.position);
             stream.SendNext(MoveDirection);
             stream.SendNext(PlayerHealthChakraUI.GetComponent<RectTransform>().localScale);
+
+            //Health
+            stream.SendNext(AccountEntity.CurrentHealth);
+            stream.SendNext(AccountEntity.CurrentCharka);
+
         }
         else
         {
             realPosition = (Vector3)stream.ReceiveNext();
             MoveDirection = (Vector2)stream.ReceiveNext();
             PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
+
+            //Health
+            AccountEntity.CurrentHealth = (int)stream.ReceiveNext();
+            AccountEntity.CurrentCharka = (int)stream.ReceiveNext();
+
 
             //Lag compensation
             currentTime = 0.0f;
