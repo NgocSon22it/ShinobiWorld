@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -35,37 +35,48 @@ public class Player_AllUIManagement : MonoBehaviour
         CoinTxt.text = Coin.ToString();
     }
 
-    public void SetUpPowerUI(int Power)
+    public void LoadPowerUI(int Power)
     {
         PowerTxt.text = Power.ToString();
     }
 
-    public void SetUpStrengthUI(int Strength)
+    public void LoadStrengthUI(int Strength, int CurrentStrengh)
     {
-        StrengthTxt.text = Strength.ToString() + " / 100";
+        StrengthTxt.text = CurrentStrengh.ToString() + " / " + Strength.ToString();
     }
 
-    public void SetUpExperienceUI(int Level, int CurrentExp, int NextLevelExp)
+    public void LoadExperienceUI(int Level, int CurrentExp, int NextLevelExp)
     {
         CurrentLevel.text = Level.ToString();
-        ExperienceTxt.text = CurrentExp.ToString() + " / " + NextLevelExp.ToString();
-        CurrentExpBar.fillAmount = (float)CurrentExp / (float)NextLevelExp;
+        if (Level < 30)
+        {
+            ExperienceTxt.text = CurrentExp.ToString() + " / " + NextLevelExp.ToString();
+            CurrentExpBar.fillAmount = (float)CurrentExp / (float)NextLevelExp;
+        }
+        else
+        {
+            ExperienceTxt.text = "Cấp tối đa!";
+            CurrentExpBar.fillAmount = 1f;
+        }
+
+        
     }
 
-    public void SetUpNameUI(string Name)
+    public void LoadNameUI(string Name)
     {
         NickNameTxt.text = Name;
     }
 
-    public void SetUpHealthNChakraUI(float TotalHealth, float CurrentHealth, float TotalChakra, float CurrentChakra)
+    public void LoadHealthUI(float TotalHealth, float CurrentHealth)
     {
         CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)TotalHealth;
-        CurrentChakra_UI.fillAmount = (float)CurrentChakra / (float)TotalChakra;
-
         HealthNumberTxt.text = CurrentHealth + " / " + TotalHealth;
-        ChakraNumberTxt.text = CurrentChakra + " / " + TotalChakra;
     }
 
-
+    public void LoadChakraUI(float TotalChakra, float CurrentChakra)
+    {
+        CurrentChakra_UI.fillAmount = (float)CurrentChakra / (float)TotalChakra;
+        ChakraNumberTxt.text = CurrentChakra + " / " + TotalChakra;
+    }
 
 }

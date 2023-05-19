@@ -1,3 +1,4 @@
+using Assets.Scripts.Database.DAO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,21 +6,33 @@ using static Cinemachine.DocumentationSortingAttribute;
 
 public class Player_LevelManagement : MonoBehaviour
 {
-    public void AddExperience(int Amount, int Experience, int ExpercienceToNextLevel, int Level)
+    public Account_Entity AccountEntity = new Account_Entity();
+
+    int ExpercienceToNextLevel;
+
+    public void AddExperience(int Amount)
     {
-        Experience += Amount;
-        while (Experience >= ExpercienceToNextLevel)
+        if (AccountEntity != null && AccountEntity.Level < 30)
         {
-            Level++;
-            Experience -= ExpercienceToNextLevel;
-            ExpercienceToNextLevel = Level * 100;
-            LevelUpReward();
+            AccountEntity.Exp += Amount;
+            while (AccountEntity.Exp >= ExpercienceToNextLevel)
+            {
+                AccountEntity.Level++;
+                AccountEntity.Exp -= ExpercienceToNextLevel;
+                ExpercienceToNextLevel = AccountEntity.Level * 100;
+                LevelUpReward();
+            }
         }
-        //SetUpExperienceUI();
+    }
+
+    public void SetUpAccountEntity(Account_Entity AccountEntity)
+    {
+        this.AccountEntity = AccountEntity;
+        ExpercienceToNextLevel = (AccountEntity.Level * 100);
     }
 
     public void LevelUpReward()
     {
-
+        Account_DAO.BonusLevelUp(AccountEntity.ID, AccountEntity.Uppercent);
     }
 }

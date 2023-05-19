@@ -7,26 +7,27 @@ using UnityEngine.InputSystem;
 
 public class MeleeChacracter : PlayerBase
 {
-
     [SerializeField] float AttackRange;
 
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-        WeaponEntity = Weapon_DAO.GetWeaponByID("Weapon_Sword");
+        WeaponName = "Weapon_Sword";
+        AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
+        SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeOne");
+        SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeTwo");
+        SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeThree");
     }
 
     // Update is called once per frame
     new void Update()
     {
         base.Update();
-        if (PV.IsMine)
-        {
-            SkillOne();
-            SkillTwo();
-            SkillThree();
-        }
+        SkillOne();
+        SkillTwo();
+        SkillThree();
+
     }
     new void FixedUpdate()
     {
@@ -35,38 +36,43 @@ public class MeleeChacracter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && PV.IsMine)
+        if (context.started && AccountWeapon_Entity != null && PV.IsMine)
         {
             CallSyncAnimation("Attack_Melee");
+            PV.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, 1);
         }
     }
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
-        if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
+        if (SkillOne_Entity != null)
         {
-
-            SkillOneCooldown_Current = SkillOneCooldown_Total;
-            CallSyncAnimation("Skill1_Melee");
+            if (context.started && CanExecuteSkill(SkillOneCooldown_Current, SkillOne_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill1_Melee");
+            }
         }
     }
 
     public void OnSkillTwo(InputAction.CallbackContext context)
     {
-        if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
+        if (SkillTwo_Entity != null)
         {
-            SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            CallSyncAnimation("Skill2_Melee");
-
+            if (context.started && CanExecuteSkill(SkillTwoCooldown_Current, SkillTwo_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill2_Melee");
+            }
         }
     }
 
     public void OnSkillThree(InputAction.CallbackContext context)
     {
-        if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
+        if (SkillThree_Entity != null)
         {
-            SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            CallSyncAnimation("Skill3_Melee");
+            if (context.started && CanExecuteSkill(SkillThreeCooldown_Current, SkillThree_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill3_Melee");
+            }
         }
     }
 
@@ -103,13 +109,18 @@ public class MeleeChacracter : PlayerBase
             {
                 if (Enemy.gameObject.CompareTag("Enemy"))
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(this , WeaponEntity.Damage); 
+                    Enemy.GetComponent<Enemy>().TakeDamage(this, AccountWeapon_Entity.Damage);
                 }
             }
         }
     }
 
-    public void ExecuteSkillTwo()
+    public void Animation_SkillOne()
+    {
+        StartCoroutine(RighteousSword());
+    }
+
+    public void Animation_SkillTwo()
     {
         GameObject skillTwo = playerPool.GetSkillTwoFromPool();
 
@@ -117,9 +128,18 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
+            skillTwo.GetComponent<SwingSword>().SetUpSwingSword(this, AccountWeapon_Entity);
             skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
         }
+    }
+
+    public IEnumerator RighteousSword()
+    {
+        int DamageBonus = 50;
+        AccountWeapon_Entity.Damage += DamageBonus;
+        yield return new WaitForSeconds(5f);
+        AccountWeapon_Entity.Damage -= DamageBonus;
     }
 
 

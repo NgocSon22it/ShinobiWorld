@@ -6,9 +6,13 @@ using UnityEngine.UI;
 public class Player_ButtonManagement : MonoBehaviour
 {
 
-    [SerializeField] GameObject SkillOneCooldown;
-    [SerializeField] GameObject SkillTwoCooldown;
-    [SerializeField] GameObject SkillThreeCooldown;
+    [SerializeField] GameObject SkillOne_Cooldown;
+    [SerializeField] GameObject SkillTwo_Cooldown;
+    [SerializeField] GameObject SkillThree_Cooldown;
+
+    [SerializeField] GameObject SkillOne_LowChakra;
+    [SerializeField] GameObject SkillTwo_LowChakra;
+    [SerializeField] GameObject SkillThree_LowChakra;
 
     PlayerBase Player;
 
@@ -31,25 +35,44 @@ public class Player_ButtonManagement : MonoBehaviour
     {
         if (Player.GetComponent<PlayerBase>().SkillOneCooldown_Current > 0)
         {
-            SkillOneCooldown.SetActive(true);
-            SkillOneCooldown.GetComponent<Image>().fillAmount = Player.SkillOneCooldown_Current / Player.SkillOneCooldown_Total;
+            SkillOne_Cooldown.SetActive(true);
+            SkillOne_Cooldown.GetComponent<Image>().fillAmount = Player.SkillOneCooldown_Current / Player.SkillOneCooldown_Total;
         }
         else
         {
-            SkillOneCooldown.SetActive(false);
+            SkillOne_Cooldown.SetActive(false);
+            if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillOne_Entity.Chakra)
+            {
+                SkillOne_LowChakra.SetActive(false);
+            }
+            else
+            {
+                SkillOne_LowChakra.SetActive(true);
+            }
         }
+
+        
+
     }
 
     public void SkillTwo()
     {
         if (Player.GetComponent<PlayerBase>().SkillTwoCooldown_Current > 0)
         {
-            SkillTwoCooldown.SetActive(true);
-            SkillTwoCooldown.GetComponent<Image>().fillAmount = Player.SkillTwoCooldown_Current / Player.SkillTwoCooldown_Total;
+            SkillTwo_Cooldown.SetActive(true);
+            SkillTwo_Cooldown.GetComponent<Image>().fillAmount = Player.SkillTwoCooldown_Current / Player.SkillTwoCooldown_Total;
         }
         else
         {
-            SkillTwoCooldown.SetActive(false);
+            SkillTwo_Cooldown.SetActive(false);
+            if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillTwo_Entity.Chakra)
+            {
+                SkillTwo_LowChakra.SetActive(false);
+            }
+            else
+            {
+                SkillTwo_LowChakra.SetActive(true);
+            }
         }
     }
 
@@ -57,13 +80,21 @@ public class Player_ButtonManagement : MonoBehaviour
     {
         if (Player.GetComponent<PlayerBase>().SkillThreeCooldown_Current > 0)
         {
-            SkillThreeCooldown.SetActive(true);
-            SkillThreeCooldown.GetComponent<Image>().fillAmount = Player.SkillThreeCooldown_Current / Player.SkillThreeCooldown_Total;
+            SkillThree_Cooldown.SetActive(true);
+            SkillThree_Cooldown.GetComponent<Image>().fillAmount = Player.SkillThreeCooldown_Current / Player.SkillThreeCooldown_Total;
         }
         else
         {
-            SkillThreeCooldown.SetActive(false);
-        }
+            SkillThree_Cooldown.SetActive(false);
+            if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillThree_Entity.Chakra)
+            {
+                SkillThree_LowChakra.SetActive(false);
+            }
+            else
+            {
+                SkillThree_LowChakra.SetActive(true);
+            }
+        }       
     }
 
 }

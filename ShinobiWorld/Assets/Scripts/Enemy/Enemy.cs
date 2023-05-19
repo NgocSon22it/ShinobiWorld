@@ -14,11 +14,13 @@ public class Enemy : MonoBehaviour
     //Health UI
     [SerializeField] Image CurrentHealth_UI;
 
-
     public void Start()
     {
-        boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-        CurrentHealth = boss_Entity.Health;
+        if (boss_Entity.ID != null)
+        {
+            boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
+            CurrentHealth = boss_Entity.Health;
+        }
         LoadHealthUI();
     }
 
@@ -31,9 +33,9 @@ public class Enemy : MonoBehaviour
     {
         CurrentHealth -= Damage;
         LoadHealthUI();
-        if(CurrentHealth <= 0)
+        if (CurrentHealth <= 0)
         {
-            playerBase.HealAmountOfHealth(10);
+            playerBase.EarnAmountOfExperience(3000);           
         }
     }
 
