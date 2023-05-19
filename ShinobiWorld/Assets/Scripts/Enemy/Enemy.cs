@@ -35,8 +35,7 @@ public class Enemy : MonoBehaviour
         LoadHealthUI();
         if (CurrentHealth <= 0)
         {
-            playerBase.EarnAmountOfExperience(100);
-            
+            playerBase.EarnAmountOfExperience(3000);           
         }
     }
 

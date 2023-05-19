@@ -6,14 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using static UnityEngine.InputManagerEntry;
 
 namespace Assets.Scripts.Database.DAO
 {
     public static class Account_DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
-      
+
         public static void CreateAccount(string UserID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
@@ -21,7 +20,20 @@ namespace Assets.Scripts.Database.DAO
                 SqlCommand cmd = connection.CreateCommand();
                 cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID]) VALUES (@UserID)";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
 
+        public static void BonusLevelUp(string UserID, int UpPercent)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set Health += Health * (@UpPercent / 100.0), Charka += Charka * (@UpPercent / 100.0), Strength += 1, [Level] += 1 where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@UpPercent", UpPercent);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
@@ -88,7 +100,7 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText =   "UPDATE [dbo].[Account]   " +
+                cmd.CommandText = "UPDATE [dbo].[Account]   " +
                                     "SET [RoleInGameID] = @RoleInGameID," +
                                     "[EyeID]   = @EyeID," +
                                     "[HairID]  = @HairID," +
@@ -127,25 +139,29 @@ namespace Assets.Scripts.Database.DAO
                     {
                         var obj = new Account_Entity
                         {
-                            ID              = dr["ID"].ToString(),
-                            RoleInGameID    = dr["RoleInGameID"].ToString(),
-                            TrophiesID      = dr["TrophiesID"].ToString(),
-                            Level           = Convert.ToInt32(dr["Level"]),
-                            Health          = Convert.ToInt32(dr["Health"]),
-                            Charka          = Convert.ToInt32(dr["Charka"]),
-                            Exp             = Convert.ToInt32(dr["Exp"]),
-                            Speed           = Convert.ToInt32(dr["Speed"]),
-                            Coin            = Convert.ToInt32(dr["Coin"]),
-                            Power           = Convert.ToInt32(dr["Power"]),
-                            Strength        = Convert.ToInt32(dr["Strength"]),
-                            EyeID           = dr["EyeID"].ToString(),
-                            HairID          = dr["HairID"].ToString(),
-                            MouthID         = dr["MouthID"].ToString(),
-                            SkinID          = dr["SkinID"].ToString(),
-                            IsDead          = Convert.ToBoolean(dr["IsDead"]),
-                            IsOnline        = Convert.ToBoolean(dr["IsOnline"]),
-                            IsTicket        = Convert.ToBoolean(dr["IsTicket"]),
-                            IsFirst         = Convert.ToBoolean(dr["IsFirst"])
+                            ID = dr["ID"].ToString(),
+                            RoleInGameID = dr["RoleInGameID"].ToString(),
+                            TrophiesID = dr["TrophiesID"].ToString(),
+                            Level = Convert.ToInt32(dr["Level"]),
+                            Health = Convert.ToInt32(dr["Health"]),
+                            CurrentHealth = Convert.ToInt32(dr["CurrentHealth"]),
+                            Charka = Convert.ToInt32(dr["Charka"]),
+                            CurrentCharka = Convert.ToInt32(dr["CurrentCharka"]),
+                            Exp = Convert.ToInt32(dr["Exp"]),
+                            Speed = Convert.ToInt32(dr["Speed"]),
+                            Coin = Convert.ToInt32(dr["Coin"]),
+                            Power = Convert.ToInt32(dr["Power"]),
+                            Strength = Convert.ToInt32(dr["Strength"]),
+                            CurrentStrength = Convert.ToInt32(dr["CurrentStrength"]),
+                            Uppercent = Convert.ToInt32(dr["Uppercent"]),
+                            EyeID = dr["EyeID"].ToString(),
+                            HairID = dr["HairID"].ToString(),
+                            MouthID = dr["MouthID"].ToString(),
+                            SkinID = dr["SkinID"].ToString(),
+                            IsDead = Convert.ToBoolean(dr["IsDead"]),
+                            IsOnline = Convert.ToBoolean(dr["IsOnline"]),
+                            IsTicket = Convert.ToBoolean(dr["IsTicket"]),
+                            IsFirst = Convert.ToBoolean(dr["IsFirst"])
                         };
                         connection.Close();
                         return obj;
@@ -159,6 +175,37 @@ namespace Assets.Scripts.Database.DAO
             }
 
             return null;
+        }
+
+        public static int GetAccountPowerByID(string UserID)
+        {
+            int Power = 0;
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Exec GetPower @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        if (dr["Power"] != DBNull.Value)
+                        {
+                            Power = Convert.ToInt32(dr["Power"]);
+                        }
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return Power;
         }
 
         public static bool IsFirstLogin(string UserID)
