@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
 using UnityEngine.TextCore.Text;
+using Assets.Scripts.Database.DAO;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -80,5 +81,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LeaveRoom(false);
         PhotonNetwork.LoadLevel(Scenes.Login);
+    }
+
+    private void OnApplicationQuit()
+    {
+        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
     }
 }

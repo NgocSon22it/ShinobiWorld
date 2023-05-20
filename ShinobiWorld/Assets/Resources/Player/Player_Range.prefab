@@ -348,7 +348,6 @@ MonoBehaviour:
   SkillThreeCooldown_Total: 0
   SkillThreeCooldown_Current: 0
   animator: {fileID: 0}
-  PV: {fileID: 0}
   rigidbody2d: {fileID: 0}
   spriteRenderer: {fileID: 0}
   sortingGroup: {fileID: 0}
@@ -504,7 +503,7 @@ MonoBehaviour:
   - {fileID: 3251223019406442410}
   - {fileID: 156649074218110970}
   - {fileID: 7765997010309911789}
-  sceneViewId: 1
+  sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &156649074218110970
@@ -539,13 +538,13 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 1
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Vertical
   - Type: 1
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Horizontal
   - Type: 1
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Speed
   - Type: 9
     SynchronizeType: 0
@@ -584,7 +583,7 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: Skill3_Support
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 0
 --- !u!50 &9202841333967612896
 Rigidbody2D:

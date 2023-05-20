@@ -16,7 +16,7 @@ public class SwingSword : MonoBehaviour
     public float rotationRadius = 2f;
     public float angularSpeed = 2f;
 
-    PlayerBase playerBase;
+    string UserID;
     AccountWeapon_Entity accountWeapon_Entity;
 
     float DamageSeconds = 0.2f;
@@ -26,9 +26,9 @@ public class SwingSword : MonoBehaviour
         collider2 = GetComponent<Collider2D>();
     }
 
-    public void SetUpSwingSword(PlayerBase playerBase, AccountWeapon_Entity accountWeapon_Entity)
+    public void SetUpSwingSword(string UserID, AccountWeapon_Entity accountWeapon_Entity)
     {
-        this.playerBase = playerBase;
+        this.UserID = UserID;
         this.accountWeapon_Entity = accountWeapon_Entity;
     }
 
@@ -87,7 +87,7 @@ public class SwingSword : MonoBehaviour
                 {
                     if (collider.gameObject.tag == "Enemy")
                     {
-                        collider.GetComponent<Enemy>().TakeDamage(playerBase, (accountWeapon_Entity.Damage / 2));
+                        collider.GetComponent<Enemy>().TakeDamage(UserID, (accountWeapon_Entity.Damage / 2));
                     }
                 }
             }
