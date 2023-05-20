@@ -13,20 +13,26 @@ public class MeleeChacracter : PlayerBase
     new void Start()
     {
         base.Start();
-        WeaponName = "Weapon_Sword";
-        AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-        SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeOne");
-        SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeTwo");
-        SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeThree");
+        if (photonView.IsMine)
+        {
+            WeaponName = "Weapon_Sword";
+            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
+            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeOne");
+            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeTwo");
+            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeThree");
+        }
     }
 
     // Update is called once per frame
     new void Update()
     {
         base.Update();
-        SkillOne();
-        SkillTwo();
-        SkillThree();
+        if (photonView.IsMine)
+        {
+            SkillOne();
+            SkillTwo();
+            SkillThree();
+        }
 
     }
     new void FixedUpdate()
@@ -36,10 +42,9 @@ public class MeleeChacracter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && AccountWeapon_Entity != null && PV.IsMine)
+        if (context.started && AccountWeapon_Entity != null && photonView.IsMine)
         {
             CallSyncAnimation("Attack_Melee");
-            PV.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, 1);
         }
     }
 
@@ -101,15 +106,18 @@ public class MeleeChacracter : PlayerBase
     }
     public void DamageNormalAttack()
     {
-        Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, AttackableLayer);
-
-        if (HitEnemy != null)
+        if (photonView.IsMine)
         {
-            foreach (Collider2D Enemy in HitEnemy)
+            Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, AttackableLayer);
+
+            if (HitEnemy != null)
             {
-                if (Enemy.gameObject.CompareTag("Enemy"))
+                foreach (Collider2D Enemy in HitEnemy)
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(this, AccountWeapon_Entity.Damage);
+                    if (Enemy.gameObject.CompareTag("Enemy"))
+                    {
+                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, AccountWeapon_Entity.Damage);
+                    }
                 }
             }
         }
@@ -128,7 +136,7 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
-            skillTwo.GetComponent<SwingSword>().SetUpSwingSword(this, AccountWeapon_Entity);
+            skillTwo.GetComponent<SwingSword>().SetUpSwingSword(AccountEntity.ID, AccountWeapon_Entity);
             skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
         }
