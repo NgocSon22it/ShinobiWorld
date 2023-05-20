@@ -17,6 +17,7 @@ namespace Assets.Scripts.Shop
 
         public void OnClick()
         {
+            ShopManager.Instance.isUpdateCost = false;
             ShopManager.Instance.ShowDetail(ID);
         }
     }
