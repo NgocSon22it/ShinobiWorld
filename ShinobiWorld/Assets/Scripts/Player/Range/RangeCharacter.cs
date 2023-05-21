@@ -1,3 +1,4 @@
+using Assets.Scripts.Database.Entity;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
@@ -18,16 +19,26 @@ public class RangeCharacter : PlayerBase
     new void Start()
     {
         base.Start();
-        WeaponEntity = Weapon_DAO.GetWeaponByID("Weapon_Dart");
+        if (photonView.IsMine)
+        {
+            WeaponName = "Weapon_Dart";
+            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
+            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeOne");
+            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeTwo");
+            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeThree");
+        }
     }
 
     // Update is called once per frame
     new void Update()
     {
         base.Update();
-        SkillOne();
-        SkillTwo();
-        SkillThree();
+        if (photonView.IsMine)
+        {
+            SkillOne();
+            SkillTwo();
+            SkillThree();
+        }
     }
 
     new void FixedUpdate()
@@ -37,38 +48,46 @@ public class RangeCharacter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && PV.IsMine)
+        if (context.started && AccountWeapon_Entity != null && photonView.IsMine)
         {
             CallSyncAnimation("Attack_Range");
+
         }
     }
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
-        if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
+        if (SkillOne_Entity != null)
         {
-            SkillOneCooldown_Current = SkillOneCooldown_Total;
-            CallSyncAnimation("Skill1_Range");
+            if (context.started && CanExecuteSkill(SkillOneCooldown_Current, SkillOne_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill1_Range");
+            }
         }
     }
 
     public void OnSkillTwo(InputAction.CallbackContext context)
     {
-        if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
+        if (SkillTwo_Entity != null)
         {
-            SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            CallSyncAnimation("Skill2_Range");
+            if (context.started && CanExecuteSkill(SkillTwoCooldown_Current, SkillTwo_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill2_Range");
+            }
         }
     }
 
     public void OnSkillThree(InputAction.CallbackContext context)
     {
-        if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
+        if (SkillThree_Entity != null)
         {
-            SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            CallSyncAnimation("Skill3_Range");
+            if (context.started && CanExecuteSkill(SkillThreeCooldown_Current, SkillThree_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill3_Range");
+            }
         }
     }
+
 
     public void SkillOne()
     {
@@ -94,11 +113,11 @@ public class RangeCharacter : PlayerBase
         }
     }
 
-    public void Spawn_Darts()
+    public void Animation_NormalAttack()
     {
         GameObject normalAttack = playerPool.GetNormalAttackFromPool();
 
-        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
 
         if (Enemy != null)
         {
@@ -110,7 +129,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
-                normalAttack.GetComponent<Dart>().SetUpDart(this, WeaponEntity);
+                normalAttack.GetComponent<Dart>().SetUpDart(AccountEntity.ID, AccountWeapon_Entity);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
             }
@@ -121,18 +140,18 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
-                normalAttack.GetComponent<Dart>().SetUpDart(this, WeaponEntity);
+                normalAttack.GetComponent<Dart>().SetUpDart(AccountEntity.ID, AccountWeapon_Entity);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = 10 * new Vector2(transform.localScale.x, 0);
             }
         }
     }
 
-    public void SpawnBigDarts()
+    public void Animation_SkillOne()
     {
         GameObject skillOne = playerPool.GetSkillOneFromPool();
 
-        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
 
         if (Enemy != null)
         {
@@ -160,9 +179,9 @@ public class RangeCharacter : PlayerBase
         }
     }
 
-    public void SpawnThreeDarts()
+    public void Animation_SkillTwo()
     {
-        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
 
         if (Enemy != null)
         {
@@ -208,7 +227,7 @@ public class RangeCharacter : PlayerBase
         }
     }
 
-    public void Ultimate()
+    public void Animation_SkillThree()
     {
         StartCoroutine(EnhanceDamageNSpeed());
     }

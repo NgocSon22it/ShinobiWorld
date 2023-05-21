@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
 using UnityEngine.TextCore.Text;
+using Assets.Scripts.Database.DAO;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [SerializeField] GameObject PlayerMelee;
     [SerializeField] GameObject PlayerRange;
-    [SerializeField] GameObject PlayerSupport;  
+    [SerializeField] GameObject PlayerSupport;
 
     public static GameManager Instance;
     private void Awake()
@@ -23,11 +24,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
-        roomOptions.IsOpen = true;
-        roomOptions.BroadcastPropsChangeToAll = true;
-        PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
+        if (PhotonNetwork.IsConnectedAndReady)
+        {
+            RoomOptions roomOptions = new RoomOptions();
+            roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
+            roomOptions.IsOpen = true;
+            roomOptions.BroadcastPropsChangeToAll = true;
+            PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
+        }
     }
 
     public override void OnJoinedRoom()
@@ -47,10 +51,22 @@ public class GameManager : MonoBehaviourPunCallbacks
                     break;
             }
 
-          
+
             Debug.Log("Successfully joined room S1!");
         }
     }
+
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        Debug.Log("Create Room Failed");
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.Log("Join Room Failed");
+    }
+
 
     public override void OnLeftRoom()
     {
@@ -65,5 +81,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LeaveRoom(false);
         PhotonNetwork.LoadLevel(Scenes.Login);
+    }
+
+    private void OnApplicationQuit()
+    {
+        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
     }
 }
