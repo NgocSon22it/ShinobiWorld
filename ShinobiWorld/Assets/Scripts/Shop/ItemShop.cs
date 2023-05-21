@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Shop
 {
-    public class ItemManager : MonoBehaviour
+    public class ItemShop : MonoBehaviour
     {
         public string ID;
         public Image Image;
