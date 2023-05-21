@@ -12,6 +12,7 @@ public class ShopManager : MonoBehaviour
 {
     public GameObject ItemTemplate, ShopPannel;
     public Transform Content;
+    public TMP_Text Coin;
 
     public static ShopManager Instance;
 
@@ -20,6 +21,7 @@ public class ShopManager : MonoBehaviour
     public TMP_Text Name, Cost, Limit, Description, MessageError;
     public TMP_InputField Amount;
     public Button MinBtn, PlusBtn, BuyBtn, ShopBtn, CloseBtn;
+
 
     public int cost;
     public bool isUpdateCost = true;
@@ -54,7 +56,7 @@ public class ShopManager : MonoBehaviour
     {
         foreach (var item in References.listItem)
         {
-            var itemManager = ItemTemplate.GetComponent<ItemManager>();
+            var itemManager = ItemTemplate.GetComponent<ItemShop>();
             itemManager.ID = item.ID;
             itemManager.Image.sprite = Resources.Load<Sprite>(item.Image);
             itemManager.Cost.text = item.BuyCost.ToString();
@@ -62,6 +64,7 @@ public class ShopManager : MonoBehaviour
             Instantiate(ItemTemplate, Content);
         }
         References.accountRefer = Account_DAO.GetAccountByID("piENbG5OaZZn4WN0jNHQWhP4ZaA3");
+        Coin.text = References.accountRefer.Coin.ToString();
         References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
     }
 
