@@ -87,7 +87,7 @@ public class SwingSword : MonoBehaviour
                 {
                     if (collider.gameObject.tag == "Enemy")
                     {
-                        collider.GetComponent<Enemy>().TakeDamage(UserID, (accountWeapon_Entity.Damage / 2));
+                        collider.GetComponent<Enemy>().TakeDamage(UserID, accountWeapon_Entity.Damage);
                     }
                 }
             }
