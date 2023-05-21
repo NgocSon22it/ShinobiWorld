@@ -7,6 +7,7 @@ using UnityEngine;
 public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
+    public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
 
     public static int Maxserver = 20;
 
