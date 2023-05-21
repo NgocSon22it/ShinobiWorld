@@ -14,11 +14,11 @@ namespace Assets.Scripts.Bag
         public GameObject BagPannel;
         public Button ItemBtn, EquipmentBtn, BagBtn;
         public GameObject ItemDetail, EquipmentDetail;
-
+        GameObject instantiatedItemDetail, instantiatedEquipmentDetail;
         public void OnBagBtnClick()
         {
             BagPannel.SetActive(true);
-            OnEquipmentBtnClick();
+            OnItemBtnClick();
         }
 
         public void OnItemBtnClick()
@@ -35,14 +35,14 @@ namespace Assets.Scripts.Bag
 
         public void AddItemDetail()
         {
-            Destroy(EquipmentDetail.gameObject.transform);
-            Instantiate(ItemDetail, BagPannel.transform);
+            if(instantiatedEquipmentDetail != null) Destroy(instantiatedEquipmentDetail);
+            instantiatedItemDetail = Instantiate(ItemDetail, BagPannel.transform);
         }
 
         public void AddEquipmentDetail()
         {
-            Destroy(ItemDetail.gameObject.transform);
-            Instantiate(EquipmentDetail, BagPannel.transform);
+            if (instantiatedItemDetail != null)  Destroy(instantiatedItemDetail);
+            instantiatedEquipmentDetail = Instantiate(EquipmentDetail, BagPannel.transform);
         }
 
         public void OnClose()
