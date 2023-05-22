@@ -22,10 +22,11 @@ public class MeleeChacracter : PlayerBase
         if (photonView.IsMine)
         {
             WeaponName = "Weapon_Sword";
+            SkillOneName = "Skill_MeleeOne";
+            SkillTwoName = "Skill_MeleeTwo";
+            SkillThreeName = "Skill_MeleeThree";
             AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeOne");
-            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeTwo");
-            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeThree");
+            LoadAccountSkill();
         }
     }
 

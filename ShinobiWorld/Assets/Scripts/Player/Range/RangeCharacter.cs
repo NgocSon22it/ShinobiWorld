@@ -22,10 +22,12 @@ public class RangeCharacter : PlayerBase
         if (photonView.IsMine)
         {
             WeaponName = "Weapon_Dart";
+            SkillOneName = "Skill_RangeOne";
+            SkillTwoName = "Skill_RangeTwo";
+            SkillThreeName = "Skill_RangeThree";
             AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeOne");
-            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeTwo");
-            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeThree");
+            LoadAccountSkill();
+
         }
     }
 
