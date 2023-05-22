@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Bag.Item;
 using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;

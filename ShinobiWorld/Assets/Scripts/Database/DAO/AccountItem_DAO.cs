@@ -67,5 +67,21 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+        public static void SellItem(string UserID, string ItemID, int amount, int price)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "EXECUTE [dbo].[SellItem] @UserID,@ItemID,@amount,@price";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@ItemID", ItemID);
+                cmd.Parameters.AddWithValue("@amount", amount);
+                cmd.Parameters.AddWithValue("@price", price);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }
