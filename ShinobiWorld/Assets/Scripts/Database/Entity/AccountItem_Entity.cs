@@ -11,7 +11,7 @@ namespace Assets.Scripts.Database.Entity
         public string AccountID;
         public string ItemID;
         public int Amount;
-        public bool Limit;
+        public int Limit;
         public bool Delete;
 
         public AccountItem_Entity()

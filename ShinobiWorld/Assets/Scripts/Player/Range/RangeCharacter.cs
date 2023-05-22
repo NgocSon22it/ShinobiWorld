@@ -19,20 +19,26 @@ public class RangeCharacter : PlayerBase
     new void Start()
     {
         base.Start();
-        WeaponName = "Weapon_Dart";
-        AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-        SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeOne");
-        SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeTwo");
-        SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeThree");
+        if (photonView.IsMine)
+        {
+            WeaponName = "Weapon_Dart";
+            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
+            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeOne");
+            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeTwo");
+            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_RangeThree");
+        }
     }
 
     // Update is called once per frame
     new void Update()
     {
         base.Update();
-        SkillOne();
-        SkillTwo();
-        SkillThree();
+        if (photonView.IsMine)
+        {
+            SkillOne();
+            SkillTwo();
+            SkillThree();
+        }
     }
 
     new void FixedUpdate()
@@ -42,9 +48,10 @@ public class RangeCharacter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && AccountWeapon_Entity != null && PV.IsMine)
+        if (context.started && AccountWeapon_Entity != null && photonView.IsMine)
         {
             CallSyncAnimation("Attack_Range");
+
         }
     }
 
@@ -110,7 +117,7 @@ public class RangeCharacter : PlayerBase
     {
         GameObject normalAttack = playerPool.GetNormalAttackFromPool();
 
-        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
 
         if (Enemy != null)
         {
@@ -122,7 +129,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
-                normalAttack.GetComponent<Dart>().SetUpDart(this, AccountWeapon_Entity);
+                normalAttack.GetComponent<Dart>().SetUpDart(AccountEntity.ID, AccountWeapon_Entity);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
             }
@@ -133,7 +140,7 @@ public class RangeCharacter : PlayerBase
             {
                 normalAttack.transform.position = AttackPoint.position;
                 normalAttack.transform.rotation = AttackPoint.rotation;
-                normalAttack.GetComponent<Dart>().SetUpDart(this, AccountWeapon_Entity);
+                normalAttack.GetComponent<Dart>().SetUpDart(AccountEntity.ID, AccountWeapon_Entity);
                 normalAttack.SetActive(true);
                 normalAttack.GetComponent<Rigidbody2D>().velocity = 10 * new Vector2(transform.localScale.x, 0);
             }
@@ -144,7 +151,7 @@ public class RangeCharacter : PlayerBase
     {
         GameObject skillOne = playerPool.GetSkillOneFromPool();
 
-        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
 
         if (Enemy != null)
         {
@@ -174,7 +181,7 @@ public class RangeCharacter : PlayerBase
 
     public void Animation_SkillTwo()
     {
-        PV.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
 
         if (Enemy != null)
         {

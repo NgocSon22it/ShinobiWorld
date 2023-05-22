@@ -18,18 +18,8 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO [Account] ([ID],[RoleInGameID],[TrophiesID],[Level],[Health],[Charka],[Exp],[Speed],[Coin],[Power],[Strength]," +
-                                                            "[EyeID],[HairID],[MouthID],[SkinID],[IsDead],[IsOnline],[IsTicket],[IsFirst])" +
-                                    "VALUES (@UserID,@RoleInGameID,@TrophiesID,1,100,100,0,5,0,0,100," +
-                                            "@EyeID,@HairID,@MouthID,@SkinID,0,0,0,1)";
+                cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID]) VALUES (@UserID)";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@RoleInGameID", 1);
-                cmd.Parameters.AddWithValue("@TrophiesID", 1);
-                cmd.Parameters.AddWithValue("@EyeID", 1);
-                cmd.Parameters.AddWithValue("@HairID", 1);
-                cmd.Parameters.AddWithValue("@MouthID", 1);
-                cmd.Parameters.AddWithValue("@SkinID", 1);
-
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();

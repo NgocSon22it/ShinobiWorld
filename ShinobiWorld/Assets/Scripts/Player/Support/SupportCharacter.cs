@@ -35,7 +35,7 @@ public class SupportCharacter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && AccountWeapon_Entity != null && PV.IsMine)
+        if (context.started && AccountWeapon_Entity != null && photonView.IsMine)
         {
             CallSyncAnimation("Attack_Support");
         }

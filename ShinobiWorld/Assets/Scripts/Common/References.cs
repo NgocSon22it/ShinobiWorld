@@ -7,6 +7,8 @@ using UnityEngine;
 public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
+    public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
+    public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
 
     public static int Maxserver = 20;
 
@@ -16,4 +18,7 @@ public static class References
     public static List<Mouth_Entity>listMouth  = Mouth_DAO.GetAll();
 
     public static List<RoleInGame_Entity>listRole = RoleInGame_DAO.GetAll();
+    public static List<Item_Entity> listItem = Item_DAO.GetAll();
+    public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
+    public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
 }

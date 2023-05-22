@@ -4,10 +4,10 @@ using UnityEngine;
 
 public static class ShinobiWorldConnect
 {
-    static string Server = "(local)";
-    static string id = "sa";
+    static string Server = "sql.bsite.net\\MSSQL2016";
+    static string id = "ninjagame_";
     static string password = "123456";
-    static string database = "Shinobi";
+    static string database = "ninjagame_";
 
     public static string GetConnectShinobiWorld()
     {
