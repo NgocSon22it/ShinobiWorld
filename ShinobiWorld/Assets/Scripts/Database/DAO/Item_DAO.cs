@@ -35,7 +35,7 @@ namespace Assets.Scripts.Database.DAO
                             Name = dr["Name"].ToString(),
                             HealthBonus = Convert.ToInt32(dr["HealthBonus"]),
                             ChakraBonus = Convert.ToInt32(dr["ChakraBonus"]),
-                            DamageBonus = Convert.ToInt32(dr["DamageBonus"]),
+                            StrengthBonus = Convert.ToInt32(dr["StrengthBonus"]),
                             BuyCost = Convert.ToInt32(dr["BuyCost"]),
                             Limit = Convert.ToInt32(dr["Limit"]),
                             Image = dr["Image"].ToString(),
