@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Windows;
 using WebSocketSharp;
+using static UnityEditor.Progress;
 
 public class ShopManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class ShopManager : MonoBehaviour
 
     public int cost;
     public bool isUpdateCost = true;
+    public string ItemID;
 
     private void Awake()
     {
@@ -70,6 +72,7 @@ public class ShopManager : MonoBehaviour
 
     public void ShowDetail(string ID)
     {
+        ItemID = ID;
         var item = References.listItem.Find(obj => obj.ID == ID);
         Image.sprite = Resources.Load<Sprite>(item.Image);
         Name.text = item.Name;
@@ -170,7 +173,7 @@ public class ShopManager : MonoBehaviour
 
     public void Buy()
     {
-        AccountItem_DAO.BuyItem(References.accountRefer.ID, "Item_" + Name.text,
+        AccountItem_DAO.BuyItem(References.accountRefer.ID, ItemID,
                                 int.Parse(Amount.text), int.Parse(Cost.text));
         ReLoad();
     }
@@ -179,7 +182,7 @@ public class ShopManager : MonoBehaviour
     {
         DestroyItem();
         GetListItem();
-        ShowDetail("Item_" + Name.text);
+        ShowDetail(ItemID);
     }
 
 }

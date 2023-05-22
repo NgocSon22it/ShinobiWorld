@@ -34,27 +34,23 @@ namespace Assets.Scripts.Bag
         public void OnItemBtnClick()
         {
             CloseMessage();
-            AddItemDetail();
+            DestroyDetail();
+            instantiatedItemDetail = Instantiate(ItemDetail, BagPannel.transform);
             BagItemManager.Instance.Open();
         }
 
         public void OnEquipmentBtnClick()
         {
             CloseMessage();
-            AddEquipmentDetail();
+            DestroyDetail();
+            instantiatedEquipmentDetail = Instantiate(EquipmentDetail, BagPannel.transform);
             BagEquipmentManager.Instance.Open();
         }
 
-        public void AddItemDetail()
+        public void DestroyDetail()
         {
-            if(instantiatedEquipmentDetail != null) Destroy(instantiatedEquipmentDetail);
-            instantiatedItemDetail = Instantiate(ItemDetail, BagPannel.transform);
-        }
-
-        public void AddEquipmentDetail()
-        {
-            if (instantiatedItemDetail != null)  Destroy(instantiatedItemDetail);
-            instantiatedEquipmentDetail = Instantiate(EquipmentDetail, BagPannel.transform);
+            Destroy(instantiatedItemDetail);
+            Destroy(instantiatedEquipmentDetail);
         }
 
         public void OnClose()
