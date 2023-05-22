@@ -1,5 +1,7 @@
+using Assets.Scripts.Bag;
 using Assets.Scripts.Bag.Item;
 using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Database.Entity;
 using Assets.Scripts.Shop;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +17,8 @@ public class BagItemManager : MonoBehaviour
 
     public static BagItemManager Instance;
 
+    public List<AccountItem_Entity> list;
+
     private void Awake()
     {
         Instance = this;
@@ -24,7 +28,18 @@ public class BagItemManager : MonoBehaviour
     {
         DestroyItem();
         GetListItem();
-        ItemDetail.Instance.ShowDetail(References.listAccountItem[0].ItemID);
+        ItemDetail.Instance.ShowDetail(list[0].ItemID);
+    }
+
+    public void Reload(string ID)
+    {
+        DestroyItem();
+        GetListItem();
+        var accountItem = list.Find(obj => obj.ItemID == ID);
+
+        if(accountItem != null ) ItemDetail.Instance.ShowDetail(ID);
+        else ItemDetail.Instance.ShowDetail(list[0].ItemID);
+        
     }
 
     public void DestroyItem()
@@ -41,15 +56,21 @@ public class BagItemManager : MonoBehaviour
         Coin.text = References.accountRefer.Coin.ToString();
         References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
 
-        foreach (var accountItem in References.listAccountItem)
+        list = References.listAccountItem.FindAll(obj => obj.Amount > 0);
+
+        if(list.Count <= 0 ) { BagManager.Instance.ShowMessage(); }
+        else
         {
-            var item = References.listItem.Find(obj => obj.ID == accountItem.ItemID);
-            var itemManager = ItemTemplate.GetComponent<ItemBag>();
-            itemManager.ID = item.ID;
-            itemManager.Image.sprite = Resources.Load<Sprite>(item.Image);
-            itemManager.Name.text = item.Name;
-            itemManager.Own.text = accountItem.Amount.ToString();
-            Instantiate(ItemTemplate, Content);
+            foreach (var accountItem in list)
+            {
+                var item = References.listItem.Find(obj => obj.ID == accountItem.ItemID);
+                var itemManager = ItemTemplate.GetComponent<ItemBag>();
+                itemManager.ID = item.ID;
+                itemManager.Image.sprite = Resources.Load<Sprite>(item.Image);
+                itemManager.Name.text = item.Name;
+                itemManager.Own.text = accountItem.Amount.ToString();
+                Instantiate(ItemTemplate, Content);
+            }
         }
     }
 }
