@@ -98,5 +98,12 @@ namespace Assets.Scripts.Bag.Item
 
             BagItemManager.Instance.Reload(ItemID);
         }
+
+        public void Use()
+        {
+            AccountItem_DAO.UseItem(References.accountRefer.ID, ItemID);
+
+            BagItemManager.Instance.Reload(ItemID);
+        }
     }
 }
