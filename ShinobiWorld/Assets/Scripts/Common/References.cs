@@ -19,6 +19,7 @@ public static class References
 
     public static List<RoleInGame_Entity> listRole = RoleInGame_DAO.GetAll();
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
+    public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
 
