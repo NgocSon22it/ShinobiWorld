@@ -134,14 +134,14 @@ public class MeleeChacracter : PlayerBase
     {
 
         if (Righteous != null)
-        {          
+        {
             // If a color change coroutine is already running, stop it
             StopCoroutine(Righteous);
             SetUpRighteous(Color.black, 0f, -Righteous_BonusDamage);
             Righteous = null;
         }
 
-        Righteous =  StartCoroutine(RighteousSword());
+        Righteous = StartCoroutine(RighteousSword());
     }
 
     public void Animation_SkillTwo()
@@ -171,14 +171,17 @@ public class MeleeChacracter : PlayerBase
 
     public void SetUpRighteous(Color color, float Intensity, int Damage)
     {
-        AccountWeapon_Entity.Damage += Damage;
+        if (AccountWeapon_Entity != null)
+        {
+            AccountWeapon_Entity.Damage += Damage;
 
-        Sword.material.SetColor("_GlowColor", color * Intensity);
+            Sword.material.SetColor("_GlowColor", color * Intensity);
 
-        Debug.Log(AccountWeapon_Entity.Damage);
+            Debug.Log(AccountWeapon_Entity.Damage);
+        }
     }
 
-     
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

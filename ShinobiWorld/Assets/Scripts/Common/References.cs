@@ -19,8 +19,15 @@ public static class References
 
     public static List<RoleInGame_Entity> listRole = RoleInGame_DAO.GetAll();
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
+    public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
+
+    public static float Uppercent_Skill_Damage = 3f, Uppercent_Skill_Chakra = 1f, Uppercent_Skill_CoolDown = 1f;
+    public static float Uppercent_Account = 5f;
+    public static int MaxUpgradeLevel = 30;
+
+
 
     public static void LoadAccount()
     {
