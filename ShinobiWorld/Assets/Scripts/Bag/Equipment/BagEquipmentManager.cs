@@ -27,7 +27,25 @@ namespace Assets.Scripts.Bag.Equipment
         {
             DestroyEquipment();
             GetListEquidment();
-            EquipmentDetail.Instance.ShowDetail(References.listAccountEquipment[0].EquipmentID);
+            if (References.listAccountEquipment.Count <= 0) { BagManager.Instance.ShowMessage(); }
+            else
+            {
+                EquipmentDetail.Instance.ShowDetail(References.listAccountEquipment[0].EquipmentID);
+            }
+        }
+
+        public void Reload(string ID)
+        {
+            DestroyEquipment();
+            GetListEquidment();
+            if (References.listAccountEquipment.Count <= 0) { BagManager.Instance.ShowMessage(); }
+            else
+            {
+                var accountEquipment = References.listAccountEquipment.Find(obj => obj.EquipmentID == ID);
+
+                if (accountEquipment != null) EquipmentDetail.Instance.ShowDetail(ID);
+                else EquipmentDetail.Instance.ShowDetail(References.listAccountEquipment[0].EquipmentID);
+            }
         }
 
         public void DestroyEquipment()
@@ -42,7 +60,7 @@ namespace Assets.Scripts.Bag.Equipment
         {
             References.accountRefer = Account_DAO.GetAccountByID("piENbG5OaZZn4WN0jNHQWhP4ZaA3");
             References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-
+            
             foreach (var accountEquipment in References.listAccountEquipment)
             {
                 var equipment = References.listEquipment.Find(obj => obj.ID == accountEquipment.EquipmentID);

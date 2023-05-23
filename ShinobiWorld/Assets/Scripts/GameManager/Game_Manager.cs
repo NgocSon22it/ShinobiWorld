@@ -7,15 +7,15 @@ using System.IO;
 using UnityEngine.TextCore.Text;
 using Assets.Scripts.Database.DAO;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class Game_Manager : MonoBehaviourPunCallbacks
 {
-    private GameObject PlayerManager;
+    public GameObject PlayerManager;
 
     [SerializeField] GameObject PlayerMelee;
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
-    public static GameManager Instance;
+    public static Game_Manager Instance;
     private void Awake()
     {
         Instance = this;
