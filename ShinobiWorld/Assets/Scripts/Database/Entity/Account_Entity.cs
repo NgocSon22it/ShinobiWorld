@@ -18,7 +18,6 @@ public class Account_Entity
     public int Power;
     public int Strength;
     public int CurrentStrength;
-    public int Uppercent;
     public string EyeID;
     public string HairID;
     public string MouthID;

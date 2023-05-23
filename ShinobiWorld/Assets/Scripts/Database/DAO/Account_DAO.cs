@@ -26,7 +26,7 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
-        public static void BonusLevelUp(string UserID, int UpPercent)
+        public static void BonusLevelUp(string UserID, float UpPercent)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
@@ -153,7 +153,6 @@ namespace Assets.Scripts.Database.DAO
                             Power = Convert.ToInt32(dr["Power"]),
                             Strength = Convert.ToInt32(dr["Strength"]),
                             CurrentStrength = Convert.ToInt32(dr["CurrentStrength"]),
-                            Uppercent = Convert.ToInt32(dr["Uppercent"]),
                             EyeID = dr["EyeID"].ToString(),
                             HairID = dr["HairID"].ToString(),
                             MouthID = dr["MouthID"].ToString(),

@@ -1,7 +1,9 @@
 ﻿using Assets.Scripts.Database.Entity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,14 +32,41 @@ public class Skill_Manager : MonoBehaviour
 
     [SerializeField] GameObject CanBuyPanel;
     [SerializeField] GameObject CanNotBuyPanel;
+    [SerializeField] GameObject OwnPanel;
+
+    [Header("Upgrade Skill")]
+    [SerializeField] GameObject UpgradePanel;
+    [SerializeField] Image Upgrade_SkillImage;
+    [SerializeField] TMP_Text Upgrade_SkillNameTxt;
+    [SerializeField] TMP_Text Upgrade_SkillDescriptionTxt;
+    [SerializeField] TMP_Text Upgrade_ButtonCoinTxt;
+    [SerializeField] TMP_Text Upgrade_CurrentLevelTxt;
+    [SerializeField] TMP_Text Upgrade_CurrentDamageTxt;
+    [SerializeField] TMP_Text Upgrade_CurrentCooldownTxt;
+    [SerializeField] TMP_Text Upgrade_CurrentChakraTxt;
+
+    [SerializeField] TMP_Text Upgrade_NextLevelTxt;
+    [SerializeField] TMP_Text Upgrade_NextDamageTxt;
+    [SerializeField] TMP_Text Upgrade_NextCooldownTxt;
+    [SerializeField] TMP_Text Upgrade_NextChakraTxt;
+    int DamageBonus, ChakraBonus;
+    double CooldownBonus;
+
+    [SerializeField] GameObject CanUpgradePanel;
+    [SerializeField] GameObject CanNotUpgradePanel;
+
+
 
 
     [SerializeField] TMP_Text CanNotBuyText;
 
     [SerializeField] TMP_Text BuySkillErrorTxt;
+    [SerializeField] TMP_Text UpgradeSkillErrorTxt;
 
     public Skill_Entity SkillSelected;
- 
+    public AccountSkill_Entity AccountSkill;
+
+
 
     private void Awake()
     {
@@ -57,7 +86,7 @@ public class Skill_Manager : MonoBehaviour
 
         if (!SkillSelected.RoleInGameID.Equals(References.accountRefer.RoleInGameID))
         {
-            SetUpBuyPanel(false, true);
+            SetUpBuyPanel(false, true, false);
             CanNotBuyText.text = "Kỹ năng này không trong vai trò của bạn!";
         }
         else
@@ -65,25 +94,74 @@ public class Skill_Manager : MonoBehaviour
             if (References.accountRefer.Level < SkillSelected.LevelUnlock)
             {
                 CanNotBuyText.text = "Bạn cần đạt cấp độ " + SkillSelected.LevelUnlock + " để mở khóa!";
-                SetUpBuyPanel(false, true);
+                SetUpBuyPanel(false, true, false);
             }
             else
             {
 
                 if (CheckSkillOwned())
                 {
-                    SetUpBuyPanel(false, true);
-                    CanNotBuyText.text = "Đã sở hữu!";
+                    SetUpBuyPanel(false, false, true);
+                    CanNotBuyText.text = "";
                 }
                 else
                 {
-                    SetUpBuyPanel(true, false);
+                    SetUpBuyPanel(true, false, false);
                     CanNotBuyText.text = "";
                 }
             }
         }
 
         LoadSkillList();
+    }
+
+
+    public void SetUpInformationUpgradeSkill()
+    {
+        AccountSkill = AccountSkill_DAO.GetAccountSkillByID(References.accountRefer.ID, SkillSelected.ID);
+        if (AccountSkill != null)
+        {
+            ResetErrorMessage();
+            UpgradePanel.SetActive(true);
+            Upgrade_SkillImage.sprite = Resources.Load<Sprite>(SkillSelected.Image);
+            Upgrade_SkillNameTxt.text = SkillSelected.Name;
+            Upgrade_SkillDescriptionTxt.text = SkillSelected.Description;
+            Upgrade_ButtonCoinTxt.text = SkillSelected.BuyCost.ToString();
+            Upgrade_CurrentLevelTxt.text = AccountSkill.Level.ToString();
+            Upgrade_CurrentDamageTxt.text = AccountSkill.Damage.ToString("F2");
+            Upgrade_CurrentCooldownTxt.text = AccountSkill.Cooldown.ToString("F2");
+            Upgrade_CurrentChakraTxt.text = AccountSkill.Chakra.ToString("F2");
+            SetUpStatusForUpgrade();
+        }
+    }
+    public void SetUpStatusForUpgrade()
+    {
+        if (AccountSkill.Level < References.MaxUpgradeLevel)
+        {
+            SetUpUpgradePanel(true, false);
+            Upgrade_NextLevelTxt.text = (AccountSkill.Level + 1).ToString();
+
+            DamageBonus = Convert.ToInt32(AccountSkill.Damage * (1 + References.Uppercent_Skill_Damage / 100f));
+            CooldownBonus = (AccountSkill.Cooldown * (1 - References.Uppercent_Skill_CoolDown / 100f));
+            ChakraBonus = Convert.ToInt32((AccountSkill.Chakra * (1 - References.Uppercent_Skill_Chakra / 100f)));
+            
+            
+            
+            Upgrade_NextDamageTxt.text = DamageBonus.ToString("F2");
+            Upgrade_NextCooldownTxt.text = CooldownBonus.ToString("F2");
+            Upgrade_NextChakraTxt.text = ChakraBonus.ToString("F2");
+            
+        }
+        else
+        {
+            SetUpUpgradePanel(false, true);
+        }
+    }
+
+    public void CloseUpgradePanel()
+    {
+        UpgradePanel.SetActive(false);
+
     }
 
     public void LoadSkillList()
@@ -132,6 +210,23 @@ public class Skill_Manager : MonoBehaviour
         }
     }
 
+    public void UpgradeSelectedSkill()
+    {
+        if (References.accountRefer.Coin >= SkillSelected.UpgradeCost)
+        {
+            Skill_DAO.UpgradeSkill(References.accountRefer.ID, SkillSelected.ID, DamageBonus, CooldownBonus, ChakraBonus);
+            References.accountRefer.Coin -= SkillSelected.UpgradeCost;
+            References.LoadAccount();
+            Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().LoadAccountSkill();
+            SetUpInformationUpgradeSkill();
+            UpgradeSkillErrorTxt.text = "";
+        }
+        else
+        {
+            UpgradeSkillErrorTxt.text = "Bạn không đủ xu để mua!";
+        }
+    }
+
     public void OpenSkillPanel()
     {
         if (References.ListSkill != null)
@@ -151,13 +246,21 @@ public class Skill_Manager : MonoBehaviour
 
     public void ResetErrorMessage()
     {
+        UpgradeSkillErrorTxt.text = "";
         BuySkillErrorTxt.text = "";
     }
 
-    public void SetUpBuyPanel(bool CanBuyValue, bool CanNotBuyValue)
+    public void SetUpBuyPanel(bool CanBuyValue, bool CanNotBuyValue, bool OwnValue)
     {
         CanBuyPanel.SetActive(CanBuyValue);
         CanNotBuyPanel.SetActive(CanNotBuyValue);
+        OwnPanel.SetActive(OwnValue);
+    }
+
+    public void SetUpUpgradePanel(bool CanUpgradeValue, bool CanNotUpgradeValue)
+    {
+        CanUpgradePanel.SetActive(CanUpgradeValue);
+        CanNotUpgradePanel.SetActive(CanNotUpgradeValue);
     }
 
 }
