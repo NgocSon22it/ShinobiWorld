@@ -1,5 +1,7 @@
+using Assets.Scripts.Bag;
 using Assets.Scripts.Bag.Item;
 using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Database.Entity;
 using Assets.Scripts.Shop;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,9 +13,11 @@ public class BagItemManager : MonoBehaviour
 {
     public GameObject ItemTemplate;
     public Transform Content;
-    public TMP_Text Coin;
+    public TMP_Text Coin, Health, Chakra, Strength;
 
     public static BagItemManager Instance;
+
+    public List<AccountItem_Entity> list;
 
     private void Awake()
     {
@@ -24,7 +28,22 @@ public class BagItemManager : MonoBehaviour
     {
         DestroyItem();
         GetListItem();
-        ItemDetail.Instance.ShowDetail(References.listAccountItem[0].ItemID);
+        if (list.Count <= 0) { BagManager.Instance.ShowMessage(); }
+        else ItemDetail.Instance.ShowDetail(list[0].ItemID);
+    }
+
+    public void Reload(string ID)
+    {
+        DestroyItem();
+        GetListItem();
+        if (list.Count <= 0) { BagManager.Instance.ShowMessage(); }
+        else
+        {
+            var accountItem = list.Find(obj => obj.ItemID == ID);
+
+            if (accountItem != null) ItemDetail.Instance.ShowDetail(ID);
+            else ItemDetail.Instance.ShowDetail(list[0].ItemID);
+        }
     }
 
     public void DestroyItem()
@@ -39,9 +58,14 @@ public class BagItemManager : MonoBehaviour
     {
         References.accountRefer = Account_DAO.GetAccountByID("piENbG5OaZZn4WN0jNHQWhP4ZaA3");
         Coin.text = References.accountRefer.Coin.ToString();
+        Health.text = References.accountRefer.CurrentHealth.ToString();
+        Chakra.text = References.accountRefer.CurrentCharka.ToString();
+        Strength.text = References.accountRefer.CurrentStrength.ToString();
         References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
 
-        foreach (var accountItem in References.listAccountItem)
+        list = References.listAccountItem.FindAll(obj => obj.Amount > 0);
+
+        foreach (var accountItem in list)
         {
             var item = References.listItem.Find(obj => obj.ID == accountItem.ItemID);
             var itemManager = ItemTemplate.GetComponent<ItemBag>();

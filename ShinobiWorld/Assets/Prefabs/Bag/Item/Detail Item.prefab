@@ -698,21 +698,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+      - m_Target: {fileID: 4289235786568748287}
+        m_TargetAssemblyTypeName: Assets.Scripts.Bag.Item.ItemDetail, Assembly-CSharp
         m_MethodName: CheckAmount
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 10
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: UpdateCost
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -722,9 +710,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: CheckBuy
+      - m_Target: {fileID: 4289235786568748287}
+        m_TargetAssemblyTypeName: Assets.Scripts.Bag.Item.ItemDetail, Assembly-CSharp
+        m_MethodName: UpdatePrice
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -874,9 +862,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: Buy
+      - m_Target: {fileID: 4289235786568748287}
+        m_TargetAssemblyTypeName: Assets.Scripts.Bag.Item.ItemDetail, Assembly-CSharp
+        m_MethodName: Sell
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1451,8 +1439,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+      - m_Target: {fileID: 4289235786568748287}
+        m_TargetAssemblyTypeName: Assets.Scripts.Bag.Item.ItemDetail, Assembly-CSharp
         m_MethodName: Plus
         m_Mode: 1
         m_Arguments:
@@ -1855,9 +1843,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: Buy
+      - m_Target: {fileID: 4289235786568748287}
+        m_TargetAssemblyTypeName: Assets.Scripts.Bag.Item.ItemDetail, Assembly-CSharp
+        m_MethodName: Use
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2352,8 +2340,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+      - m_Target: {fileID: 4289235786568748287}
+        m_TargetAssemblyTypeName: Assets.Scripts.Bag.Item.ItemDetail, Assembly-CSharp
         m_MethodName: Min
         m_Mode: 1
         m_Arguments:
@@ -2758,14 +2746,14 @@ MonoBehaviour:
   Own: {fileID: 5479163334274128339}
   Price: {fileID: 4943183345365196262}
   Description: {fileID: 667085816244869286}
-  MessageError: {fileID: 3139790229748019657}
   Amount: {fileID: 5935548951577910288}
   MinBtn: {fileID: 6153379606750330138}
   PlusBtn: {fileID: 3331817389139691222}
   UseBtn: {fileID: 2913677005786686982}
   SellBtn: {fileID: 3518522398342013036}
-  cost: 0
-  isUpdateCost: 1
+  price: 0
+  isUpdatePrice: 1
+  ItemID: 
 --- !u!1 &7265032466895461459
 GameObject:
   m_ObjectHideFlags: 0

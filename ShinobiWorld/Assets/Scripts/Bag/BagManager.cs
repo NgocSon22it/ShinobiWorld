@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,16 @@ namespace Assets.Scripts.Bag
         public GameObject BagPannel;
         public Button ItemBtn, EquipmentBtn, BagBtn;
         public GameObject ItemDetail, EquipmentDetail;
+        public GameObject MessageError;
         GameObject instantiatedItemDetail, instantiatedEquipmentDetail;
+
+        public static BagManager Instance;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         public void OnBagBtnClick()
         {
             BagPannel.SetActive(true);
@@ -23,31 +33,41 @@ namespace Assets.Scripts.Bag
 
         public void OnItemBtnClick()
         {
-            AddItemDetail();
+            CloseMessage();
+            DestroyDetail();
+            instantiatedItemDetail = Instantiate(ItemDetail, BagPannel.transform);
             BagItemManager.Instance.Open();
         }
 
         public void OnEquipmentBtnClick()
         {
-            AddEquipmentDetail();
+            CloseMessage();
+            DestroyDetail();
+            instantiatedEquipmentDetail = Instantiate(EquipmentDetail, BagPannel.transform);
             BagEquipmentManager.Instance.Open();
         }
 
-        public void AddItemDetail()
+        public void DestroyDetail()
         {
-            if(instantiatedEquipmentDetail != null) Destroy(instantiatedEquipmentDetail);
-            instantiatedItemDetail = Instantiate(ItemDetail, BagPannel.transform);
-        }
-
-        public void AddEquipmentDetail()
-        {
-            if (instantiatedItemDetail != null)  Destroy(instantiatedItemDetail);
-            instantiatedEquipmentDetail = Instantiate(EquipmentDetail, BagPannel.transform);
+            Destroy(instantiatedItemDetail);
+            Destroy(instantiatedEquipmentDetail);
         }
 
         public void OnClose()
         {
             BagPannel.SetActive(false);
+        }
+
+        public void ShowMessage()
+        {
+            MessageError.SetActive(true);
+            Destroy(instantiatedItemDetail);
+            Destroy(instantiatedEquipmentDetail);
+        }
+
+        public void CloseMessage()
+        {
+            MessageError.SetActive(false);
         }
     }
 }

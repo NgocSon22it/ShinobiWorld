@@ -1262,8 +1262,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
-  m_Sprite: {fileID: -1534957992, guid: 8fa4c2329fa00ce42a72ac2cb3ac8117, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: eed19d5ac497e4d479bcba343a053dba, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1413,7 +1413,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1575108183, guid: a7c370c44c7b66b46b9cce8eb654d397, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5c28c295d0731e04a8a62517df3a50a2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1496,7 +1496,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1539622746, guid: 032773e7f8c018f43b10223355304b4e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1613,7 +1613,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 333623616, guid: c021ac96eae7a144fb395f1b2b2a27ab, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ff16a6c8d9b058c469a044e414b94909, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1696,7 +1696,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 5be5e9bd8226e164f9fbf2af60bcc2f4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1869,6 +1869,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponName: 
+  SkillOneName: 
+  SkillTwoName: 
+  SkillThreeName: 
   PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
   PlayerAllUIPrefabs: {fileID: 4182973934900452979, guid: bb173a98f7a86ba4c81c986cc2ac0c96, type: 3}
@@ -1881,11 +1884,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   AttackPoint: {fileID: 8593830438398984553}
-  SkillOneCooldown_Total: 5
+  SkillOneCooldown_Total: 0
   SkillOneCooldown_Current: 0
-  SkillTwoCooldown_Total: 5
+  SkillTwoCooldown_Total: 0
   SkillTwoCooldown_Current: 0
-  SkillThreeCooldown_Total: 7
+  SkillThreeCooldown_Total: 0
   SkillThreeCooldown_Current: 0
   animator: {fileID: 0}
   rigidbody2d: {fileID: 0}
@@ -1909,6 +1912,7 @@ MonoBehaviour:
   Mouth: {fileID: 8538844861818809087}
   CanWalking: 0
   AttackRange: 1
+  Sword: {fileID: 8538844862244849140}
 --- !u!114 &380580311979023675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2041,7 +2045,7 @@ MonoBehaviour:
   - {fileID: 3417184116348443872}
   - {fileID: -1914673008292081361}
   - {fileID: -8320561212469917128}
-  sceneViewId: 0
+  sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &-1914673008292081361
