@@ -22,6 +22,8 @@ public static class References
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
 
+    public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
+
     public static void LoadAccount()
     {
         if (accountRefer != null)
