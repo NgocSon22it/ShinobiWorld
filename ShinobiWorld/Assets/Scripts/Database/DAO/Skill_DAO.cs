@@ -34,7 +34,6 @@ public static class Skill_DAO
                         Cooldown = Convert.ToDouble(dr["Cooldown"]),
                         Damage = Convert.ToInt32(dr["Damage"]),
                         Chakra = Convert.ToInt32(dr["Chakra"]),
-                        Uppercent = Convert.ToInt32(dr["Uppercent"]),
                         LevelUnlock = Convert.ToInt32(dr["LevelUnlock"]),
                         UpgradeCost = Convert.ToInt32(dr["UpgradeCost"]),
                         BuyCost = Convert.ToInt32(dr["BuyCost"]),
@@ -78,7 +77,6 @@ public static class Skill_DAO
                         Cooldown = Convert.ToDouble(dr["Cooldown"]),
                         Damage = Convert.ToInt32(dr["Damage"]),
                         Chakra = Convert.ToInt32(dr["Chakra"]),
-                        Uppercent = Convert.ToInt32(dr["Uppercent"]),
                         LevelUnlock = Convert.ToInt32(dr["LevelUnlock"]),
                         UpgradeCost = Convert.ToInt32(dr["UpgradeCost"]),
                         BuyCost = Convert.ToInt32(dr["BuyCost"]),
@@ -110,6 +108,23 @@ public static class Skill_DAO
             cmd.Parameters.AddWithValue("@Cooldown", skill_Entity.Cooldown);
             cmd.Parameters.AddWithValue("@Damage", skill_Entity.Damage);
             cmd.Parameters.AddWithValue("@Chakra", skill_Entity.Chakra);
+            connection.Open();
+            cmd.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
+
+    public static void UpgradeSkill(string UserID, string SkillID, int Damage, double Cooldown, int Chakra)
+    {
+        using (SqlConnection connection = new SqlConnection(ConnectionStr))
+        {
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "Update AccountSkill set [Level] += 1, Damage = @Damage, Cooldown = @Cooldown, Chakra = @Chakra where AccountID = @UserID and SkillID = @SkillID";
+            cmd.Parameters.AddWithValue("@UserID", UserID);
+            cmd.Parameters.AddWithValue("@Damage", Damage);
+            cmd.Parameters.AddWithValue("@Cooldown", Cooldown);
+            cmd.Parameters.AddWithValue("@Chakra", Chakra);
+            cmd.Parameters.AddWithValue("@SkillID", SkillID);
             connection.Open();
             cmd.ExecuteNonQuery();
             connection.Close();
