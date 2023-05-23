@@ -9,6 +9,12 @@ public class MeleeChacracter : PlayerBase
 {
     [SerializeField] float AttackRange;
 
+    //Skill One
+    [SerializeField] SpriteRenderer Sword;
+    float TimeCount = 5f;
+    private Coroutine Righteous;
+    int Righteous_BonusDamage = 50;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -16,10 +22,11 @@ public class MeleeChacracter : PlayerBase
         if (photonView.IsMine)
         {
             WeaponName = "Weapon_Sword";
+            SkillOneName = "Skill_MeleeOne";
+            SkillTwoName = "Skill_MeleeTwo";
+            SkillThreeName = "Skill_MeleeThree";
             AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeOne");
-            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeTwo");
-            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_MeleeThree");
+            LoadAccountSkill();
         }
     }
 
@@ -125,7 +132,16 @@ public class MeleeChacracter : PlayerBase
 
     public void Animation_SkillOne()
     {
-        StartCoroutine(RighteousSword());
+
+        if (Righteous != null)
+        {          
+            // If a color change coroutine is already running, stop it
+            StopCoroutine(Righteous);
+            SetUpRighteous(Color.black, 0f, -Righteous_BonusDamage);
+            Righteous = null;
+        }
+
+        Righteous =  StartCoroutine(RighteousSword());
     }
 
     public void Animation_SkillTwo()
@@ -144,13 +160,25 @@ public class MeleeChacracter : PlayerBase
 
     public IEnumerator RighteousSword()
     {
-        int DamageBonus = 50;
-        AccountWeapon_Entity.Damage += DamageBonus;
-        yield return new WaitForSeconds(5f);
-        AccountWeapon_Entity.Damage -= DamageBonus;
+        SetUpRighteous(Color.yellow, 3f, Righteous_BonusDamage);
+
+        yield return new WaitForSeconds(TimeCount);
+
+        SetUpRighteous(Color.black, 0f, -Righteous_BonusDamage);
+
+        Righteous = null;
     }
 
+    public void SetUpRighteous(Color color, float Intensity, int Damage)
+    {
+        AccountWeapon_Entity.Damage += Damage;
 
+        Sword.material.SetColor("_GlowColor", color * Intensity);
+
+        Debug.Log(AccountWeapon_Entity.Damage);
+    }
+
+     
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

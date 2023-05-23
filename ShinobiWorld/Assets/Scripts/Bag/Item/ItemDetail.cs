@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WebSocketSharp;
+using static UnityEditor.Progress;
 
 namespace Assets.Scripts.Bag.Item
 {
@@ -20,6 +21,7 @@ namespace Assets.Scripts.Bag.Item
 
         public int price;
         public bool isUpdatePrice = true;
+        public string ItemID;
 
         public static ItemDetail Instance;
 
@@ -30,6 +32,7 @@ namespace Assets.Scripts.Bag.Item
 
         public void ShowDetail(string ID)
         {
+            ItemID = ID;
             var item = References.listItem.Find(obj => obj.ID == ID);
             var accountItem = References.listAccountItem.Find(obj => obj.ItemID == ID);
 
@@ -90,10 +93,17 @@ namespace Assets.Scripts.Bag.Item
 
         public void Sell()
         {
-            AccountItem_DAO.SellItem(References.accountRefer.ID, "Item_" + Name.text,
+            AccountItem_DAO.SellItem(References.accountRefer.ID, ItemID,
                                     int.Parse(Amount.text), int.Parse(Price.text));
 
-            BagItemManager.Instance.Reload("Item_" + Name.text);
+            BagItemManager.Instance.Reload(ItemID);
+        }
+
+        public void Use()
+        {
+            AccountItem_DAO.UseItem(References.accountRefer.ID, ItemID);
+
+            BagItemManager.Instance.Reload(ItemID);
         }
     }
 }

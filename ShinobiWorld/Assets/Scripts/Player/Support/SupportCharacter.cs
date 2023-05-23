@@ -13,10 +13,11 @@ public class SupportCharacter : PlayerBase
     {
         base.Start();
         WeaponName = "Weapon_Glove";
+        SkillOneName = "Skill_SupportOne";
+        SkillTwoName = "Skill_SupportTwo";
+        SkillThreeName = "Skill_SupportThree";
         AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-        SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_SupportOne");
-        SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_SupportTwo");
-        SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, "Skill_SupportThree");
+        LoadAccountSkill();
     }
 
     // Update is called once per frame

@@ -23,7 +23,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
     public AccountSkill_Entity SkillThree_Entity = new AccountSkill_Entity();
 
-    public string WeaponName;
+    public string WeaponName, SkillOneName, SkillTwoName, SkillThreeName;
 
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerControlPrefabs;
@@ -457,10 +457,14 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         SkillThreeCooldown_Current = SkillThreeCooldown_Total;
         AccountEntity.CurrentCharka -= SkillThree_Entity.Chakra;
         LoadPlayerChakraUI();
-
-
     }
 
+    public void LoadAccountSkill()
+    {
+        SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillOneName);
+        SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillTwoName);
+        SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillThreeName);
+    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

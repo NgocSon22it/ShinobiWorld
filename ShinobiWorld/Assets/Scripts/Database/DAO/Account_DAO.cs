@@ -238,5 +238,27 @@ namespace Assets.Scripts.Database.DAO
             }
             return IsFirst;
         }
+        public static void LoadAccount(Account_Entity account_Entity)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Charka = @Chakra, CurrentCharka = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
+                cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
+                cmd.Parameters.AddWithValue("@Health", account_Entity.Health);
+                cmd.Parameters.AddWithValue("@CurrentHealth", account_Entity.CurrentHealth);
+                cmd.Parameters.AddWithValue("@Chakra", account_Entity.Charka);
+                cmd.Parameters.AddWithValue("@CurrentChakra", account_Entity.CurrentCharka);
+                cmd.Parameters.AddWithValue("@Exp", account_Entity.Exp);
+                cmd.Parameters.AddWithValue("@Coin", account_Entity.Coin);
+                cmd.Parameters.AddWithValue("@Power", account_Entity.Power);
+                cmd.Parameters.AddWithValue("@Strenth", account_Entity.Strength);
+                cmd.Parameters.AddWithValue("@CurrentStrength", account_Entity.CurrentStrength);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }
