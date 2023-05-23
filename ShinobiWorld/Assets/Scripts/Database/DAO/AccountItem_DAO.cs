@@ -83,5 +83,19 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+        public static void UseItem(string UserID, string ItemID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "EXECUTE [dbo].[UseItem] @UserID, @ItemID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@ItemID", ItemID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }
