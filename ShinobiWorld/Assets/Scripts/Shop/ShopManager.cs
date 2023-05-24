@@ -8,7 +8,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Windows;
 using WebSocketSharp;
-using static UnityEditor.Progress;
 
 public class ShopManager : MonoBehaviour
 { 

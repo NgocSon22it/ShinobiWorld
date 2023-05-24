@@ -1,10 +1,20 @@
+using Assets.Scripts.Database.Entity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigDart : MonoBehaviour
+public class SuperDart : MonoBehaviour
 {
     [SerializeField] List<string> ListTag = new List<string>();
+
+    string UserID;
+    AccountSkill_Entity accountSkill_Entity;
+
+    public void SetUpSuperDart(string UserID, AccountSkill_Entity accountSkill_Entity)
+    {
+        this.UserID = UserID;
+        this.accountSkill_Entity = accountSkill_Entity;
+    }
 
     private void OnEnable()
     {
@@ -25,6 +35,10 @@ public class BigDart : MonoBehaviour
     {
         if (ListTag.Contains(collision.gameObject.tag))
         {
+            if (collision.gameObject.tag == "Enemy")
+            {
+                collision.GetComponent<Enemy>().TakeDamage(UserID, accountSkill_Entity.Damage);
+            }
             TurnOff();
         }
     }
