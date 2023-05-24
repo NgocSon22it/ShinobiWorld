@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -198,8 +197,10 @@ public class Skill_Manager : MonoBehaviour
         {
             Skill_DAO.BuySkill(References.accountRefer.ID, SkillSelected);
             References.accountRefer.Coin -= SkillSelected.BuyCost;
+
             References.LoadAccount();
             Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().LoadAccountSkill();
+
             LoadSkillList();
             SetUpSelectedSkill(SkillSelected);
             BuySkillErrorTxt.text = "";
@@ -217,7 +218,11 @@ public class Skill_Manager : MonoBehaviour
             Skill_DAO.UpgradeSkill(References.accountRefer.ID, SkillSelected.ID, DamageBonus, CooldownBonus, ChakraBonus);
             References.accountRefer.Coin -= SkillSelected.UpgradeCost;
             References.LoadAccount();
+
+            PlayerCoinTxt.text = References.accountRefer.Coin.ToString();
+
             Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().LoadAccountSkill();
+            Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(References.accountRefer.Coin);
             SetUpInformationUpgradeSkill();
             UpgradeSkillErrorTxt.text = "";
         }

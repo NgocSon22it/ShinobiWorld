@@ -165,6 +165,7 @@ public class RangeCharacter : PlayerBase
             {
                 skillOne.transform.position = AttackPoint.position;
                 skillOne.transform.rotation = AttackPoint.rotation;
+                skillOne.GetComponent<SuperDart>().SetUpSuperDart(AccountEntity.ID, SkillOne_Entity);
                 skillOne.SetActive(true);
                 skillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
             }
@@ -175,6 +176,7 @@ public class RangeCharacter : PlayerBase
             {
                 skillOne.transform.position = AttackPoint.position;
                 skillOne.transform.rotation = AttackPoint.rotation;
+                skillOne.GetComponent<SuperDart>().SetUpSuperDart(AccountEntity.ID, SkillOne_Entity);
                 skillOne.SetActive(true);
                 skillOne.GetComponent<Rigidbody2D>().velocity = (10 * new Vector2(transform.localScale.x, 0));
             }
@@ -208,6 +210,7 @@ public class RangeCharacter : PlayerBase
         {
             centerDarts.transform.position = transform.position;
             centerDarts.transform.rotation = Quaternion.identity;
+            centerDarts.GetComponent<RedDart>().SetUpRedDart(AccountEntity.ID, SkillTwo_Entity);
             centerDarts.SetActive(true);
             centerDarts.GetComponent<Rigidbody2D>().velocity = direction;
         }
@@ -216,6 +219,7 @@ public class RangeCharacter : PlayerBase
         if (leftDarts != null)
         {
             leftDarts.transform.position = transform.position;
+            leftDarts.GetComponent<RedDart>().SetUpRedDart(AccountEntity.ID, SkillTwo_Entity);
             leftDarts.SetActive(true);
             leftDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
@@ -224,6 +228,7 @@ public class RangeCharacter : PlayerBase
         if (rightDarts != null)
         {
             rightDarts.transform.position = transform.position;
+            rightDarts.GetComponent<RedDart>().SetUpRedDart(AccountEntity.ID, SkillTwo_Entity);
             rightDarts.SetActive(true);
             rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }

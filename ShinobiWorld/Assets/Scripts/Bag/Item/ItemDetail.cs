@@ -8,7 +8,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WebSocketSharp;
-using static UnityEditor.Progress;
 
 namespace Assets.Scripts.Bag.Item
 {
