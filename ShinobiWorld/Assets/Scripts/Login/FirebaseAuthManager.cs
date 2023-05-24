@@ -432,7 +432,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                PhotonNetwork.LoadLevel(Scenes.Game);
+                PhotonNetwork.LoadLevel(Scenes.Konoha);
             }
         }
         else
@@ -440,6 +440,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
         }
     }
+
     private void OnApplicationQuit()
     {
         Account_DAO.ChangeStateOnline(user.UserId, false);
@@ -449,8 +450,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (auth != null && user != null)
         {
-            auth.SignOut();
             Account_DAO.ChangeStateOnline(user.UserId, false);
+            auth.SignOut();
             PhotonNetwork.Disconnect();
         }
     }

@@ -13,7 +13,6 @@ public class BagItemManager : MonoBehaviour
 {
     public GameObject ItemTemplate;
     public Transform Content;
-    public TMP_Text Coin, Health, Chakra, Strength;
 
     public static BagItemManager Instance;
 
@@ -56,11 +55,6 @@ public class BagItemManager : MonoBehaviour
 
     public void GetListItem()
     {
-        References.accountRefer = Account_DAO.GetAccountByID("piENbG5OaZZn4WN0jNHQWhP4ZaA3");
-        Coin.text = References.accountRefer.Coin.ToString();
-        Health.text = References.accountRefer.CurrentHealth.ToString();
-        Chakra.text = References.accountRefer.CurrentCharka.ToString();
-        Strength.text = References.accountRefer.CurrentStrength.ToString();
         References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
 
         list = References.listAccountItem.FindAll(obj => obj.Amount > 0);
