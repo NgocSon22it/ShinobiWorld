@@ -58,7 +58,6 @@ namespace Assets.Scripts.Bag.Equipment
 
         public void GetListEquidment()
         {
-            References.accountRefer = Account_DAO.GetAccountByID("piENbG5OaZZn4WN0jNHQWhP4ZaA3");
             References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
             
             foreach (var accountEquipment in References.listAccountEquipment)
