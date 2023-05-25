@@ -116,10 +116,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         playerInput = GetComponent<PlayerInput>();
         playerPool = GetComponent<Player_Pool>();
         player_LevelManagement = GetComponent<Player_LevelManagement>();
-
-
     }
 
+    [PunRPC]
     public void LoadLayout()
     {
         //Eye
@@ -131,11 +130,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         Hair.sprite = Resources.Load<Sprite>(image);
 
         //Mouth
-        image = References.listMouth.Find(obj => obj.ID == AccountEntity.EyeID).Image;
+        image = References.listMouth.Find(obj => obj.ID == AccountEntity.MouthID).Image;
         Mouth.sprite = Resources.Load<Sprite>(image);
 
         //Skin
         image = References.listSkin.Find(obj => obj.ID == AccountEntity.SkinID).Image;
+
         Shirt.sprite = Resources.Load<Sprite>(image + "_Shirt");
         LeftHand.sprite = Resources.Load<Sprite>(image + "_LeftHand");
         RightHand.sprite = Resources.Load<Sprite>(image + "_RightHand");
@@ -153,6 +153,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (AccountEntity != null)
             {
+                photonView.RPC(nameof(LoadLayout), RpcTarget.AllBuffered);
                 PlayerControlInstance = Instantiate(PlayerControlPrefabs);
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
@@ -167,24 +168,19 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
-                player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
-
-                sortingGroup.sortingLayerName = "Me";
+                player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);               
                 PlayerHealthChakraUI.SetActive(false);
-                PlayerHealthChakraUI.GetComponent<Canvas>().sortingLayerName = "Me";
 
                 InvokeRepeating(nameof(RegenHealth), 1f, 1f);
                 InvokeRepeating(nameof(RegenChakra), 1f, 1f);
             }
-
         }
         else
         {
-            sortingGroup.sortingLayerName = "Other";
             PlayerHealthChakraUI.SetActive(true);
-            PlayerHealthChakraUI.GetComponent<Canvas>().sortingLayerName = "Other";
+            
         }
-
+        
         PlayerNickName.text = photonView.Owner.NickName;
         LoadPlayerHealthUI();
         LoadPlayerChakraUI();
