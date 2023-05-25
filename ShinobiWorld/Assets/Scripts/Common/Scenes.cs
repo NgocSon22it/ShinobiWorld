@@ -8,4 +8,5 @@ public class Scenes
     public static string Login      = "Login";
     public static string MainMenu   = "MainMenu";
     public static string Creator    = "Creator";
+    public static string Konoha = "Lang La";
 }

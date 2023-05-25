@@ -36,44 +36,101 @@ public class Creator : MonoBehaviour
     public SpriteRenderer Mouth;
 
     [Header("Role")]
-    public int roleNr;
-    public List<Role> roles;
     public SpriteRenderer Weapon;
-    public TMP_Text Name;
+    public Button MeleeBtn, RangeBtn, SupportBtn;
+
+    [Header("Button")]
+    public Button HairBtn;
+    public Button EyeBtn;
+    public Button MouthBtn;
+    public Button SkinBtn;
+    public Button BackBtn;
+    public GameObject ChangeBtn;
 
     string layout = "Role";
+    string IDRole = "Role_Melee";
 
-    public void OnRoleBtnClick()
+
+    public void ResetColorRole()
     {
+        MeleeBtn.GetComponent<Image>().color = Color.white;
+        RangeBtn.GetComponent<Image>().color = Color.white;
+        SupportBtn.GetComponent<Image>().color = Color.white;
+        ResetColorLayout();
+        ChangeBtn.SetActive(false);
+    }
+
+    public void ResetColorLayout()
+    {
+        ChangeBtn.SetActive(true);
+        HairBtn.GetComponent<Image>().color = Color.white;
+        EyeBtn.GetComponent<Image>().color = Color.white;
+        MouthBtn.GetComponent<Image>().color = Color.white;
+        SkinBtn.GetComponent<Image>().color = Color.white;
+    }
+    public void OnMeleeBtnClick()
+    {
+        IDRole = "Role_Melee";
         layout = "Role";
+        ResetColorRole();
+        MeleeBtn.GetComponent<Image>().color = new Color32(0, 100, 255, 255);
+    }
+
+    public void OnRangeBtnClick()
+    {
+        IDRole = "Role_Range";
+        layout = "Role";
+        ResetColorRole();
+        RangeBtn.GetComponent<Image>().color = new Color32(0, 100, 255, 255);
+    }
+
+    public void OnSupportBtnClick()
+    {
+        IDRole = "Role_Support";
+        layout = "Role";
+        ResetColorRole();
+        SupportBtn.GetComponent<Image>().color = new Color32(0, 100, 255, 255);
     }
 
     public void OnSkinBtnClick()
     {
         layout = "Skin";
+        ResetColorLayout();
+        SkinBtn.GetComponent<Image>().color = new Color32(255, 190, 0, 255);
     }
 
     public void OnHairBtnClick()
     {
         layout = "Hair";
+        ResetColorLayout();
+        HairBtn.GetComponent<Image>().color = new Color32(255, 190, 0, 255);
     }
 
     public void OnEyeBtnClick()
     {
         layout = "Eye";
+        ResetColorLayout();
+        EyeBtn.GetComponent<Image>().color = new Color32(255, 190, 0, 255);
     }
 
     public void OnMouthBtnClick()
     {
         layout = "Mouth";
+        ResetColorLayout();
+        MouthBtn.GetComponent<Image>().color = new Color32(255, 190, 0, 255);
+    }
+
+    public void OnBackBtnClick()
+    {
+        PhotonNetwork.Disconnect();
+        PhotonNetwork.LoadLevel(Scenes.Login);
     }
 
     public void OnSaveBtnClick()
     {
-        Account_DAO.SaveLayout(References.accountRefer.ID, roles[roleNr].ID, 
+        Account_DAO.SaveLayout(References.accountRefer.ID, IDRole, 
             eyes[eyeNr].ID, hairs[hairNr].ID, mouths[mouthNr].ID, skins[skinNr].ID);
-
-        PhotonNetwork.LoadLevel(Scenes.Game);
+        PhotonNetwork.LoadLevel(Scenes.Konoha);
     }
 
     void LateUpdate()
@@ -119,14 +176,20 @@ public class Creator : MonoBehaviour
             skins.Add(skin);
         }
 
-        foreach (var item in References.listRole)
-        {
-            var role = new Role();
-            role.ID = item.ID;
-            role.Weapon = Resources.Load<Sprite>(item.Image);
-            role.Name = item.Name;
-            roles.Add(role);
-        }
+        //init layout
+        Hair.sprite = hairs[0].Sprite;
+        Eye.sprite = eyes[0].Sprite;
+        Mouth.sprite = mouths[0].Sprite;
+        Shirt.sprite = skins[0].Shirt;
+        LeftHand.sprite = skins[0].LeftHand;
+        RightHand.sprite = skins[0].RightHand;
+        LeftFoot.sprite = skins[0].LeftFoot;
+        RightFoot.sprite = skins[0].RightFoot;
+        var image = References.listRole.Find(obj => obj.ID == IDRole).Image;
+        Weapon.sprite = Resources.Load<Sprite>(image);
+
+        MeleeBtn.GetComponent<Image>().color = new Color32(0, 100, 255, 255);
+        ChangeBtn.SetActive(false);
     }
 
     void LayoutChoice()
@@ -150,8 +213,8 @@ public class Creator : MonoBehaviour
                 RightFoot.sprite = skins[skinNr].RightFoot;
                 break;
             case "Role":
-                Weapon.sprite = roles[roleNr].Weapon;
-                Name.text = roles[roleNr].Name;
+                var image = References.listRole.Find(obj => obj.ID == IDRole).Image;
+                Weapon.sprite = Resources.Load<Sprite>(image); 
                 break;
         }
     }
@@ -172,9 +235,6 @@ public class Creator : MonoBehaviour
             case "Skin":
                 skinNr = (skinNr + 1) > skins.Count - 1 ? 0 : ++skinNr;
                 break;
-            case "Role":
-                roleNr = (roleNr + 1) > roles.Count - 1 ? 0 : ++roleNr;
-                break;
         }
     }
 
@@ -193,9 +253,6 @@ public class Creator : MonoBehaviour
                 break;
             case "Skin":
                 skinNr = (skinNr - 1) < 0 ? skins.Count - 1 : --skinNr;
-                break;
-            case "Role":
-                roleNr = (roleNr - 1) < 0 ? roles.Count - 1 : --roleNr;
                 break;
         }
     }
@@ -217,12 +274,4 @@ public struct Layout
 {
     public string ID;
     public Sprite Sprite;
-}
-
-[System.Serializable]
-public struct Role
-{
-    public string ID;
-    public Sprite Weapon;
-    public string Name;
 }
