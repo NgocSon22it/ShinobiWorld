@@ -317,7 +317,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443372752192905
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +401,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443372838735683
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,7 +517,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443373196502186
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,7 +601,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443373260945476
 GameObject:
   m_ObjectHideFlags: 0
@@ -751,7 +751,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443373997991443
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,7 +835,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443374064252308
 GameObject:
   m_ObjectHideFlags: 0
@@ -951,7 +951,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443374251207326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,7 +1035,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443374396377185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1119,7 +1119,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &1231443374405932938
 GameObject:
   m_ObjectHideFlags: 0
@@ -1140,9 +1140,10 @@ GameObject:
   - component: {fileID: 9178576785560787549}
   - component: {fileID: 1765921653329179999}
   - component: {fileID: -8033183920986694419}
-  m_Layer: 0
+  - component: {fileID: 7713341436081449469}
+  m_Layer: 6
   m_Name: Player_Support
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1216,7 +1217,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &1231443374405932936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1557,7 +1558,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!210 &1765921653329179999
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -1566,8 +1567,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1231443374405932938}
   m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 178467679
+  m_SortingLayer: 4
   m_SortingOrder: 0
 --- !u!114 &-8033183920986694419
 MonoBehaviour:
@@ -1581,6 +1582,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1268cfb93420c8d428f8db85402bde73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!61 &7713341436081449469
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231443374405932938}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.068291634, y: -0.7392499}
+  m_SpriteTilingProperty:
+    border: {x: 1.5799999, y: 0.22, z: 1.68, w: 0.16}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.94, y: 4.2}
+    newSize: {x: 5.94, y: 4.2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.68462783, y: 0.57305443}
+  m_EdgeRadius: 0
 --- !u!1 &1785329040892814512
 GameObject:
   m_ObjectHideFlags: 0
@@ -2141,7 +2168,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1214518677
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &5782387832993526486
