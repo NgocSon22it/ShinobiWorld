@@ -1,10 +1,12 @@
 ﻿using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using WebSocketSharp;
@@ -16,7 +18,7 @@ namespace Assets.Scripts.Bag.Item
         public Image Image;
         public TMP_Text Name, Own, Price, Description;
         public TMP_InputField Amount;
-        public Button MinBtn, PlusBtn, UseBtn, SellBtn;
+        public Button MinBtn, PlusBtn;
 
         public int price;
         public bool isUpdatePrice = true;
@@ -38,13 +40,14 @@ namespace Assets.Scripts.Bag.Item
             Image.sprite = Resources.Load<Sprite>(item.Image);
             Name.text = item.Name;
             Own.text = accountItem.Amount.ToString();
-            price = Convert.ToInt32(item.BuyCost * 0.8);
-            Price.text = price.ToString();
-            Amount.text = "1";
+            if (!Price.IsUnityNull())
+            {
+                price = Convert.ToInt32(item.BuyCost * 0.8);
+                Price.text = price.ToString();
+                isUpdatePrice = true;
+            }
+            if (!Amount.IsUnityNull())  Amount.text = "1";
             Description.text = item.Description;
-
-            isUpdatePrice = true;
-
         }
 
         public void CheckAmount()
@@ -95,14 +98,14 @@ namespace Assets.Scripts.Bag.Item
             AccountItem_DAO.SellItem(References.accountRefer.ID, ItemID,
                                     int.Parse(Amount.text), int.Parse(Price.text));
 
-            BagItemManager.Instance.Reload(ItemID);
+            BagManager.Instance.ReloadItem(ItemID);
         }
 
         public void Use()
         {
             AccountItem_DAO.UseItem(References.accountRefer.ID, ItemID);
 
-            BagItemManager.Instance.Reload(ItemID);
+            BagManager.Instance.ReloadItem(ItemID);
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Assets.Scripts.Bag.Item;
 using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +17,6 @@ namespace Assets.Scripts.Bag.Equipment
     {
         public Image Image;
         public TMP_Text Name, Level, Price, UpgradeCost, Description, MessageError;
-        public Button UseBtn, SellBtn, UpgradeBtn, DowngradeBtn;
 
         public static EquipmentDetail Instance;
         public string EquipmentID;
@@ -34,8 +35,8 @@ namespace Assets.Scripts.Bag.Equipment
             Image.sprite = Resources.Load<Sprite>(equipment.Image);
             Name.text = equipment.Name;
             Level.text = accountEquipment.Level.ToString();
-            Price.text = equipment.SellCost.ToString();
-            UpgradeCost.text = equipment.UpgradeCost.ToString();
+            if (!Price.IsUnityNull()) Price.text = equipment.SellCost.ToString();
+            if (!UpgradeCost.IsUnityNull()) UpgradeCost.text = equipment.UpgradeCost.ToString();
             Description.text = equipment.Description;
         }
 
@@ -43,7 +44,7 @@ namespace Assets.Scripts.Bag.Equipment
         {
             AccountEquipment_DAO.SellEquipment(References.accountRefer.ID, EquipmentID, int.Parse(Price.text));
 
-            BagEquipmentManager.Instance.Reload(EquipmentID);
+            BagManager.Instance.ReloadEquipment(EquipmentID);
         }
     }
 }

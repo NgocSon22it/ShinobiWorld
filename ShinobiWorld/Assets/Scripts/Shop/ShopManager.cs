@@ -1,3 +1,4 @@
+using Assets.Scripts.Bag;
 using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Shop;
 using System;
@@ -11,181 +12,50 @@ using UnityEngine.Windows;
 using WebSocketSharp;
 
 public class ShopManager : MonoBehaviour
-{ 
-    public GameObject ItemTemplate, ShopPannel;
-    public Transform Content;
+{
+    public GameObject Shop, BuyPanel, SellPanel, PopupPanel;
+    public Button BuyBtn, SellBtn;
+
+    GameObject instantiatedBuyPanel, instantiatedSellPanel;
 
     public static ShopManager Instance;
-
-    [Header("Detail")]
-    public Image Image;
-    public TMP_Text Name, Cost, Limit, Description, MessageError;
-    public TMP_InputField Amount;
-    public Button MinBtn, PlusBtn, BuyBtn, ShopBtn, CloseBtn;
-
-    public int cost;
-    public bool isUpdateCost = true;
-    public string ItemID;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    public void OpenShop()
+    public void OnShopBtnClick()
     {
-        ShopPannel.SetActive(true);
-        DestroyItem();
-        GetListItem();
-        ShowDetail(References.listItem[0].ID);
+        PopupPanel.SetActive(true);
     }
 
-    public void DestroyItem()
+    public void OnBuyBtnClick()
     {
-        foreach (Transform child in Content)
-        {
-            Destroy(child.gameObject);
-        }
+        PopupPanel.SetActive(false);
+        instantiatedBuyPanel = Instantiate(BuyPanel, Shop.transform);
+        BuyItemManager.Instance.Open();
     }
 
-    public void CloseShop()
+    public void OnSellBtnClick()
     {
-        DestroyItem();
-        ShopPannel.SetActive(false);
+        PopupPanel.SetActive(false);
+        instantiatedSellPanel = Instantiate(SellPanel, Shop.transform);
+        BagManager.Instance.OnItemBtnClick();  
     }
 
-    public void GetListItem()
+    public void Close()
     {
-        foreach (var item in References.listItem)
-        {
-            var itemManager = ItemTemplate.GetComponent<ItemShop>();
-            itemManager.ID = item.ID;
-            itemManager.Image.sprite = Resources.Load<Sprite>(item.Image);
-            itemManager.Cost.text = item.BuyCost.ToString();
-            itemManager.Name.text = item.Name;
-            Instantiate(ItemTemplate, Content);
-        }
-        if(References.DateUpdate.Day != DateTime.Now.Day)
-        {
-            References.DateUpdate = DateTime.Now;
-            AccountItem_DAO.ResetLimitBuyItem(References.accountRefer.ID);
-        }
-        References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
+        PopupPanel.SetActive(false);
     }
 
-    public void ShowDetail(string ID)
+    public void CloseBuyPanel()
     {
-        ItemID = ID;
-        var item = References.listItem.Find(obj => obj.ID == ID);
-        Image.sprite = Resources.Load<Sprite>(item.Image);
-        Name.text = item.Name;
-        Cost.text = item.BuyCost.ToString();
-        Limit.text = item.Limit.ToString();
-        Amount.text = "1";
-        Description.text = item.Description;
-
-        //set active btn
-        BuyBtn.interactable = true;
-        MinBtn.interactable = true;
-        PlusBtn.interactable = true;
-        Amount.interactable = true;
-
-        cost = item.BuyCost; //cost of a item 
-        isUpdateCost = true; // update cost*amount
-
-        //Get limit buy items in a day of the account
-        var accountItem = References.listAccountItem.Find(obj => obj.ItemID == ID);
-        if (accountItem != null)
-        {
-            Limit.text = accountItem.Limit.ToString();
-        }
-
-        //Show message overlimit buy item in a day of the account
-        if (Limit.text == "0")
-        {
-            MessageError.text = Message.OverLimit;
-            BuyBtn.interactable = false;
-            MinBtn.interactable = false;
-            PlusBtn.interactable = false;
-            Amount.interactable = false;
-        }
-        else
-        {
-            //Check coin current of the account
-            CheckBuy();
-        }
-       
+        Destroy(instantiatedBuyPanel);
     }
 
-    public void CheckAmount()
+    public void CloseSellPanel()
     {
-        int value = 0;
-        if (!Amount.text.IsNullOrEmpty() && (!int.TryParse(Amount.text, out value) ||(value <= 0)))
-        {
-            Amount.text = "1";
-        } else
-        {
-            if(value > int.Parse(Limit.text)) Amount.text = Limit.text;
-        }
+        Destroy(instantiatedSellPanel);
     }
-
-    public void UpdateCost()
-    {
-        if (isUpdateCost && !Amount.text.IsNullOrEmpty())
-        {
-            Cost.text = (cost * int.Parse(Amount.text)).ToString();
-        }   
-    }
-
-    public void Plus()
-    {
-        if (Amount.text.IsNullOrEmpty())
-            Amount.text = "1";
-        else
-        {
-            var value = int.Parse(Amount.text);
-            Amount.text = (++value).ToString();
-        }
-    }
-
-    public void Min()
-    {
-        if (Amount.text.IsNullOrEmpty())
-            Amount.text = "1";
-        else
-        {
-            var value = int.Parse(Amount.text);
-            Amount.text = (--value).ToString();
-        }
-    }
-
-    public void CheckBuy()
-    {
-        if (int.Parse(Cost.text) <= References.accountRefer.Coin)
-        {
-            BuyBtn.interactable = true;
-            MessageError.text = "";
-        }
-        else
-        {
-            MessageError.text = Message.NotEnoughMoney.ToString();
-            BuyBtn.interactable = false;
-        }
-                
-    }
-
-    public void Buy()
-    {
-        AccountItem_DAO.BuyItem(References.accountRefer.ID, ItemID,
-                                int.Parse(Amount.text), int.Parse(Cost.text));
-        ReLoad();
-    }
-
-    public void ReLoad()
-    {
-        DestroyItem();
-        GetListItem();
-        ShowDetail(ItemID);
-    }
-
 }
