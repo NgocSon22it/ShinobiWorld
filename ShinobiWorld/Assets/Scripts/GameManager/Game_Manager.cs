@@ -6,6 +6,7 @@ using Photon.Realtime;
 using System.IO;
 using UnityEngine.TextCore.Text;
 using Assets.Scripts.Database.DAO;
+using System.Security.Principal;
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
@@ -16,6 +17,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerSupport;
 
     public static Game_Manager Instance;
+
     private void Awake()
     {
         Instance = this;
@@ -51,10 +53,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                     break;
             }
 
-
             Debug.Log("Successfully joined room S1!");
         }
     }
+
 
 
     public override void OnCreateRoomFailed(short returnCode, string message)
