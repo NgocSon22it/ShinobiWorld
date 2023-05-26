@@ -1,5 +1,6 @@
 using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Shop;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -63,6 +64,11 @@ public class ShopManager : MonoBehaviour
             itemManager.Cost.text = item.BuyCost.ToString();
             itemManager.Name.text = item.Name;
             Instantiate(ItemTemplate, Content);
+        }
+        if(References.DateUpdate.Day != DateTime.Now.Day)
+        {
+            References.DateUpdate = DateTime.Now;
+            AccountItem_DAO.ResetLimitBuyItem(References.accountRefer.ID);
         }
         References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
     }

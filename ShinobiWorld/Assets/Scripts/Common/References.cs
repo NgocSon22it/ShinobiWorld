@@ -1,5 +1,6 @@
 using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +28,7 @@ public static class References
     public static float Uppercent_Account = 5f;
     public static int MaxUpgradeLevel = 30;
 
-
+    public static DateTime DateUpdate;  //ResetLimitBuyItem
 
     public static void LoadAccount()
     {
