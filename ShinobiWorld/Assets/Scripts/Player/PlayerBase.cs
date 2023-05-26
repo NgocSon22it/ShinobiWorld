@@ -26,14 +26,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public string WeaponName, SkillOneName, SkillTwoName, SkillThreeName;
 
     [Header("Player Instance")]
-    [SerializeField] GameObject PlayerControlPrefabs;
     [SerializeField] GameObject PlayerCameraPrefabs;
     [SerializeField] GameObject PlayerAllUIPrefabs;
 
     [SerializeField] TMP_Text PlayerNickName;
     [SerializeField] GameObject PlayerHealthChakraUI;
 
-    public GameObject PlayerControlInstance;
     public GameObject PlayerCameraInstance;
     public GameObject PlayerAllUIInstance;
 
@@ -120,8 +118,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void LoadLayout()
     {
-        if(AccountEntity != null)       
-        {        
+        if (AccountEntity != null)
+        {
             string image = References.listEye.Find(obj => obj.ID == AccountEntity.EyeID).Image;
             Eye.sprite = Resources.Load<Sprite>(image);
 
@@ -141,7 +139,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             RightHand.sprite = Resources.Load<Sprite>(image + "_RightHand");
             LeftFoot.sprite = Resources.Load<Sprite>(image + "_LeftFoot");
             RightFoot.sprite = Resources.Load<Sprite>(image + "_RightFoot");
-        }     
+        }
     }
 
     public void Start()
@@ -153,15 +151,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             photonView.RPC(nameof(SetUpAccount), RpcTarget.AllBuffered);
 
             if (AccountEntity != null)
-            {             
+            {
 
-                PlayerControlInstance = Instantiate(PlayerControlPrefabs);
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
                 PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
-
-                PlayerControlInstance.GetComponent<Player_ButtonManagement>().SetUpPlayer(this.gameObject);
 
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(photonView.Owner.NickName);
@@ -169,7 +164,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
-                player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);               
+                player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
                 PlayerHealthChakraUI.SetActive(false);
 
                 InvokeRepeating(nameof(RegenHealth), 1f, 1f);
@@ -179,7 +174,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             PlayerHealthChakraUI.SetActive(true);
-            
+
         }
         LoadLayout();
         PlayerNickName.text = photonView.Owner.NickName;
@@ -277,8 +272,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+
     public void Update()
-    {       
+    {
         if (photonView.IsMine)
         {
             animator.SetFloat("Horizontal", MoveDirection.x);
