@@ -66,6 +66,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public Player_Pool playerPool;
     public Player_LevelManagement player_LevelManagement;
 
+    InputAction Move;
+
     //Player Input
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
@@ -152,7 +154,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (AccountEntity != null)
             {
-
+                
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
