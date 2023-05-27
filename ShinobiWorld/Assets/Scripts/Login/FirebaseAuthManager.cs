@@ -9,6 +9,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+using System;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -85,6 +87,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.NickName = user.DisplayName;
                 Account_DAO.ChangeStateOnline(user.UserId, true);
                 References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
+                References.DateUpdate = DateTime.Now;  //ResetLimitBuyItem
                 PhotonNetwork.ConnectUsingSettings();
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
@@ -207,6 +210,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
+                        References.DateUpdate = DateTime.Now; //ResetLimitBuyItem
                         PhotonNetwork.ConnectUsingSettings(); //Connect server photon
                     }
                 }

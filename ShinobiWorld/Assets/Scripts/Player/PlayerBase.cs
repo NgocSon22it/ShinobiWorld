@@ -118,29 +118,30 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         player_LevelManagement = GetComponent<Player_LevelManagement>();
     }
 
-    [PunRPC]
     public void LoadLayout()
     {
-        //Eye
-        var image = References.listEye.Find(obj => obj.ID == AccountEntity.EyeID).Image;
-        Eye.sprite = Resources.Load<Sprite>(image);
+        if(AccountEntity != null)       
+        {        
+            string image = References.listEye.Find(obj => obj.ID == AccountEntity.EyeID).Image;
+            Eye.sprite = Resources.Load<Sprite>(image);
 
-        //Hair
-        image = References.listHair.Find(obj => obj.ID == AccountEntity.HairID).Image;
-        Hair.sprite = Resources.Load<Sprite>(image);
+            //Hair
+            image = References.listHair.Find(obj => obj.ID == AccountEntity.HairID).Image;
+            Hair.sprite = Resources.Load<Sprite>(image);
 
-        //Mouth
-        image = References.listMouth.Find(obj => obj.ID == AccountEntity.MouthID).Image;
-        Mouth.sprite = Resources.Load<Sprite>(image);
+            //Mouth
+            image = References.listMouth.Find(obj => obj.ID == AccountEntity.MouthID).Image;
+            Mouth.sprite = Resources.Load<Sprite>(image);
 
-        //Skin
-        image = References.listSkin.Find(obj => obj.ID == AccountEntity.SkinID).Image;
+            //Skin
+            image = References.listSkin.Find(obj => obj.ID == AccountEntity.SkinID).Image;
 
-        Shirt.sprite = Resources.Load<Sprite>(image + "_Shirt");
-        LeftHand.sprite = Resources.Load<Sprite>(image + "_LeftHand");
-        RightHand.sprite = Resources.Load<Sprite>(image + "_RightHand");
-        LeftFoot.sprite = Resources.Load<Sprite>(image + "_LeftFoot");
-        RightFoot.sprite = Resources.Load<Sprite>(image + "_RightFoot");
+            Shirt.sprite = Resources.Load<Sprite>(image + "_Shirt");
+            LeftHand.sprite = Resources.Load<Sprite>(image + "_LeftHand");
+            RightHand.sprite = Resources.Load<Sprite>(image + "_RightHand");
+            LeftFoot.sprite = Resources.Load<Sprite>(image + "_LeftFoot");
+            RightFoot.sprite = Resources.Load<Sprite>(image + "_RightFoot");
+        }     
     }
 
     public void Start()
@@ -149,11 +150,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
         if (photonView.IsMine)
         {
-            AccountEntity = References.accountRefer;
+            photonView.RPC(nameof(SetUpAccount), RpcTarget.AllBuffered);
 
             if (AccountEntity != null)
-            {
-                photonView.RPC(nameof(LoadLayout), RpcTarget.AllBuffered);
+            {             
+
                 PlayerControlInstance = Instantiate(PlayerControlPrefabs);
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
@@ -180,7 +181,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerHealthChakraUI.SetActive(true);
             
         }
-        
+        LoadLayout();
         PlayerNickName.text = photonView.Owner.NickName;
         LoadPlayerHealthUI();
         LoadPlayerChakraUI();
@@ -195,6 +196,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         HealAmountOfChakra(1);
     }
+
+    [PunRPC]
+    public void SetUpAccount()
+    {
+        AccountEntity = References.accountRefer;
+    }
+
 
     public void HealAmountOfHealth(int Amount)
     {
