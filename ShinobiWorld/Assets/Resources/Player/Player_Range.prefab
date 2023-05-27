@@ -333,12 +333,10 @@ MonoBehaviour:
   SkillOneName: 
   SkillTwoName: 
   SkillThreeName: 
-  PlayerControlPrefabs: {fileID: 3906063223002935133, guid: 897d6a168f46d894ab81ff248a2ad6ea, type: 3}
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
   PlayerAllUIPrefabs: {fileID: 4182973934900452979, guid: bb173a98f7a86ba4c81c986cc2ac0c96, type: 3}
   PlayerNickName: {fileID: 7389634413770532880}
   PlayerHealthChakraUI: {fileID: 8182716103278543108}
-  PlayerControlInstance: {fileID: 0}
   PlayerCameraInstance: {fileID: 0}
   PlayerAllUIInstance: {fileID: 0}
   AttackableLayer:
@@ -414,12 +412,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 5b593c47-da39-4241-8a9c-7ec3a8b876c8
-    m_ActionName: Player/Move
+    m_ActionId: b4303511-40ab-4272-b040-23f22b65c744
+    m_ActionName: Player/Movement[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3251223019406442410}
-        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
+        m_TargetAssemblyTypeName: RangeCharacter, Assembly-CSharp
         m_MethodName: Attack
         m_Mode: 0
         m_Arguments:
@@ -430,56 +428,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: bc5f6b6f-f7df-46ec-a0af-546ed7f3dfd1
-    m_ActionName: Player/Attack
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3251223019406442410}
-        m_TargetAssemblyTypeName: RangeCharacter, Assembly-CSharp
-        m_MethodName: OnSkillOne
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: bdb81e29-5444-4f24-a905-5f839b4f3dbc
-    m_ActionName: Player/SkillOne
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3251223019406442410}
-        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
-        m_MethodName: OnSkillTwo
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 9c999ba2-0db4-498f-9379-bad3de780939
-    m_ActionName: Player/SkillTwo
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3251223019406442410}
-        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
-        m_MethodName: OnSkillThree
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: dea0f335-f4cc-4875-a6bb-f8427ac49f54
-    m_ActionName: Player/SkillThree
+    m_ActionId: 7e0e8d07-b3c4-4747-b7fc-e9015e406d68
+    m_ActionName: Player/Attack[/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
