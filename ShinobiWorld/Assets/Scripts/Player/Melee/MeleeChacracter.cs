@@ -34,12 +34,6 @@ public class MeleeChacracter : PlayerBase
     new void Update()
     {
         base.Update();
-        if (photonView.IsMine)
-        {
-            SkillOne();
-            SkillTwo();
-            SkillThree();
-        }
 
     }
     new void FixedUpdate()
@@ -49,13 +43,12 @@ public class MeleeChacracter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.performed && AccountWeapon_Entity != null && photonView.IsMine)
+        if (context.performed && CanExecuteNormalAttack(AttackCooldown_Current))
         {
             CallSyncAnimation("Attack_Melee");
         }
 
     }
-
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
@@ -90,29 +83,6 @@ public class MeleeChacracter : PlayerBase
         }
     }
 
-    public void SkillOne()
-    {
-        if (SkillOneCooldown_Current > 0)
-        {
-            SkillOneCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillTwo()
-    {
-        if (SkillTwoCooldown_Current > 0)
-        {
-            SkillTwoCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillThree()
-    {
-        if (SkillThreeCooldown_Current > 0)
-        {
-            SkillThreeCooldown_Current -= Time.deltaTime;
-        }
-    }
     public void DamageNormalAttack()
     {
         if (photonView.IsMine)
@@ -154,7 +124,7 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
-            skillTwo.GetComponent<SwingSword>().SetUpSwingSword(AccountEntity.ID, AccountWeapon_Entity);
+            skillTwo.GetComponent<SwingSword>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
         }
@@ -173,14 +143,13 @@ public class MeleeChacracter : PlayerBase
 
     public void SetUpRighteous(Color color, float Intensity, int Damage)
     {
-        if (AccountWeapon_Entity != null)
-        {
-            AccountWeapon_Entity.Damage += Damage;
 
-            Sword.material.SetColor("_GlowColor", color * Intensity);
+        DamageBonus += Damage;
 
-            Debug.Log(AccountWeapon_Entity.Damage);
-        }
+        Sword.material.SetColor("_GlowColor", color * Intensity);
+
+        Debug.Log(DamageBonus);
+
     }
 
 

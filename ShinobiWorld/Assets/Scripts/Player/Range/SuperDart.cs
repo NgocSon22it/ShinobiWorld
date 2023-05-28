@@ -8,12 +8,12 @@ public class SuperDart : MonoBehaviour
     [SerializeField] List<string> ListTag = new List<string>();
 
     string UserID;
-    AccountSkill_Entity accountSkill_Entity;
+    int Damage;
 
-    public void SetUpSuperDart(string UserID, AccountSkill_Entity accountSkill_Entity)
+    public void SetUp(string UserID, int Damage)
     {
         this.UserID = UserID;
-        this.accountSkill_Entity = accountSkill_Entity;
+        this.Damage = Damage;
     }
 
     private void OnEnable()
@@ -37,7 +37,7 @@ public class SuperDart : MonoBehaviour
         {
             if (collision.gameObject.tag == "Enemy")
             {
-                collision.GetComponent<Enemy>().TakeDamage(UserID, accountSkill_Entity.Damage);
+                collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
             }
             TurnOff();
         }
