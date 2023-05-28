@@ -97,5 +97,18 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+        public static void ResetLimitBuyItem(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "EXECUTE [dbo].[ResetLimitBuyItem] @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }

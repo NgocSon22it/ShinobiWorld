@@ -130,6 +130,7 @@ public class Creator : MonoBehaviour
     {
         Account_DAO.SaveLayout(References.accountRefer.ID, IDRole, 
             eyes[eyeNr].ID, hairs[hairNr].ID, mouths[mouthNr].ID, skins[skinNr].ID);
+        References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
         PhotonNetwork.LoadLevel(Scenes.Konoha);
     }
 
