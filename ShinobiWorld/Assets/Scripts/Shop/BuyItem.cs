@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Shop
 {
-    public class ItemShop : MonoBehaviour
+    public class BuyItem : MonoBehaviour
     {
         public string ID;
         public Image Image;
@@ -17,8 +17,7 @@ namespace Assets.Scripts.Shop
 
         public void OnClick()
         {
-            ShopManager.Instance.isUpdateCost = false;
-            ShopManager.Instance.ShowDetail(ID);
+            BuyItemManager.Instance.ShowDetail(ID);
         }
     }
 }
