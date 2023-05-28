@@ -39,6 +39,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     //Attack
     [SerializeField] public Transform AttackPoint;
 
+
     //Skill
     public float SkillOneCooldown_Total;
     public float SkillOneCooldown_Current;
@@ -49,11 +50,22 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public float SkillThreeCooldown_Total;
     public float SkillThreeCooldown_Current;
 
+    //Attack
+    public float AttackCooldown_Total;
+    public float AttackCooldown_Current;
+
     //Take Damage
     private bool Hurting;
 
     //Enemy
     protected GameObject Enemy;
+
+    //Mouse
+    Vector3 mousePosition;
+    protected Vector3 targetPosition;
+
+    //Bonus
+    public int DamageBonus, SpeedBonus;
 
     //Component
     public Animator animator;
@@ -66,7 +78,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public Player_Pool playerPool;
     public Player_LevelManagement player_LevelManagement;
 
-    InputAction Move;
 
     //Player Input
     [SerializeField] Vector2 MoveDirection;
@@ -154,7 +165,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (AccountEntity != null)
             {
-                
+                AttackCooldown_Total = 0.5f;
+
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
@@ -171,6 +183,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                 InvokeRepeating(nameof(RegenHealth), 1f, 1f);
                 InvokeRepeating(nameof(RegenChakra), 1f, 1f);
+
             }
         }
         else
@@ -265,16 +278,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             CurrentHealth_NumberUI.text = AccountEntity.CurrentHealth + " / " + AccountEntity.Health;
         }
     }
-
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        if (CanWalking && photonView.IsMine)
-        {
-            MoveDirection = context.ReadValue<Vector2>();
-        }
-    }
-
-
     public void Update()
     {
         if (photonView.IsMine)
@@ -283,10 +286,19 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
 
+            Attack();
+            SkillOne();
+            SkillTwo();
+            SkillThree();
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
             }
+            else
+            {
+                MoveDirection = playerInput.actions["Movement"].ReadValue<Vector2>();
+            }
+
         }
 
     }
@@ -367,7 +379,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Walk()
     {
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
-        transform.Translate(Movement * AccountEntity.Speed * Time.fixedDeltaTime);
+        transform.Translate(Movement * (AccountEntity.Speed + SpeedBonus) * Time.fixedDeltaTime);
 
         if (Movement.x > 0 && !FacingRight)
         {
@@ -394,19 +406,21 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
-    public void FlipToEnemy()
+    public void FlipToMouse()
     {
-        if (Enemy != null)
+        mousePosition = Input.mousePosition;
+        mousePosition.z = 10f; // Set the distance from the camera
+        targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+        if (targetPosition.x > AttackPoint.position.x && !FacingRight)
         {
-            if (Enemy.transform.position.x > AttackPoint.position.x && !FacingRight)
-            {
-                Flip();
-            }
-            else if (Enemy.transform.position.x < AttackPoint.position.x && FacingRight)
-            {
-                Flip();
-            }
+            Flip();
         }
+        else if (targetPosition.x < AttackPoint.position.x && FacingRight)
+        {
+            Flip();
+        }
+
     }
 
 
@@ -426,6 +440,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         CanWalking = value;
     }
 
+    #region Attack && Skill CanExecute
+    public bool CanExecuteNormalAttack(float CurrentCooldown)
+    {
+        if (CurrentCooldown <= 0 && AccountWeapon_Entity != null && photonView.IsMine)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public bool CanExecuteSkill(float CurrentCooldown, int Chakra)
     {
         if (CurrentCooldown <= 0 && AccountEntity.CurrentCharka >= Chakra && photonView.IsMine)
@@ -435,14 +460,19 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
         return false;
     }
+    #endregion
+
+    #region Attack && Skill Resources
+    public void Attack_Resources()
+    {
+        AttackCooldown_Current = AttackCooldown_Total;
+    }
 
     public void SkillOne_Resources()
     {
         SkillOneCooldown_Current = SkillOneCooldown_Total;
         AccountEntity.CurrentCharka -= SkillOne_Entity.Chakra;
         LoadPlayerChakraUI();
-
-
     }
 
     public void SkillTwo_Resources()
@@ -450,8 +480,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         SkillTwoCooldown_Current = SkillTwoCooldown_Total;
         AccountEntity.CurrentCharka -= SkillTwo_Entity.Chakra;
         LoadPlayerChakraUI();
-
-
     }
 
     public void SkillThree_Resources()
@@ -460,6 +488,53 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         AccountEntity.CurrentCharka -= SkillThree_Entity.Chakra;
         LoadPlayerChakraUI();
     }
+    #endregion
+
+    #region Attack && Skill Cooldown
+
+    public void Attack()
+    {
+        if (AccountWeapon_Entity != null)
+        {
+            if (AttackCooldown_Current > 0)
+            {
+                AttackCooldown_Current -= Time.deltaTime;
+            }
+        }
+
+    }
+    public void SkillOne()
+    {
+        if (SkillOne_Entity != null)
+        {
+            if (SkillOneCooldown_Current > 0)
+            {
+                SkillOneCooldown_Current -= Time.deltaTime;
+            }
+        }
+    }
+    public void SkillTwo()
+    {
+        if (SkillTwo_Entity != null)
+        {
+            if (SkillTwoCooldown_Current > 0)
+            {
+                SkillTwoCooldown_Current -= Time.deltaTime;
+            }
+        }
+    }
+    public void SkillThree()
+    {
+        if (SkillThree_Entity != null)
+        {
+            if (SkillThreeCooldown_Current > 0)
+            {
+                SkillThreeCooldown_Current -= Time.deltaTime;
+            }
+        }
+    }
+
+    #endregion
 
     public void LoadAccountSkill()
     {

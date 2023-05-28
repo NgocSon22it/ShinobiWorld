@@ -1889,6 +1889,8 @@ MonoBehaviour:
   SkillTwoCooldown_Current: 0
   SkillThreeCooldown_Total: 0
   SkillThreeCooldown_Current: 0
+  AttackCooldown_Total: 0
+  AttackCooldown_Current: 0
   animator: {fileID: 0}
   rigidbody2d: {fileID: 0}
   spriteRenderer: {fileID: 0}
@@ -1938,19 +1940,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3417184116348443872}
-        m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
-        m_MethodName: OnMove
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: b4303511-40ab-4272-b040-23f22b65c744
     m_ActionName: Player/Movement[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
   - m_PersistentCalls:
@@ -1969,6 +1959,54 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 7e0e8d07-b3c4-4747-b7fc-e9015e406d68
     m_ActionName: Player/Attack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3417184116348443872}
+        m_TargetAssemblyTypeName: MeleeChacracter, Assembly-CSharp
+        m_MethodName: OnSkillOne
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 589b6e62-4b93-4c5a-8fe5-a5b7c0c28c51
+    m_ActionName: Player/SkillOne[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3417184116348443872}
+        m_TargetAssemblyTypeName: MeleeChacracter, Assembly-CSharp
+        m_MethodName: OnSkillTwo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 94b9520f-d424-490d-8679-129964c84ac3
+    m_ActionName: Player/SkillTwo[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3417184116348443872}
+        m_TargetAssemblyTypeName: MeleeChacracter, Assembly-CSharp
+        m_MethodName: OnSkillThree
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b0b477bc-a1fe-4d1c-8ff6-c4af8bcc5fc4
+    m_ActionName: Player/SkillThree[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
