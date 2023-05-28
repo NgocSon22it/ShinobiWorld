@@ -1,10 +1,8 @@
-using Assets.Scripts.Database.Entity;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
-public class Dart : MonoBehaviour
+public class FierceFist : MonoBehaviour
 {
     [SerializeField] List<string> ListTag = new List<string>();
 
@@ -36,7 +34,7 @@ public class Dart : MonoBehaviour
     {
         if (ListTag.Contains(collision.gameObject.tag))
         {
-            if(collision.gameObject.tag == "Enemy")
+            if (collision.gameObject.tag == "Enemy")
             {
                 collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
             }
