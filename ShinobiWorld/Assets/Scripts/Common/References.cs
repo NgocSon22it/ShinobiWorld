@@ -39,3 +39,9 @@ public static class References
     }
 
 }
+
+
+public enum TypeSell
+{
+    Item, Equipment
+}

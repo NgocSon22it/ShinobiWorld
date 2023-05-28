@@ -22,7 +22,7 @@ namespace Assets.Scripts.Bag.Item
 
         public int price;
         public bool isUpdatePrice = true;
-        public string ItemID;
+        public string ItemID; 
 
         public static ItemDetail Instance;
 
@@ -91,6 +91,13 @@ namespace Assets.Scripts.Bag.Item
                 var value = int.Parse(Amount.text);
                 Amount.text = (--value).ToString();
             }
+        }
+
+        public void OnSellBtnClick()
+        {
+            Debug.Log("OnSellBtnClick");
+            ShopManager.Instance.typeSell = TypeSell.Item;
+            ShopManager.Instance.ConfirmPanel.SetActive(true);
         }
 
         public void Sell()
