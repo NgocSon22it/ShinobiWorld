@@ -49,11 +49,13 @@ public class MeleeChacracter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && AccountWeapon_Entity != null && photonView.IsMine)
+        if (context.performed && AccountWeapon_Entity != null && photonView.IsMine)
         {
             CallSyncAnimation("Attack_Melee");
         }
+
     }
+
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
