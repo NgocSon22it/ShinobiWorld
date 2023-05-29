@@ -272,7 +272,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 395, y: -29.439789}
+  m_AnchoredPosition: {x: 395, y: -29.43982}
   m_SizeDelta: {x: -810, y: -78.87952}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3034583073954890472
@@ -333,8 +333,6 @@ MonoBehaviour:
   Amount: {fileID: 367088145164992373}
   MinBtn: {fileID: 153778579750182527}
   PlusBtn: {fileID: 8753758150333212083}
-  UseBtn: {fileID: 0}
-  SellBtn: {fileID: 7463356911384052489}
   price: 0
   isUpdatePrice: 1
   ItemID: 
@@ -2523,7 +2521,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7836557828276645786}
         m_TargetAssemblyTypeName: Assets.Scripts.Bag.Item.ItemDetail, Assembly-CSharp
-        m_MethodName: Sell
+        m_MethodName: OnSellBtnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

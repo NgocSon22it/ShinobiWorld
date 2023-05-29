@@ -40,6 +40,12 @@ namespace Assets.Scripts.Bag.Equipment
             Description.text = equipment.Description;
         }
 
+        public void OnSellBtnClick()
+        {
+            ShopManager.Instance.typeSell = TypeSell.Equipment;
+            ShopManager.Instance.ConfirmPanel.SetActive(true);
+        }
+
         public void Sell()
         {
             AccountEquipment_DAO.SellEquipment(References.accountRefer.ID, EquipmentID, int.Parse(Price.text));
