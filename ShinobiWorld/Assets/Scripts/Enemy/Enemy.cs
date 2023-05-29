@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         LoadHealthUI();
         if(CurrentHealth < 0)
         {
-            Debug.Log(References.accountRefer.ID);
+            Debug.Log(UserID);
         }
 
     }
