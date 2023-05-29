@@ -9,12 +9,12 @@ public class Dart : MonoBehaviour
     [SerializeField] List<string> ListTag = new List<string>();
 
     string UserID;
-    AccountWeapon_Entity accountWeapon_Entity;
+    int Damage;
 
-    public void SetUpDart(string UserID, AccountWeapon_Entity accountWeapon_Entity)
+    public void SetUp(string UserID, int Damage)
     {
         this.UserID = UserID;
-        this.accountWeapon_Entity = accountWeapon_Entity;
+        this.Damage = Damage;
     }
 
     private void OnEnable()
@@ -38,7 +38,7 @@ public class Dart : MonoBehaviour
         {
             if(collision.gameObject.tag == "Enemy")
             {
-                collision.GetComponent<Enemy>().TakeDamage(UserID, accountWeapon_Entity.Damage);
+                collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
             }
             TurnOff();
         }

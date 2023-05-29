@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
@@ -13,7 +14,12 @@ public class RangeCharacter : PlayerBase
 
     [SerializeField] float AttackRange;
     [SerializeField] float EndAngle = 25f;
-    bool IsDetectEnemy;
+
+    //Skill One
+    float Hunter_Time = 10f;
+    private Coroutine Hunter;
+    int Hunter_DamageBonus = 70;
+    int Hunter_SpeedBonus = 5;
 
 
     new void Start()
@@ -35,12 +41,6 @@ public class RangeCharacter : PlayerBase
     new void Update()
     {
         base.Update();
-        if (photonView.IsMine)
-        {
-            SkillOne();
-            SkillTwo();
-            SkillThree();
-        }
     }
 
     new void FixedUpdate()
@@ -50,10 +50,9 @@ public class RangeCharacter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && AccountWeapon_Entity != null && photonView.IsMine)
+        if (context.started && CanExecuteNormalAttack(AttackCooldown_Current))
         {
             CallSyncAnimation("Attack_Range");
-
         }
     }
 
@@ -90,136 +89,67 @@ public class RangeCharacter : PlayerBase
         }
     }
 
-
-    public void SkillOne()
-    {
-        if (SkillOneCooldown_Current > 0)
-        {
-            SkillOneCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillTwo()
-    {
-        if (SkillTwoCooldown_Current > 0)
-        {
-            SkillTwoCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillThree()
-    {
-        if (SkillThreeCooldown_Current > 0)
-        {
-            SkillThreeCooldown_Current -= Time.deltaTime;
-        }
-    }
-
     public void Animation_NormalAttack()
     {
         GameObject normalAttack = playerPool.GetNormalAttackFromPool();
+        FlipToMouse();
 
-        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        direction.Normalize();
 
-        if (Enemy != null)
+        if (normalAttack != null)
         {
-            FlipToEnemy();
-            Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
-            direction.Normalize();
+            normalAttack.transform.position = AttackPoint.position;
+            normalAttack.transform.rotation = AttackPoint.rotation;
+            normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, AccountWeapon_Entity.Damage + DamageBonus);
+            normalAttack.SetActive(true);
+            normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
+        }
 
-            if (normalAttack != null)
-            {
-                normalAttack.transform.position = AttackPoint.position;
-                normalAttack.transform.rotation = AttackPoint.rotation;
-                normalAttack.GetComponent<Dart>().SetUpDart(AccountEntity.ID, AccountWeapon_Entity);
-                normalAttack.SetActive(true);
-                normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
-            }
-        }
-        else
-        {
-            if (normalAttack != null)
-            {
-                normalAttack.transform.position = AttackPoint.position;
-                normalAttack.transform.rotation = AttackPoint.rotation;
-                normalAttack.GetComponent<Dart>().SetUpDart(AccountEntity.ID, AccountWeapon_Entity);
-                normalAttack.SetActive(true);
-                normalAttack.GetComponent<Rigidbody2D>().velocity = 10 * new Vector2(transform.localScale.x, 0);
-            }
-        }
     }
 
     public void Animation_SkillOne()
     {
         GameObject skillOne = playerPool.GetSkillOneFromPool();
 
-        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
+        FlipToMouse();
 
-        if (Enemy != null)
-        {
-            FlipToEnemy();
-            Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
-            direction.Normalize();
+        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        direction.Normalize();
 
-            if (skillOne != null)
-            {
-                skillOne.transform.position = AttackPoint.position;
-                skillOne.transform.rotation = AttackPoint.rotation;
-                skillOne.GetComponent<SuperDart>().SetUpSuperDart(AccountEntity.ID, SkillOne_Entity);
-                skillOne.SetActive(true);
-                skillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
-            }
-        }
-        else
+        if (skillOne != null)
         {
-            if (skillOne != null)
-            {
-                skillOne.transform.position = AttackPoint.position;
-                skillOne.transform.rotation = AttackPoint.rotation;
-                skillOne.GetComponent<SuperDart>().SetUpSuperDart(AccountEntity.ID, SkillOne_Entity);
-                skillOne.SetActive(true);
-                skillOne.GetComponent<Rigidbody2D>().velocity = (10 * new Vector2(transform.localScale.x, 0));
-            }
+            skillOne.transform.position = AttackPoint.position;
+            skillOne.transform.rotation = AttackPoint.rotation;
+            skillOne.GetComponent<SuperDart>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+            skillOne.SetActive(true);
+            skillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
         }
     }
 
     public void Animation_SkillTwo()
     {
-        photonView.RPC(nameof(FindClostestEnemy), RpcTarget.AllBuffered, (int)AttackRange);
-
-        if (Enemy != null)
-        {
-            FlipToEnemy();
-            Vector2 direction = (Vector2)Enemy.transform.position - (Vector2)AttackPoint.position;
-            direction.Normalize();
-
-            ExecuteThreeDarts(10 * direction);
-
-        }
-        else
-        {
-            ExecuteThreeDarts(10 * new Vector2(transform.localScale.x, 0));
-        }
-
-    }
-
-    public void ExecuteThreeDarts(Vector2 direction)
-    {
         GameObject centerDarts = playerPool.GetSkillTwoFromPool();
+
+        FlipToMouse();
+
+        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        direction.Normalize();
+
+
         if (centerDarts != null)
         {
-            centerDarts.transform.position = transform.position;
-            centerDarts.transform.rotation = Quaternion.identity;
-            centerDarts.GetComponent<RedDart>().SetUpRedDart(AccountEntity.ID, SkillTwo_Entity);
+            centerDarts.transform.position = AttackPoint.position;
+            centerDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             centerDarts.SetActive(true);
-            centerDarts.GetComponent<Rigidbody2D>().velocity = direction;
+            centerDarts.GetComponent<Rigidbody2D>().velocity = direction * 10;
         }
 
         GameObject leftDarts = playerPool.GetSkillTwoFromPool();
         if (leftDarts != null)
         {
-            leftDarts.transform.position = transform.position;
-            leftDarts.GetComponent<RedDart>().SetUpRedDart(AccountEntity.ID, SkillTwo_Entity);
+            leftDarts.transform.position = AttackPoint.position;
+            leftDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             leftDarts.SetActive(true);
             leftDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
@@ -227,32 +157,44 @@ public class RangeCharacter : PlayerBase
         GameObject rightDarts = playerPool.GetSkillTwoFromPool();
         if (rightDarts != null)
         {
-            rightDarts.transform.position = transform.position;
-            rightDarts.GetComponent<RedDart>().SetUpRedDart(AccountEntity.ID, SkillTwo_Entity);
+            rightDarts.transform.position = AttackPoint.position;
+            rightDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             rightDarts.SetActive(true);
             rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
+
     }
 
     public void Animation_SkillThree()
     {
-        StartCoroutine(EnhanceDamageNSpeed());
+
+        if (Hunter != null)
+        {
+            StopCoroutine(Hunter);
+            SetUpHunter(-Hunter_DamageBonus, -Hunter_SpeedBonus);
+            Hunter = null;
+        }
+
+        Hunter = StartCoroutine(IE_Hunter());
     }
 
-    IEnumerator EnhanceDamageNSpeed()
+
+    IEnumerator IE_Hunter()
     {
-        int DamageBonus = 70;
-        int SpeedBonus = 5;
+        SetUpHunter(Hunter_DamageBonus, Hunter_SpeedBonus);
 
-        AccountEntity.Strength += DamageBonus;
-        AccountEntity.Speed += SpeedBonus;
+        yield return new WaitForSeconds(Hunter_Time);
 
+        SetUpHunter(-Hunter_DamageBonus, -Hunter_SpeedBonus);
 
-        yield return new WaitForSeconds(10f);
-        AccountEntity.Strength -= DamageBonus;
-        AccountEntity.Speed -= SpeedBonus;
+        Hunter = null;
+    }
 
-
+    public void SetUpHunter(int Damage, int Speed)
+    {
+        DamageBonus += Damage;
+        SpeedBonus += Speed;
+        Debug.Log(DamageBonus);
     }
 
     private void OnDrawGizmosSelected()

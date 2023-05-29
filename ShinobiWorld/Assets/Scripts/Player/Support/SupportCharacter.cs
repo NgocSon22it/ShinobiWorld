@@ -3,11 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class SupportCharacter : PlayerBase
 {
     [SerializeField] protected Vector2 DetectGroundVector;
 
+    //Skill One
+    float SteelFist_Time = 5f;
+    private Coroutine SteelFist;
+    int SteelFist_DamageBonus = 60;
+
+    //Skill Two
+    float Blessing_Time = 7f;
+    private Coroutine Blessing;
+    int Blessing_SpeedBonus = 5;
+    int Blessing_HealthBonus = 200;
 
     new void Start()
     {
@@ -24,9 +35,6 @@ public class SupportCharacter : PlayerBase
     new void Update()
     {
         base.Update();
-        SkillOne();
-        SkillTwo();
-        SkillThree();
     }
 
     new void FixedUpdate()
@@ -36,7 +44,7 @@ public class SupportCharacter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && AccountWeapon_Entity != null && photonView.IsMine)
+        if (context.started && CanExecuteNormalAttack(AttackCooldown_Current))
         {
             CallSyncAnimation("Attack_Support");
         }
@@ -75,30 +83,6 @@ public class SupportCharacter : PlayerBase
         }
     }
 
-    public void SkillOne()
-    {
-        if (SkillOneCooldown_Current > 0)
-        {
-            SkillOneCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillTwo()
-    {
-        if (SkillTwoCooldown_Current > 0)
-        {
-            SkillTwoCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillThree()
-    {
-        if (SkillThreeCooldown_Current > 0)
-        {
-            SkillThreeCooldown_Current -= Time.deltaTime;
-        }
-    }
-
     public void NormalAttackDamage()
     {
         RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
@@ -109,46 +93,90 @@ public class SupportCharacter : PlayerBase
             {
                 if (Enemy.transform.CompareTag("Enemy"))
                 {
-                    Debug.Log(Enemy.transform.name);
+                    //Enemy.transform.GetComponent<Enemy>().take
                 }
             }
         }
     }
 
-    public void ExecuteSkillOne()
+    public void Animation_SkillOne()
     {
-        StartCoroutine(EnhanceDamage());
+        if (SteelFist != null)
+        {
+            StopCoroutine(SteelFist);
+            SetUpSteelFist(-SteelFist_DamageBonus);
+            SteelFist = null;
+        }
+
+        SteelFist = StartCoroutine(IE_SteelFist());
     }
 
-    public void ExecuteSkillTwo()
+    public void Animation_SkillTwo()
     {
-        StartCoroutine(EnhanceSpeedNHeal());
+        if (Blessing != null)
+        {
+            // If a color change coroutine is already running, stop it
+            StopCoroutine(Blessing);
+            SetUpBlessing(Blessing_SpeedBonus, 0);
+            Blessing = null;
+        }
 
+        Blessing = StartCoroutine(IE_Blessing());
     }
 
-    IEnumerator EnhanceSpeedNHeal()
+    public void Animation_SkillThree()
     {
-        int SpeedeBonus = 60;
-        int HealAmount = 200;
+        GameObject skillThree = playerPool.GetSkillThreeFromPool();
 
-        AccountEntity.Speed += SpeedeBonus;
-        AccountEntity.CurrentHealth += HealAmount;
+        FlipToMouse();
+
+        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        direction.Normalize();
+
+        if (skillThree != null)
+        {
+            skillThree.transform.position = AttackPoint.position;
+            skillThree.transform.rotation = AttackPoint.rotation;
+            skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+            skillThree.SetActive(true);
+            skillThree.GetComponent<Rigidbody2D>().velocity = (direction * 10);
+        }
+    }
+
+    IEnumerator IE_Blessing()
+    {
+        SetUpBlessing(Blessing_SpeedBonus, Blessing_HealthBonus);
 
         yield return new WaitForSeconds(10f);
 
+        SetUpBlessing(-Blessing_SpeedBonus, 0);
 
-        AccountEntity.Speed -= SpeedeBonus;
+        Blessing = null;
     }
 
-    IEnumerator EnhanceDamage()
+    IEnumerator IE_SteelFist()
     {
-        int DamageBonus = 60;
+        SetUpSteelFist(SteelFist_DamageBonus);
 
-        AccountEntity.Strength += DamageBonus;
+        yield return new WaitForSeconds(SteelFist_Time);
 
+        SetUpSteelFist(-SteelFist_DamageBonus);
 
-        yield return new WaitForSeconds(10f);
-        AccountEntity.Strength -= DamageBonus;
+        SteelFist = null;
+
+    }
+
+    public void SetUpSteelFist(int Damage)
+    {
+        DamageBonus += Damage;
+        Debug.Log(DamageBonus);
+    }
+
+    public void SetUpBlessing(int Speed, int Health)
+    {
+        SpeedBonus += Speed;
+        HealAmountOfHealth(Health);
+        Debug.Log(DamageBonus);
     }
 
     private void OnDrawGizmos()

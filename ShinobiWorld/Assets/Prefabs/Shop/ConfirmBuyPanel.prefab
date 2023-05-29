@@ -121,7 +121,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3787986784096686773}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3167216094458023988, guid: 557c79c1b1b29ba45b9e6e8756875e32, type: 3}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: OnCancelBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3277913233757834163
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,7 +200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "B\u1EA1n ch\u1EAFc ch\u1EAFn mu\u1ED1n b\xE1n \nn v\u1EADt ph\u1EA9m ?"
+  m_text: "B\u1EA1n ch\u1EAFc ch\u1EAFn b\xE1n?"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -378,7 +390,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6590526891912786254}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3167216094458023988, guid: 557c79c1b1b29ba45b9e6e8756875e32, type: 3}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: OnConfirmSellBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4454861525456558626
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,7 +524,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8820612664387120048}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3167216094458023988, guid: 557c79c1b1b29ba45b9e6e8756875e32, type: 3}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: OnCancelBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6259126610301939755
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,14 +818,13 @@ GameObject:
   - component: {fileID: 8826219639980971866}
   - component: {fileID: 9125468724155609527}
   - component: {fileID: 7068618061230028452}
-  - component: {fileID: 8063121539829363013}
   m_Layer: 5
   m_Name: ConfirmBuyPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8826219639980971866
 RectTransform:
   m_ObjectHideFlags: 0
@@ -797,7 +832,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7629990685267740132}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -852,26 +887,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8063121539829363013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7629990685267740132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b11331912bc310944bd35c9a86c66451, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Shop: {fileID: 0}
-  BuyPanel: {fileID: 0}
-  SellPanel: {fileID: 0}
-  PopupPanel: {fileID: 0}
-  BuyBtn: {fileID: 0}
-  SellBtn: {fileID: 0}
-  SellItemBtn: {fileID: 0}
-  SellEquipmentBtn: {fileID: 0}
 --- !u!1 &8465489758024914723
 GameObject:
   m_ObjectHideFlags: 0
