@@ -9,16 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Shop
 {
     public class BagManager : MonoBehaviour
     {
-        public GameObject Panel, prefabItemBag, prefabEquipmentBag, MessageError;
+        public GameObject Panel, prefabItemBag, prefabItemDetail, prefabEquipmentBag, prefabEquipmentDetail, MessageError;
         public Transform Content;
-
-        public GameObject prefabItemDetail, prefabEquipmentDetail;
-        GameObject instantiatedItemDetail, instantiatedEquipmentDetail;
 
         public List<AccountItem_Entity> listItem;
         public List<AccountEquipment_Entity> listEquipment;
@@ -39,8 +37,8 @@ namespace Assets.Scripts.Shop
         public void OnItemBtnClick()
         {
             CloseMessage();
-            DestroyDetail();
-            instantiatedItemDetail = Instantiate(prefabItemDetail, Panel.transform);
+            CloseDetail();
+            prefabItemDetail.SetActive(true);
             DestroyContent();
             GetListItem();
             if (listItem.Count <= 0) { ShowMessage(); }
@@ -50,18 +48,18 @@ namespace Assets.Scripts.Shop
         public void OnEquipmentBtnClick()
         {
             CloseMessage();
-            DestroyDetail();
-            instantiatedEquipmentDetail = Instantiate(prefabEquipmentDetail, Panel.transform);
+            CloseDetail();
+            prefabEquipmentDetail.SetActive(true);
             DestroyContent();
             GetListEquipment();
             if (listEquipment.Count <= 0) { ShowMessage(); }
             else EquipmentDetail.Instance.ShowDetail(listEquipment[0].EquipmentID);
         }
 
-        public void DestroyDetail()
+        public void CloseDetail()
         {
-            Destroy(instantiatedItemDetail);
-            Destroy(instantiatedEquipmentDetail);
+            prefabEquipmentDetail.SetActive(false);
+            prefabItemDetail.SetActive(false);
         }
 
         public void Close()
@@ -72,15 +70,14 @@ namespace Assets.Scripts.Shop
         public void OnCloseBtnClick()
         {
             Panel.SetActive(false);
-            DestroyDetail();
+            CloseDetail();
             DestroyContent();
         }
 
         public void ShowMessage()
         {
             MessageError.SetActive(true);
-            Destroy(instantiatedItemDetail);
-            Destroy(instantiatedEquipmentDetail);
+            CloseDetail();
         }
 
         public void CloseMessage()
@@ -130,6 +127,7 @@ namespace Assets.Scripts.Shop
                 Instantiate(prefabEquipmentBag, Content);
             }
         }
+
         public void ReloadItem(string ID)
         {
             DestroyContent();
@@ -157,6 +155,5 @@ namespace Assets.Scripts.Shop
                 else EquipmentDetail.Instance.ShowDetail(listEquipment[0].EquipmentID);
             }
         }
-
     }
 }
