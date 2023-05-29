@@ -61,8 +61,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     protected GameObject Enemy;
 
     //Mouse
-    Vector3 mousePosition;
     protected Vector3 targetPosition;
+
+    //Direction
+    protected Vector2 SkillDirection;
 
     //Bonus
     public int DamageBonus, SpeedBonus;
@@ -285,11 +287,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             animator.SetFloat("Horizontal", MoveDirection.x);
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
-
+            targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Attack();
             SkillOne();
             SkillTwo();
             SkillThree();
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -376,6 +379,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         Enemy = closestEnemy;
     }
 
+
+
     public void Walk()
     {
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
@@ -408,10 +413,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void FlipToMouse()
     {
-        mousePosition = Input.mousePosition;
-        mousePosition.z = 10f; // Set the distance from the camera
-        targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
         if (targetPosition.x > AttackPoint.position.x && !FacingRight)
         {
             Flip();
@@ -420,7 +421,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Flip();
         }
-
     }
 
 
@@ -548,8 +548,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(transform.position);
+            stream.SendNext(transform.localScale);
             stream.SendNext(MoveDirection);
             stream.SendNext(PlayerHealthChakraUI.GetComponent<RectTransform>().localScale);
+
+            stream.SendNext(targetPosition);
+            stream.SendNext(SkillDirection);
 
 
             stream.SendNext(AccountEntity.CurrentHealth);
@@ -557,12 +561,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(AccountEntity.Health);
             stream.SendNext(AccountEntity.Charka);
 
+
         }
         else
         {
             realPosition = (Vector3)stream.ReceiveNext();
+            transform.localScale = (Vector3)stream.ReceiveNext();
             MoveDirection = (Vector2)stream.ReceiveNext();
             PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
+
+            targetPosition = (Vector3)stream.ReceiveNext();
+            SkillDirection = (Vector2)stream.ReceiveNext();
 
             AccountEntity.CurrentHealth = (int)stream.ReceiveNext();
             AccountEntity.CurrentCharka = (int)stream.ReceiveNext();
