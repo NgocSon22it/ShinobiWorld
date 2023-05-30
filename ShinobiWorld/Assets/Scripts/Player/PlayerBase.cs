@@ -193,6 +193,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerHealthChakraUI.SetActive(true);
 
         }
+
         LoadLayout();
         PlayerNickName.text = photonView.Owner.NickName;
         LoadPlayerHealthUI();
@@ -414,13 +415,16 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void FlipToMouse()
     {
-        if (targetPosition.x > AttackPoint.position.x && !FacingRight)
+        if (photonView.IsMine)
         {
-            Flip();
-        }
-        else if (targetPosition.x < AttackPoint.position.x && FacingRight)
-        {
-            Flip();
+            if (targetPosition.x > AttackPoint.position.x && !FacingRight)
+            {
+                Flip();
+            }
+            else if (targetPosition.x < AttackPoint.position.x && FacingRight)
+            {
+                Flip();
+            }
         }
     }
 
@@ -428,7 +432,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void TriggerAnimator(string TriggerName)
     {
-        animator.SetTrigger(TriggerName);
+        if (photonView.IsMine)
+        {
+            animator.SetTrigger(TriggerName);
+        }
     }
 
     public void CallSyncAnimation(string TriggerName)
@@ -438,7 +445,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Animation_SetUpWalking(bool value)
     {
-        CanWalking = value;
+        if (photonView.IsMine)
+        {
+            CanWalking = value;
+        }
     }
 
     #region Attack && Skill CanExecute
@@ -609,10 +619,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void LoadPlayerStrengthUI()
     {
+        if (photonView.IsMine)
+        {
             if (PlayerAllUIInstance != null)
             {
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-                LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
+            LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             }
+        }
     }
 }
