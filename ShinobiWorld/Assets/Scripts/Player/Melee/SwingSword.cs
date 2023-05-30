@@ -5,9 +5,8 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SwingSword : MonoBehaviour
+public class SwingSword : PlayerSkill
 {
-    [SerializeField] List<string> ListTag = new List<string>();
 
     public Transform Center;
     Collider2D collider2;
@@ -16,27 +15,23 @@ public class SwingSword : MonoBehaviour
     public float rotationRadius = 2f;
     public float angularSpeed = 2f;
 
-    string UserID;
-    int Damage;
-
     float DamageSeconds = 0.2f;
 
     private void Awake()
     {
         collider2 = GetComponent<Collider2D>();
-    }
+    } 
 
-    public void SetUp(string UserID, int Damage)
+    new void OnEnable()
     {
-        this.UserID = UserID;
-        this.Damage = Damage;
-    }
-
-    private void OnEnable()
-    {
+        base.OnEnable();
         angle = 1.5f;
-        Invoke(nameof(TurnOff), 5f);
+        LifeTime = 5f;
         StartCoroutine(LogTriggeredObjects());
+    }
+    new void OnDisable()
+    {
+        base.OnDisable();
     }
 
     private void Update()
@@ -56,21 +51,9 @@ public class SwingSword : MonoBehaviour
         }
     }
 
-
     public void SetUpCenter(Transform transform)
     {
         Center = transform;
-    }
-    private void OnDisable()
-    {
-        CancelInvoke();
-        StopCoroutine(LogTriggeredObjects());
-
-    }
-
-    void TurnOff()
-    {
-        gameObject.SetActive(false);
     }
 
     private IEnumerator LogTriggeredObjects()
@@ -83,7 +66,7 @@ public class SwingSword : MonoBehaviour
 
             foreach (Collider2D collider in colliders)
             {
-                if (ListTag.Contains(collider.gameObject.tag))
+                if (AttackAble_Tag.Contains(collider.gameObject.tag))
                 {
                     if (collider.gameObject.tag == "Enemy")
                     {

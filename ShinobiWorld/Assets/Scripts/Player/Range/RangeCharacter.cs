@@ -94,8 +94,8 @@ public class RangeCharacter : PlayerBase
         GameObject normalAttack = playerPool.GetNormalAttackFromPool();
         FlipToMouse();
 
-        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-        direction.Normalize();
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
 
         if (normalAttack != null)
         {
@@ -103,7 +103,7 @@ public class RangeCharacter : PlayerBase
             normalAttack.transform.rotation = AttackPoint.rotation;
             normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, AccountWeapon_Entity.Damage + DamageBonus);
             normalAttack.SetActive(true);
-            normalAttack.GetComponent<Rigidbody2D>().velocity = direction * 10;
+            normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
 
     }
@@ -114,8 +114,8 @@ public class RangeCharacter : PlayerBase
 
         FlipToMouse();
 
-        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-        direction.Normalize();
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
 
         if (skillOne != null)
         {
@@ -123,7 +123,7 @@ public class RangeCharacter : PlayerBase
             skillOne.transform.rotation = AttackPoint.rotation;
             skillOne.GetComponent<SuperDart>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
             skillOne.SetActive(true);
-            skillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
+            skillOne.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
     }
 
@@ -133,8 +133,8 @@ public class RangeCharacter : PlayerBase
 
         FlipToMouse();
 
-        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-        direction.Normalize();
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
 
 
         if (centerDarts != null)
@@ -142,7 +142,7 @@ public class RangeCharacter : PlayerBase
             centerDarts.transform.position = AttackPoint.position;
             centerDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             centerDarts.SetActive(true);
-            centerDarts.GetComponent<Rigidbody2D>().velocity = direction * 10;
+            centerDarts.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
 
         GameObject leftDarts = playerPool.GetSkillTwoFromPool();
