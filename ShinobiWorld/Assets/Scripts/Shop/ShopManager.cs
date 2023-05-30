@@ -1,10 +1,13 @@
 using Assets.Scripts.Bag;
+using Assets.Scripts.Bag.Equipment;
+using Assets.Scripts.Bag.Item;
 using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Shop;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,49 +16,58 @@ using WebSocketSharp;
 
 public class ShopManager : MonoBehaviour
 {
-    public GameObject Shop, BuyPanel, SellPanel, PopupPanel;
-    public Button BuyBtn, SellBtn;
-
-    GameObject instantiatedBuyPanel, instantiatedSellPanel;
+    public GameObject BuyPanel, SellPanel, ShopPanel, ConfirmPanel;
 
     public static ShopManager Instance;
+    public TypeSell typeSell;
 
     private void Awake()
     {
         Instance = this;
     }
 
+    public void Init()
+    {
+        ShopPanel.SetActive(false);
+        BuyPanel.SetActive(false);
+        CloseConfirmPanel();
+        SellPanel.SetActive(false);
+    }
+
     public void OnShopBtnClick()
     {
-        PopupPanel.SetActive(true);
+        Init();
+        ShopPanel.SetActive(true);
     }
 
     public void OnBuyBtnClick()
     {
-        PopupPanel.SetActive(false);
-        instantiatedBuyPanel = Instantiate(BuyPanel, Shop.transform);
+        Init();
+        BuyPanel.SetActive(true);
         BuyItemManager.Instance.Open();
     }
 
     public void OnSellBtnClick()
     {
-        PopupPanel.SetActive(false);
-        instantiatedSellPanel = Instantiate(SellPanel, Shop.transform);
+        Init();
+        SellPanel.SetActive(true);
         BagManager.Instance.OnItemBtnClick();  
     }
 
-    public void Close()
-    {
-        PopupPanel.SetActive(false);
-    }
+    public void CloseConfirmPanel() { ConfirmPanel.SetActive(false); }
 
-    public void CloseBuyPanel()
+    public void OnConfirmSellBtnClick()
     {
-        Destroy(instantiatedBuyPanel);
-    }
-
-    public void CloseSellPanel()
-    {
-        Destroy(instantiatedSellPanel);
+        switch (typeSell)
+        {
+            case TypeSell.Item:
+                ItemDetail.Instance.Sell();
+                CloseConfirmPanel();
+                break;
+            case TypeSell.Equipment:
+                EquipmentDetail.Instance.Sell();
+                CloseConfirmPanel();
+                break;
+        }
     }
 }

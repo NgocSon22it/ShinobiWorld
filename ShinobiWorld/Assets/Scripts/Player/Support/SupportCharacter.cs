@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class SupportCharacter : PlayerBase
 {
@@ -130,8 +129,8 @@ public class SupportCharacter : PlayerBase
 
         FlipToMouse();
 
-        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-        direction.Normalize();
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
 
         if (skillThree != null)
         {
@@ -139,7 +138,7 @@ public class SupportCharacter : PlayerBase
             skillThree.transform.rotation = AttackPoint.rotation;
             skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
             skillThree.SetActive(true);
-            skillThree.GetComponent<Rigidbody2D>().velocity = (direction * 10);
+            skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
     }
 

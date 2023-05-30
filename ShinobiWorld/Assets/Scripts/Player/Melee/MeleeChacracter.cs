@@ -130,6 +130,19 @@ public class MeleeChacracter : PlayerBase
         }
     }
 
+    public void Animation_SkillThree()
+    {
+        GameObject skillThree = playerPool.GetSkillThreeFromPool();
+        FlipToMouse();
+        if (skillThree != null)
+        {
+            skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
+            skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
+            skillThree.SetActive(true);
+        }
+    }
+
     public IEnumerator RighteousSword()
     {
         SetUpRighteous(Color.yellow, 3f, Righteous_BonusDamage);
