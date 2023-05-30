@@ -58,6 +58,10 @@ namespace Assets.Scripts.Bag.Equipment
         public void Sell()
         {
             AccountEquipment_DAO.SellEquipment(References.accountRefer.ID, accountEquipment.EquipmentID, int.Parse(Price.text));
+            
+            References.accountRefer.Coin += int.Parse(Price.text);
+            Player_AllUIManagement.InInstance.SetUpCoinUI(References.accountRefer.Coin); 
+            
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
         }
 
@@ -77,15 +81,33 @@ namespace Assets.Scripts.Bag.Equipment
             if(equip !=  null)
             {
                 AccountEquipment_DAO.RemoveEquipment(References.accountRefer.ID, equip.EquipmentID);
+                LoadUI(equip.Health * (-1), equip.Chakra * (-1));
             }
+
             AccountEquipment_DAO.UseEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
+
+            LoadUI(accountEquipment.Health, accountEquipment.Chakra);
+
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
         }
 
         public void Remove()
         {
             AccountEquipment_DAO.RemoveEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
+            LoadUI(accountEquipment.Health*(-1), accountEquipment.Chakra * (-1));
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
+        }
+
+        public void LoadUI(int Health, int Charka)
+        {
+            References.accountRefer.Health += accountEquipment.Health;
+            References.accountRefer.Charka += accountEquipment.Chakra;
+
+            Player_AllUIManagement.InInstance
+                    .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
+            Player_AllUIManagement.InInstance
+                    .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
+
         }
     }
 }

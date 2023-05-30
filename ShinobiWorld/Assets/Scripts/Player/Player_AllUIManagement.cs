@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Player_AllUIManagement : MonoBehaviour
 {
+    public static Player_AllUIManagement InInstance;
+
     [Header("Level UI")]
     [SerializeField] TMP_Text CurrentLevel;
     [SerializeField] TMP_Text ExperienceTxt;
@@ -29,6 +31,11 @@ public class Player_AllUIManagement : MonoBehaviour
 
     [Header("Power")]
     [SerializeField] TMP_Text PowerTxt;
+
+    private void Awake()
+    {
+        InInstance = this;
+    }
 
     public void SetUpCoinUI(int Coin)
     {
