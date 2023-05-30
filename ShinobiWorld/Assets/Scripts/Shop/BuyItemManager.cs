@@ -178,7 +178,7 @@ namespace Assets.Scripts.Shop
         public void Close()
         {
             DestroyItem();
-            ShopManager.Instance.CloseBuyPanel();
+            ShopManager.Instance.BuyPanel.SetActive(false);
         }
     }
 }
