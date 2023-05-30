@@ -7,8 +7,7 @@ using UnityEngine;
 
 public static class References
 {
-    public static Account_Entity accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
-    //public static Account_Entity accountRefer = new Account_Entity();
+    public static Account_Entity accountRefer = new Account_Entity();
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
 
