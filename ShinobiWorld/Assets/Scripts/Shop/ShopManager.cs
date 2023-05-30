@@ -28,7 +28,7 @@ public class ShopManager : MonoBehaviour
 
     public void Init()
     {
-        ShopPanel.SetActive(false);
+        CloseShopPanel();
         BuyPanel.SetActive(false);
         CloseConfirmPanel();
         SellPanel.SetActive(false);
@@ -55,6 +55,7 @@ public class ShopManager : MonoBehaviour
     }
 
     public void CloseConfirmPanel() { ConfirmPanel.SetActive(false); }
+    public void CloseShopPanel() { ShopPanel.SetActive(false); }
 
     public void OnConfirmSellBtnClick()
     {
