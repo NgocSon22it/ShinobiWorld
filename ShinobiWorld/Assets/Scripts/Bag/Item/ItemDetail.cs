@@ -23,7 +23,6 @@ namespace Assets.Scripts.Bag.Item
 
         public int price;
         public bool isUpdatePrice = true;
-        public string ItemID; 
 
         public Item_Entity item;
 
@@ -104,22 +103,35 @@ namespace Assets.Scripts.Bag.Item
 
         public void Sell()
         {
-            AccountItem_DAO.SellItem(References.accountRefer.ID, ItemID,
+            AccountItem_DAO.SellItem(References.accountRefer.ID, item.ID,
                                     int.Parse(Amount.text), int.Parse(Price.text));
 
             References.accountRefer.Coin += int.Parse(Price.text);
             Player_AllUIManagement.InInstance.SetUpCoinUI(References.accountRefer.Coin);
 
-            BagManager.Instance.ReloadItem(ItemID);
+            BagManager.Instance.ReloadItem(item.ID);
         }
 
         public void Use()
         {
-            AccountItem_DAO.UseItem(References.accountRefer.ID, ItemID);
+            AccountItem_DAO.UseItem(References.accountRefer.ID, item.ID);
+            
+            if(References.accountRefer.CurrentCharka + item.ChakraBonus > References.accountRefer.Charka)
+            {
+                References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+            } else References.accountRefer.CurrentCharka += item.ChakraBonus;
 
-            References.accountRefer.CurrentCharka += item.ChakraBonus;
-            References.accountRefer.CurrentHealth += item.HealthBonus;
-            References.accountRefer.CurrentStrength += item.StrengthBonus;
+            if (References.accountRefer.CurrentHealth + item.HealthBonus > References.accountRefer.Health)
+            {
+                References.accountRefer.CurrentHealth = References.accountRefer.Health;
+            }
+            else References.accountRefer.CurrentHealth += item.HealthBonus;
+
+            if (References.accountRefer.CurrentStrength + item.StrengthBonus > References.accountRefer.Strength)
+            {
+                References.accountRefer.CurrentStrength = References.accountRefer.Strength;
+            }
+            else References.accountRefer.CurrentStrength += item.StrengthBonus;
 
             Player_AllUIManagement.InInstance
                     .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
@@ -128,8 +140,8 @@ namespace Assets.Scripts.Bag.Item
             Player_AllUIManagement.InInstance
                     .LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
             
-            BagManager.Instance.ReloadItem(ItemID);
-            Debug.Log("Use Item");
+            BagManager.Instance.ReloadItem(item.ID);
+            Debug.Log("Use Item" + References.accountRefer.ID);
         }
     }
 }
