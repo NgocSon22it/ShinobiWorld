@@ -3,36 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RedDart : MonoBehaviour
+public class RedDart : PlayerSkill
 {
-    [SerializeField] List<string> ListTag = new List<string>();
-
-    string UserID;
-    int Damage;
-
-    public void SetUp(string UserID, int Damage)
+    new void OnEnable()
     {
-        this.UserID = UserID;
-        this.Damage = Damage;
-    }
-    private void OnEnable()
-    {
-        Invoke(nameof(TurnOff), 5f);
+        LifeTime = 5f;
+        base.OnEnable();
     }
 
-    private void OnDisable()
+    new void OnDisable()
     {
-        CancelInvoke();
+        base.OnDisable();
     }
 
-    void TurnOff()
-    {
-        gameObject.SetActive(false);
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (ListTag.Contains(collision.gameObject.tag))
+        if (AttackAble_Tag.Contains(collision.gameObject.tag))
         {
             if (collision.gameObject.tag == "Enemy")
             {

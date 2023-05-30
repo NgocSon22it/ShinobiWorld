@@ -288,6 +288,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            targetPosition.z = 10;
             Attack();
             SkillOne();
             SkillTwo();
