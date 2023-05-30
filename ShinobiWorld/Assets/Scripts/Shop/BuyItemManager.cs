@@ -163,8 +163,10 @@ namespace Assets.Scripts.Shop
         public void Buy()
         {
             References.accountRefer.Coin -= int.Parse(Cost.text);
+            Player_AllUIManagement.InInstance.SetUpCoinUI(References.accountRefer.Coin);
             AccountItem_DAO.BuyItem(References.accountRefer.ID, ItemID,
                                     int.Parse(Amount.text), int.Parse(Cost.text));
+
             ReLoad();
         }
 
