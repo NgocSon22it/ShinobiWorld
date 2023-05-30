@@ -185,7 +185,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                 InvokeRepeating(nameof(RegenHealth), 1f, 1f);
                 InvokeRepeating(nameof(RegenChakra), 1f, 1f);
-
+                InvokeRepeating(nameof(RegenStrength), 360f, 360f);
             }
         }
         else
@@ -592,5 +592,27 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public void RegenStrength()
+    {
+        HealAmountOfStrength(1);
+    }
 
+    public void HealAmountOfStrength(int Amount)
+    {
+        AccountEntity.CurrentStrength += Amount;
+        if (AccountEntity.CurrentStrength >= AccountEntity.Strength)
+        {
+            AccountEntity.CurrentStrength = AccountEntity.Strength;
+        }
+        LoadPlayerStrengthUI();
+    }
+
+    public void LoadPlayerStrengthUI()
+    {
+            if (PlayerAllUIInstance != null)
+            {
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
+                LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
+            }
+    }
 }
