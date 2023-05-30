@@ -185,7 +185,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                 InvokeRepeating(nameof(RegenHealth), 1f, 1f);
                 InvokeRepeating(nameof(RegenChakra), 1f, 1f);
-                InvokeRepeating(nameof(RegenStrength), 5f, 1f);
+                InvokeRepeating(nameof(RegenStrength), 360f, 360f);
             }
         }
         else
