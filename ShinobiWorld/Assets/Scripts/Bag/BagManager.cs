@@ -23,6 +23,7 @@ namespace Assets.Scripts.Shop
 
         public static BagManager Instance;
 
+        public Intention Intention;
         private void Awake()
         {
             Instance = this;
@@ -60,11 +61,6 @@ namespace Assets.Scripts.Shop
         {
             prefabEquipmentDetail.SetActive(false);
             prefabItemDetail.SetActive(false);
-        }
-
-        public void Close()
-        {
-            ShopManager.Instance.CloseSellPanel();
         }
 
         public void OnCloseBtnClick()
@@ -114,8 +110,10 @@ namespace Assets.Scripts.Shop
         public void GetListEquipment()
         {
             References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-            
+
             listEquipment = References.listAccountEquipment;
+
+            if(Intention == Intention.Sell) listEquipment = References.listAccountEquipment.FindAll(obj => obj.IsUse == false);
 
             foreach (var accountEquipment in listEquipment)
             {

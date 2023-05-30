@@ -28,10 +28,10 @@ public class ShopManager : MonoBehaviour
 
     public void Init()
     {
-        CloseShopPanel();
-        CloseBuyPanel();
+        ShopPanel.SetActive(false);
+        BuyPanel.SetActive(false);
         CloseConfirmPanel();
-        CloseSellPanel();
+        SellPanel.SetActive(false);
     }
 
     public void OnShopBtnClick()
@@ -54,25 +54,7 @@ public class ShopManager : MonoBehaviour
         BagManager.Instance.OnItemBtnClick();  
     }
 
-    public void CloseShopPanel()
-    {
-        ShopPanel.SetActive(false);
-    }
-
-    public void CloseBuyPanel()
-    {
-        BuyPanel.SetActive(false);
-    }
-
-    public void CloseSellPanel()
-    {
-        SellPanel.SetActive(false);
-    }
-
-    public void CloseConfirmPanel()
-    {
-        ConfirmPanel.SetActive(false);
-    }
+    public void CloseConfirmPanel() { ConfirmPanel.SetActive(false); }
 
     public void OnConfirmSellBtnClick()
     {

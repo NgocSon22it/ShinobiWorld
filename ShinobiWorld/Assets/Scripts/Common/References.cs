@@ -21,6 +21,7 @@ public static class References
     public static List<RoleInGame_Entity> listRole = RoleInGame_DAO.GetAll();
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
+    public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
 
@@ -44,4 +45,9 @@ public static class References
 public enum TypeSell
 {
     Item, Equipment
+}
+
+public enum Intention
+{
+    Sell, Bag
 }
