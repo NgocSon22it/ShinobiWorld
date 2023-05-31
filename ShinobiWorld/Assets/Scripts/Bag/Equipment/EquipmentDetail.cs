@@ -170,10 +170,10 @@ namespace Assets.Scripts.Bag.Equipment
             References.accountRefer.Health += accountEquipment.Health;
             References.accountRefer.Charka += accountEquipment.Chakra;
 
-            Player_AllUIManagement.Instance
-                    .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
-            Player_AllUIManagement.Instance
-                    .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
+            //Player_AllUIManagement.Instance
+            //        .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
+            //Player_AllUIManagement.Instance
+            //        .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
         }
     }
 }
