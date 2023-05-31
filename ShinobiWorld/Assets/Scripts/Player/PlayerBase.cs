@@ -160,7 +160,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Start()
     {
         SetUpComponent();
-
         if (photonView.IsMine)
         {
             photonView.RPC(nameof(SetUpAccount), RpcTarget.AllBuffered);
@@ -185,16 +184,16 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                 InvokeRepeating(nameof(RegenHealth), 1f, 1f);
                 InvokeRepeating(nameof(RegenChakra), 1f, 1f);
-                InvokeRepeating(nameof(RegenStrength), 360f, 360f);
+                InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
         else
         {
             PlayerHealthChakraUI.SetActive(true);
-
         }
 
         LoadLayout();
+        
         PlayerNickName.text = photonView.Owner.NickName;
         LoadPlayerHealthUI();
         LoadPlayerChakraUI();
@@ -432,10 +431,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void TriggerAnimator(string TriggerName)
     {
-        if (photonView.IsMine)
-        {
-            animator.SetTrigger(TriggerName);
-        }
+        animator.SetTrigger(TriggerName);
     }
 
     public void CallSyncAnimation(string TriggerName)
