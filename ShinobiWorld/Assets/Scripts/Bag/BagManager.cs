@@ -15,7 +15,8 @@ namespace Assets.Scripts.Shop
 {
     public class BagManager : MonoBehaviour
     {
-        public GameObject Panel, prefabItemBag, prefabItemDetail, prefabEquipmentBag, prefabEquipmentDetail, MessageError;
+        public GameObject Panel, prefabItemBag, prefabItemDetail, 
+                            prefabEquipmentBag, prefabEquipmentDetail, MessageError;
         public Transform Content;
 
         public List<AccountItem_Entity> listItem;
