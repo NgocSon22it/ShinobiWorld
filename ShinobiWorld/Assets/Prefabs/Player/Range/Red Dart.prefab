@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8360305639434253572}
   - component: {fileID: 2172905112567603905}
   - component: {fileID: 8006881683912325753}
-  - component: {fileID: 624025072144276587}
   - component: {fileID: 5485529820588284086}
+  - component: {fileID: 624025072144276587}
   - component: {fileID: 1579645630364566303}
   m_Layer: 7
   m_Name: Red Dart
@@ -86,20 +86,6 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
---- !u!114 &624025072144276587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3326273127931828948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95ec76ccde73ae24c9369e7b27d94f75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ListTag:
-  - Enemy
 --- !u!2083052967 &5485529820588284086
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -137,6 +123,20 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array: []
+--- !u!114 &624025072144276587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3326273127931828948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95ec76ccde73ae24c9369e7b27d94f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AttackAble_Tag:
+  - Enemy
 --- !u!73398921 &1579645630364566303
 VFXRenderer:
   serializedVersion: 1
@@ -175,5 +175,5 @@ VFXRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 178467679
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0

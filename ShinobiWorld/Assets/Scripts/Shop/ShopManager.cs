@@ -7,7 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using TMPro.EditorUtilities;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -30,9 +29,9 @@ public class ShopManager : MonoBehaviour
     public void Init()
     {
         CloseShopPanel();
-        CloseBuyPanel();
+        BuyPanel.SetActive(false);
         CloseConfirmPanel();
-        CloseSellPanel();
+        SellPanel.SetActive(false);
     }
 
     public void OnShopBtnClick()
@@ -55,25 +54,8 @@ public class ShopManager : MonoBehaviour
         BagManager.Instance.OnItemBtnClick();  
     }
 
-    public void CloseShopPanel()
-    {
-        ShopPanel.SetActive(false);
-    }
-
-    public void CloseBuyPanel()
-    {
-        BuyPanel.SetActive(false);
-    }
-
-    public void CloseSellPanel()
-    {
-        SellPanel.SetActive(false);
-    }
-
-    public void CloseConfirmPanel()
-    {
-        ConfirmPanel.SetActive(false);
-    }
+    public void CloseConfirmPanel() { ConfirmPanel.SetActive(false); }
+    public void CloseShopPanel() { ShopPanel.SetActive(false); }
 
     public void OnConfirmSellBtnClick()
     {

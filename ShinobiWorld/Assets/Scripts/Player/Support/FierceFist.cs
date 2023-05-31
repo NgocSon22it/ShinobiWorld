@@ -2,37 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FierceFist : MonoBehaviour
+public class FierceFist : PlayerSkill
 {
-    [SerializeField] List<string> ListTag = new List<string>();
-
-    string UserID;
-    int Damage;
-
-    public void SetUp(string UserID, int Damage)
+    new void OnEnable()
     {
-        this.UserID = UserID;
-        this.Damage = Damage;
+        LifeTime = 5f;
+        base.OnEnable();
     }
 
-    private void OnEnable()
+    new void OnDisable()
     {
-        Invoke(nameof(TurnOff), 5f);
-    }
-
-    private void OnDisable()
-    {
-        CancelInvoke();
-    }
-
-    void TurnOff()
-    {
-        gameObject.SetActive(false);
+        base.OnDisable();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (ListTag.Contains(collision.gameObject.tag))
+        if (AttackAble_Tag.Contains(collision.gameObject.tag))
         {
             if (collision.gameObject.tag == "Enemy")
             {

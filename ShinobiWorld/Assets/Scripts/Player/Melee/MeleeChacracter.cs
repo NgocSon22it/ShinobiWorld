@@ -19,15 +19,6 @@ public class MeleeChacracter : PlayerBase
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            WeaponName = "Weapon_Sword";
-            SkillOneName = "Skill_MeleeOne";
-            SkillTwoName = "Skill_MeleeTwo";
-            SkillThreeName = "Skill_MeleeThree";
-            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-            LoadAccountSkill();
-        }
     }
 
     // Update is called once per frame
@@ -127,6 +118,19 @@ public class MeleeChacracter : PlayerBase
             skillTwo.GetComponent<SwingSword>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
+        }
+    }
+
+    public void Animation_SkillThree()
+    {
+        GameObject skillThree = playerPool.GetSkillThreeFromPool();
+        FlipToMouse();
+        if (skillThree != null)
+        {
+            skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
+            skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
+            skillThree.SetActive(true);
         }
     }
 

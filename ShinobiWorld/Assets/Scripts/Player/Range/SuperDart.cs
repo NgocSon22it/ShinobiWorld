@@ -3,37 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SuperDart : MonoBehaviour
+public class SuperDart : PlayerSkill
 {
-    [SerializeField] List<string> ListTag = new List<string>();
 
-    string UserID;
-    int Damage;
-
-    public void SetUp(string UserID, int Damage)
+    new void OnEnable()
     {
-        this.UserID = UserID;
-        this.Damage = Damage;
+        LifeTime = 5f;
+        base.OnEnable();
     }
 
-    private void OnEnable()
+    new void OnDisable()
     {
-        Invoke(nameof(TurnOff), 5f);
+        base.OnDisable();
     }
 
-    private void OnDisable()
-    {
-        CancelInvoke();
-    }
-
-    void TurnOff()
-    {
-        gameObject.SetActive(false);
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (ListTag.Contains(collision.gameObject.tag))
+        if (AttackAble_Tag.Contains(collision.gameObject.tag))
         {
             if (collision.gameObject.tag == "Enemy")
             {

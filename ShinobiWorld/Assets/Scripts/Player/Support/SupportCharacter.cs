@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class SupportCharacter : PlayerBase
 {
@@ -23,12 +22,6 @@ public class SupportCharacter : PlayerBase
     new void Start()
     {
         base.Start();
-        WeaponName = "Weapon_Glove";
-        SkillOneName = "Skill_SupportOne";
-        SkillTwoName = "Skill_SupportTwo";
-        SkillThreeName = "Skill_SupportThree";
-        AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-        LoadAccountSkill();
     }
 
     // Update is called once per frame
@@ -130,8 +123,8 @@ public class SupportCharacter : PlayerBase
 
         FlipToMouse();
 
-        Vector2 direction = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-        direction.Normalize();
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
 
         if (skillThree != null)
         {
@@ -139,7 +132,7 @@ public class SupportCharacter : PlayerBase
             skillThree.transform.rotation = AttackPoint.rotation;
             skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
             skillThree.SetActive(true);
-            skillThree.GetComponent<Rigidbody2D>().velocity = (direction * 10);
+            skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
     }
 
@@ -147,7 +140,7 @@ public class SupportCharacter : PlayerBase
     {
         SetUpBlessing(Blessing_SpeedBonus, Blessing_HealthBonus);
 
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(Blessing_Time);
 
         SetUpBlessing(-Blessing_SpeedBonus, 0);
 
