@@ -16,8 +16,20 @@ namespace Assets.Scripts.Bag.Equipment
 {
     public class EquipmentDetail : MonoBehaviour
     {
+        [Header("Detail")]
         public Image Image;
         public TMP_Text Name, Level, Price, UpgradeCost, Description, MessageError, UseBtn_Text;
+
+        [Header("Upgrade")]
+        public GameObject UpgradePanel;
+        public GameObject LevelObj;
+        public GameObject HealthObj;
+        public GameObject ChakraObj;
+        public GameObject DamageObj;
+        public TMP_Text LevelCurrent, HealthCurrent, ChakraCurrent, DamageCurrent;
+        public TMP_Text LevelUpgrade, HealthUpgrade, ChakraUpgrade, DamageUpgrade;
+        public TMP_Text CostUpgrade;
+        int HealthBonus, ChakraBonus, DamageBonus;
 
         public static EquipmentDetail Instance;
         public AccountEquipment_Entity accountEquipment;
@@ -60,7 +72,7 @@ namespace Assets.Scripts.Bag.Equipment
             AccountEquipment_DAO.SellEquipment(References.accountRefer.ID, accountEquipment.EquipmentID, int.Parse(Price.text));
             
             References.accountRefer.Coin += int.Parse(Price.text);
-            Player_AllUIManagement.InInstance.SetUpCoinUI(References.accountRefer.Coin); 
+            Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin); 
             
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
         }
@@ -98,16 +110,70 @@ namespace Assets.Scripts.Bag.Equipment
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
         }
 
+        public void OnCloseBtnClick()
+        {
+            UpgradePanel.SetActive(false);
+        }
+
+        public void OnUpgradeBtnClick()
+        {
+            UpgradePanel.SetActive(true);
+            HealthObj.SetActive(false);
+            ChakraObj.SetActive(false);
+            DamageObj.SetActive(false);
+
+            CostUpgrade.text = UpgradeCost.text;
+
+            LevelCurrent.text = Level.text;
+            LevelUpgrade.text = (accountEquipment.Level + 1).ToString();
+
+            if(accountEquipment.Health != 0)
+            {
+                HealthBonus = Convert.ToInt32(accountEquipment.Health * (1 + References.Uppercent_Equipment / 100f));
+                HealthObj.SetActive(true);
+                HealthCurrent.text = accountEquipment.Health.ToString();
+                HealthUpgrade.text = HealthBonus.ToString();
+            }
+
+            if (accountEquipment.Chakra != 0)
+            {
+                ChakraBonus = Convert.ToInt32(accountEquipment.Chakra * (1 + References.Uppercent_Equipment / 100f));
+                ChakraObj.SetActive(true);
+                ChakraCurrent.text = accountEquipment.Chakra.ToString();
+                ChakraUpgrade.text = ChakraBonus.ToString();
+            }
+
+            if (accountEquipment.Damage != 0)
+            {
+                DamageBonus = Convert.ToInt32(accountEquipment.Damage * (1 + References.Uppercent_Equipment / 100f));
+                DamageObj.SetActive(true);
+                DamageCurrent.text = accountEquipment.Damage.ToString();
+                DamageUpgrade.text = DamageBonus.ToString();
+            }
+        }
+
+        public void Upgrade()
+        {
+            AccountEquipment_DAO.UpgradeEquipment(References.accountRefer.ID, accountEquipment.EquipmentID,
+                                                    DamageBonus, HealthBonus, ChakraBonus);
+
+            References.accountRefer.Coin -= int.Parse(CostUpgrade.text);
+            //Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+
+            BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
+
+            UpgradePanel.SetActive(false);
+        }
+
         public void LoadUI(int Health, int Charka)
         {
             References.accountRefer.Health += accountEquipment.Health;
             References.accountRefer.Charka += accountEquipment.Chakra;
 
-            Player_AllUIManagement.InInstance
-                    .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
-            Player_AllUIManagement.InInstance
-                    .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
-
+            //Player_AllUIManagement.Instance
+            //        .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
+            //Player_AllUIManagement.Instance
+            //        .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
         }
     }
 }

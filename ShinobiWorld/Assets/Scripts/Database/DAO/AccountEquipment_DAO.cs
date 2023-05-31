@@ -96,5 +96,23 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+        public static void UpgradeEquipment(string UserID, string EquipmentID, 
+                                            int Damage, int Health, int Chakra)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update AccountEquipment set [Level] += 1, Damage = @Damage, Health = @Health, Chakra = @Chakra where AccountID = @UserID and EquipmentID = @EquipmentID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@Damage", Damage);
+                cmd.Parameters.AddWithValue("@Health", Health);
+                cmd.Parameters.AddWithValue("@Chakra", Chakra);
+                cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }
