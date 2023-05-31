@@ -35,6 +35,7 @@ namespace Assets.Scripts.Bag.Item
 
         public void ShowDetail(string ID)
         {
+
             item = References.listItem.Find(obj => obj.ID == ID);
             var accountItem = References.listAccountItem.Find(obj => obj.ItemID == ID);
 
@@ -106,7 +107,10 @@ namespace Assets.Scripts.Bag.Item
                                     int.Parse(Amount.text), int.Parse(Price.text));
 
             References.accountRefer.Coin += int.Parse(Price.text);
-            //Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+            Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+
+            var index = References.listAccountItem.FindIndex(obj => obj.ItemID == item.ID);
+            References.listAccountItem[index].Amount -= int.Parse(Amount.text);
 
             BagManager.Instance.ReloadItem(item.ID);
         }
@@ -132,15 +136,16 @@ namespace Assets.Scripts.Bag.Item
             }
             else References.accountRefer.CurrentStrength += item.StrengthBonus;
 
-            //Player_AllUIManagement.Instance
-            //        .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
-            //Player_AllUIManagement.Instance
-            //        .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
-            //Player_AllUIManagement.Instance
-            //        .LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
-            
+            Game_Manager.Instance.SetUpAccountData();
+
+            Player_AllUIManagement.Instance
+                    .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
+            Player_AllUIManagement.Instance
+                    .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
+            Player_AllUIManagement.Instance
+                    .LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
+
             BagManager.Instance.ReloadItem(item.ID);
-            Debug.Log("Use Item" + References.accountRefer.ID);
         }
     }
 }

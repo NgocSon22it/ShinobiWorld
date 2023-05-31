@@ -31,8 +31,6 @@ public static class References
     public static float Uppercent_Equipment = 5f;
     public static int MaxUpgradeLevel = 30;
 
-    public static DateTime DateUpdate;  //ResetLimitBuyItem
-
     public static void LoadAccount()
     {
         if (accountRefer != null)

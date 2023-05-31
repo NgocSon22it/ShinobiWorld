@@ -15,6 +15,13 @@ namespace Assets.Scripts.Shop
         public Image Image;
         public TMP_Text Name, Cost;
 
+        public BuyItem Instance;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         public void OnClick()
         {
             BuyItemManager.Instance.ShowDetail(ID);

@@ -160,7 +160,8 @@ namespace Assets.Scripts.Database.DAO
                             IsDead = Convert.ToBoolean(dr["IsDead"]),
                             IsOnline = Convert.ToBoolean(dr["IsOnline"]),
                             IsTicket = Convert.ToBoolean(dr["IsTicket"]),
-                            IsFirst = Convert.ToBoolean(dr["IsFirst"])
+                            IsFirst = Convert.ToBoolean(dr["IsFirst"]),
+                            DateReset = Convert.ToDateTime(dr["DateReset"])
                         };
                         connection.Close();
                         return obj;
