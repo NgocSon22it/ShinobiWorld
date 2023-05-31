@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Account_Entity
 {
     public string ID;
@@ -29,4 +30,20 @@ public class Account_Entity
     public bool IsFirst;
 
     public Account_Entity() { }
+
+    public static object Deserialize(byte[] data)
+    {
+        var result = new Account_Entity();
+        result.ID = data[0].ToString();
+        result.EyeID = data[1].ToString();
+
+
+        return result;
+    }
+
+    public static byte[] Serialize(object customType)
+    {
+        var c = (Account_Entity)customType;
+        return new byte[] { Convert.ToByte(c.ID), Convert.ToByte(c.EyeID) };
+    }
 }
