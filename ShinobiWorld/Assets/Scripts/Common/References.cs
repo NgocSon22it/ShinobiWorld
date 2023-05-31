@@ -8,6 +8,7 @@ using UnityEngine;
 public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
+    //public static Account_Entity accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
 
@@ -27,6 +28,7 @@ public static class References
 
     public static float Uppercent_Skill_Damage = 3f, Uppercent_Skill_Chakra = 1f, Uppercent_Skill_CoolDown = 1f;
     public static float Uppercent_Account = 5f;
+    public static float Uppercent_Equipment = 5f;
     public static int MaxUpgradeLevel = 30;
 
     public static DateTime DateUpdate;  //ResetLimitBuyItem
