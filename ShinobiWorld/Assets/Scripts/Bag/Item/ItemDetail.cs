@@ -96,7 +96,6 @@ namespace Assets.Scripts.Bag.Item
 
         public void OnSellBtnClick()
         {
-            Debug.Log("OnSellBtnClick");
             ShopManager.Instance.typeSell = TypeSell.Item;
             ShopManager.Instance.ConfirmPanel.SetActive(true);
         }
@@ -107,7 +106,7 @@ namespace Assets.Scripts.Bag.Item
                                     int.Parse(Amount.text), int.Parse(Price.text));
 
             References.accountRefer.Coin += int.Parse(Price.text);
-            Player_AllUIManagement.InInstance.SetUpCoinUI(References.accountRefer.Coin);
+            Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
 
             BagManager.Instance.ReloadItem(item.ID);
         }
@@ -133,11 +132,11 @@ namespace Assets.Scripts.Bag.Item
             }
             else References.accountRefer.CurrentStrength += item.StrengthBonus;
 
-            Player_AllUIManagement.InInstance
+            Player_AllUIManagement.Instance
                     .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
-            Player_AllUIManagement.InInstance
+            Player_AllUIManagement.Instance
                     .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
-            Player_AllUIManagement.InInstance
+            Player_AllUIManagement.Instance
                     .LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
             
             BagManager.Instance.ReloadItem(item.ID);

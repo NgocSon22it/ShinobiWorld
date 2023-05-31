@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Player_AllUIManagement : MonoBehaviour
 {
-    public static Player_AllUIManagement InInstance;
+    public static Player_AllUIManagement Instance;
 
     [Header("Level UI")]
     [SerializeField] TMP_Text CurrentLevel;
@@ -34,7 +34,7 @@ public class Player_AllUIManagement : MonoBehaviour
 
     private void Awake()
     {
-        InInstance = this;
+        Instance = this;
     }
 
     public void SetUpCoinUI(int Coin)
