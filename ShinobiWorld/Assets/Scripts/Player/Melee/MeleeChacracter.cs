@@ -19,15 +19,6 @@ public class MeleeChacracter : PlayerBase
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            WeaponName = "Weapon_Sword";
-            SkillOneName = "Skill_MeleeOne";
-            SkillTwoName = "Skill_MeleeTwo";
-            SkillThreeName = "Skill_MeleeThree";
-            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-            LoadAccountSkill();
-        }
     }
 
     // Update is called once per frame

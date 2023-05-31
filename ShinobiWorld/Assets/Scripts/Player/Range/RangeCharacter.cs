@@ -25,16 +25,6 @@ public class RangeCharacter : PlayerBase
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            WeaponName = "Weapon_Dart";
-            SkillOneName = "Skill_RangeOne";
-            SkillTwoName = "Skill_RangeTwo";
-            SkillThreeName = "Skill_RangeThree";
-            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-            LoadAccountSkill();
-
-        }
     }
 
     // Update is called once per frame
