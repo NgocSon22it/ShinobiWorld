@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Database.Entity;
 using Assets.Scripts.Shop;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,8 @@ namespace Assets.Scripts.Bag.Item
 
         public int price;
         public bool isUpdatePrice = true;
-        public string ItemID; 
+
+        public Item_Entity item;
 
         public static ItemDetail Instance;
 
@@ -33,8 +35,7 @@ namespace Assets.Scripts.Bag.Item
 
         public void ShowDetail(string ID)
         {
-            ItemID = ID;
-            var item = References.listItem.Find(obj => obj.ID == ID);
+            item = References.listItem.Find(obj => obj.ID == ID);
             var accountItem = References.listAccountItem.Find(obj => obj.ItemID == ID);
 
             Image.sprite = Resources.Load<Sprite>(item.Image);
@@ -102,17 +103,45 @@ namespace Assets.Scripts.Bag.Item
 
         public void Sell()
         {
-            AccountItem_DAO.SellItem(References.accountRefer.ID, ItemID,
+            AccountItem_DAO.SellItem(References.accountRefer.ID, item.ID,
                                     int.Parse(Amount.text), int.Parse(Price.text));
 
-            BagManager.Instance.ReloadItem(ItemID);
+            References.accountRefer.Coin += int.Parse(Price.text);
+            Player_AllUIManagement.InInstance.SetUpCoinUI(References.accountRefer.Coin);
+
+            BagManager.Instance.ReloadItem(item.ID);
         }
 
         public void Use()
         {
-            AccountItem_DAO.UseItem(References.accountRefer.ID, ItemID);
+            AccountItem_DAO.UseItem(References.accountRefer.ID, item.ID);
+            
+            if(References.accountRefer.CurrentCharka + item.ChakraBonus > References.accountRefer.Charka)
+            {
+                References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+            } else References.accountRefer.CurrentCharka += item.ChakraBonus;
 
-            BagManager.Instance.ReloadItem(ItemID);
+            if (References.accountRefer.CurrentHealth + item.HealthBonus > References.accountRefer.Health)
+            {
+                References.accountRefer.CurrentHealth = References.accountRefer.Health;
+            }
+            else References.accountRefer.CurrentHealth += item.HealthBonus;
+
+            if (References.accountRefer.CurrentStrength + item.StrengthBonus > References.accountRefer.Strength)
+            {
+                References.accountRefer.CurrentStrength = References.accountRefer.Strength;
+            }
+            else References.accountRefer.CurrentStrength += item.StrengthBonus;
+
+            Player_AllUIManagement.InInstance
+                    .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
+            Player_AllUIManagement.InInstance
+                    .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
+            Player_AllUIManagement.InInstance
+                    .LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
+            
+            BagManager.Instance.ReloadItem(item.ID);
+            Debug.Log("Use Item" + References.accountRefer.ID);
         }
     }
 }
