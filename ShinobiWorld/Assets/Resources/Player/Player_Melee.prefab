@@ -824,6 +824,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &7955717774833130040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2046557355040735177}
+  m_Layer: 6
+  m_Name: MainPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2046557355040735177
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7955717774833130040}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.06829163, y: -0.55, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8538844862298929406}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8538844860861749929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1752,6 +1783,7 @@ Transform:
   - {fileID: 8538844861352236149}
   - {fileID: 6880015734267894088}
   - {fileID: 8593830438398984553}
+  - {fileID: 2046557355040735177}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1914,6 +1946,7 @@ MonoBehaviour:
   SkillThreeCooldown_Current: 0
   AttackCooldown_Total: 0
   AttackCooldown_Current: 0
+  MainPoint: {fileID: 2046557355040735177}
   DamageBonus: 0
   SpeedBonus: 0
   animator: {fileID: 0}

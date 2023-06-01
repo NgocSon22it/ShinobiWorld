@@ -70,6 +70,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     //Direction
     protected Vector2 SkillDirection;
 
+    //MainPoint
+    [SerializeField] Transform MainPoint;
+
     //Bonus
     public int DamageBonus, SpeedBonus;
 
@@ -432,16 +435,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-
     public void FlipToMouse()
     {
         if (photonView.IsMine)
         {
-            if (targetPosition.x > AttackPoint.position.x && !FacingRight)
+            if (targetPosition.x > MainPoint.position.x && !FacingRight)
             {
                 Flip();
             }
-            else if (targetPosition.x < AttackPoint.position.x && FacingRight)
+            else if (targetPosition.x < MainPoint.position.x && FacingRight)
             {
                 Flip();
             }
