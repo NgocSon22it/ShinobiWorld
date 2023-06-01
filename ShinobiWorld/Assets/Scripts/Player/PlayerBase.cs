@@ -349,8 +349,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    [PunRPC]
     public void TakeDamage(int Damage)
+    {
+        photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, Damage);
+    }
+
+    [PunRPC]
+    public void TakeDamageSync(int Damage)
     {
         if (Hurting) { return; }
         AccountEntity.CurrentHealth -= Damage;
@@ -359,7 +364,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
         if (photonView.IsMine)
         {
-            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 2, 1);
+            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(1, 1, 1);
         }
         LoadPlayerHealthUI();
         if (AccountEntity.CurrentHealth <= 0)
