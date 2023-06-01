@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace Assets.Scripts.Shop
         public Button MinBtn, PlusBtn, BuyItemBtn;
 
         public int cost;
-        public string ItemID;
+        public Item_Entity item;
 
         private void Awake()
         {
@@ -58,9 +59,8 @@ namespace Assets.Scripts.Shop
                 itemManager.Name.text = item.Name;
                 Instantiate(ItemTemplate, Content);
             }
-            if (References.DateUpdate.Day != DateTime.Now.Day)
+            if (References.accountRefer.DateReset.Day != DateTime.Now.Day)
             {
-                References.DateUpdate = DateTime.Now;
                 AccountItem_DAO.ResetLimitBuyItem(References.accountRefer.ID);
             }
             References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
@@ -68,8 +68,7 @@ namespace Assets.Scripts.Shop
 
         public void ShowDetail(string ID)
         {
-            ItemID = ID;
-            var item = References.listItem.Find(obj => obj.ID == ID);
+            item = References.listItem.Find(obj => obj.ID == ID);
             Image.sprite = Resources.Load<Sprite>(item.Image);
             Name.text = item.Name;
             Cost.text = item.BuyCost.ToString();
@@ -162,19 +161,37 @@ namespace Assets.Scripts.Shop
 
         public void Buy()
         {
-            References.accountRefer.Coin -= int.Parse(Cost.text);
-            Player_AllUIManagement.InInstance.SetUpCoinUI(References.accountRefer.Coin);
-            AccountItem_DAO.BuyItem(References.accountRefer.ID, ItemID,
+            AccountItem_DAO.BuyItem(References.accountRefer.ID, item.ID,
                                     int.Parse(Amount.text), int.Parse(Cost.text));
 
+            References.accountRefer.Coin -= int.Parse(Cost.text);
+            Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+
+            var index = References.listAccountItem.FindIndex(obj => obj.ItemID == item.ID);
+            if (index != -1)
+            {
+                References.listAccountItem[index].Amount += int.Parse(Amount.text);
+                References.listAccountItem[index].Limit -= int.Parse(Amount.text);
+            } else
+            {
+                var newItem = new AccountItem_Entity
+                {
+                    AccountID = References.accountRefer.ID,
+                    ItemID = item.ID,
+                    Amount = int.Parse(Amount.text),
+                    Limit = item.Limit - int.Parse(Amount.text),
+                    Delete = false
+                };
+                References.listAccountItem.Add(newItem);
+            }
             ReLoad();
         }
 
         public void ReLoad()
         {
-            DestroyItem();
-            GetListItem();
-            ShowDetail(ItemID);
+            //DestroyItem();
+            //GetListItem();
+            ShowDetail(item.ID);
         }
 
         public void Close()

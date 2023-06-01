@@ -15,7 +15,8 @@ namespace Assets.Scripts.Shop
 {
     public class BagManager : MonoBehaviour
     {
-        public GameObject Panel, prefabItemBag, prefabItemDetail, prefabEquipmentBag, prefabEquipmentDetail, MessageError;
+        public GameObject Panel, prefabItemBag, prefabItemDetail, 
+                            prefabEquipmentBag, prefabEquipmentDetail, MessageError;
         public Transform Content;
 
         public List<AccountItem_Entity> listItem;
@@ -37,6 +38,7 @@ namespace Assets.Scripts.Shop
 
         public void OnItemBtnClick()
         {
+            References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
             CloseDetail();
             prefabItemDetail.SetActive(true);
@@ -48,6 +50,7 @@ namespace Assets.Scripts.Shop
 
         public void OnEquipmentBtnClick()
         {
+            References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
             CloseDetail();
             prefabEquipmentDetail.SetActive(true);
@@ -91,7 +94,7 @@ namespace Assets.Scripts.Shop
 
         public void GetListItem()
         {
-            References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
+            //References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
 
             listItem = References.listAccountItem.FindAll(obj => obj.Amount > 0);
 
@@ -109,7 +112,7 @@ namespace Assets.Scripts.Shop
 
         public void GetListEquipment()
         {
-            References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            //References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
             listEquipment = References.listAccountEquipment;
 
