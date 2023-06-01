@@ -7,6 +7,7 @@ using System.IO;
 using UnityEngine.TextCore.Text;
 using Assets.Scripts.Database.DAO;
 using System.Security.Principal;
+using ExitGames.Client.Photon;
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
@@ -18,6 +19,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public static Game_Manager Instance;
 
+    ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
     private void Awake()
     {
         Instance = this;
@@ -38,26 +40,40 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        
+        PhotonPeer.RegisterType(typeof(Account_Entity), (byte) 'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         if (PlayerManager == null && PhotonNetwork.IsConnectedAndReady)
         {
             switch (References.accountRefer.RoleInGameID)
             {
                 case "Role_Melee":
                     PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerMelee.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Sword");
+                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_MeleeOne", "Skill_MeleeTwo", "Skill_MeleeThree");
                     break;
                 case "Role_Range":
                     PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerRange.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Dart");
+                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_RangeOne", "Skill_RangeTwo", "Skill_RangeThree");
                     break;
                 case "Role_Support":
                     PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerSupport.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Glove");
+                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_SupportOne", "Skill_SupportTwo", "Skill_SupportThree");
                     break;
             }
-
+            SetUpAccountData();
             Debug.Log("Successfully joined room S1!");
         }
     }
 
+    public void SetUpAccountData()
+    {
+        string AccountJson = JsonUtility.ToJson(References.accountRefer);
+        PlayerProperties["Account"] = AccountJson;
 
+        PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
+    }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
@@ -67,6 +83,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Debug.Log("Join Room Failed");
+    }
+
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        SetUpAccountData();
     }
 
 

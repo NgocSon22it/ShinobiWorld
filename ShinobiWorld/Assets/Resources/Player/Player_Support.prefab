@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &267326560718065337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3957536264760239255}
+  m_Layer: 6
+  m_Name: MainPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3957536264760239255
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267326560718065337}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.06829163, y: -0.55, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1231443374405932950}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &447124732004845375
 GameObject:
   m_ObjectHideFlags: 0
@@ -1164,6 +1195,7 @@ Transform:
   - {fileID: 1231443372386269981}
   - {fileID: 5158649508958808361}
   - {fileID: 8699623757859872075}
+  - {fileID: 3957536264760239255}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1281,6 +1313,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fffd9395a75a9044864014850e37da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AccountEntity:
+    ID: 
+    RoleInGameID: 
+    TrophiesID: 
+    Level: 0
+    Health: 0
+    CurrentHealth: 0
+    Charka: 0
+    CurrentCharka: 0
+    Exp: 0
+    Speed: 0
+    Coin: 0
+    Power: 0
+    Strength: 0
+    CurrentStrength: 0
+    EyeID: 
+    HairID: 
+    MouthID: 
+    SkinID: 
+    IsDead: 0
+    IsOnline: 0
+    IsTicket: 0
+    IsFirst: 0
   WeaponName: 
   SkillOneName: 
   SkillTwoName: 
@@ -1303,6 +1358,7 @@ MonoBehaviour:
   SkillThreeCooldown_Current: 0
   AttackCooldown_Total: 0
   AttackCooldown_Current: 0
+  MainPoint: {fileID: 3957536264760239255}
   DamageBonus: 0
   SpeedBonus: 0
   animator: {fileID: 0}
@@ -1559,7 +1615,7 @@ SortingGroup:
   m_GameObject: {fileID: 1231443374405932938}
   m_Enabled: 1
   m_SortingLayerID: 178467679
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0
 --- !u!61 &7713341436081449469
 BoxCollider2D:
@@ -1599,6 +1655,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1268cfb93420c8d428f8db85402bde73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AccountEntity:
+    ID: 
+    RoleInGameID: 
+    TrophiesID: 
+    Level: 0
+    Health: 0
+    CurrentHealth: 0
+    Charka: 0
+    CurrentCharka: 0
+    Exp: 0
+    Speed: 0
+    Coin: 0
+    Power: 0
+    Strength: 0
+    CurrentStrength: 0
+    EyeID: 
+    HairID: 
+    MouthID: 
+    SkinID: 
+    IsDead: 0
+    IsOnline: 0
+    IsTicket: 0
+    IsFirst: 0
 --- !u!114 &-1987454478111399211
 MonoBehaviour:
   m_ObjectHideFlags: 0
