@@ -575,7 +575,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!WeaponName.IsNullOrEmpty())
         {
-            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
+            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
         }
 
     }
