@@ -1,3 +1,4 @@
+using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ public class Bat : Enemy
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
             FlipToTarget();
-            direction = Target.transform.position - transform.Find("MainPoint").position;
+            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
 
             if (SkillOne != null)
             {
@@ -43,6 +44,8 @@ public class Bat : Enemy
             }
         }
     }
+
+
 
 
 }

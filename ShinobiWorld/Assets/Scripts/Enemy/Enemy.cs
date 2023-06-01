@@ -33,8 +33,9 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public float detectionRadius = 5f;
     public float delayTime = 2f;
 
-    //Projectile
-    public Transform bulletPrefab;
+    private float timer = 0f;
+    private float interval = 1f;
+
 
     // MainPoint
     [SerializeField] Transform MainPoint;
@@ -115,7 +116,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             {
                 // Move towards the target position
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, 3f * Time.deltaTime);
-               
+
                 // Check if the NPC has reached the target position
                 if (transform.position == targetPosition)
                 {
@@ -138,7 +139,23 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
                 }
             }
         }
-        Target = FindClostestTarget(detectionRadius, "Player");
+        timer += Time.deltaTime;
+
+        // Check if the interval has passed
+        if (timer >= interval)
+        {
+            if (FindClostestTarget(detectionRadius, "Player") != null)
+            {
+                photonView.RPC(nameof(SyncFindTarget), RpcTarget.AllBuffered);
+            }
+            else
+            {
+                Target = null;
+                Debug.Log("Reduce");
+            }
+            // Call the RPC and reset the timer
+            timer = 0f;
+        }
 
         // Update the player in range status
         playerInRange = Target != null;
@@ -202,13 +219,13 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
         if (!FacingRight)
         {
-            transform.localScale = new Vector3(ScaleValue, ScaleValue, 1);
-            HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(ScaleValue, ScaleValue, 1);
+            transform.localScale = new Vector3(1, 1, 1);
+            HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         }
         else
         {
-            transform.localScale = new Vector3(-ScaleValue, ScaleValue, 1);
-            HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-ScaleValue, ScaleValue, 1);
+            transform.localScale = new Vector3(-1, 1, 1);
+            HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
     }
 
@@ -226,6 +243,13 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
+
+    [PunRPC]
+    public void SyncFindTarget()
+    {
+        Target = FindClostestTarget(detectionRadius, "Player");
+    }
+
 
     public GameObject FindClostestTarget(float Range, string TargetTag)
     {
