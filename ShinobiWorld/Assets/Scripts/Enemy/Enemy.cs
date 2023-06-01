@@ -169,19 +169,10 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
-
-    IEnumerator DamageAnimation()
-    {
-        spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(.2f);
-        spriteRenderer.color = Color.white;
-    }
-
     [PunRPC]
     public void TakeDamageSync(string UserID, int Damage)
     {
         CurrentHealth -= Damage;
-        StartCoroutine(DamageAnimation());
         LoadHealthUI();
         if (CurrentHealth < 0)
         {

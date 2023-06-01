@@ -58,9 +58,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public float AttackCooldown_Total;
     public float AttackCooldown_Current;
 
-    //Take Damage
-    private bool Hurting;
-
     //Enemy
     protected GameObject Enemy;
 
@@ -225,7 +222,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
             player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
-       }
+        }
     }
 
     public void RegenHealth()
@@ -351,16 +348,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void TakeDamage(int Damage)
     {
-        photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, Damage);
-    }
-
-    [PunRPC]
-    public void TakeDamageSync(int Damage)
-    {
-        if (Hurting) { return; }
         AccountEntity.CurrentHealth -= Damage;
-
-        StartCoroutine(DamageAnimation());
 
         if (photonView.IsMine)
         {
@@ -373,20 +361,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public IEnumerator DamageAnimation()
-    {
-        Hurting = true;
-        for (int i = 0; i < 10; i++)
-        {
-            spriteRenderer.color = Color.red;
-
-            yield return new WaitForSeconds(.1f);
-
-            spriteRenderer.color = Color.white;
-            yield return new WaitForSeconds(.1f);
-        }
-        Hurting = false;
-    }
 
     [PunRPC]
     public void FindClostestEnemy(int Range)
