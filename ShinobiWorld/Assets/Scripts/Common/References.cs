@@ -34,6 +34,12 @@ public static class References
     public static float Uppercent_Equipment = 5f;
     public static int MaxUpgradeLevel = 30;
 
+    public static Vector3 Hokake = new(0, 0, 0);
+    public static Vector3 Hospital = new(17, -26, 0);
+
+    public static int RespawnTime = 20;
+    public static int RespawnCost = 1000;
+
     public static void LoadAccount()
     {
         if (accountRefer != null)
