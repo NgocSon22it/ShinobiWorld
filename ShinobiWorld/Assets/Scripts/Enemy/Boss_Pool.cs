@@ -1,12 +1,12 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss_Pool : MonoBehaviour
+public class Boss_Pool : MonoBehaviourPunCallbacks
 {
     [Header("Projectile Amount")]
     int Amount = 5;
-
 
     [SerializeField] GameObject SkillOne;
     List<GameObject> List_SkillOne = new List<GameObject>();
@@ -18,7 +18,7 @@ public class Boss_Pool : MonoBehaviour
     List<GameObject> List_SkillThree = new List<GameObject>();
 
 
-    private void Start()
+    public void InitializeProjectilePool(string Extension)
     {
         GameObject obj;
 
@@ -26,7 +26,7 @@ public class Boss_Pool : MonoBehaviour
         {
             for (int i = 0; i < Amount; i++)
             {
-                obj = Instantiate(SkillOne);
+                obj = PhotonNetwork.Instantiate(Extension + SkillOne.name, Vector3.zero, Quaternion.identity);
                 obj.SetActive(false);
                 List_SkillOne.Add(obj);
             }
@@ -35,7 +35,7 @@ public class Boss_Pool : MonoBehaviour
         {
             for (int i = 0; i < Amount; i++)
             {
-                obj = Instantiate(SkillTwo);
+                obj = PhotonNetwork.Instantiate(Extension + SkillTwo.name, Vector3.zero, Quaternion.identity);
                 obj.SetActive(false);
                 List_SkillTwo.Add(obj);
             }
@@ -44,15 +44,12 @@ public class Boss_Pool : MonoBehaviour
         {
             for (int i = 0; i < Amount; i++)
             {
-                obj = Instantiate(SkillThree);
+                obj = PhotonNetwork.Instantiate(Extension + SkillThree.name, Vector3.zero, Quaternion.identity);
                 obj.SetActive(false);
                 List_SkillThree.Add(obj);
             }
         }
-
     }
-
-
     public GameObject GetSkillOneFromPool()
     {
         for (int i = 0; i < List_SkillOne.Count; i++)
