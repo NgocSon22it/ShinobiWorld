@@ -16,13 +16,14 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 {
     // Entity
     protected Boss_Entity boss_Entity = new Boss_Entity();
-    int CurrentHealth;
+    protected int CurrentHealth;
 
     // Move Area
     [SerializeField] Collider2D movementBounds;
     Vector2 minPosition, maxPosition;
     float randomX, randomY;
     Vector2 randomPosition;
+
 
     private Vector3 targetPosition;
     private bool isMoving = true;
@@ -47,8 +48,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     // Skill Direction
     public Vector2 direction;
 
-    //Scale Value
-    float ScaleValue;
 
     // Health Bar
     [SerializeField] GameObject HealthChakraUI;
@@ -74,22 +73,10 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     {
         SetUpComponent();
         targetPosition = GetRandomPosition();
-        if (photonView.IsMine)
-        {
-            if (boss_Entity.ID != null)
-            {
-                boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-                CurrentHealth = boss_Entity.Health;
-                ScaleValue = transform.localScale.y;
-            }
-        }
-
-        LoadHealthUI();
     }
 
     public void Update()
     {
-
     }
 
     public void LoadHealthUI()
@@ -274,7 +261,10 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(playerInRange);
             stream.SendNext(isMoving);
 
+
             stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
+
+
         }
         else
         {

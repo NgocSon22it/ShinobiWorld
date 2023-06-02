@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,6 @@ public class Player_Pool : MonoBehaviour
 
     [SerializeField] GameObject SkillThree;
     List<GameObject> List_SkillThree = new List<GameObject>();
-
 
     private void Start()
     {
@@ -60,8 +60,8 @@ public class Player_Pool : MonoBehaviour
                 List_SkillThree.Add(obj);
             }
         }
-
     }
+  
 
     public GameObject GetNormalAttackFromPool()
     {
