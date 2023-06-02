@@ -47,17 +47,17 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             switch (References.accountRefer.RoleInGameID)
             {
                 case "Role_Melee":
-                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerMelee.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager = PhotonNetwork.Instantiate("Player/Melee/" + Path.Combine(PlayerMelee.name), new(0, 0, 0), Quaternion.identity);
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Sword");
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_MeleeOne", "Skill_MeleeTwo", "Skill_MeleeThree");
                     break;
                 case "Role_Range":
-                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerRange.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager = PhotonNetwork.Instantiate("Player/Range/" + Path.Combine(PlayerRange.name), new(0, 0, 0), Quaternion.identity);
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Dart");
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_RangeOne", "Skill_RangeTwo", "Skill_RangeThree");
                     break;
                 case "Role_Support":
-                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerSupport.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager = PhotonNetwork.Instantiate("Player/Support/" + Path.Combine(PlayerSupport.name), new(0, 0, 0), Quaternion.identity);
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Glove");
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_SupportOne", "Skill_SupportTwo", "Skill_SupportThree");
                     break;

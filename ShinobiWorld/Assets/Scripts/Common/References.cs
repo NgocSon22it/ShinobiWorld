@@ -8,9 +8,11 @@ using UnityEngine;
 public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
-    //public static Account_Entity accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
+    public static List<AccountSkill_Entity> listAccountSkill = new List<AccountSkill_Entity>();
+    public static AccountWeapon_Entity accountWeapon = new AccountWeapon_Entity();
+    public static Weapon_Entity weapon = new Weapon_Entity();
 
     public static int Maxserver = 20;
 
@@ -23,6 +25,7 @@ public static class References
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
+    public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
 
@@ -30,8 +33,6 @@ public static class References
     public static float Uppercent_Account = 5f;
     public static float Uppercent_Equipment = 5f;
     public static int MaxUpgradeLevel = 30;
-
-    public static DateTime DateUpdate;  //ResetLimitBuyItem
 
     public static void LoadAccount()
     {

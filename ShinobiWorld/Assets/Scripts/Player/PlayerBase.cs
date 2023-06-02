@@ -44,6 +44,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     //Attack
     [SerializeField] public Transform AttackPoint;
 
+    [SerializeField] GameObject Quai;
+    [SerializeField] GameObject Quai1;
+
     //Skill
     public float SkillOneCooldown_Total;
     public float SkillOneCooldown_Current;
@@ -58,9 +61,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public float AttackCooldown_Total;
     public float AttackCooldown_Current;
 
-    //Take Damage
-    private bool Hurting;
-
     //Enemy
     protected GameObject Enemy;
 
@@ -69,6 +69,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     //Direction
     protected Vector2 SkillDirection;
+
+    //MainPoint
+    [SerializeField] Transform MainPoint;
 
     //Bonus
     public int DamageBonus, SpeedBonus;
@@ -222,7 +225,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
             player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
-       }
+        }
     }
 
     public void RegenHealth()
@@ -313,6 +316,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                PhotonNetwork.Instantiate("Boss/Locusts/"+ Quai.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Crap/" + Quai1.name, Vector3.zero, Quaternion.identity);
+            }
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -346,17 +355,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    [PunRPC]
     public void TakeDamage(int Damage)
     {
-        if (Hurting) { return; }
         AccountEntity.CurrentHealth -= Damage;
-
-        StartCoroutine(DamageAnimation());
 
         if (photonView.IsMine)
         {
-            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 2, 1);
+            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(1, 1, 1);
         }
         LoadPlayerHealthUI();
         if (AccountEntity.CurrentHealth <= 0)
@@ -365,20 +370,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public IEnumerator DamageAnimation()
-    {
-        Hurting = true;
-        for (int i = 0; i < 10; i++)
-        {
-            spriteRenderer.color = Color.red;
-
-            yield return new WaitForSeconds(.1f);
-
-            spriteRenderer.color = Color.white;
-            yield return new WaitForSeconds(.1f);
-        }
-        Hurting = false;
-    }
 
     [PunRPC]
     public void FindClostestEnemy(int Range)
@@ -430,18 +421,18 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             transform.localScale = new Vector3(-1, 1, 1);
             PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
+        
     }
-
 
     public void FlipToMouse()
     {
         if (photonView.IsMine)
         {
-            if (targetPosition.x > AttackPoint.position.x && !FacingRight)
+            if (targetPosition.x > MainPoint.position.x && !FacingRight)
             {
                 Flip();
             }
-            else if (targetPosition.x < AttackPoint.position.x && FacingRight)
+            else if (targetPosition.x < MainPoint.position.x && FacingRight)
             {
                 Flip();
             }
@@ -573,7 +564,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!WeaponName.IsNullOrEmpty())
         {
-            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
+            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
         }
 
     }
