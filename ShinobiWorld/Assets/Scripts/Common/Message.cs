@@ -29,5 +29,6 @@ public class Message
     public static string NotEnoughMoney = "Bạn không đủ xu";
     public static string OverLimit = "Bạn đã hết lượt mua hôm nay";
     public static string IsUsing = "Đang sử dụng";
+    public static string Skill_Unlock = "Bạn cần đạt cấp độ {0} để mở khóa!";
 
 }
