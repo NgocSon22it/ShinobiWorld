@@ -1,10 +1,9 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bat : Enemy
+public class Locusts : Enemy
 {
     // Start is called before the first frame update
     new void Start()
@@ -14,13 +13,12 @@ public class Bat : Enemy
         {
             FacingRight = false;
             boss_Entity.ID = "Boss_Bat";
-            boss_Pool.InitializeProjectilePool("Boss/Bat/");
+            boss_Pool.InitializeProjectilePool("Boss/Locusts/");
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
             CurrentHealth = boss_Entity.Health;
         }
 
         LoadHealthUI();
-
     }
 
     new void Update()
@@ -30,7 +28,6 @@ public class Bat : Enemy
             AttackAndMove();
         }
     }
-
     public void AttackAndMove()
     {
         if (playerInRange)
@@ -96,22 +93,7 @@ public class Bat : Enemy
     {
         if (Target != null)
         {
-            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
-
-            if (SkillOne != null)
-            {
-                SkillOne.transform.position = transform.position;
-                SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
-                SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
-            }
+            
         }
     }
-
-
-
-
 }
