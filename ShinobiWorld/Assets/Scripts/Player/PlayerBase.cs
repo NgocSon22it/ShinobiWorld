@@ -363,10 +363,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(1, 1, 1);
         }
+
+        //if (AccountEntity.CurrentHealth <= 0) AccountEntity.CurrentHealth = 0;
+        
         LoadPlayerHealthUI();
+        
         if (AccountEntity.CurrentHealth <= 0)
         {
             Debug.Log("Die");
+            Destroy(PlayerAllUIInstance);
+            Destroy(PlayerCameraInstance);
+            Game_Manager.Instance.DestroyPlayer();
         }
     }
 
