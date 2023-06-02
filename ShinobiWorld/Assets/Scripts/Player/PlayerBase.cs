@@ -45,6 +45,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] public Transform AttackPoint;
 
     [SerializeField] GameObject Quai;
+    [SerializeField] GameObject Quai1;
 
     //Skill
     public float SkillOneCooldown_Total;
@@ -315,6 +316,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                PhotonNetwork.Instantiate("Boss/Locusts/"+ Quai.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Crap/" + Quai1.name, Vector3.zero, Quaternion.identity);
+            }
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -421,6 +428,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             transform.localScale = new Vector3(-1, 1, 1);
             PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
+        
     }
 
     public void FlipToMouse()

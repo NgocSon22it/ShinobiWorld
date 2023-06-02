@@ -19,23 +19,25 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     protected int CurrentHealth;
 
     // Move Area
-    [SerializeField] Collider2D movementBounds;
+    [SerializeField] public Collider2D movementBounds;
     Vector2 minPosition, maxPosition;
     float randomX, randomY;
     Vector2 randomPosition;
 
 
-    private Vector3 targetPosition;
-    private bool isMoving = true;
-    private float delayTimer;
-    protected GameObject Target;
-    private bool playerInRange = false;
-    Vector3 clampedPosition;
-    public float detectionRadius = 5f;
-    public float delayTime = 2f;
+    protected Vector3 MovePosition;
+    public bool isMoving = true;
 
-    private float timer = 0f;
-    private float interval = 1f;
+    public float Break_CurrentTime;
+    public float Break_TotalTime = 2f;
+
+    protected GameObject Target;
+    protected bool playerInRange = false;
+    public Vector3 clampedPosition;
+    public float detectionRadius = 5f;
+
+    public float FindTarget_CurrentTime;
+    public float FindTarget_TotalTime = 1f;
 
 
     // MainPoint
@@ -48,7 +50,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     // Skill Direction
     public Vector2 direction;
 
-
     // Health Bar
     [SerializeField] GameObject HealthChakraUI;
 
@@ -59,7 +60,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public Boss_Pool boss_Pool;
 
     // Facing
-    public bool FacingRight = true;
+    public bool FacingRight;
 
     public void SetUpComponent()
     {
@@ -72,11 +73,12 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public void Start()
     {
         SetUpComponent();
-        targetPosition = GetRandomPosition();
+        MovePosition = GetRandomPosition();
     }
 
     public void Update()
     {
+
     }
 
     public void LoadHealthUI()
@@ -88,71 +90,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public void TakeDamage(string UserID, int Damage)
     {
         photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, UserID, Damage);
-    }
-
-    public void AttackAndMoveRandom()
-    {
-        if (playerInRange)
-        {
-            // Stop moving
-            isMoving = false;
-        }
-        else
-        {
-            if (isMoving)
-            {
-                // Move towards the target position
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, 3f * Time.deltaTime);
-
-                // Check if the NPC has reached the target position
-                if (transform.position == targetPosition)
-                {
-                    // Start the delay timer
-                    delayTimer = delayTime;
-                    isMoving = false;
-                }
-
-            }
-            else
-            {
-
-                // Start or continue the delay
-                delayTimer -= Time.deltaTime;
-                if (delayTimer <= 0f)
-                {
-                    // Set a new random target position and start moving again
-                    targetPosition = GetRandomPosition();
-                    isMoving = true;
-                }
-            }
-        }
-        timer += Time.deltaTime;
-
-        // Check if the interval has passed
-        if (timer >= interval)
-        {
-            if (FindClostestTarget(detectionRadius, "Player") != null)
-            {
-                photonView.RPC(nameof(SyncFindTarget), RpcTarget.AllBuffered);
-            }
-            else
-            {
-                Target = null;
-                Debug.Log("Reduce");
-            }
-            // Call the RPC and reset the timer
-            timer = 0f;
-        }
-
-        // Update the player in range status
-        playerInRange = Target != null;
-
-        // Restrict movement to the move area
-        clampedPosition = movementBounds.ClosestPoint(transform.position);
-        transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
-
-        animator.SetBool("Attack", playerInRange);
-        animator.SetBool("Walk", isMoving);
     }
 
 
@@ -167,7 +104,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    private Vector2 GetRandomPosition()
+    public Vector2 GetRandomPosition()
     {
         // Get the bounds of the collider
         minPosition = movementBounds.bounds.min;
@@ -193,9 +130,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Flip()
     {
-        FacingRight = !FacingRight;
-
-        if (!FacingRight)
+        if (FacingRight)
         {
             transform.localScale = new Vector3(1, 1, 1);
             HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
@@ -205,6 +140,8 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             transform.localScale = new Vector3(-1, 1, 1);
             HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
+
+        FacingRight = !FacingRight;
     }
 
     public void FlipToTarget()
@@ -270,7 +207,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         {
             CurrentHealth = (int)stream.ReceiveNext();
             boss_Entity.Health = (int)stream.ReceiveNext();
-            targetPosition = (Vector3)stream.ReceiveNext();
+            MovePosition = (Vector3)stream.ReceiveNext();
 
             playerInRange = (bool)stream.ReceiveNext();
             isMoving = (bool)stream.ReceiveNext();
