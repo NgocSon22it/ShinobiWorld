@@ -9,6 +9,7 @@ public class Boss_Skill : MonoBehaviour
     protected int Damage;
 
     protected float LifeTime;
+ 
 
     public void SetUp(int Damage)
     {

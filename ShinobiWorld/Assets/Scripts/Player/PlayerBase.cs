@@ -44,6 +44,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     //Attack
     [SerializeField] public Transform AttackPoint;
 
+    [SerializeField] GameObject Quai;
+
     //Skill
     public float SkillOneCooldown_Total;
     public float SkillOneCooldown_Current;
