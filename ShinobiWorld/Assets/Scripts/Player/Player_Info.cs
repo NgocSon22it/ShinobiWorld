@@ -38,6 +38,22 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public GameObject DetailEquipment;
     public TMP_Text Name_Equipment, Level_Equipment, Damage_Equipment, Health_Equipment, Chakra_Equipment;
 
+    [Header("Layout")]
+    //Sprite layout
+    //Skin
+    public SpriteRenderer Shirt;
+    public SpriteRenderer RightFoot;
+    public SpriteRenderer LeftFoot;
+    public SpriteRenderer RightHand;
+    public SpriteRenderer LeftHand;
+    //Eye
+    public SpriteRenderer Eye;
+    //Hair
+    public SpriteRenderer Hair;
+    //Mouth
+    public SpriteRenderer Mouth;
+    //Weapon
+    public SpriteRenderer Weapon;
     public void Init()
     {
         DetailPlayer.SetActive(false);
@@ -48,7 +64,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void OnAvatarBtnClick()
     {
-        //References.accountRefer = Account_DAO.GetAccountByID(ID);
+        References.accountRefer = Account_DAO.GetAccountByID(ID);
 
         References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
         References.listAccountSkill = AccountSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
@@ -78,6 +94,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
         Role.text = References.listRole.Find(obj => obj.ID == References.accountRefer.RoleInGameID).Name;
         Trophy.text = References.listTrophy.Find(obj => obj.ID == References.accountRefer.TrophiesID).Name;
 
+        LoadLayout();
         SetupPreviewBtn();
         SetupPreviewSkillBtn();
         SetupPreviewEquipmentBtn();
@@ -137,6 +154,32 @@ public class Player_Info : MonoBehaviourPunCallbacks
                     break;
             }
         }
+    }
+
+    public void LoadLayout()
+    {
+        string image = References.listEye.Find(obj => obj.ID == References.accountRefer.EyeID).Image;
+        Eye.sprite = Resources.Load<Sprite>(image);
+
+        //Hair
+        image = References.listHair.Find(obj => obj.ID == References.accountRefer.HairID).Image;
+        Hair.sprite = Resources.Load<Sprite>(image);
+
+        //Mouth
+        image = References.listMouth.Find(obj => obj.ID == References.accountRefer.MouthID).Image;
+        Mouth.sprite = Resources.Load<Sprite>(image);
+
+        //Weapon
+        Weapon.sprite = Resources.Load<Sprite>(References.weapon.Image);
+
+        //Skin
+        image = References.listSkin.Find(obj => obj.ID == References.accountRefer.SkinID).Image;
+
+        Shirt.sprite = Resources.Load<Sprite>(image + "_Shirt");
+        LeftHand.sprite = Resources.Load<Sprite>(image + "_LeftHand");
+        RightHand.sprite = Resources.Load<Sprite>(image + "_RightHand");
+        LeftFoot.sprite = Resources.Load<Sprite>(image + "_LeftFoot");
+        RightFoot.sprite = Resources.Load<Sprite>(image + "_RightFoot");
     }
 
     public void SetupPreviewEquipmentBtn()
@@ -214,5 +257,6 @@ public class Player_Info : MonoBehaviourPunCallbacks
         Level_Weapon.text = References.accountWeapon.Level.ToString();
         Damage_Weapon.text = References.accountWeapon.Damage.ToString();
     }
+
 
 }
