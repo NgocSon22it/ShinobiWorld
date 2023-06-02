@@ -176,10 +176,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9173586481242614638}
+  - component: {fileID: 9064849194121175315}
   - component: {fileID: 9173586481242614639}
   - component: {fileID: 9173586481242614640}
   - component: {fileID: 9173586481242614641}
+  - component: {fileID: 1252603678}
   m_Layer: 0
   m_Name: Player_Info
   m_TagString: Untagged
@@ -187,22 +188,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9173586481242614638
-Transform:
+--- !u!224 &9064849194121175315
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9173586481242614642}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7420842, y: 0.7263796, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9173586482984929253}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -960.65, y: -546.17}
+  m_SizeDelta: {x: 5.94, y: 4.2}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &9173586481242614639
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -279,8 +285,8 @@ MonoBehaviour:
   - {fileID: 9173586482835502010}
   - {fileID: 9173586483197833357}
   m_Bounds:
-    m_Center: {x: 0.9449831, y: 0.06587267, z: 0}
-    m_Extent: {x: 1.337, y: 1.8325601, z: 0}
+    m_Center: {x: 0.9449245, y: 0.065895796, z: 0}
+    m_Extent: {x: 1.3370003, y: 1.8325841, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -305,6 +311,14 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!222 &1252603678
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9173586481242614642}
+  m_CullTransparentMesh: 1
 --- !u!1 &9173586481285199001
 GameObject:
   m_ObjectHideFlags: 0
@@ -970,7 +984,7 @@ Transform:
   - {fileID: 9173586482318000442}
   - {fileID: 9173586483046488445}
   - {fileID: 9173586481575905643}
-  m_Father: {fileID: 9173586481242614638}
+  m_Father: {fileID: 9064849194121175315}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9173586482990536871
