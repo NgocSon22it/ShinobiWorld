@@ -22,7 +22,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
-    public AccountWeapon_Entity AccountWeapon_Entity = new AccountWeapon_Entity();
 
     public AccountSkill_Entity SkillOne_Entity = new AccountSkill_Entity();
     public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
@@ -43,9 +42,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] public LayerMask AttackableLayer;
     //Attack
     [SerializeField] public Transform AttackPoint;
-
-    [SerializeField] GameObject Quai;
-    [SerializeField] GameObject Quai1;
 
     //Skill
     public float SkillOneCooldown_Total;
@@ -72,6 +68,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     //MainPoint
     [SerializeField] Transform MainPoint;
+
+    [SerializeField] GameObject Quai;
+    [SerializeField] GameObject Quai1;
 
     //Bonus
     public int DamageBonus, SpeedBonus;
@@ -318,8 +317,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (Input.GetKeyDown(KeyCode.U))
             {
-                PhotonNetwork.Instantiate("Boss/Locusts/"+ Quai.name, Vector3.zero, Quaternion.identity);
-                PhotonNetwork.Instantiate("Boss/Crap/" + Quai1.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Fish/" + Quai1.name, Vector3.zero, Quaternion.identity);
             }
 
             if (!CanWalking)
@@ -472,7 +471,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     #region Attack && Skill CanExecute
     public bool CanExecuteNormalAttack(float CurrentCooldown)
     {
-        if (CurrentCooldown <= 0 && AccountWeapon_Entity != null && photonView.IsMine)
+        if (CurrentCooldown <= 0 && References.accountWeapon != null && photonView.IsMine)
         {
             return true;
         }
@@ -523,7 +522,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Attack()
     {
-        if (AccountWeapon_Entity != null)
+        if (References.accountWeapon != null)
         {
             if (AttackCooldown_Current > 0)
             {
@@ -571,7 +570,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!WeaponName.IsNullOrEmpty())
         {
-            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
+            References.accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
         }
 
     }
