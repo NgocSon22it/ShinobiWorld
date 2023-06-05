@@ -317,8 +317,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (Input.GetKeyDown(KeyCode.U))
             {
-                PhotonNetwork.Instantiate("Boss/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
-                PhotonNetwork.Instantiate("Boss/Fish/" + Quai1.name, Vector3.zero, Quaternion.identity);
+                //PhotonNetwork.Instantiate("Boss/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Frog/" + Quai1.name, Vector3.zero, Quaternion.identity);
             }
 
             if (!CanWalking)

@@ -1,9 +1,10 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Locusts : Enemy
+public class Bat : Enemy
 {
     // Start is called before the first frame update
     new void Start()
@@ -11,14 +12,14 @@ public class Locusts : Enemy
         base.Start();
         if (photonView.IsMine)
         {
-            FacingRight = false;
             boss_Entity.ID = "Boss_Bat";
-            boss_Pool.InitializeProjectilePool("Boss/Locusts/");
+            boss_Pool.InitializeProjectilePool("Boss/Normal/Bat/");
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
             CurrentHealth = boss_Entity.Health;
         }
 
         LoadHealthUI();
+
     }
 
     new void Update()
@@ -28,6 +29,7 @@ public class Locusts : Enemy
             AttackAndMove();
         }
     }
+
     public void AttackAndMove()
     {
         if (playerInRange)
@@ -93,7 +95,22 @@ public class Locusts : Enemy
     {
         if (Target != null)
         {
-            
+            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
+            FlipToTarget();
+            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
+
+            if (SkillOne != null)
+            {
+                SkillOne.transform.position = transform.position;
+                SkillOne.transform.rotation = transform.rotation;
+                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
+                SkillOne.SetActive(true);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
+            }
         }
     }
+
+
+
+
 }
