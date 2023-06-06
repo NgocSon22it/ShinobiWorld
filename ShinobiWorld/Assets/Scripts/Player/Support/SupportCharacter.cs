@@ -131,7 +131,7 @@ public class SupportCharacter : PlayerBase
         {
             skillThree.transform.position = AttackPoint.position;
             skillThree.transform.rotation = AttackPoint.rotation;
-            skillThree.GetComponent<FierceFist>().SetUp(References.accountRefer.ID, SkillOne_Entity.Damage + DamageBonus);
+            skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
             skillThree.SetActive(true);
             skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
