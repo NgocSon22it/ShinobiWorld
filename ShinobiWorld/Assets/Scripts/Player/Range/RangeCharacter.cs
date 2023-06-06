@@ -25,16 +25,6 @@ public class RangeCharacter : PlayerBase
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            WeaponName = "Weapon_Dart";
-            SkillOneName = "Skill_RangeOne";
-            SkillTwoName = "Skill_RangeTwo";
-            SkillThreeName = "Skill_RangeThree";
-            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-            LoadAccountSkill();
-
-        }
     }
 
     // Update is called once per frame
@@ -101,7 +91,7 @@ public class RangeCharacter : PlayerBase
         {
             normalAttack.transform.position = AttackPoint.position;
             normalAttack.transform.rotation = AttackPoint.rotation;
-            normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, AccountWeapon_Entity.Damage + DamageBonus);
+            normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, References.accountWeapon.Damage + DamageBonus);
             normalAttack.SetActive(true);
             normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }

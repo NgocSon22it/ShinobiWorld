@@ -22,12 +22,7 @@ public class SupportCharacter : PlayerBase
     new void Start()
     {
         base.Start();
-        WeaponName = "Weapon_Glove";
-        SkillOneName = "Skill_SupportOne";
-        SkillTwoName = "Skill_SupportTwo";
-        SkillThreeName = "Skill_SupportThree";
-        AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
-        LoadAccountSkill();
+
     }
 
     // Update is called once per frame
@@ -146,7 +141,7 @@ public class SupportCharacter : PlayerBase
     {
         SetUpBlessing(Blessing_SpeedBonus, Blessing_HealthBonus);
 
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(Blessing_Time);
 
         SetUpBlessing(-Blessing_SpeedBonus, 0);
 

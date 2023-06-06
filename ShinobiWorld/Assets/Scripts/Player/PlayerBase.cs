@@ -11,13 +11,17 @@ using Assets.Scripts.Database.DAO;
 using Photon.Pun.UtilityScripts;
 using Assets.Scripts.Database.Entity;
 using ExitGames.Client.Photon;
+using System.Security.Principal;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Photon.Pun.Demo.PunBasics;
+using WebSocketSharp;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
 
     [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
-    public AccountWeapon_Entity AccountWeapon_Entity = new AccountWeapon_Entity();
 
     public AccountSkill_Entity SkillOne_Entity = new AccountSkill_Entity();
     public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
@@ -39,7 +43,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     //Attack
     [SerializeField] public Transform AttackPoint;
 
-
     //Skill
     public float SkillOneCooldown_Total;
     public float SkillOneCooldown_Current;
@@ -54,9 +57,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public float AttackCooldown_Total;
     public float AttackCooldown_Current;
 
-    //Take Damage
-    private bool Hurting;
-
     //Enemy
     protected GameObject Enemy;
 
@@ -65,6 +65,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     //Direction
     protected Vector2 SkillDirection;
+
+    //MainPoint
+    [SerializeField] Transform MainPoint;
+
+    [SerializeField] GameObject Quai;
+    [SerializeField] GameObject Quai1;
 
     //Bonus
     public int DamageBonus, SpeedBonus;
@@ -120,6 +126,29 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     Quaternion rotationAtLastPacket = Quaternion.identity;
 
 
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
+        {
+            if (changedProps.ContainsKey("Account"))
+            {
+                string accountJson = (string)changedProps["Account"];
+                AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
+                SetUpAccountData();
+            }
+
+        }
+    }
+
+    public void SetUpAccountData()
+    {
+        PlayerNickName.text = photonView.Owner.NickName;
+        LoadLayout();
+        LoadAllAccountUI();
+        LoadAccountWeapon();
+        LoadAccountSkill();
+    }
+
     public void SetUpComponent()
     {
         animator = GetComponent<Animator>();
@@ -160,26 +189,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Start()
     {
         SetUpComponent();
+
         if (photonView.IsMine)
         {
-            photonView.RPC(nameof(SetUpAccount), RpcTarget.AllBuffered);
-
             if (AccountEntity != null)
             {
                 AttackCooldown_Total = 0.5f;
-
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
-                PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
-
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(photonView.Owner.NickName);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
-
-                player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
                 PlayerHealthChakraUI.SetActive(false);
 
                 InvokeRepeating(nameof(RegenHealth), 1f, 1f);
@@ -191,12 +209,22 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             PlayerHealthChakraUI.SetActive(true);
         }
+    }
 
-        LoadLayout();
-        
-        PlayerNickName.text = photonView.Owner.NickName;
-        LoadPlayerHealthUI();
-        LoadPlayerChakraUI();
+    public void LoadAllAccountUI()
+    {
+        if (photonView.IsMine)
+        {
+            PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
+
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(photonView.Owner.NickName);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
+
+            player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
+        }
     }
 
     public void RegenHealth()
@@ -208,13 +236,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         HealAmountOfChakra(1);
     }
-
-    [PunRPC]
-    public void SetUpAccount()
-    {
-        AccountEntity = References.accountRefer;
-    }
-
 
     public void HealAmountOfHealth(int Amount)
     {
@@ -294,6 +315,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                //PhotonNetwork.Instantiate("Boss/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Frog/" + Quai1.name, Vector3.zero, Quaternion.identity);
+            }
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -304,6 +331,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             }
 
         }
+
+
 
     }
 
@@ -325,39 +354,28 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    [PunRPC]
     public void TakeDamage(int Damage)
     {
-        if (Hurting) { return; }
         AccountEntity.CurrentHealth -= Damage;
-
-        StartCoroutine(DamageAnimation());
 
         if (photonView.IsMine)
         {
-            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 2, 1);
+            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(1, 1, 1);
         }
+
+        //if (AccountEntity.CurrentHealth <= 0) AccountEntity.CurrentHealth = 0;
+        
         LoadPlayerHealthUI();
+        
         if (AccountEntity.CurrentHealth <= 0)
         {
             Debug.Log("Die");
+            Destroy(PlayerAllUIInstance);
+            Destroy(PlayerCameraInstance);
+            Game_Manager.Instance.DestroyPlayer();
         }
     }
 
-    public IEnumerator DamageAnimation()
-    {
-        Hurting = true;
-        for (int i = 0; i < 10; i++)
-        {
-            spriteRenderer.color = Color.red;
-
-            yield return new WaitForSeconds(.1f);
-
-            spriteRenderer.color = Color.white;
-            yield return new WaitForSeconds(.1f);
-        }
-        Hurting = false;
-    }
 
     [PunRPC]
     public void FindClostestEnemy(int Range)
@@ -409,18 +427,18 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             transform.localScale = new Vector3(-1, 1, 1);
             PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
+        
     }
-
 
     public void FlipToMouse()
     {
         if (photonView.IsMine)
         {
-            if (targetPosition.x > AttackPoint.position.x && !FacingRight)
+            if (targetPosition.x > MainPoint.position.x && !FacingRight)
             {
                 Flip();
             }
-            else if (targetPosition.x < AttackPoint.position.x && FacingRight)
+            else if (targetPosition.x < MainPoint.position.x && FacingRight)
             {
                 Flip();
             }
@@ -431,7 +449,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void TriggerAnimator(string TriggerName)
     {
-        animator.SetTrigger(TriggerName);
+        if (animator != null)
+        {
+            animator.SetTrigger(TriggerName);
+        }
     }
 
     public void CallSyncAnimation(string TriggerName)
@@ -450,7 +471,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     #region Attack && Skill CanExecute
     public bool CanExecuteNormalAttack(float CurrentCooldown)
     {
-        if (CurrentCooldown <= 0 && AccountWeapon_Entity != null && photonView.IsMine)
+        if (CurrentCooldown <= 0 && References.accountWeapon != null && photonView.IsMine)
         {
             return true;
         }
@@ -501,7 +522,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Attack()
     {
-        if (AccountWeapon_Entity != null)
+        if (References.accountWeapon != null)
         {
             if (AttackCooldown_Current > 0)
             {
@@ -543,12 +564,49 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     #endregion
 
+    #region Weapon Load
+
+    public void LoadAccountWeapon()
+    {
+        if (!WeaponName.IsNullOrEmpty())
+        {
+            References.accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
+        }
+
+    }
+    public void SetUpAccountWeaponName(string Weapon)
+    {
+        WeaponName = Weapon;
+    }
+
+    #endregion
+
+    #region Skill Load
+
     public void LoadAccountSkill()
     {
-        SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillOneName);
-        SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillTwoName);
-        SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillThreeName);
+        if (!SkillOneName.IsNullOrEmpty())
+        {
+            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillOneName);
+        }
+        if (!SkillTwoName.IsNullOrEmpty())
+        {
+            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillTwoName);
+        }
+        if (!SkillThreeName.IsNullOrEmpty())
+        {
+            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillThreeName);
+        }
     }
+
+    public void SetUpAccountSkillName(string SkillOne, string SkillTwo, string SkillThree)
+    {
+        SkillOneName = SkillOne;
+        SkillTwoName = SkillTwo;
+        SkillThreeName = SkillThree;
+    }
+
+    #endregion
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -579,6 +637,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             targetPosition = (Vector3)stream.ReceiveNext();
             SkillDirection = (Vector2)stream.ReceiveNext();
+
 
             AccountEntity.CurrentHealth = (int)stream.ReceiveNext();
             AccountEntity.CurrentCharka = (int)stream.ReceiveNext();
@@ -624,4 +683,5 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
+
 }
