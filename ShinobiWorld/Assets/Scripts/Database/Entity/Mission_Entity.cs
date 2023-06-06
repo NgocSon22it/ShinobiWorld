@@ -8,13 +8,13 @@ namespace Assets.Scripts.Database.Entity
 {
     public class Mission_Entity
     {
-        public string ID;
+        public int ID;
+        public string TrophiesID;
+        public int RequiredStrength;
         public string Content;
-        public int Level;
         public int Target;
         public int ExpBonus;
         public int CoinBonus;
-        public string Image;
         public bool Delete;
 
         public Mission_Entity()

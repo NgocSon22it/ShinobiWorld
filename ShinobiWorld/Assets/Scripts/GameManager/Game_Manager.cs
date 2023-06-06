@@ -45,13 +45,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte) 'A', Account_Entity.Serialize, Account_Entity.Deserialize);
-        SetupPlayer(References.Hokake);
+        SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
     }
 
     public void SetupPlayer(Vector3 position)
     {
-        Debug.Log(PlayerManager == null);
-        Debug.Log(PhotonNetwork.IsConnectedAndReady);
         if (PlayerManager == null && PhotonNetwork.IsConnectedAndReady)
         {
             switch (References.accountRefer.RoleInGameID)

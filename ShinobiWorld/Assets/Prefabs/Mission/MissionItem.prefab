@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 1841329699556635208}
   - component: {fileID: 1841329699556635222}
   - component: {fileID: 4677949571859437335}
+  - component: {fileID: 5918141193069745633}
   m_Layer: 5
   m_Name: MissionItem
   m_TagString: Untagged
@@ -366,8 +367,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Assets.Scripts.Shop.ItemManager, Assembly-CSharp
+      - m_Target: {fileID: 5918141193069745633}
+        m_TargetAssemblyTypeName: Assets.Scripts.Mission.MissionItem, Assembly-CSharp
         m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
@@ -391,7 +392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4339623, g: 0.30043834, b: 0.23908864, a: 1}
+  m_Color: {r: 0.43137255, g: 0.3137255, b: 0.23529412, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -408,6 +409,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5918141193069745633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841329699556635220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb8c256161c2fde4f9045f4714b60316, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  Content: {fileID: 4510025644705328231}
+  Target: {fileID: 692851365738031974}
+  requiedStrength: {fileID: 4691738749455210754}
+  Trophi: {fileID: 6603376242891539094}
 --- !u!1 &3361908552787423393
 GameObject:
   m_ObjectHideFlags: 0

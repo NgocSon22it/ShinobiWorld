@@ -71,7 +71,7 @@ namespace Assets.Scripts.Hospital
             StopAllCoroutines();
             DiePanel.SetActive(false);
             References.accountRefer.CurrentHealth = References.accountRefer.Health;
-            Game_Manager.Instance.SetupPlayer(References.Hospital);
+            Game_Manager.Instance.SetupPlayer(References.HouseAddress[House.Hospital.ToString()]);
         }
 
         public void OnRespawnClick()
