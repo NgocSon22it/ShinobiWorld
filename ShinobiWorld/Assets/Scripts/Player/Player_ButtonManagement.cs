@@ -48,7 +48,7 @@ public class Player_ButtonManagement : MonoBehaviour
             else
             {
                 SkillOne_Cooldown.SetActive(false);
-                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillOne_Entity.Chakra)
+                if (References.accountRefer.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillOne_Entity.Chakra)
                 {
                     SkillOne_LowChakra.SetActive(false);
                 }
@@ -78,7 +78,7 @@ public class Player_ButtonManagement : MonoBehaviour
             else
             {
                 SkillTwo_Cooldown.SetActive(false);
-                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillTwo_Entity.Chakra)
+                if (References.accountRefer.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillTwo_Entity.Chakra)
                 {
                     SkillTwo_LowChakra.SetActive(false);
                 }
@@ -109,7 +109,7 @@ public class Player_ButtonManagement : MonoBehaviour
             else
             {
                 SkillThree_Cooldown.SetActive(false);
-                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillThree_Entity.Chakra)
+                if (References.accountRefer.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillThree_Entity.Chakra)
                 {
                     SkillThree_LowChakra.SetActive(false);
                 }

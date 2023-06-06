@@ -8,10 +8,14 @@ using UnityEngine;
 public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
+
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
+
     public static List<AccountSkill_Entity> listAccountSkill = new List<AccountSkill_Entity>();
+
     public static AccountWeapon_Entity accountWeapon = new AccountWeapon_Entity();
+
     public static Weapon_Entity weapon = new Weapon_Entity();
 
     public static int Maxserver = 20;
