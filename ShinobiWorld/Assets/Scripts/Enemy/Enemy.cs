@@ -73,8 +73,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Start()
     {
-        SetUpComponent();
-        MovePosition = GetRandomPosition();
+        SetUpComponent();      
         LocalScaleX = transform.localScale.x;
     }
 

@@ -31,4 +31,7 @@ public class Message
     public static string IsUsing = "Đang sử dụng";
     public static string Skill_Unlock = "Bạn cần đạt cấp độ {0} để mở khóa!";
 
+
+
+
 }
