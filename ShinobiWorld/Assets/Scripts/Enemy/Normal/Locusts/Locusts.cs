@@ -1,10 +1,9 @@
-using Assets.Scripts.Database.Entity;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fish : Enemy
+public class Locusts : Enemy
 {
     // Start is called before the first frame update
     new void Start()
@@ -12,9 +11,8 @@ public class Fish : Enemy
         base.Start();
         if (photonView.IsMine)
         {
-            FacingRight = false;
             boss_Entity.ID = "Boss_Bat";
-            boss_Pool.InitializeProjectilePool("Boss/Fish/");
+            boss_Pool.InitializeProjectilePool("Boss/Locusts/");
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
             CurrentHealth = boss_Entity.Health;
         }
@@ -94,22 +92,7 @@ public class Fish : Enemy
     {
         if (Target != null)
         {
-            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
-
-            if (SkillOne != null)
-            {
-                SkillOne.transform.position = transform.position;
-                SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Fish_SkillOne>().SetUp(100);
-                SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
-            }
+            
         }
     }
-
-
-
-
 }
