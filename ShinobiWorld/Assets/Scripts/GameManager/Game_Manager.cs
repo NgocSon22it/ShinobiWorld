@@ -70,12 +70,12 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_SupportOne", "Skill_SupportTwo", "Skill_SupportThree");
                     break;
             }
-            SetUpAccountData();
+            ReloadPlayerProperties();
             Debug.Log("Successfully joined room S1!");
         }
     }
 
-    public void SetUpAccountData()
+    public void ReloadPlayerProperties()
     {
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
         PlayerProperties["Account"] = AccountJson;
@@ -95,7 +95,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        SetUpAccountData();
+        ReloadPlayerProperties();
     }
 
 
@@ -114,18 +114,20 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(Scenes.Login);
     }
 
-    public void DestroyPlayer()
+    public void GoingToHospital()
     {
-        Destroy(PlayerManager);
-        PlayerManager = null;
+        PlayerManager.GetComponent<BoxCollider2D>().enabled = false;
         Hospital.Instance.SetDuration(References.RespawnTime).Begin();
     }
 
-    public void Die()
+    public void GoingOutHospital()
     {
-        PlayerManager.GetComponent<PlayerBase>().TakeDamage(10000);
+        References.accountRefer.CurrentHealth = References.accountRefer.Health;
+        References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+        PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+        ReloadPlayerProperties();
+        PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
     }
-
 
     private void OnApplicationQuit()
     {

@@ -1102,11 +1102,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1131052687918275396, guid: 0c7981ad0f182b645906077557dd7e2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.1
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 1131052687918275396, guid: 0c7981ad0f182b645906077557dd7e2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15.98
+      value: 17.58
       objectReference: {fileID: 0}
     - target: {fileID: 1131052687918275396, guid: 0c7981ad0f182b645906077557dd7e2c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1144,12 +1144,52 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shukaku
       objectReference: {fileID: 0}
+    - target: {fileID: 6236129432633013481, guid: 0c7981ad0f182b645906077557dd7e2c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6394405256417218125, guid: 0c7981ad0f182b645906077557dd7e2c, type: 3}
       propertyPath: m_SynchronizeScale
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c7981ad0f182b645906077557dd7e2c, type: 3}
+--- !u!1 &663094580 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6236129432633013481, guid: 0c7981ad0f182b645906077557dd7e2c, type: 3}
+  m_PrefabInstance: {fileID: 663094579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &663094581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 663094580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a470f11a9c3c9df429d982348db83684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementBounds: {fileID: 0}
+  isMoving: 1
+  Break_CurrentTime: 0
+  Break_TotalTime: 2
+  clampedPosition: {x: 0, y: 0, z: 0}
+  detectionRadius: 5
+  FindTarget_CurrentTime: 0
+  FindTarget_TotalTime: 1
+  LocalScaleX: 0
+  MainPoint: {fileID: 0}
+  CurrentHealth_UI: {fileID: 0}
+  HealthNumber: {fileID: 0}
+  direction: {x: 0, y: 0}
+  HealthChakraUI: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  rigidbody2d: {fileID: 0}
+  animator: {fileID: 0}
+  boss_Pool: {fileID: 0}
+  FacingRight: 0
 --- !u!1 &802022206
 GameObject:
   m_ObjectHideFlags: 0
@@ -146393,17 +146433,37 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skill_Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8577793752804808022, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8577793752881015785, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 212529895}
-    - target: {fileID: 8577793752881015785, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToMenu
+    - target: {fileID: 8577793753211702055, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -59.110504
       objectReference: {fileID: 0}
-    - target: {fileID: 8577793752881015785, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Game_Manager, Assembly-CSharp
+    - target: {fileID: 8577793753479531502, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8577793753479531502, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8577793753861379443, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8577793753861379443, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8577793753861379443, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f0e28f127a136e4fba3971e4c756917, type: 3}

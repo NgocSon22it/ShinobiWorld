@@ -19,8 +19,6 @@ using WebSocketSharp;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
-
-    [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
 
     public AccountSkill_Entity SkillOne_Entity = new AccountSkill_Entity();
@@ -140,6 +138,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public void CallInvoke()
+    {
+        InvokeRepeating(nameof(RegenHealth), 1f, 1f);
+        InvokeRepeating(nameof(RegenChakra), 1f, 1f);
+    }
+
     public void SetUpAccountData()
     {
         PlayerNickName.text = photonView.Owner.NickName;
@@ -200,8 +204,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                 PlayerHealthChakraUI.SetActive(false);
 
-                InvokeRepeating(nameof(RegenHealth), 1f, 1f);
-                InvokeRepeating(nameof(RegenChakra), 1f, 1f);
+                CallInvoke();
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
@@ -210,6 +213,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerHealthChakraUI.SetActive(true);
         }
     }
+
+    
 
     public void LoadAllAccountUI()
     {
@@ -317,8 +322,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (Input.GetKeyDown(KeyCode.U))
             {
-                //PhotonNetwork.Instantiate("Boss/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
-                PhotonNetwork.Instantiate("Boss/Frog/" + Quai1.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Normal/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Normal/Fish/" + Quai1.name, Vector3.zero, Quaternion.identity);
             }
 
             if (!CanWalking)
@@ -360,20 +365,23 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
         if (photonView.IsMine)
         {
-            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(1, 1, 1);
+            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
+            References.accountRefer = AccountEntity;
+            Game_Manager.Instance.ReloadPlayerProperties();
         }
 
-        //if (AccountEntity.CurrentHealth <= 0) AccountEntity.CurrentHealth = 0;
-        
-        LoadPlayerHealthUI();
-        
         if (AccountEntity.CurrentHealth <= 0)
         {
-            Debug.Log("Die");
-            Destroy(PlayerAllUIInstance);
-            Destroy(PlayerCameraInstance);
-            Game_Manager.Instance.DestroyPlayer();
+            AccountEntity.CurrentHealth = 0;
+            
+
+            CancelInvoke(nameof(RegenChakra));
+            CancelInvoke(nameof(RegenHealth));
+
+            Game_Manager.Instance.GoingToHospital();
         }
+
+        LoadPlayerHealthUI();
     }
 
 

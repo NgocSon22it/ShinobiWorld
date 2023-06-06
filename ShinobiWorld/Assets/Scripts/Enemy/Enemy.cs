@@ -73,8 +73,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Start()
     {
-        SetUpComponent();
-        MovePosition = GetRandomPosition();
+        SetUpComponent();      
         LocalScaleX = transform.localScale.x;
     }
 
@@ -181,7 +180,9 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         foreach (GameObject currentTarget in allTarget)
         {
             float distanceToTarget = (currentTarget.transform.position - this.transform.position).sqrMagnitude;
-            if (distanceToTarget < distanceToClosestTarget && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range)
+            if (distanceToTarget < distanceToClosestTarget 
+                && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range
+                && currentTarget.GetComponent<BoxCollider2D>().enabled)
             {
                 distanceToClosestTarget = distanceToTarget;
                 closestTarget = currentTarget;

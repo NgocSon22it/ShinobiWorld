@@ -15,6 +15,7 @@ public class Locusts : Enemy
             boss_Pool.InitializeProjectilePool("Boss/Locusts/");
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
             CurrentHealth = boss_Entity.Health;
+            MovePosition = GetRandomPosition();
         }
 
         LoadHealthUI();
