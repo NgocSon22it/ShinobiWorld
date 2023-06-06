@@ -19,10 +19,7 @@ using WebSocketSharp;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
-
-    [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
-    public AccountWeapon_Entity AccountWeapon_Entity = new AccountWeapon_Entity();
 
     public AccountSkill_Entity SkillOne_Entity = new AccountSkill_Entity();
     public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
@@ -58,9 +55,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public float AttackCooldown_Total;
     public float AttackCooldown_Current;
 
-    //Take Damage
-    private bool Hurting;
-
     //Enemy
     protected GameObject Enemy;
 
@@ -72,6 +66,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     //MainPoint
     [SerializeField] Transform MainPoint;
+
+    [SerializeField] GameObject Quai;
+    [SerializeField] GameObject Quai1;
 
     //Bonus
     public int DamageBonus, SpeedBonus;
@@ -212,6 +209,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    
+
     public void LoadAllAccountUI()
     {
         if (photonView.IsMine)
@@ -225,7 +224,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
             player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
-       }
+        }
     }
 
     public void RegenHealth()
@@ -316,6 +315,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                PhotonNetwork.Instantiate("Boss/Normal/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Boss/Normal/Fish/" + Quai1.name, Vector3.zero, Quaternion.identity);
+            }
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -351,42 +356,27 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void TakeDamage(int Damage)
     {
-        photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, Damage);
-    }
-
-    [PunRPC]
-    public void TakeDamageSync(int Damage)
-    {
-        if (Hurting) { return; }
         AccountEntity.CurrentHealth -= Damage;
-
-        StartCoroutine(DamageAnimation());
 
         if (photonView.IsMine)
         {
-            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(1, 1, 1);
+            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
         }
+
+        if (AccountEntity.CurrentHealth <= 0) AccountEntity.CurrentHealth = 0;
+        
         LoadPlayerHealthUI();
+        Game_Manager.Instance.ReloadPlayerProperties();
+        
         if (AccountEntity.CurrentHealth <= 0)
         {
             Debug.Log("Die");
+            Destroy(PlayerAllUIInstance);
+            Destroy(PlayerCameraInstance);
+            Game_Manager.Instance.DestroyPlayer();
         }
     }
 
-    public IEnumerator DamageAnimation()
-    {
-        Hurting = true;
-        for (int i = 0; i < 10; i++)
-        {
-            spriteRenderer.color = Color.red;
-
-            yield return new WaitForSeconds(.1f);
-
-            spriteRenderer.color = Color.white;
-            yield return new WaitForSeconds(.1f);
-        }
-        Hurting = false;
-    }
 
     [PunRPC]
     public void FindClostestEnemy(int Range)
@@ -438,6 +428,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             transform.localScale = new Vector3(-1, 1, 1);
             PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
+        
     }
 
     public void FlipToMouse()
@@ -481,7 +472,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     #region Attack && Skill CanExecute
     public bool CanExecuteNormalAttack(float CurrentCooldown)
     {
-        if (CurrentCooldown <= 0 && AccountWeapon_Entity != null && photonView.IsMine)
+        if (CurrentCooldown <= 0 && References.accountWeapon != null && photonView.IsMine)
         {
             return true;
         }
@@ -532,7 +523,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Attack()
     {
-        if (AccountWeapon_Entity != null)
+        if (References.accountWeapon != null)
         {
             if (AttackCooldown_Current > 0)
             {
@@ -580,7 +571,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!WeaponName.IsNullOrEmpty())
         {
-            AccountWeapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID, WeaponName);
+            References.accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
         }
 
     }

@@ -86,7 +86,7 @@ public class MeleeChacracter : PlayerBase
                 {
                     if (Enemy.gameObject.CompareTag("Enemy"))
                     {
-                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, AccountWeapon_Entity.Damage);
+                        Enemy.GetComponent<Enemy>().TakeDamage(References.accountRefer.ID, References.accountWeapon.Damage);
                     }
                 }
             }
@@ -115,7 +115,7 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
-            skillTwo.GetComponent<SwingSword>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            skillTwo.GetComponent<SwingSword>().SetUp(References.accountRefer.ID, SkillTwo_Entity.Damage + DamageBonus);
             skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
         }
@@ -128,7 +128,7 @@ public class MeleeChacracter : PlayerBase
         if (skillThree != null)
         {
             skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
-            skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            skillThree.GetComponent<JudgmentJustice>().SetUp(References.accountRefer.ID, SkillTwo_Entity.Damage + DamageBonus);
             skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
             skillThree.SetActive(true);
         }
