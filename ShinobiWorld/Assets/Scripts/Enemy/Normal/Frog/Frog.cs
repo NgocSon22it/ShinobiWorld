@@ -11,9 +11,8 @@ public class Frog : Enemy
         base.Start();
         if (photonView.IsMine)
         {
-            FacingRight = false;
             boss_Entity.ID = "Boss_Bat";
-            boss_Pool.InitializeProjectilePool("Boss/Frog/");
+            boss_Pool.InitializeProjectilePool("Boss/Normal/Frog/");
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
             CurrentHealth = boss_Entity.Health;
         }
@@ -25,40 +24,11 @@ public class Frog : Enemy
     {
         if (photonView.IsMine)
         {
-            AttackAndMove();
+            Attack();
         }
     }
-    public void AttackAndMove()
-    {
-        if (playerInRange)
-        {
-            // Stop moving
-            isMoving = false;
-        }
-        else
-        {
-            if (isMoving)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
-
-                if (transform.position == MovePosition)
-                {
-                    Break_CurrentTime = Break_TotalTime;
-                    isMoving = false;
-                }
-
-            }
-            else
-            {
-                Break_CurrentTime -= Time.deltaTime;
-
-                if (Break_CurrentTime <= 0f)
-                {
-                    MovePosition = GetRandomPosition();
-                    isMoving = true;
-                }
-            }
-        }
+    public void Attack()
+    {      
         FindTarget_CurrentTime += Time.deltaTime;
 
         // Check if the interval has passed
@@ -80,12 +50,7 @@ public class Frog : Enemy
         // Update the player in range status
         playerInRange = Target != null;
 
-        // Restrict movement to the move area
-        clampedPosition = movementBounds.ClosestPoint(transform.position);
-        transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
-
         animator.SetBool("Attack", playerInRange);
-        animator.SetBool("Walk", isMoving);
     }
 
 
@@ -101,7 +66,7 @@ public class Frog : Enemy
             {
                 SkillOne.transform.position = transform.position;
                 SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Fish_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Frog_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }
