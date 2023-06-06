@@ -1,4 +1,4 @@
-using Assets.Scripts.Database.DAO;
+﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
 using Assets.Scripts.Mission;
 using Assets.Scripts.Shop;
@@ -7,8 +7,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using WebSocketSharp;
 
 public class MissionManager : MonoBehaviour
 {
@@ -17,9 +19,9 @@ public class MissionManager : MonoBehaviour
     public GameObject MissionItemPrefab, MissionPanel;
     public Transform Content;
 
-    public string AccountID;
+    public int HavingMissionID;
 
-    List<Mission_Entity> listMission;
+    public List<Mission_Entity> listMission;
 
     private void Awake()
     {
@@ -28,11 +30,12 @@ public class MissionManager : MonoBehaviour
 
     public void Open()
     {
-        References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
-
         var filterlist = References.listAccountMission = AccountMission_DAO.GetAllByUserID(References.accountRefer.ID);
         listMission = References.listMission.FindAll(obj => filterlist.Any(filter => filter.MissionID == obj.ID));
-        
+
+        if (filterlist.Any(obj => obj.Status == true))
+            HavingMissionID = filterlist.Find(obj => obj.Status == true).MissionID;
+
         MissionPanel.SetActive(true);
         GetList();
     }
@@ -47,15 +50,37 @@ public class MissionManager : MonoBehaviour
 
     public void GetList()
     {
-        foreach (var item in listMission)
+        var strength = References.accountRefer.CurrentStrength;
+
+        foreach (var mission in listMission)
         {
-            var itemManager = MissionItemPrefab.GetComponent<MissionItem>();
-            itemManager.ID = item.ID;
-            itemManager.Content.text = item.Content;
-            itemManager.requiedStrength.text = item.RequiredStrength.ToString();
-            itemManager.Trophi.text = References.listTrophy.Find(obj => obj.ID == item.TrophiesID).Name;
+            var missionManager = MissionItemPrefab.GetComponent<MissionItem>();
+            missionManager.ID = mission.ID;
+            missionManager.Content.text = mission.Content;
+            missionManager.requiedStrength.text = mission.RequiredStrength.ToString();
+            missionManager.Trophi.text = References.listTrophy.Find(obj => obj.ID == mission.TrophiesID).Name;
+
+            missionManager.TakeBtn.interactable = true;
+            if (strength < mission.RequiredStrength || HavingMissionID != 0) missionManager.TakeBtn.interactable = false;
+            
+            missionManager.status = false;
+            missionManager.TakeBtn.GetComponentInChildren<TMP_Text>().text = "Nhận";
+
+            if (mission.ID == HavingMissionID) 
+            { 
+                missionManager.status = true;
+                missionManager.TakeBtn.interactable = true;
+                missionManager.TakeBtn.GetComponentInChildren<TMP_Text>().text = "Hủy bỏ"; 
+            }
+
+            
             Instantiate(MissionItemPrefab, Content);
         }
+    }
+
+    public void Reload() {
+        Destroy();
+        GetList();
     }
 
     public void ResetColor()

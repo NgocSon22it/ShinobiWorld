@@ -20,9 +20,6 @@ namespace Assets.Scripts.Mission
         {
             if (Input.GetKeyDown(KeyCode.O) && isOpen)
             {
-                Debug.Log("Open O");
-                Debug.Log(house);
-
                 switch (house)
                 {
                     case House.Hokage:
