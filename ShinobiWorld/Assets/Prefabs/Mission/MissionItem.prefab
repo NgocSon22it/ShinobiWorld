@@ -426,6 +426,8 @@ MonoBehaviour:
   Target: {fileID: 692851365738031974}
   requiedStrength: {fileID: 4691738749455210754}
   Trophi: {fileID: 6603376242891539094}
+  TakeBtn: {fileID: 5697796706450423624}
+  status: 0
 --- !u!1 &3361908552787423393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1093,7 +1095,7 @@ GameObject:
   - component: {fileID: 5474699350305415747}
   - component: {fileID: 5697796706450423624}
   m_Layer: 5
-  m_Name: GetBtn
+  m_Name: TakeBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1201,7 +1203,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5474699350305415747}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5918141193069745633}
+        m_TargetAssemblyTypeName: Assets.Scripts.Mission.MissionItem, Assembly-CSharp
+        m_MethodName: OnTakeBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8703542770440528618
 GameObject:
   m_ObjectHideFlags: 0
