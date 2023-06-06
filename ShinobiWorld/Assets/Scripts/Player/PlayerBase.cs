@@ -19,6 +19,7 @@ using WebSocketSharp;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
+    public Account_Entity AccountEntity = new Account_Entity();
 
     public AccountSkill_Entity SkillOne_Entity = new AccountSkill_Entity();
     public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
@@ -130,7 +131,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (changedProps.ContainsKey("Account"))
             {
                 string accountJson = (string)changedProps["Account"];
-                References.accountRefer = JsonUtility.FromJson<Account_Entity>(accountJson);
+                AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
                 SetUpAccountData();
             }
 
@@ -159,21 +160,21 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void LoadLayout()
     {
-        if (References.accountRefer != null)
+        if (AccountEntity != null)
         {
-            string image = References.listEye.Find(obj => obj.ID == References.accountRefer.EyeID).Image;
+            string image = References.listEye.Find(obj => obj.ID == AccountEntity.EyeID).Image;
             Eye.sprite = Resources.Load<Sprite>(image);
 
             //Hair
-            image = References.listHair.Find(obj => obj.ID == References.accountRefer.HairID).Image;
+            image = References.listHair.Find(obj => obj.ID == AccountEntity.HairID).Image;
             Hair.sprite = Resources.Load<Sprite>(image);
 
             //Mouth
-            image = References.listMouth.Find(obj => obj.ID == References.accountRefer.MouthID).Image;
+            image = References.listMouth.Find(obj => obj.ID == AccountEntity.MouthID).Image;
             Mouth.sprite = Resources.Load<Sprite>(image);
 
             //Skin
-            image = References.listSkin.Find(obj => obj.ID == References.accountRefer.SkinID).Image;
+            image = References.listSkin.Find(obj => obj.ID == AccountEntity.SkinID).Image;
 
             Shirt.sprite = Resources.Load<Sprite>(image + "_Shirt");
             LeftHand.sprite = Resources.Load<Sprite>(image + "_LeftHand");
@@ -189,7 +190,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
         if (photonView.IsMine)
         {
-            if (References.accountRefer != null)
+            if (AccountEntity != null)
             {
                 AttackCooldown_Total = 0.5f;
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
@@ -216,13 +217,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
 
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(References.accountRefer.Level, References.accountRefer.Exp, References.accountRefer.Level * 100);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(photonView.Owner.NickName);
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(References.accountRefer.Coin);
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(References.accountRefer.ID));
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
-            player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(References.accountRefer);
+            player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
         }
     }
 
@@ -238,10 +239,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void HealAmountOfHealth(int Amount)
     {
-        References.accountRefer.CurrentHealth += Amount;
-        if (References.accountRefer.CurrentHealth >= References.accountRefer.Health)
+        AccountEntity.CurrentHealth += Amount;
+        if (AccountEntity.CurrentHealth >= AccountEntity.Health)
         {
-            References.accountRefer.CurrentHealth = References.accountRefer.Health;
+            AccountEntity.CurrentHealth = AccountEntity.Health;
         }
         LoadPlayerHealthUI();
     }
@@ -249,10 +250,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void HealAmountOfChakra(int Amount)
     {
-        References.accountRefer.CurrentCharka += Amount;
-        if (References.accountRefer.CurrentCharka >= References.accountRefer.Charka)
+        AccountEntity.CurrentCharka += Amount;
+        if (AccountEntity.CurrentCharka >= AccountEntity.Charka)
         {
-            References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+            AccountEntity.CurrentCharka = AccountEntity.Charka;
         }
         LoadPlayerChakraUI();
     }
@@ -262,7 +263,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
         {
             player_LevelManagement.AddExperience(Amount);
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(References.accountRefer.Level, References.accountRefer.Exp, References.accountRefer.Level * 100);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
         }
     }
 
@@ -274,13 +275,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (PlayerAllUIInstance != null)
             {
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-                LoadChakraUI((float)References.accountRefer.Charka, (float)References.accountRefer.CurrentCharka);
+                LoadChakraUI((float)AccountEntity.Charka, (float)AccountEntity.CurrentCharka);
             }
         }
         else
         {
-            CurrentChakra_UI.fillAmount = (float)References.accountRefer.CurrentCharka / (float)References.accountRefer.Charka;
-            CurrentChakra_NumberUI.text = References.accountRefer.CurrentCharka + " / " + References.accountRefer.Charka;
+            CurrentChakra_UI.fillAmount = (float)AccountEntity.CurrentCharka / (float)AccountEntity.Charka;
+            CurrentChakra_NumberUI.text = AccountEntity.CurrentCharka + " / " + AccountEntity.Charka;
         }
     }
 
@@ -291,13 +292,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (PlayerAllUIInstance != null)
             {
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-                LoadHealthUI((float)References.accountRefer.Health, (float)References.accountRefer.CurrentHealth);
+                LoadHealthUI((float)AccountEntity.Health, (float)AccountEntity.CurrentHealth);
             }
         }
         else
         {
-            CurrentHealth_UI.fillAmount = (float)References.accountRefer.CurrentHealth / (float)References.accountRefer.Health;
-            CurrentHealth_NumberUI.text = References.accountRefer.CurrentHealth + " / " + References.accountRefer.Health;
+            CurrentHealth_UI.fillAmount = (float)AccountEntity.CurrentHealth / (float)AccountEntity.Health;
+            CurrentHealth_NumberUI.text = AccountEntity.CurrentHealth + " / " + AccountEntity.Health;
         }
     }
     public void Update()
@@ -355,19 +356,19 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void TakeDamage(int Damage)
     {
-        References.accountRefer.CurrentHealth -= Damage;
+        AccountEntity.CurrentHealth -= Damage;
 
         if (photonView.IsMine)
         {
             PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
         }
 
-        if (References.accountRefer.CurrentHealth <= 0) References.accountRefer.CurrentHealth = 0;
+        if (AccountEntity.CurrentHealth <= 0) AccountEntity.CurrentHealth = 0;
         
         LoadPlayerHealthUI();
         Game_Manager.Instance.ReloadPlayerProperties();
         
-        if (References.accountRefer.CurrentHealth <= 0)
+        if (AccountEntity.CurrentHealth <= 0)
         {
             Debug.Log("Die");
             Destroy(PlayerAllUIInstance);
@@ -403,7 +404,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Walk()
     {
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
-        transform.Translate(Movement * (References.accountRefer.Speed + SpeedBonus) * Time.fixedDeltaTime);
+        transform.Translate(Movement * (AccountEntity.Speed + SpeedBonus) * Time.fixedDeltaTime);
 
         if (Movement.x > 0 && !FacingRight)
         {
@@ -481,7 +482,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool CanExecuteSkill(float CurrentCooldown, int Chakra)
     {
-        if (CurrentCooldown <= 0 && References.accountRefer.CurrentCharka >= Chakra && photonView.IsMine)
+        if (CurrentCooldown <= 0 && AccountEntity.CurrentCharka >= Chakra && photonView.IsMine)
         {
             return true;
         }
@@ -499,21 +500,21 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void SkillOne_Resources()
     {
         SkillOneCooldown_Current = SkillOneCooldown_Total;
-        References.accountRefer.CurrentCharka -= SkillOne_Entity.Chakra;
+        AccountEntity.CurrentCharka -= SkillOne_Entity.Chakra;
         LoadPlayerChakraUI();
     }
 
     public void SkillTwo_Resources()
     {
         SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-        References.accountRefer.CurrentCharka -= SkillTwo_Entity.Chakra;
+        AccountEntity.CurrentCharka -= SkillTwo_Entity.Chakra;
         LoadPlayerChakraUI();
     }
 
     public void SkillThree_Resources()
     {
         SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-        References.accountRefer.CurrentCharka -= SkillThree_Entity.Chakra;
+        AccountEntity.CurrentCharka -= SkillThree_Entity.Chakra;
         LoadPlayerChakraUI();
     }
     #endregion
@@ -570,7 +571,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!WeaponName.IsNullOrEmpty())
         {
-            References.accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(References.accountRefer.ID);
+            References.accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
         }
 
     }
@@ -587,15 +588,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!SkillOneName.IsNullOrEmpty())
         {
-            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(References.accountRefer.ID, SkillOneName);
+            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillOneName);
         }
         if (!SkillTwoName.IsNullOrEmpty())
         {
-            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(References.accountRefer.ID, SkillTwoName);
+            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillTwoName);
         }
         if (!SkillThreeName.IsNullOrEmpty())
         {
-            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(References.accountRefer.ID, SkillThreeName);
+            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillThreeName);
         }
     }
 
@@ -621,10 +622,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(SkillDirection);
 
 
-            stream.SendNext(References.accountRefer.CurrentHealth);
-            stream.SendNext(References.accountRefer.CurrentCharka);
-            stream.SendNext(References.accountRefer.Health);
-            stream.SendNext(References.accountRefer.Charka);
+            stream.SendNext(AccountEntity.CurrentHealth);
+            stream.SendNext(AccountEntity.CurrentCharka);
+            stream.SendNext(AccountEntity.Health);
+            stream.SendNext(AccountEntity.Charka);
 
 
         }
@@ -639,10 +640,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillDirection = (Vector2)stream.ReceiveNext();
 
 
-            References.accountRefer.CurrentHealth = (int)stream.ReceiveNext();
-            References.accountRefer.CurrentCharka = (int)stream.ReceiveNext();
-            References.accountRefer.Health = (int)stream.ReceiveNext();
-            References.accountRefer.Charka = (int)stream.ReceiveNext();
+            AccountEntity.CurrentHealth = (int)stream.ReceiveNext();
+            AccountEntity.CurrentCharka = (int)stream.ReceiveNext();
+            AccountEntity.Health = (int)stream.ReceiveNext();
+            AccountEntity.Charka = (int)stream.ReceiveNext();
 
             //Lag compensation
             currentTime = 0.0f;
@@ -664,10 +665,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void HealAmountOfStrength(int Amount)
     {
-        References.accountRefer.CurrentStrength += Amount;
-        if (References.accountRefer.CurrentStrength >= References.accountRefer.Strength)
+        AccountEntity.CurrentStrength += Amount;
+        if (AccountEntity.CurrentStrength >= AccountEntity.Strength)
         {
-            References.accountRefer.CurrentStrength = References.accountRefer.Strength;
+            AccountEntity.CurrentStrength = AccountEntity.Strength;
         }
         LoadPlayerStrengthUI();
     }
@@ -679,7 +680,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (PlayerAllUIInstance != null)
             {
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-            LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
+            LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             }
         }
     }
