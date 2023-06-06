@@ -116,18 +116,20 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(Scenes.Login);
     }
 
-    public void DestroyPlayer()
+    public void GoingToHospital()
     {
-        Destroy(PlayerManager);
-        PlayerManager = null;
+        PlayerManager.GetComponent<BoxCollider2D>().enabled = false;
         Hospital.Instance.SetDuration(References.RespawnTime).Begin();
     }
 
-    public void Die()
+    public void GoingOutHospital()
     {
-        PlayerManager.GetComponent<PlayerBase>().TakeDamage(10000);
+        References.accountRefer.CurrentHealth = References.accountRefer.Health;
+        References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+        PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+        ReloadPlayerProperties();
+        PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
     }
-
 
     private void OnApplicationQuit()
     {
