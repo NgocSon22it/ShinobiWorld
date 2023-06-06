@@ -238,7 +238,7 @@ namespace Assets.Scripts.Bag.Equipment
         {
             References.accountRefer.Health += Health;
             References.accountRefer.Charka += Charka;
-            Game_Manager.Instance.SetUpAccountData();
+            Game_Manager.Instance.ReloadPlayerProperties();
 
             Player_AllUIManagement.Instance
                     .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
