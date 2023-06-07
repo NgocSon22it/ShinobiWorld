@@ -127,6 +127,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
         ReloadPlayerProperties();
         PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
+        PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
 
     private void OnApplicationQuit()
