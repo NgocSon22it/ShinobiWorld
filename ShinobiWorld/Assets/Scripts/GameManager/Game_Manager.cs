@@ -45,13 +45,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte) 'A', Account_Entity.Serialize, Account_Entity.Deserialize);
-        SetupPlayer(References.Hokake);
+        SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
     }
 
     public void SetupPlayer(Vector3 position)
     {
-        Debug.Log(PlayerManager == null);
-        Debug.Log(PhotonNetwork.IsConnectedAndReady);
         if (PlayerManager == null && PhotonNetwork.IsConnectedAndReady)
         {
             switch (References.accountRefer.RoleInGameID)
@@ -116,18 +114,21 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(Scenes.Login);
     }
 
-    public void DestroyPlayer()
+    public void GoingToHospital()
     {
-        Destroy(PlayerManager);
-        PlayerManager = null;
+        PlayerManager.GetComponent<BoxCollider2D>().enabled = false;
         Hospital.Instance.SetDuration(References.RespawnTime).Begin();
     }
 
-    public void Die()
+    public void GoingOutHospital()
     {
-        PlayerManager.GetComponent<PlayerBase>().TakeDamage(10000);
+        References.accountRefer.CurrentHealth = References.accountRefer.Health;
+        References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+        PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+        ReloadPlayerProperties();
+        PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
+        PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
-
 
     private void OnApplicationQuit()
     {

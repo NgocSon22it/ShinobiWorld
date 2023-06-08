@@ -138,6 +138,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public void CallInvoke()
+    {
+        InvokeRepeating(nameof(RegenHealth), 1f, 1f);
+        InvokeRepeating(nameof(RegenChakra), 1f, 1f);
+    }
+
     public void SetUpAccountData()
     {
         PlayerNickName.text = photonView.Owner.NickName;
@@ -198,8 +204,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                 PlayerHealthChakraUI.SetActive(false);
 
-                InvokeRepeating(nameof(RegenHealth), 1f, 1f);
-                InvokeRepeating(nameof(RegenChakra), 1f, 1f);
+                CallInvoke();
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
@@ -361,20 +366,22 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
         {
             PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
+            References.accountRefer = AccountEntity;
+            Game_Manager.Instance.ReloadPlayerProperties();
         }
 
-        if (AccountEntity.CurrentHealth <= 0) AccountEntity.CurrentHealth = 0;
-        
-        LoadPlayerHealthUI();
-        Game_Manager.Instance.ReloadPlayerProperties();
-        
         if (AccountEntity.CurrentHealth <= 0)
         {
-            Debug.Log("Die");
-            Destroy(PlayerAllUIInstance);
-            Destroy(PlayerCameraInstance);
-            Game_Manager.Instance.DestroyPlayer();
+            AccountEntity.CurrentHealth = 0;
+            
+
+            CancelInvoke(nameof(RegenChakra));
+            CancelInvoke(nameof(RegenHealth));
+
+            Game_Manager.Instance.GoingToHospital();
         }
+
+        LoadPlayerHealthUI();
     }
 
 
