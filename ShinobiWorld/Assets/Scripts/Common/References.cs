@@ -35,6 +35,10 @@ public static class References
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
 
+    public static AccountSkill_Entity accountSkillOne = new AccountSkill_Entity();
+    public static AccountSkill_Entity accountSkillTwo = new AccountSkill_Entity();
+    public static AccountSkill_Entity accountSkillThree = new AccountSkill_Entity();
+
     public static float Uppercent_Skill_Damage = 3f, Uppercent_Skill_Chakra = 1f, Uppercent_Skill_CoolDown = 1f;
     public static float Uppercent_Account = 5f;
     public static float Uppercent_Equipment = 5f;

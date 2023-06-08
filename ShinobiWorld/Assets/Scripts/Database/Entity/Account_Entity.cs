@@ -36,7 +36,6 @@ public class Account_Entity
     {
         var result = new Account_Entity();
         result.ID = data[0].ToString();
-        result.EyeID = data[1].ToString();
 
 
         return result;
@@ -45,6 +44,6 @@ public class Account_Entity
     public static byte[] Serialize(object customType)
     {
         var c = (Account_Entity)customType;
-        return new byte[] { Convert.ToByte(c.ID), Convert.ToByte(c.EyeID) };
+        return new byte[] { Convert.ToByte(c.ID)};
     }
 }

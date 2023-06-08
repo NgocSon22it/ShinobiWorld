@@ -61,7 +61,42 @@ public class Player_Pool : MonoBehaviour
             }
         }
     }
-  
+    public void DestroyPool()
+    {
+        if (List_NormalAttack.Count > 0)
+        {
+            foreach (GameObject a in List_NormalAttack)
+            {
+                Destroy(a);
+            }
+        }
+        if (List_SkillOne.Count > 0)
+        {
+            foreach (GameObject a in List_SkillOne)
+            {
+                Destroy(a);
+            }
+        }
+        if (List_SkillTwo.Count > 0)
+        {
+            foreach (GameObject a in List_SkillTwo)
+            {
+                Destroy(a);
+            }
+        }
+        if (List_SkillThree.Count > 0)
+        {
+            foreach (GameObject a in List_SkillThree)
+            {
+                Destroy(a);
+            }
+        }
+        List_NormalAttack.Clear();
+        List_SkillOne.Clear();
+        List_SkillTwo.Clear();
+        List_SkillThree.Clear();
+    }
+
 
     public GameObject GetNormalAttackFromPool()
     {

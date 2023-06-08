@@ -11,6 +11,7 @@ using System.Security.Principal;
 using UnityEngine.InputSystem;
 using UnityEngine.LowLevel;
 using UnityEngine.Rendering;
+using Photon.Realtime;
 
 public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -31,7 +32,8 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public float Break_CurrentTime;
     public float Break_TotalTime = 2f;
 
-    protected GameObject Target;
+    protected Vector3 TargetPosition;
+
     protected bool playerInRange = false;
     public Vector3 clampedPosition;
     public float detectionRadius = 5f;
@@ -71,9 +73,31 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         boss_Pool = GetComponent<Boss_Pool>();
     }
 
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
+        {
+            if (changedProps.ContainsKey("Enemy"))
+            {
+                string NPCJson = (string)changedProps["Enemy"];
+                boss_Entity = JsonUtility.FromJson<Boss_Entity>(NPCJson);
+                CurrentHealth = (int)changedProps["CurrentHealth"];
+                SetUpNPCData();
+
+            }
+
+        }
+
+    }
+
+    public void SetUpNPCData()
+    {
+        LoadHealthUI();
+    }
+
     public void Start()
     {
-        SetUpComponent();      
+        SetUpComponent();
         LocalScaleX = transform.localScale.x;
     }
 
@@ -89,19 +113,11 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     public void TakeDamage(string UserID, int Damage)
-    {
-        photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, UserID, Damage);
-    }
-
-
-    [PunRPC]
-    public void TakeDamageSync(string UserID, int Damage)
-    {
-        CurrentHealth -= Damage;
-        LoadHealthUI();
-        if (CurrentHealth < 0)
+    {     
+        if (photonView.IsMine)
         {
-            Debug.Log(UserID);
+            CurrentHealth -= Damage;
+            Game_Manager.Instance.ReloadNPCProperties(photonView, boss_Entity, CurrentHealth);
         }
     }
 
@@ -152,45 +168,39 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            if (MainPoint.position.x < Target.transform.position.x  && !FacingRight)
+            if (MainPoint.position.x < TargetPosition.x && !FacingRight)
             {
                 Flip();
             }
-            else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
+            else if (MainPoint.position.x > TargetPosition.x && FacingRight)
             {
                 Flip();
             }
         }
     }
 
-    [PunRPC]
-    public void SyncFindTarget()
-    {
-        Target = FindClostestTarget(detectionRadius, "Player");
-    }
-
-
-    public GameObject FindClostestTarget(float Range, string TargetTag)
+    public Vector3 FindClostestTarget(float Range, string TargetTag)
     {
         float distanceToClosestTarget = Mathf.Infinity;
-        GameObject closestTarget = null;
+        Vector3 closestTargetPosition = Vector3.zero;
+
         GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
 
 
         foreach (GameObject currentTarget in allTarget)
         {
             float distanceToTarget = (currentTarget.transform.position - this.transform.position).sqrMagnitude;
-            if (distanceToTarget < distanceToClosestTarget 
+            if (distanceToTarget < distanceToClosestTarget
                 && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range
                 && currentTarget.GetComponent<BoxCollider2D>().enabled)
             {
                 distanceToClosestTarget = distanceToTarget;
-                closestTarget = currentTarget;
+                closestTargetPosition = currentTarget.transform.Find("MainPoint").position;
 
             }
         }
 
-        return closestTarget;
+        return closestTargetPosition;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -204,9 +214,9 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(playerInRange);
             stream.SendNext(isMoving);
 
+            stream.SendNext(TargetPosition);
 
             stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
-
 
         }
         else
@@ -218,7 +228,12 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             playerInRange = (bool)stream.ReceiveNext();
             isMoving = (bool)stream.ReceiveNext();
 
+            TargetPosition = (Vector3)stream.ReceiveNext();
+
             HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
+
+            LoadHealthUI();
+
         }
     }
 }

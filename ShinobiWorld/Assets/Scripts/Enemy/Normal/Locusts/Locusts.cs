@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Locusts : Enemy
@@ -64,21 +65,12 @@ public class Locusts : Enemy
         // Check if the interval has passed
         if (FindTarget_CurrentTime >= FindTarget_TotalTime)
         {
-            if (FindClostestTarget(detectionRadius, "Player") != null)
-            {
-                photonView.RPC(nameof(SyncFindTarget), RpcTarget.AllBuffered);
-            }
-            else
-            {
-                Target = null;
-                Debug.Log("Reduce");
-            }
+            TargetPosition = FindClostestTarget(detectionRadius, "Player");
             // Call the RPC and reset the timer
             FindTarget_CurrentTime = 0f;
         }
 
-        // Update the player in range status
-        playerInRange = Target != null;
+        playerInRange = TargetPosition != Vector3.zero;
 
         // Restrict movement to the move area
         clampedPosition = movementBounds.ClosestPoint(transform.position);
@@ -91,7 +83,7 @@ public class Locusts : Enemy
 
     public void Animation_SkillOne()
     {
-        if (Target != null)
+        if (TargetPosition != Vector3.zero)
         {
             
         }

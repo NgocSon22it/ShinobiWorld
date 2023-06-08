@@ -1,4 +1,4 @@
-using Photon.Pun;
+/*using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -179,3 +179,4 @@ public class SupportCharacter : PlayerBase
         Gizmos.DrawCube(AttackPoint.position - AttackPoint.up * 0, DetectGroundVector);
     }
 }
+*/

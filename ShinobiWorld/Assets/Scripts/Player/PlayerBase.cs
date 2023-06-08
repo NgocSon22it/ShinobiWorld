@@ -21,6 +21,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
     public Account_Entity AccountEntity = new Account_Entity();
 
+    public AccountWeapon_Entity Weapon_Entity = new AccountWeapon_Entity();
+
     public AccountSkill_Entity SkillOne_Entity = new AccountSkill_Entity();
     public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
     public AccountSkill_Entity SkillThree_Entity = new AccountSkill_Entity();
@@ -66,9 +68,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     //MainPoint
     [SerializeField] Transform MainPoint;
-
-    [SerializeField] GameObject Quai;
-    [SerializeField] GameObject Quai1;
 
     //Bonus
     public int DamageBonus, SpeedBonus;
@@ -131,7 +130,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (changedProps.ContainsKey("Account"))
             {
                 string accountJson = (string)changedProps["Account"];
+                string AccountWeaponJson = (string)changedProps["AccountWeapon"];
+                string AccountSkillOneJson = (string)changedProps["AccountSkillOne"];
+                string AccountSkillTwoJson = (string)changedProps["AccountSkillTwo"];
+                string AccountSkillThreeJson = (string)changedProps["AccountSkillThree"];
+
                 AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
+                Weapon_Entity = JsonUtility.FromJson<AccountWeapon_Entity>(AccountWeaponJson);
+                SkillOne_Entity = JsonUtility.FromJson<AccountSkill_Entity>(AccountSkillOneJson);
+                SkillTwo_Entity = JsonUtility.FromJson<AccountSkill_Entity>(AccountSkillTwoJson);
+                SkillThree_Entity = JsonUtility.FromJson<AccountSkill_Entity>(AccountSkillThreeJson);
+
                 SetUpAccountData();
             }
 
@@ -162,6 +171,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         playerInput = GetComponent<PlayerInput>();
         playerPool = GetComponent<Player_Pool>();
         player_LevelManagement = GetComponent<Player_LevelManagement>();
+    }
+
+    public void LoadProperties()
+    {
+        References.accountRefer = AccountEntity;
+        References.accountWeapon = Weapon_Entity;
+        References.accountSkillOne = SkillOne_Entity;
+        References.accountSkillTwo = SkillTwo_Entity;
+        References.accountSkillThree = SkillThree_Entity;
+
+        Game_Manager.Instance.ReloadPlayerProperties();
     }
 
     public void LoadLayout()
@@ -320,10 +340,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
-            if (Input.GetKeyDown(KeyCode.U))
+            if (Input.GetKeyDown(KeyCode.U)) 
             {
-                PhotonNetwork.Instantiate("Boss/Normal/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
-                PhotonNetwork.Instantiate("Boss/Normal/Fish/" + Quai1.name, Vector3.zero, Quaternion.identity);
+                TakeDamage(100);
             }
 
             if (!CanWalking)
@@ -336,9 +355,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             }
 
         }
-
-
-
     }
 
     public void FixedUpdate()
@@ -361,13 +377,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void TakeDamage(int Damage)
     {
-        AccountEntity.CurrentHealth -= Damage;
-
         if (photonView.IsMine)
-        {
+        {         
             PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
-            References.accountRefer = AccountEntity;
-            Game_Manager.Instance.ReloadPlayerProperties();
+            AccountEntity.CurrentHealth -= Damage;
+            LoadProperties();
         }
 
         if (AccountEntity.CurrentHealth <= 0)
@@ -383,29 +397,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
         LoadPlayerHealthUI();
     }
-
-
-    [PunRPC]
-    public void FindClostestEnemy(int Range)
-    {
-        float distanceToClosestEnemy = Mathf.Infinity;
-        GameObject closestEnemy = null;
-        GameObject[] allEnemy = GameObject.FindGameObjectsWithTag("Enemy");
-
-
-        foreach (GameObject currentEnemy in allEnemy)
-        {
-            float distanceToEnemy = (currentEnemy.transform.position - this.transform.position).sqrMagnitude;
-            if (distanceToEnemy < distanceToClosestEnemy && Vector2.Distance(currentEnemy.transform.position, transform.position) <= Range)
-            {
-                distanceToClosestEnemy = distanceToEnemy;
-                closestEnemy = currentEnemy;
-            }
-        }
-
-        Enemy = closestEnemy;
-    }
-
 
 
     public void Walk()
@@ -479,7 +470,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     #region Attack && Skill CanExecute
     public bool CanExecuteNormalAttack(float CurrentCooldown)
     {
-        if (CurrentCooldown <= 0 && References.accountWeapon != null && photonView.IsMine)
+        if (CurrentCooldown <= 0 && Weapon_Entity != null && photonView.IsMine)
         {
             return true;
         }
@@ -530,7 +521,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Attack()
     {
-        if (References.accountWeapon != null)
+        if (Weapon_Entity != null)
         {
             if (AttackCooldown_Current > 0)
             {
@@ -578,7 +569,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!WeaponName.IsNullOrEmpty())
         {
-            References.accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
+            Weapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
         }
 
     }
@@ -678,6 +669,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             AccountEntity.CurrentStrength = AccountEntity.Strength;
         }
         LoadPlayerStrengthUI();
+    }
+
+    private void OnDestroy()
+    {
+        playerPool.DestroyPool();
     }
 
     public void LoadPlayerStrengthUI()

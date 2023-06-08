@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
+    public GameObject a;
     // Start is called before the first frame update
     new void Start()
     {
@@ -13,21 +14,21 @@ public class Bat : Enemy
         if (photonView.IsMine)
         {
             boss_Entity.ID = "Boss_Bat";
-            boss_Pool.InitializeProjectilePool("Boss/Normal/Bat/");
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
             CurrentHealth = boss_Entity.Health;
+            boss_Pool.InitializeProjectilePool("Boss/Normal/Bat/");         
             MovePosition = GetRandomPosition();
+            Game_Manager.Instance.ReloadNPCProperties(photonView, boss_Entity, CurrentHealth);
         }
 
         LoadHealthUI();
 
     }
-
     new void Update()
     {
         if (photonView.IsMine)
         {
-            AttackAndMove();
+           // AttackAndMove();
         }
     }
 
@@ -67,38 +68,26 @@ public class Bat : Enemy
         // Check if the interval has passed
         if (FindTarget_CurrentTime >= FindTarget_TotalTime)
         {
-            if (FindClostestTarget(detectionRadius, "Player") != null)
-            {
-                photonView.RPC(nameof(SyncFindTarget), RpcTarget.AllBuffered);
-            }
-            else
-            {
-                Target = null;
-                Debug.Log("Reduce");
-            }
-            // Call the RPC and reset the timer
+            TargetPosition = FindClostestTarget(detectionRadius, "Player");
             FindTarget_CurrentTime = 0f;
         }
 
-        // Update the player in range status
-        playerInRange = Target != null;
-
+        playerInRange = TargetPosition != Vector3.zero;
         // Restrict movement to the move area
         clampedPosition = movementBounds.ClosestPoint(transform.position);
         transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
 
-        animator.SetBool("Attack", playerInRange);
+        animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
     }
 
-
     public void Animation_SkillOne()
     {
-        if (Target != null)
+        if (TargetPosition != Vector3.zero)
         {
-            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
+            GameObject SkillOne = PhotonNetwork.Instantiate(a.name, Vector3.zero, Quaternion.identity);
             FlipToTarget();
-            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
+            direction = TargetPosition - transform.Find("MainPoint").position;
 
             if (SkillOne != null)
             {

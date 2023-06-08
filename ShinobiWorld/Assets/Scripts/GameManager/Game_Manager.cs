@@ -11,6 +11,8 @@ using ExitGames.Client.Photon;
 using Photon.Pun.Demo.PunBasics;
 using System.Threading;
 using Assets.Scripts.Hospital;
+using UnityEngine.UIElements;
+using Assets.Scripts.Database.Entity;
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
@@ -20,9 +22,13 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
+    [SerializeField] GameObject Quai;
+
     public static Game_Manager Instance;
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
+
+    ExitGames.Client.Photon.Hashtable EnemyProperties = new ExitGames.Client.Photon.Hashtable();
     private void Awake()
     {
         Instance = this;
@@ -43,9 +49,19 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        
-        PhotonPeer.RegisterType(typeof(Account_Entity), (byte) 'A', Account_Entity.Serialize, Account_Entity.Deserialize);
+        PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+           SpawnNPC();
+        }
+    }
+
+
+    public void SpawnNPC()
+    {
+        GameObject npc = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
     }
 
     public void SetupPlayer(Vector3 position)
@@ -78,9 +94,28 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public void ReloadPlayerProperties()
     {
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
-        PlayerProperties["Account"] = AccountJson;
 
-        PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
+        string AccountWeaponJson = JsonUtility.ToJson(References.accountWeapon);
+        string AccountSkillOneJson = JsonUtility.ToJson(References.accountSkillOne);
+        string AccountSkillTwoJson = JsonUtility.ToJson(References.accountSkillTwo);
+        string AccountSkillThreeJson = JsonUtility.ToJson(References.accountSkillThree);
+
+        PlayerProperties["Account"] = AccountJson;
+        PlayerProperties["AccountWeapon"] = AccountWeaponJson;
+        PlayerProperties["AccountSkillOne"] = AccountSkillOneJson;
+        PlayerProperties["AccountSkillTwo"] = AccountSkillTwoJson;
+        PlayerProperties["AccountSkillThree"] = AccountSkillThreeJson;
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);   
+    }
+
+    public void ReloadNPCProperties(PhotonView photonView ,Boss_Entity boss_Entity, int CurrentHealth)
+    {
+        string NPCJson = JsonUtility.ToJson(boss_Entity);
+        EnemyProperties["Enemy"] = NPCJson;
+        EnemyProperties["CurrentHealth"] = CurrentHealth;
+
+        photonView.Owner.SetCustomProperties(EnemyProperties);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
