@@ -9,7 +9,8 @@ namespace Assets.Scripts.Database.Entity
     public class AccountMission_Entity
     {
         public string AccountID;
-        public string MissionID;
+        public int MissionID;
+        public int Target;
         public int Current;
         public bool Status;
 

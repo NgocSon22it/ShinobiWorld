@@ -91,7 +91,7 @@ public class RangeCharacter : PlayerBase
         {
             normalAttack.transform.position = AttackPoint.position;
             normalAttack.transform.rotation = AttackPoint.rotation;
-            normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, AccountWeapon_Entity.Damage + DamageBonus);
+            normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, References.accountWeapon.Damage + DamageBonus);
             normalAttack.SetActive(true);
             normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }

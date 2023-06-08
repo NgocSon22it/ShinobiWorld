@@ -8,6 +8,9 @@ using UnityEngine.TextCore.Text;
 using Assets.Scripts.Database.DAO;
 using System.Security.Principal;
 using ExitGames.Client.Photon;
+using Photon.Pun.Demo.PunBasics;
+using System.Threading;
+using Assets.Scripts.Hospital;
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
@@ -42,32 +45,37 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte) 'A', Account_Entity.Serialize, Account_Entity.Deserialize);
+        SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
+    }
+
+    public void SetupPlayer(Vector3 position)
+    {
         if (PlayerManager == null && PhotonNetwork.IsConnectedAndReady)
         {
             switch (References.accountRefer.RoleInGameID)
             {
                 case "Role_Melee":
-                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerMelee.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager = PhotonNetwork.Instantiate("Player/Melee/" + Path.Combine(PlayerMelee.name), position, Quaternion.identity);
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Sword");
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_MeleeOne", "Skill_MeleeTwo", "Skill_MeleeThree");
                     break;
                 case "Role_Range":
-                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerRange.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager = PhotonNetwork.Instantiate("Player/Range/" + Path.Combine(PlayerRange.name), position, Quaternion.identity);
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Dart");
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_RangeOne", "Skill_RangeTwo", "Skill_RangeThree");
                     break;
                 case "Role_Support":
-                    PlayerManager = PhotonNetwork.Instantiate("Player/" + Path.Combine(PlayerSupport.name), new(0, 0, 0), Quaternion.identity);
+                    PlayerManager = PhotonNetwork.Instantiate("Player/Support/" + Path.Combine(PlayerSupport.name), position, Quaternion.identity);
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Glove");
                     PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_SupportOne", "Skill_SupportTwo", "Skill_SupportThree");
                     break;
             }
-            SetUpAccountData();
+            ReloadPlayerProperties();
             Debug.Log("Successfully joined room S1!");
         }
     }
 
-    public void SetUpAccountData()
+    public void ReloadPlayerProperties()
     {
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
         PlayerProperties["Account"] = AccountJson;
@@ -87,7 +95,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        SetUpAccountData();
+        ReloadPlayerProperties();
     }
 
 
@@ -104,6 +112,22 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LeaveRoom(false);
         PhotonNetwork.LoadLevel(Scenes.Login);
+    }
+
+    public void GoingToHospital()
+    {
+        PlayerManager.GetComponent<BoxCollider2D>().enabled = false;
+        Hospital.Instance.SetDuration(References.RespawnTime).Begin();
+    }
+
+    public void GoingOutHospital()
+    {
+        References.accountRefer.CurrentHealth = References.accountRefer.Health;
+        References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+        PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+        ReloadPlayerProperties();
+        PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
+        PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
 
     private void OnApplicationQuit()
