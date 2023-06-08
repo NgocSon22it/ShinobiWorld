@@ -49,5 +49,20 @@ namespace Assets.Scripts.Database.DAO
 
             return list;
         }
+
+        public static void ChangeStatusMission(string UserID, int MissionID, bool status)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE [dbo].[AccountMission] SET [Status] = @status WHERE AccountID = @UserID and MissionID = @MissionID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@MissionID", MissionID);
+                cmd.Parameters.AddWithValue("@status", status);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }
