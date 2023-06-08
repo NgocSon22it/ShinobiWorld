@@ -33,10 +33,10 @@ namespace Assets.Scripts.Database.DAO
                         var obj = new AccountMission_Entity
                         {
                             AccountID = dr["AccountID"].ToString(),
-                            MissionID = Convert.ToInt32(dr["MissionID"]),
+                            MissionID = dr["MissionID"].ToString(),
                             Target = Convert.ToInt32(dr["Target"]),
                             Current = Convert.ToInt32(dr["Current"]),
-                            Status = Convert.ToBoolean(dr["Status"])
+                            Status = (StatusMission) Convert.ToInt32(dr["Status"])
                         };
                         list.Add(obj);
                     }
@@ -50,7 +50,7 @@ namespace Assets.Scripts.Database.DAO
             return list;
         }
 
-        public static void ChangeStatusMission(string UserID, int MissionID, bool status)
+        public static void ChangeStatusMission(string UserID, string MissionID, StatusMission status)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
