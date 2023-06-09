@@ -16,10 +16,18 @@ public class MissionManager : MonoBehaviour
 {
     public static MissionManager Instance;
 
-    public GameObject MissionItemPrefab, MissionPanel;
+    [Header("Mission")]
+    public GameObject MissionItemPrefab;
+    public GameObject MissionPanel;
     public Transform Content;
 
-    public string HavingMissionID = string.Empty;
+    [Header("Status")]
+    public GameObject MissionUIObject;
+    public TMP_Text MissionContent;
+    public TMP_Text Status;
+
+    public Mission_Entity HavingMission = null;
+    public AccountMission_Entity CurrentMission = null;
 
     public List<Mission_Entity> listMission;
 
@@ -28,14 +36,22 @@ public class MissionManager : MonoBehaviour
         Instance = this;
     }
 
-    public void Open()
+    public void Setup()
     {
         var filterlist = References.listAccountMission = AccountMission_DAO.GetAllByUserID(References.accountRefer.ID);
         listMission = References.listMission.FindAll(obj => filterlist.Any(filter => filter.MissionID == obj.ID));
 
         if (filterlist.Any(obj => obj.Status == StatusMission.Doing))
-            HavingMissionID = filterlist.Find(obj => obj.Status == StatusMission.Doing).MissionID;
+        {
+            CurrentMission = filterlist.Find(obj => obj.Status == StatusMission.Doing);
+            HavingMission = References.listMission.Find(obj => obj.ID == CurrentMission.MissionID);
+        }
+    }
 
+    public void Open()
+    {
+
+        Setup();
         MissionPanel.SetActive(true);
         GetList();
     }
@@ -74,4 +90,86 @@ public class MissionManager : MonoBehaviour
         Destroy();
         MissionPanel.SetActive(false);
     }
+
+    public void LoadMissionUI()
+    {
+        MissionUIObject.SetActive(true);
+        MissionContent.text = HavingMission.Content;
+        LoadStatusUI();
+    }
+
+    public void LoadStatusUI()
+    {
+        if (CurrentMission.Current == CurrentMission.Target) Status.text = Message.MissionFinish;
+        else Status.text = string.Format("{0}/{1}", CurrentMission.Current, CurrentMission.Target);
+    }
+
+    public void TakeMission(Mission_Entity selected)
+    {
+        HavingMission = selected;
+
+        References.accountRefer.CurrentStrength -= selected.RequiredStrength;
+        Player_AllUIManagement.Instance
+            .LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
+
+        var index = References.listAccountMission.FindIndex(obj => obj.MissionID == selected.ID);
+        References.listAccountMission[index].Status = StatusMission.Doing;
+        CurrentMission = References.listAccountMission[index];
+
+        LoadMissionUI();
+        Reload();
+    }
+
+    public void CancelMission()
+    {
+        var index = References.listAccountMission.FindIndex(obj => obj.MissionID == HavingMission.ID);
+        References.listAccountMission[index].Status = StatusMission.None;
+
+        HavingMission = null;
+        CurrentMission = null;
+
+        MissionUIObject.SetActive(false);
+        Reload();
+    }
+
+    public void DoingMission(string BossID)
+    {
+        if(HavingMission != null && BossID == HavingMission.BossID)
+        {
+            ++CurrentMission.Current;
+            LoadStatusUI();
+            if(CurrentMission.Current >= CurrentMission.Target)
+            {
+                AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, HavingMission.ID, 
+                                                            StatusMission.Claim);
+                
+                HavingMission = null;
+                CurrentMission = null;
+            }
+        }
+    }
+
+    public void TakeBonusMission(Mission_Entity selected)
+    {
+        AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ExpBonus, selected.CoinBonus);
+        References.accountRefer.Coin += selected.CoinBonus;
+        References.accountRefer.Exp += selected.ExpBonus;
+
+        var index = References.listAccountMission.FindIndex(obj => obj.MissionID == selected.ID);
+        References.listAccountMission[index].Status = StatusMission.Done;
+
+        Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+
+        Player_AllUIManagement.Instance
+            .LoadExperienceUI(References.accountRefer.Level, References.accountRefer.Exp, 
+                                References.accountRefer.Level * 100);
+
+        Reload();
+    }
+
+    public void Check()
+    {
+        DoingMission(HavingMission.BossID);
+    }
+
 }

@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
@@ -17,10 +18,10 @@ namespace Assets.Scripts.Mission
 {
     public class MissionItem : MonoBehaviour
     {
-        public string ID;
         public TMP_Text Content, Target, requiedStrength, Trophi;
         public Button MissionBtn;
         public StatusMission status;
+        Mission_Entity selected;
 
         public void OnClick()
         {
@@ -30,64 +31,50 @@ namespace Assets.Scripts.Mission
 
         public void Setup(Mission_Entity mission)
         {
-            ID = mission.ID;
+            selected = mission;
             Content.text = mission.Content;
             requiedStrength.text = mission.RequiredStrength.ToString();
             Target.text = mission.Target.ToString();
             Trophi.text = References.listTrophy.Find(obj => obj.ID == mission.TrophiesID).Name;
 
-            status = References.listAccountMission.Find(obj => obj.MissionID == ID).Status;
+            status = References.listAccountMission.Find(obj => obj.MissionID == mission.ID).Status;
 
             MissionBtn.GetComponentInChildren<TMP_Text>().text = References.BtnMission[status.ToString()];
             MissionBtn.interactable = false;
 
             var strength = References.accountRefer.CurrentStrength;
-            if (strength >= mission.RequiredStrength && string.IsNullOrEmpty(MissionManager.Instance.HavingMissionID))
-                MissionBtn.interactable = true;
-
-            if (mission.ID == MissionManager.Instance.HavingMissionID)
-            {
-                MissionBtn.interactable = true;
-            }
+            if ((strength >= mission.RequiredStrength //Enough strength
+                    && MissionManager.Instance.HavingMission == null //and None mission
+                    && status != StatusMission.Done) //Mission not done
+                || status == StatusMission.Claim //Done mission
+                || (MissionManager.Instance.HavingMission != null
+                    &&  mission.ID == MissionManager.Instance.HavingMission.ID ))  // Have this mission
+                        MissionBtn.interactable = true;
         }
 
         public void OnMissionBtnClick()
         {
-            var index = 0;
             switch (status)
             {
                 case StatusMission.None:
                     //Take mission
-                    References.accountRefer.CurrentStrength -= Convert.ToInt32(requiedStrength.text);
-                    AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, ID, StatusMission.Doing);
+                    AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.Doing);
+                    MissionManager.Instance.TakeMission(selected);
 
-                    MissionManager.Instance.HavingMissionID = ID;
-                    index = References.listAccountMission.FindIndex(obj => obj.MissionID == ID);
-                    References.listAccountMission[index].Status = StatusMission.Doing;
-
-                    Player_AllUIManagement.Instance.LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
-                    
                     break;
                 case StatusMission.Doing:
                     //Cancel mission
-                    AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, ID, StatusMission.None);
+                    AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.None);
+                    MissionManager.Instance.CancelMission();
                     
-                    MissionManager.Instance.HavingMissionID = string.Empty;
-                    index = References.listAccountMission.FindIndex(obj => obj.MissionID == ID);
-                    References.listAccountMission[index].Status = StatusMission.None;
-
                     break;
                 case StatusMission.Claim:
                     // Take bonus mission when finished mission
-                    break;
-                case StatusMission.Done:
-                    // Done mission
+                    AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.Done);
+                    MissionManager.Instance.TakeBonusMission(selected);
                     break;
             }
 
-            MissionManager.Instance.Reload();
         }
-
-
     }
 }
