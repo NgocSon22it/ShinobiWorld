@@ -26,6 +26,8 @@ public class Bat : Enemy
     }
     new void Update()
     {
+        base.Update();
+           
         if (photonView.IsMine)
         {
            // AttackAndMove();

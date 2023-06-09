@@ -16,8 +16,8 @@ using Photon.Realtime;
 public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 {
     // Entity
-    protected Boss_Entity boss_Entity = new Boss_Entity();
-    protected int CurrentHealth;
+    public Boss_Entity boss_Entity = new Boss_Entity();
+    public int CurrentHealth;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -82,17 +82,11 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
                 string NPCJson = (string)changedProps["Enemy"];
                 boss_Entity = JsonUtility.FromJson<Boss_Entity>(NPCJson);
                 CurrentHealth = (int)changedProps["CurrentHealth"];
-                SetUpNPCData();
-
+                LoadHealthUI();
             }
 
         }
 
-    }
-
-    public void SetUpNPCData()
-    {
-        LoadHealthUI();
     }
 
     public void Start()
@@ -103,7 +97,13 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Update()
     {
-
+        if (photonView.IsMine)
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                TakeDamage("1", 100);
+            }
+        }
     }
 
     public void LoadHealthUI()
@@ -113,7 +113,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     public void TakeDamage(string UserID, int Damage)
-    {     
+    {
         if (photonView.IsMine)
         {
             CurrentHealth -= Damage;

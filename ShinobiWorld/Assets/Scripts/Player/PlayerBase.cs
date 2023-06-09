@@ -27,8 +27,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
     public AccountSkill_Entity SkillThree_Entity = new AccountSkill_Entity();
 
-    public string WeaponName, SkillOneName, SkillTwoName, SkillThreeName;
-
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerCameraPrefabs;
     [SerializeField] GameObject PlayerAllUIPrefabs;
@@ -127,21 +125,41 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
         {
-            if (changedProps.ContainsKey("Account"))
+
+            foreach (var key in changedProps.Keys)
             {
-                string accountJson = (string)changedProps["Account"];
-                string AccountWeaponJson = (string)changedProps["AccountWeapon"];
-                string AccountSkillOneJson = (string)changedProps["AccountSkillOne"];
-                string AccountSkillTwoJson = (string)changedProps["AccountSkillTwo"];
-                string AccountSkillThreeJson = (string)changedProps["AccountSkillThree"];
-
-                AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
-                Weapon_Entity = JsonUtility.FromJson<AccountWeapon_Entity>(AccountWeaponJson);
-                SkillOne_Entity = JsonUtility.FromJson<AccountSkill_Entity>(AccountSkillOneJson);
-                SkillTwo_Entity = JsonUtility.FromJson<AccountSkill_Entity>(AccountSkillTwoJson);
-                SkillThree_Entity = JsonUtility.FromJson<AccountSkill_Entity>(AccountSkillThreeJson);
-
-                SetUpAccountData();
+                if (key.Equals("Account"))
+                {
+                    string accountJson = (string)changedProps[key];
+                    AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
+                    SetUpAccountData();
+                    Debug.Log("Account property has changed. New value: " + accountJson);
+                    Debug.Log("Account property has changed. New value: " + accountJson);
+                }
+                else if (key.Equals("AccountWeapon"))
+                {
+                    string accountWeaponJson = (string)changedProps[key];
+                    Weapon_Entity = JsonUtility.FromJson<AccountWeapon_Entity>(accountWeaponJson);
+                    Debug.Log("AccountWeapon property has changed. New value: " + accountWeaponJson);
+                }
+                else if (key.Equals("AccountSkillOne"))
+                {
+                    string accountSkillOneJson = (string)changedProps[key];
+                    SkillOne_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillOneJson);
+                    Debug.Log("AccountSkillOne property has changed. New value: " + accountSkillOneJson);
+                }
+                else if (key.Equals("AccountSkillTwo"))
+                {
+                    string accountSkillTwoJson = (string)changedProps[key];
+                    SkillTwo_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillTwoJson);
+                    Debug.Log("AccountSkillTwo property has changed. New value: " + accountSkillTwoJson);
+                }
+                else if (key.Equals("AccountSkillThree"))
+                {
+                    string accountSkillThreeJson = (string)changedProps[key];
+                    SkillThree_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillThreeJson);
+                    Debug.Log("AccountSkillThree property has changed. New value: " + accountSkillThreeJson);
+                }
             }
 
         }
@@ -158,8 +176,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         PlayerNickName.text = photonView.Owner.NickName;
         LoadLayout();
         LoadAllAccountUI();
-        LoadAccountWeapon();
-        LoadAccountSkill();
+
+    }
+
+    public void LoadProperties()
+    {
+        References.UpdateAccountToDB();
+        Game_Manager.Instance.ReloadPlayerProperties();
     }
 
     public void SetUpComponent()
@@ -173,16 +196,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         player_LevelManagement = GetComponent<Player_LevelManagement>();
     }
 
-    public void LoadProperties()
-    {
-        References.accountRefer = AccountEntity;
-        References.accountWeapon = Weapon_Entity;
-        References.accountSkillOne = SkillOne_Entity;
-        References.accountSkillTwo = SkillTwo_Entity;
-        References.accountSkillThree = SkillThree_Entity;
-
-        Game_Manager.Instance.ReloadPlayerProperties();
-    }
 
     public void LoadLayout()
     {
@@ -234,7 +247,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    
+
 
     public void LoadAllAccountUI()
     {
@@ -249,6 +262,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
             player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
+
+            LoadPlayerHealthUI();
+            LoadPlayerChakraUI();
+            LoadPlayerStrengthUI();
         }
     }
 
@@ -269,6 +286,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             AccountEntity.CurrentHealth = AccountEntity.Health;
         }
+        References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
         LoadPlayerHealthUI();
     }
 
@@ -279,7 +297,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (AccountEntity.CurrentCharka >= AccountEntity.Charka)
         {
             AccountEntity.CurrentCharka = AccountEntity.Charka;
+
         }
+        References.accountRefer.CurrentCharka = AccountEntity.CurrentCharka;
         LoadPlayerChakraUI();
     }
 
@@ -289,6 +309,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             player_LevelManagement.AddExperience(Amount);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
+
         }
     }
 
@@ -340,7 +361,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
-            if (Input.GetKeyDown(KeyCode.U)) 
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                EarnAmountOfExperience(100);
+            }
+            if (Input.GetKeyDown(KeyCode.I))
             {
                 TakeDamage(100);
             }
@@ -378,16 +403,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void TakeDamage(int Damage)
     {
         if (photonView.IsMine)
-        {         
+        {
             PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
             AccountEntity.CurrentHealth -= Damage;
+            References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
             LoadProperties();
         }
 
         if (AccountEntity.CurrentHealth <= 0)
         {
             AccountEntity.CurrentHealth = 0;
-            
+
 
             CancelInvoke(nameof(RegenChakra));
             CancelInvoke(nameof(RegenHealth));
@@ -426,7 +452,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             transform.localScale = new Vector3(-1, 1, 1);
             PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
         }
-        
+
     }
 
     public void FlipToMouse()
@@ -499,6 +525,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         SkillOneCooldown_Current = SkillOneCooldown_Total;
         AccountEntity.CurrentCharka -= SkillOne_Entity.Chakra;
+        References.accountRefer.CurrentCharka = AccountEntity.CurrentCharka;
         LoadPlayerChakraUI();
     }
 
@@ -506,6 +533,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         SkillTwoCooldown_Current = SkillTwoCooldown_Total;
         AccountEntity.CurrentCharka -= SkillTwo_Entity.Chakra;
+        References.accountRefer.CurrentCharka = AccountEntity.CurrentCharka;
         LoadPlayerChakraUI();
     }
 
@@ -513,6 +541,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         SkillThreeCooldown_Current = SkillThreeCooldown_Total;
         AccountEntity.CurrentCharka -= SkillThree_Entity.Chakra;
+        References.accountRefer.CurrentCharka = AccountEntity.CurrentCharka;
         LoadPlayerChakraUI();
     }
     #endregion
@@ -563,49 +592,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     #endregion
 
-    #region Weapon Load
-
-    public void LoadAccountWeapon()
-    {
-        if (!WeaponName.IsNullOrEmpty())
-        {
-            Weapon_Entity = AccountWeapon_DAO.GetAccountWeaponByID(AccountEntity.ID);
-        }
-
-    }
-    public void SetUpAccountWeaponName(string Weapon)
-    {
-        WeaponName = Weapon;
-    }
-
-    #endregion
-
-    #region Skill Load
-
-    public void LoadAccountSkill()
-    {
-        if (!SkillOneName.IsNullOrEmpty())
-        {
-            SkillOne_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillOneName);
-        }
-        if (!SkillTwoName.IsNullOrEmpty())
-        {
-            SkillTwo_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillTwoName);
-        }
-        if (!SkillThreeName.IsNullOrEmpty())
-        {
-            SkillThree_Entity = AccountSkill_DAO.GetAccountSkillByID(AccountEntity.ID, SkillThreeName);
-        }
-    }
-
-    public void SetUpAccountSkillName(string SkillOne, string SkillTwo, string SkillThree)
-    {
-        SkillOneName = SkillOne;
-        SkillTwoName = SkillTwo;
-        SkillThreeName = SkillThree;
-    }
-
-    #endregion
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -624,7 +610,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(AccountEntity.CurrentCharka);
             stream.SendNext(AccountEntity.Health);
             stream.SendNext(AccountEntity.Charka);
-
 
         }
         else
@@ -668,6 +653,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             AccountEntity.CurrentStrength = AccountEntity.Strength;
         }
+        References.accountRefer.CurrentStrength = AccountEntity.CurrentStrength;
         LoadPlayerStrengthUI();
     }
 

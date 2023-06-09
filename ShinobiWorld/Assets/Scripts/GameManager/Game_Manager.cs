@@ -13,16 +13,20 @@ using System.Threading;
 using Assets.Scripts.Hospital;
 using UnityEngine.UIElements;
 using Assets.Scripts.Database.Entity;
+using System.Data;
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
     public GameObject PlayerManager;
+
+    public string Role;
 
     [SerializeField] GameObject PlayerMelee;
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
     [SerializeField] GameObject Quai;
+    [SerializeField] GameObject Quai1;
 
     public static Game_Manager Instance;
 
@@ -54,14 +58,15 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-           SpawnNPC();
+            //SpawnNPC();
         }
     }
 
 
     public void SpawnNPC()
     {
-        GameObject npc = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Bat/" + Quai.name, Vector3.zero, Quaternion.identity);
+        GameObject npc = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Bat/" + Quai.name, new(-1, -3, 0), Quaternion.identity);
+        GameObject npc1 = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Fish/" + Quai1.name, new(2, -3, 0), Quaternion.identity);
     }
 
     public void SetupPlayer(Vector3 position)
@@ -71,19 +76,16 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             switch (References.accountRefer.RoleInGameID)
             {
                 case "Role_Melee":
+                    Role = "Melee";
                     PlayerManager = PhotonNetwork.Instantiate("Player/Melee/" + Path.Combine(PlayerMelee.name), position, Quaternion.identity);
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Sword");
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_MeleeOne", "Skill_MeleeTwo", "Skill_MeleeThree");
                     break;
                 case "Role_Range":
+                    Role = "Range";
                     PlayerManager = PhotonNetwork.Instantiate("Player/Range/" + Path.Combine(PlayerRange.name), position, Quaternion.identity);
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Dart");
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_RangeOne", "Skill_RangeTwo", "Skill_RangeThree");
                     break;
                 case "Role_Support":
+                    Role = "Support";
                     PlayerManager = PhotonNetwork.Instantiate("Player/Support/" + Path.Combine(PlayerSupport.name), position, Quaternion.identity);
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Glove");
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_SupportOne", "Skill_SupportTwo", "Skill_SupportThree");
                     break;
             }
             ReloadPlayerProperties();
@@ -91,10 +93,13 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
+
+
     public void ReloadPlayerProperties()
     {
+        References.LoadAccountWeaponNSkill(Role);
+        References.LoadAccount();
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
-
         string AccountWeaponJson = JsonUtility.ToJson(References.accountWeapon);
         string AccountSkillOneJson = JsonUtility.ToJson(References.accountSkillOne);
         string AccountSkillTwoJson = JsonUtility.ToJson(References.accountSkillTwo);
@@ -106,10 +111,16 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PlayerProperties["AccountSkillTwo"] = AccountSkillTwoJson;
         PlayerProperties["AccountSkillThree"] = AccountSkillThreeJson;
 
-        PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);   
+        Debug.Log("GameManager_Reload"); 
+        Debug.Log(AccountJson);
+        Debug.Log(AccountWeaponJson);
+        Debug.Log(AccountSkillOneJson);
+        Debug.Log(AccountSkillTwoJson);
+        Debug.Log(AccountSkillThreeJson);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
     }
 
-    public void ReloadNPCProperties(PhotonView photonView ,Boss_Entity boss_Entity, int CurrentHealth)
+    public void ReloadNPCProperties(PhotonView photonView, Boss_Entity boss_Entity, int CurrentHealth)
     {
         string NPCJson = JsonUtility.ToJson(boss_Entity);
         EnemyProperties["Enemy"] = NPCJson;
@@ -168,5 +179,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     private void OnApplicationQuit()
     {
         Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        References.UpdateAccountToDB();
     }
 }

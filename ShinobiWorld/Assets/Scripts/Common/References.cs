@@ -3,6 +3,7 @@ using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public static class References
@@ -31,7 +32,7 @@ public static class References
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
     public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
-    public static List<Mission_Entity> listMission= Mission_DAO.GetAll();
+    public static List<Mission_Entity> listMission = Mission_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
 
@@ -47,6 +48,8 @@ public static class References
     public static int RespawnTime = 20;
     public static int RespawnCost = 1000;
 
+    public static int HealthBonus, ChakraBonus, StrengthBonus;
+
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
                                                             {"Hokage", new(0, 0, 0)},
@@ -59,16 +62,55 @@ public static class References
                                                             {"Uchiha", new(43, 0, 0)},
                                                          };
 
-    public static void LoadAccount()
+    public static void UpdateAccountToDB()
     {
         if (accountRefer != null)
         {
-            Account_DAO.LoadAccount(accountRefer);
+            Account_DAO.UpdateAccountToDB(accountRefer);         
         }
     }
 
-}
+    public static void BonusLevelUp()
+    {
+        if (accountRefer != null)
+        {
+            
+            HealthBonus = Convert.ToInt32(accountRefer.Health * (Uppercent_Account / 100f));
+            ChakraBonus = Convert.ToInt32(accountRefer.Charka * (Uppercent_Account / 100f));
+            StrengthBonus = 1;
 
+            Debug.Log(HealthBonus + " " + ChakraBonus + " " + StrengthBonus);
+
+            accountRefer.Health += HealthBonus;
+            accountRefer.Charka += ChakraBonus;
+
+            accountRefer.CurrentHealth += HealthBonus;
+            accountRefer.CurrentCharka += ChakraBonus;
+
+            accountRefer.Strength += StrengthBonus;
+            accountRefer.CurrentStrength += StrengthBonus;
+
+            accountRefer.Level += 1;
+        }
+    }
+
+    public static void LoadAccount()
+    {
+        accountRefer = Account_DAO.GetAccountByID(accountRefer.ID);
+    }
+
+    public static void LoadAccountWeaponNSkill(string Role)
+    {
+        if (accountRefer != null)
+        {
+            accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(accountRefer.ID);
+            accountSkillOne = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "One");
+            accountSkillTwo = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "Two");
+            accountSkillThree = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "Three");
+        }
+
+    }
+}
 
 public enum TypeSell
 {
@@ -84,3 +126,4 @@ public enum House
 {
     Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino
 }
+
