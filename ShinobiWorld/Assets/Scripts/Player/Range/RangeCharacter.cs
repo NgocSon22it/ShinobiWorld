@@ -91,11 +91,11 @@ public class RangeCharacter : PlayerBase
         {
             normalAttack.transform.position = AttackPoint.position;
             normalAttack.transform.rotation = AttackPoint.rotation;
-            normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, References.accountWeapon.Damage + DamageBonus);
+            normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
             normalAttack.SetActive(true);
             normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
-
+        Debug.Log(Weapon_Entity.Damage + DamageBonus);
     }
 
     public void Animation_SkillOne()
@@ -114,6 +114,7 @@ public class RangeCharacter : PlayerBase
             skillOne.GetComponent<SuperDart>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
             skillOne.SetActive(true);
             skillOne.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
+            Debug.Log(SkillOne_Entity.Damage + DamageBonus);
         }
     }
 
@@ -152,6 +153,9 @@ public class RangeCharacter : PlayerBase
             rightDarts.SetActive(true);
             rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
+
+        Debug.Log(SkillTwo_Entity.Damage + DamageBonus);
+
 
     }
 

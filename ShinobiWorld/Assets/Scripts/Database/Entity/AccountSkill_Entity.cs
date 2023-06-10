@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.Entity
 {
+    [System.Serializable]
     public class AccountSkill_Entity
     {
         public string AccountID;
