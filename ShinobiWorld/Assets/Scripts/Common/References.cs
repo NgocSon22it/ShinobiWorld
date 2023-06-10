@@ -1,4 +1,4 @@
-using Assets.Scripts.Database.DAO;
+﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections;
@@ -62,7 +62,16 @@ public static class References
                                                             {"Uchiha", new(43, 0, 0)},
                                                          };
 
-    public static void UpdateAccountToDB()
+    public static IDictionary<string, string> BtnMission = new Dictionary<string, string>()
+                                                        {
+                                                            {StatusMission.None.ToString(), "Nhận" },
+                                                            {StatusMission.Doing.ToString(), "Hủy bỏ"},
+                                                            {StatusMission.Claim.ToString(), "Nhận thưởng"},
+                                                            {StatusMission.Done.ToString(), "Hoàn thành"},
+                                                        };
+    public static void UpdateAccountToDB();
+
+    public static void LoadAccount()
     {
         if (accountRefer != null)
         {
@@ -127,3 +136,7 @@ public enum House
     Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino
 }
 
+public enum StatusMission
+{
+    None, Doing, Claim, Done
+}
