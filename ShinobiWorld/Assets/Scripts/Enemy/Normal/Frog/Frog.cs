@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Frog : Enemy
@@ -35,21 +36,12 @@ public class Frog : Enemy
         // Check if the interval has passed
         if (FindTarget_CurrentTime >= FindTarget_TotalTime)
         {
-            if (FindClostestTarget(detectionRadius, "Player") != null)
-            {
-                photonView.RPC(nameof(SyncFindTarget), RpcTarget.AllBuffered);
-            }
-            else
-            {
-                Target = null;
-                Debug.Log("Reduce");
-            }
+            TargetPosition = FindClostestTarget(detectionRadius, "Player");
             // Call the RPC and reset the timer
             FindTarget_CurrentTime = 0f;
         }
 
-        // Update the player in range status
-        playerInRange = Target != null;
+        playerInRange = TargetPosition != Vector3.zero;
 
         animator.SetBool("Attack", playerInRange);
     }
@@ -57,11 +49,11 @@ public class Frog : Enemy
 
     public void Animation_SkillOne()
     {
-        if (Target != null)
+        if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
             FlipToTarget();
-            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
+            direction = TargetPosition - transform.Find("MainPoint").position;
 
             if (SkillOne != null)
             {

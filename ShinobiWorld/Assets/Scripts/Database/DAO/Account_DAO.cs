@@ -26,19 +26,6 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
-        public static void BonusLevelUp(string UserID, float UpPercent)
-        {
-            using (SqlConnection connection = new SqlConnection(ConnectionStr))
-            {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set Health += Health * (@UpPercent / 100.0), Charka += Charka * (@UpPercent / 100.0), Strength += 1, [Level] += 1 where ID = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@UpPercent", UpPercent);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
-            }
-        }
         public static void UpdateAccountCoin(string UserID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
@@ -238,13 +225,14 @@ namespace Assets.Scripts.Database.DAO
             }
             return IsFirst;
         }
-        public static void LoadAccount(Account_Entity account_Entity)
+        public static void UpdateAccountToDB(Account_Entity account_Entity)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Charka = @Chakra, CurrentCharka = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
+                cmd.CommandText = "Update Account set TrophiesID = @Trophie, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Charka = @Chakra, CurrentCharka = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
+                cmd.Parameters.AddWithValue("@Trophie", account_Entity.TrophiesID);
                 cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
                 cmd.Parameters.AddWithValue("@Health", account_Entity.Health);
                 cmd.Parameters.AddWithValue("@CurrentHealth", account_Entity.CurrentHealth);
