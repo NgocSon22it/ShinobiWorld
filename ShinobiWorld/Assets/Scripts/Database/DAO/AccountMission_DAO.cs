@@ -64,5 +64,20 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+        public static void TakeBonus(string UserID, int ExpBonus, int CoinBonus)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE [dbo].[Account] SET [Exp] += @ExpBonus, [Coin] += @CoinBonus WHERE ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@ExpBonus", ExpBonus);
+                cmd.Parameters.AddWithValue("@CoinBonus", CoinBonus);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }

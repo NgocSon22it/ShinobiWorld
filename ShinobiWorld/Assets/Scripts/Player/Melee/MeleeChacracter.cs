@@ -86,7 +86,7 @@ public class MeleeChacracter : PlayerBase
                 {
                     if (Enemy.gameObject.CompareTag("Enemy"))
                     {
-                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, References.accountWeapon.Damage);
+                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage);
                     }
                 }
             }
@@ -119,6 +119,7 @@ public class MeleeChacracter : PlayerBase
             skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
         }
+        Debug.Log(SkillTwo_Entity.Damage + DamageBonus);
     }
 
     public void Animation_SkillThree()
@@ -128,10 +129,11 @@ public class MeleeChacracter : PlayerBase
         if (skillThree != null)
         {
             skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
-            skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
             skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
             skillThree.SetActive(true);
         }
+        Debug.Log(SkillThree_Entity.Damage + DamageBonus);
     }
 
     public IEnumerator RighteousSword()

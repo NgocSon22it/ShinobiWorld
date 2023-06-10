@@ -12,11 +12,12 @@ public class Fish : Enemy
         base.Start();
         if (photonView.IsMine)
         {
-            boss_Entity.ID = "Boss_Bat";
-            boss_Pool.InitializeProjectilePool("Boss/Normal/Fish/");
+            boss_Entity.ID = "Boss_Kakashi";
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
             CurrentHealth = boss_Entity.Health;
+            //boss_Pool.InitializeProjectilePool("Boss/Normal/Bat/");
             MovePosition = GetRandomPosition();
+            Game_Manager.Instance.ReloadNPCProperties(photonView, boss_Entity, CurrentHealth);
         }
 
         LoadHealthUI();
@@ -26,7 +27,7 @@ public class Fish : Enemy
     {
         if (photonView.IsMine)
         {
-            AttackAndMove();
+            //AttackAndMove();
         }
     }
     public void AttackAndMove()
@@ -63,23 +64,15 @@ public class Fish : Enemy
         FindTarget_CurrentTime += Time.deltaTime;
 
         // Check if the interval has passed
+        // Check if the interval has passed
         if (FindTarget_CurrentTime >= FindTarget_TotalTime)
         {
-            if (FindClostestTarget(detectionRadius, "Player") != null)
-            {
-                photonView.RPC(nameof(SyncFindTarget), RpcTarget.AllBuffered);
-            }
-            else
-            {
-                Target = null;
-                Debug.Log("Reduce");
-            }
+            TargetPosition = FindClostestTarget(detectionRadius, "Player");
             // Call the RPC and reset the timer
             FindTarget_CurrentTime = 0f;
         }
 
-        // Update the player in range status
-        playerInRange = Target != null;
+        playerInRange = TargetPosition != Vector3.zero;
 
         // Restrict movement to the move area
         clampedPosition = movementBounds.ClosestPoint(transform.position);
@@ -92,11 +85,11 @@ public class Fish : Enemy
 
     public void Animation_SkillOne()
     {
-        if (Target != null)
+        if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
             FlipToTarget();
-            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
+            direction = TargetPosition - transform.Find("MainPoint").position;
 
             if (SkillOne != null)
             {

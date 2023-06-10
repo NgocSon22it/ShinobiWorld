@@ -11,6 +11,7 @@ namespace Assets.Scripts.Database.Entity
         public string ID;
         public string TrophiesID;
         public string BossID;
+        public string EquipmentID;
         public int RequiredStrength;
         public string Content;
         public int Target;
