@@ -24,7 +24,7 @@ public class Bat_SkillOne : Boss_Skill
             {
                 collision.GetComponent<PlayerBase>().TakeDamage(Damage);
             }
-            TurnOff();
+            Destroy(gameObject);
         }
     }
 
