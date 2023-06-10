@@ -69,9 +69,7 @@ public static class References
                                                             {StatusMission.Claim.ToString(), "Nhận thưởng"},
                                                             {StatusMission.Done.ToString(), "Hoàn thành"},
                                                         };
-    public static void UpdateAccountToDB();
-
-    public static void LoadAccount()
+    public static void UpdateAccountToDB()
     {
         if (accountRefer != null)
         {
