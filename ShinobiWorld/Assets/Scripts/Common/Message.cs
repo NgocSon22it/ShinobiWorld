@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Message 
 {
@@ -30,5 +31,7 @@ public class Message
     public static string OverLimit = "Bạn đã hết lượt mua hôm nay";
     public static string IsUsing = "Đang sử dụng";
     public static string Skill_Unlock = "Bạn cần đạt cấp độ {0} để mở khóa!";
+
+    public static string MissionFinish = "Hoàn thành";
 
 }

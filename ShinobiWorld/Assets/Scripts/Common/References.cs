@@ -1,4 +1,4 @@
-using Assets.Scripts.Database.DAO;
+﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections;
@@ -8,11 +8,16 @@ using UnityEngine;
 public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
+
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
+
     public static List<AccountSkill_Entity> listAccountSkill = new List<AccountSkill_Entity>();
+
     public static AccountWeapon_Entity accountWeapon = new AccountWeapon_Entity();
+
     public static Weapon_Entity weapon = new Weapon_Entity();
+    public static List<AccountMission_Entity> listAccountMission = new List<AccountMission_Entity>();
 
     public static int Maxserver = 20;
 
@@ -26,6 +31,7 @@ public static class References
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
     public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
+    public static List<Mission_Entity> listMission= Mission_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
 
@@ -33,6 +39,29 @@ public static class References
     public static float Uppercent_Account = 5f;
     public static float Uppercent_Equipment = 5f;
     public static int MaxUpgradeLevel = 30;
+
+    public static int RespawnTime = 20;
+    public static int RespawnCost = 1000;
+
+    public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
+                                                        {
+                                                            {"Hokage", new(0, 0, 0)},
+                                                            {"Hospital", new(17, -26, 0)},
+                                                            {"Shop", new(-17, -47, 0)},
+                                                            {"Arena", new(-44, -24, 0)},
+                                                            {"Ramen", new(-15, -26, 0)},
+                                                            {"School", new(-28, 8, 0)},
+                                                            {"Casino", new(19, -47, 0)},
+                                                            {"Uchiha", new(43, 0, 0)},
+                                                         };
+
+    public static IDictionary<string, string> BtnMission = new Dictionary<string, string>()
+                                                        {
+                                                            {StatusMission.None.ToString(), "Nhận" },
+                                                            {StatusMission.Doing.ToString(), "Hủy bỏ"},
+                                                            {StatusMission.Claim.ToString(), "Nhận thưởng"},
+                                                            {StatusMission.Done.ToString(), "Hoàn thành"},
+                                                        };
 
     public static void LoadAccount()
     {
@@ -53,4 +82,14 @@ public enum TypeSell
 public enum Intention
 {
     Sell, Bag
+}
+
+public enum House
+{
+    Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino
+}
+
+public enum StatusMission
+{
+    None, Doing, Claim, Done
 }

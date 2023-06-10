@@ -39,6 +39,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public float FindTarget_CurrentTime;
     public float FindTarget_TotalTime = 1f;
 
+    public float LocalScaleX;
 
     // MainPoint
     [SerializeField] Transform MainPoint;
@@ -60,7 +61,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public Boss_Pool boss_Pool;
 
     // Facing
-    public bool FacingRight;
+    public bool FacingRight = false;
 
     public void SetUpComponent()
     {
@@ -72,8 +73,8 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Start()
     {
-        SetUpComponent();
-        MovePosition = GetRandomPosition();
+        SetUpComponent();      
+        LocalScaleX = transform.localScale.x;
     }
 
     public void Update()
@@ -117,42 +118,45 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         // Create a new position using the random coordinates
         randomPosition = new Vector2(randomX, randomY);
 
-        if (randomPosition.x > MainPoint.position.x && !FacingRight)
+        if (MainPoint.position.x < randomPosition.x && !FacingRight)
         {
             Flip();
         }
-        else if (randomPosition.x < MainPoint.position.x && FacingRight)
+        else if (MainPoint.position.x > randomPosition.x && FacingRight)
         {
             Flip();
         }
+
         return randomPosition;
     }
 
     public void Flip()
     {
-        if (FacingRight)
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-            HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-        }
-        else
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-            HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
-        }
-
         FacingRight = !FacingRight;
+        LocalScaleX *= -1f;
+
+
+        SetUpFlip(LocalScaleX, 1f, 1f);
+    }
+
+    public void SetUpFlip(float x, float y, float z)
+    {
+        transform.localScale = new Vector3(x, y, z);
+        if (HealthChakraUI != null)
+        {
+            HealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(x, y, z);
+        }
     }
 
     public void FlipToTarget()
     {
         if (photonView.IsMine)
         {
-            if (Target.transform.position.x > MainPoint.position.x && !FacingRight)
+            if (MainPoint.position.x < Target.transform.position.x  && !FacingRight)
             {
                 Flip();
             }
-            else if (Target.transform.position.x < MainPoint.position.x && FacingRight)
+            else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
             {
                 Flip();
             }
@@ -176,7 +180,9 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         foreach (GameObject currentTarget in allTarget)
         {
             float distanceToTarget = (currentTarget.transform.position - this.transform.position).sqrMagnitude;
-            if (distanceToTarget < distanceToClosestTarget && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range)
+            if (distanceToTarget < distanceToClosestTarget 
+                && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range
+                && currentTarget.GetComponent<BoxCollider2D>().enabled)
             {
                 distanceToClosestTarget = distanceToTarget;
                 closestTarget = currentTarget;

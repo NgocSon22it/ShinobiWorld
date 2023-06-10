@@ -156,5 +156,13 @@ namespace Assets.Scripts.Shop
                 else EquipmentDetail.Instance.ShowDetail(listEquipment[0].EquipmentID);
             }
         }
+
+        public void ResetColor()
+        {
+            foreach (Transform child in Content)
+            {
+                child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
+            }
+        }
     }
 }

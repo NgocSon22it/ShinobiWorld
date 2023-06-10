@@ -136,7 +136,7 @@ namespace Assets.Scripts.Bag.Item
             }
             else References.accountRefer.CurrentStrength += item.StrengthBonus;
 
-            Game_Manager.Instance.SetUpAccountData();
+            Game_Manager.Instance.ReloadPlayerProperties();
 
             Player_AllUIManagement.Instance
                     .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
