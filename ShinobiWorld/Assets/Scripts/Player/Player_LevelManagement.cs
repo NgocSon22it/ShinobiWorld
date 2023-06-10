@@ -33,6 +33,8 @@ public class Player_LevelManagement : MonoBehaviour
 
     public void LevelUpReward()
     {
-        Account_DAO.BonusLevelUp(AccountEntity.ID, References.Uppercent_Account);
+        References.BonusLevelUp();
+        References.UpdateAccountToDB();
+        Game_Manager.Instance.ReloadPlayerProperties();
     }
 }

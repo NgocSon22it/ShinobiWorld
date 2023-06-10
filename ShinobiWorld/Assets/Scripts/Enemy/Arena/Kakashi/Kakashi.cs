@@ -64,11 +64,11 @@ public class Kakashi : Enemy
 
     public void Animation_SkillOne()
     {
-        if (Target != null)
+        if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
             FlipToTarget();
-            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
+            direction = TargetPosition - transform.Find("MainPoint").position;
 
             if (SkillOne != null)
             {

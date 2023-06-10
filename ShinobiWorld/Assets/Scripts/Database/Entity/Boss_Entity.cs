@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.Entity
 {
+    [System.Serializable]
     public class Boss_Entity
     {
         public string ID;
@@ -21,6 +22,19 @@ namespace Assets.Scripts.Database.Entity
 
         public Boss_Entity()
         {
+        }
+        public static object Deserialize(byte[] data)
+        {
+            var result = new Boss_Entity();
+            result.ID = data[0].ToString();
+
+            return result;
+        }
+
+        public static byte[] Serialize(object customType)
+        {
+            var c = (Boss_Entity)customType;
+            return new byte[] { Convert.ToByte(c.ID)};
         }
     }
 }

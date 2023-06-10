@@ -464,8 +464,8 @@ MonoBehaviour:
   - {fileID: 3659108022375067634}
   - {fileID: 3659108023784942103}
   m_Bounds:
-    m_Center: {x: 0.2976458, y: 0.23929673, z: 0}
-    m_Extent: {x: 1.5313153, y: 1.2169001, z: 0}
+    m_Center: {x: 0.2976458, y: 0.23929709, z: 0}
+    m_Extent: {x: 1.5313153, y: 1.2168996, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -502,6 +502,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b87bf5201be9c4f88b46436913809b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boss_Entity:
+    ID: 
+    TypeBossID: 
+    Name: 
+    Health: 0
+    Speed: 0
+    CoinBonus: 0
+    ExpBonus: 0
+    Image: 
+    Description: 
+    Delete: 0
+  CurrentHealth: 0
   movementBounds: {fileID: 3659108024181459250}
   isMoving: 1
   Break_CurrentTime: 0
@@ -521,6 +533,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   boss_Pool: {fileID: 0}
   FacingRight: 0
+  a: {fileID: 2458842513146125682, guid: afae49211c5d1ce42ba88a2892197f20, type: 3}
 --- !u!61 &3659108024285446473
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -626,10 +639,10 @@ MonoBehaviour:
   m_SynchronizeParameters:
   - Type: 4
     SynchronizeType: 1
-    Name: Attack
-  - Type: 4
-    SynchronizeType: 1
     Name: Walk
+  - Type: 4
+    SynchronizeType: 0
+    Name: PlayerInRange
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
