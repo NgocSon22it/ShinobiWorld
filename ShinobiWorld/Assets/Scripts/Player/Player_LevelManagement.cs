@@ -15,10 +15,12 @@ public class Player_LevelManagement : MonoBehaviour
         if (AccountEntity != null && AccountEntity.Level < 30)
         {
             AccountEntity.Exp += Amount;
+            References.accountRefer.Exp = AccountEntity.Exp;
             while (AccountEntity.Exp >= ExpercienceToNextLevel)
             {
                 AccountEntity.Level++;
                 AccountEntity.Exp -= ExpercienceToNextLevel;
+                References.accountRefer.Exp = AccountEntity.Exp;
                 ExpercienceToNextLevel = AccountEntity.Level * 100;
                 LevelUpReward();
             }

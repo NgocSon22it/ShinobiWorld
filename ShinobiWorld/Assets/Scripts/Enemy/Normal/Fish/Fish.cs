@@ -12,12 +12,14 @@ public class Fish : Enemy
         base.Start();
         if (photonView.IsMine)
         {
-            boss_Entity.ID = "Boss_Kakashi";
+            boss_Entity.ID = "Boss_Fish";
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
             CurrentHealth = boss_Entity.Health;
-            //boss_Pool.InitializeProjectilePool("Boss/Normal/Bat/");
+            boss_Pool.InitializeProjectilePool("Boss/Normal/Fish/");
             MovePosition = GetRandomPosition();
-            Game_Manager.Instance.ReloadNPCProperties(photonView, boss_Entity, CurrentHealth);
+
+            // Set initial Custom Properties for this NPC
+            SetUpNPC();
         }
 
         LoadHealthUI();

@@ -65,6 +65,8 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     // Facing
     public bool FacingRight = false;
 
+    public ExitGames.Client.Photon.Hashtable NPCProperties = new ExitGames.Client.Photon.Hashtable();
+
     public void SetUpComponent()
     {
         animator = GetComponent<Animator>();
@@ -73,22 +75,37 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         boss_Pool = GetComponent<Boss_Pool>();
     }
 
+
+
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
         {
-            if (changedProps.ContainsKey("Enemy"))
+            if (changedProps.ContainsKey("Account"))
             {
-                string NPCJson = (string)changedProps["Enemy"];
-                boss_Entity = JsonUtility.FromJson<Boss_Entity>(NPCJson);
-                CurrentHealth = (int)changedProps["CurrentHealth"];
-                LoadHealthUI();
+                //string NPCJson = (string)changedProps["NPC_Enemy"];
+               // boss_Entity = JsonUtility.FromJson<Boss_Entity>(NPCJson);
+                //Debug.Log("Account property has changed. New value: " + NPCJson);
+                Debug.Log("Co Account");
+            }
+            if (changedProps.ContainsKey("NPC_Health"))
+            {
+                CurrentHealth = (int)changedProps["NPC_Health"];
+                Debug.Log("Speed updated: " + CurrentHealth);
             }
 
         }
-
     }
 
+    public void SetUpNPC()
+    {
+        string NPCJson = JsonUtility.ToJson(boss_Entity);
+
+        NPCProperties["NPC_Enemy"] = NPCJson;
+        NPCProperties["NPC_Health"] = CurrentHealth;
+
+        photonView.Owner.SetCustomProperties(NPCProperties);
+    }
     public void Start()
     {
         SetUpComponent();
@@ -117,8 +134,18 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
         {
             CurrentHealth -= Damage;
-            Game_Manager.Instance.ReloadNPCProperties(photonView, boss_Entity, CurrentHealth);
+            UpdateNPCProperties();
         }
+        LoadHealthUI();
+    }
+
+    public void UpdateNPCProperties()
+    {
+        string NPCJson = JsonUtility.ToJson(boss_Entity);
+
+        NPCProperties["NPC_Enemy"] = NPCJson;
+        NPCProperties["NPC_Health"] = CurrentHealth;
+        photonView.Owner.SetCustomProperties(NPCProperties);
     }
 
     public Vector2 GetRandomPosition()

@@ -32,7 +32,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
 
-    ExitGames.Client.Photon.Hashtable EnemyProperties = new ExitGames.Client.Photon.Hashtable();
     private void Awake()
     {
         Instance = this;
@@ -58,7 +57,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            //SpawnNPC();
+           SpawnNPC();
         }
     }
 
@@ -67,6 +66,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         GameObject npc = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Bat/" + Quai.name, new(-1, -3, 0), Quaternion.identity);
         GameObject npc1 = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Fish/" + Quai1.name, new(2, -3, 0), Quaternion.identity);
+        GameObject npc2 = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Fish/" + Quai1.name, new(4, -3, 0), Quaternion.identity);
+
+
     }
 
     public void SetupPlayer(Vector3 position)
@@ -111,22 +113,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PlayerProperties["AccountSkillTwo"] = AccountSkillTwoJson;
         PlayerProperties["AccountSkillThree"] = AccountSkillThreeJson;
 
-        Debug.Log("GameManager_Reload"); 
-        Debug.Log(AccountJson);
-        Debug.Log(AccountWeaponJson);
-        Debug.Log(AccountSkillOneJson);
-        Debug.Log(AccountSkillTwoJson);
-        Debug.Log(AccountSkillThreeJson);
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
-    }
-
-    public void ReloadNPCProperties(PhotonView photonView, Boss_Entity boss_Entity, int CurrentHealth)
-    {
-        string NPCJson = JsonUtility.ToJson(boss_Entity);
-        EnemyProperties["Enemy"] = NPCJson;
-        EnemyProperties["CurrentHealth"] = CurrentHealth;
-
-        photonView.Owner.SetCustomProperties(EnemyProperties);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -171,6 +158,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         References.accountRefer.CurrentHealth = References.accountRefer.Health;
         References.accountRefer.CurrentCharka = References.accountRefer.Charka;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+        References.UpdateAccountToDB();
         ReloadPlayerProperties();
         PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
