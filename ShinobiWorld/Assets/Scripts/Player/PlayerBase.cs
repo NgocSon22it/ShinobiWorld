@@ -133,32 +133,26 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                     string accountJson = (string)changedProps[key];
                     AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
                     SetUpAccountData();
-                    Debug.Log("Account property has changed. New value: " + accountJson);
-                    Debug.Log("Account property has changed. New value: " + accountJson);
                 }
                 else if (key.Equals("AccountWeapon"))
                 {
                     string accountWeaponJson = (string)changedProps[key];
                     Weapon_Entity = JsonUtility.FromJson<AccountWeapon_Entity>(accountWeaponJson);
-                    Debug.Log("AccountWeapon property has changed. New value: " + accountWeaponJson);
                 }
                 else if (key.Equals("AccountSkillOne"))
                 {
                     string accountSkillOneJson = (string)changedProps[key];
                     SkillOne_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillOneJson);
-                    Debug.Log("AccountSkillOne property has changed. New value: " + accountSkillOneJson);
                 }
                 else if (key.Equals("AccountSkillTwo"))
                 {
                     string accountSkillTwoJson = (string)changedProps[key];
                     SkillTwo_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillTwoJson);
-                    Debug.Log("AccountSkillTwo property has changed. New value: " + accountSkillTwoJson);
                 }
                 else if (key.Equals("AccountSkillThree"))
                 {
                     string accountSkillThreeJson = (string)changedProps[key];
                     SkillThree_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillThreeJson);
-                    Debug.Log("AccountSkillThree property has changed. New value: " + accountSkillThreeJson);
                 }
             }
 
