@@ -17,7 +17,13 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 {
     // Entity
     public Boss_Entity boss_Entity = new Boss_Entity();
-    public int CurrentHealth;
+
+    public AreaBoss_Entity areaBoss_Entity = new AreaBoss_Entity();
+
+    //Separate
+    public string AreaName;
+    public string EnemyID;
+    public string PoolExtension;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -65,7 +71,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     // Facing
     public bool FacingRight = false;
 
-    public ExitGames.Client.Photon.Hashtable NPCProperties = new ExitGames.Client.Photon.Hashtable();
+
 
     public void SetUpComponent()
     {
@@ -75,40 +81,45 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         boss_Pool = GetComponent<Boss_Pool>();
     }
 
-
-
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    public void SetUpEntity(string EnemyID, string AreaName, string PoolExtension)
     {
-        if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
-        {
-            if (changedProps.ContainsKey("Account"))
-            {
-                //string NPCJson = (string)changedProps["NPC_Enemy"];
-               // boss_Entity = JsonUtility.FromJson<Boss_Entity>(NPCJson);
-                //Debug.Log("Account property has changed. New value: " + NPCJson);
-                Debug.Log("Co Account");
-            }
-            if (changedProps.ContainsKey("NPC_Health"))
-            {
-                CurrentHealth = (int)changedProps["NPC_Health"];
-                Debug.Log("Speed updated: " + CurrentHealth);
-            }
+        photonView.RPC(nameof(SyncEntity), RpcTarget.AllBuffered, EnemyID, AreaName, PoolExtension);
+    }
 
+    [PunRPC]
+    public void SyncEntity(string EnemyID, string AreaName, string PoolExtension)
+    {
+        this.EnemyID = EnemyID;
+        this.AreaName = AreaName;
+        this.PoolExtension = PoolExtension;
+        boss_Entity = Boss_DAO.GetBossByID(EnemyID);
+        areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+    }
+
+    public void SetUpEnemy()
+    {
+        if (photonView.IsMine)
+        {
+            if (boss_Entity != null && areaBoss_Entity != null)
+            {
+                boss_Pool.InitializeProjectilePool(PoolExtension);
+                LoadHealthUI();
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 
-    public void SetUpNPC()
+    public void LoadProperties()
     {
-        string NPCJson = JsonUtility.ToJson(boss_Entity);
-
-        NPCProperties["NPC_Enemy"] = NPCJson;
-        NPCProperties["NPC_Health"] = CurrentHealth;
-
-        photonView.Owner.SetCustomProperties(NPCProperties);
+        AreaBoss_DAO.UpdateAreaBoss(areaBoss_Entity);
     }
+
+
     public void Start()
     {
-        SetUpComponent();
         LocalScaleX = transform.localScale.x;
     }
 
@@ -118,34 +129,28 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (Input.GetKeyDown(KeyCode.J))
             {
-                TakeDamage("1", 100);
+                //ReloadNPCProperties();
             }
         }
     }
 
     public void LoadHealthUI()
     {
-        HealthNumber.text = CurrentHealth + " / " + boss_Entity.Health;
-        CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)boss_Entity.Health;
+        HealthNumber.text = areaBoss_Entity.CurrentHealth + " / " + boss_Entity.Health;
+        CurrentHealth_UI.fillAmount = (float)areaBoss_Entity.CurrentHealth / (float)boss_Entity.Health;
     }
 
     public void TakeDamage(string UserID, int Damage)
     {
-        if (photonView.IsMine)
-        {
-            CurrentHealth -= Damage;
-            UpdateNPCProperties();
-        }
-        LoadHealthUI();
+        photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, UserID, Damage);
     }
 
-    public void UpdateNPCProperties()
+    [PunRPC]
+    public void TakeDamageSync(string UserID, int Damage)
     {
-        string NPCJson = JsonUtility.ToJson(boss_Entity);
-
-        NPCProperties["NPC_Enemy"] = NPCJson;
-        NPCProperties["NPC_Health"] = CurrentHealth;
-        photonView.Owner.SetCustomProperties(NPCProperties);
+        areaBoss_Entity.CurrentHealth -= Damage;
+        LoadProperties();
+        LoadHealthUI();
     }
 
     public Vector2 GetRandomPosition()
@@ -234,7 +239,8 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(CurrentHealth);
+            stream.SendNext(areaBoss_Entity.CurrentHealth);
+            stream.SendNext(boss_Entity.ID);
             stream.SendNext(boss_Entity.Health);
             stream.SendNext(transform.position);
 
@@ -245,10 +251,12 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
             stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
 
+
         }
         else
         {
-            CurrentHealth = (int)stream.ReceiveNext();
+            areaBoss_Entity.CurrentHealth = (int)stream.ReceiveNext();
+            boss_Entity.ID = (string)stream.ReceiveNext();
             boss_Entity.Health = (int)stream.ReceiveNext();
             MovePosition = (Vector3)stream.ReceiveNext();
 

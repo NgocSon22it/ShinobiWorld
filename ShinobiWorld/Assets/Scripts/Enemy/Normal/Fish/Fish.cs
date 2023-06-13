@@ -14,13 +14,11 @@ public class Fish : Enemy
         {
             boss_Entity.ID = "Boss_Fish";
             boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-            CurrentHealth = boss_Entity.Health;
+            //CurrentHealth = boss_Entity.Health;
             boss_Pool.InitializeProjectilePool("Boss/Normal/Fish/");
             MovePosition = GetRandomPosition();
 
-            // Set initial Custom Properties for this NPC
-            SetUpNPC();
-        }
+                  }
 
         LoadHealthUI();
     }
