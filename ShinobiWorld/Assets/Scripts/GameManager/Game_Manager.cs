@@ -14,6 +14,27 @@ using Assets.Scripts.Hospital;
 using UnityEngine.UIElements;
 using Assets.Scripts.Database.Entity;
 using System.Data;
+using Unity.VisualScripting;
+using System.Data.SqlTypes;
+using System;
+
+public class EnemyInfo
+{
+    public string EnemyID;
+    public string Extension;
+    public string AreaName;
+
+    public GameObject enemyPrefab;
+    public Vector3 SpawnPosition;
+
+    public Boss_Entity boss_Entity;
+    public AreaBoss_Entity areaBoss_Entity;
+
+    public void SetBossEntity() { boss_Entity = Boss_DAO.GetBossByID(EnemyID); }
+    public void SetAreaBossEntity() { areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID); }
+
+}
+
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
@@ -25,12 +46,23 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
-    [SerializeField] GameObject Quai;
-    [SerializeField] GameObject Quai1;
+    [SerializeField] GameObject BossPrefabs_Bat;
+    [SerializeField] GameObject BossPrefabs_Fish;
+    [SerializeField] GameObject BossPrefabs_Crap;
 
     public static Game_Manager Instance;
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
+
+    ExitGames.Client.Photon.Hashtable NPCProperties = new ExitGames.Client.Photon.Hashtable();
+
+
+    ExitGames.Client.Photon.Hashtable RoomProperties = new ExitGames.Client.Photon.Hashtable();
+
+    [SerializeField] List<EnemyInfo> SpawnList_LangLa1 = new List<EnemyInfo>();
+    List<GameObject> ListBoss_LangLa1 = new List<GameObject>();
+
+
 
     private void Awake()
     {
@@ -50,26 +82,55 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
+
     public override void OnJoinedRoom()
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
-
         if (PhotonNetwork.IsMasterClient)
         {
-           SpawnNPC();
+            SpawnNPC();
         }
-    }
 
+    }
 
     public void SpawnNPC()
     {
-        GameObject npc = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Bat/" + Quai.name, new(-1, -3, 0), Quaternion.identity);
-        GameObject npc1 = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Fish/" + Quai1.name, new(2, -3, 0), Quaternion.identity);
-        GameObject npc2 = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Fish/" + Quai1.name, new(4, -3, 0), Quaternion.identity);
+        SpawnList_LangLa1.AddRange(new List<EnemyInfo>
+        {
+            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat1", SpawnPosition = new Vector3(-1, -3, 0)},
+            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat2", SpawnPosition = new Vector3(2, -3, 0) }
+        });
 
 
+        foreach (EnemyInfo enemyInfo in SpawnList_LangLa1)
+        {
+            enemyInfo.SetBossEntity();
+            enemyInfo.SetAreaBossEntity();
+
+            SqlDateTime sqlDateTime = new SqlDateTime(DateTime.Now);
+
+            if (enemyInfo.areaBoss_Entity.isDead == false && sqlDateTime >= enemyInfo.areaBoss_Entity.TimeSpawn)
+            {
+
+                GameObject EnemyObject = PhotonNetwork.InstantiateRoomObject(enemyInfo.Extension + enemyInfo.enemyPrefab.name, enemyInfo.SpawnPosition, Quaternion.identity);
+                Enemy enemyScript = EnemyObject.GetComponentInChildren<Enemy>();
+
+                enemyScript.EnemyID = enemyInfo.EnemyID;
+                enemyScript.AreaName = enemyInfo.AreaName;
+                enemyScript.PoolExtension = enemyInfo.Extension;
+                enemyScript.SetUpEntity(enemyInfo.EnemyID, enemyInfo.AreaName, enemyInfo.Extension);
+                enemyScript.SetUpComponent();
+                enemyScript.SetUpEnemy();
+                enemyScript.enabled = true;
+
+                ListBoss_LangLa1.Add(EnemyObject);
+            }
+        } 
     }
+
+
+
 
     public void SetupPlayer(Vector3 position)
     {
@@ -115,7 +176,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
     }
-
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.Log("Create Room Failed");
@@ -128,6 +188,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
+        References.UpdateAccountToDB();
         ReloadPlayerProperties();
     }
 

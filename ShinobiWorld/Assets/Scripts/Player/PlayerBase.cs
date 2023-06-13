@@ -407,8 +407,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (AccountEntity.CurrentHealth <= 0)
         {
             AccountEntity.CurrentHealth = 0;
-
-
+            References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
             CancelInvoke(nameof(RegenChakra));
             CancelInvoke(nameof(RegenHealth));
 
