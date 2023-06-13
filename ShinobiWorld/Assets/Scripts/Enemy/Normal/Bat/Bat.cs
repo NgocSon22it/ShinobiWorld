@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
-    public GameObject a;
     // Start is called before the first frame update
     new void Start()
     {
@@ -18,7 +17,10 @@ public class Bat : Enemy
             CurrentHealth = boss_Entity.Health;
             boss_Pool.InitializeProjectilePool("Boss/Normal/Bat/");         
             MovePosition = GetRandomPosition();
-            Game_Manager.Instance.ReloadNPCProperties(photonView, boss_Entity, CurrentHealth);
+
+            // Set initial Custom Properties for this NPC
+
+            SetUpNPC();
         }
 
         LoadHealthUI();
@@ -87,7 +89,7 @@ public class Bat : Enemy
     {
         if (TargetPosition != Vector3.zero)
         {
-            GameObject SkillOne = PhotonNetwork.Instantiate(a.name, Vector3.zero, Quaternion.identity);
+            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
             FlipToTarget();
             direction = TargetPosition - transform.Find("MainPoint").position;
 
