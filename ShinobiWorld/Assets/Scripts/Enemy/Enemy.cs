@@ -150,6 +150,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     {
         areaBoss_Entity.CurrentHealth -= Damage;
         LoadProperties();
+        Debug.Log("1");
         LoadHealthUI();
     }
 

@@ -79,15 +79,18 @@ public class SupportCharacter : PlayerBase
 
     public void NormalAttackDamage()
     {
-        RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
-
-        if (HitEnemy != null)
+        if (photonView.IsMine)
         {
-            foreach (RaycastHit2D Enemy in HitEnemy)
+            RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
+
+            if (HitEnemy != null)
             {
-                if (Enemy.transform.CompareTag("Enemy"))
+                foreach (RaycastHit2D Enemy in HitEnemy)
                 {
-                    //Enemy.transform.GetComponent<Enemy>().take
+                    if (Enemy.transform.CompareTag("Enemy"))
+                    {
+                        Enemy.transform.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage);
+                    }
                 }
             }
         }
@@ -95,45 +98,54 @@ public class SupportCharacter : PlayerBase
 
     public void Animation_SkillOne()
     {
-        if (SteelFist != null)
+        if (photonView.IsMine)
         {
-            StopCoroutine(SteelFist);
-            SetUpSteelFist(-SteelFist_DamageBonus);
-            SteelFist = null;
-        }
+            if (SteelFist != null)
+            {
+                StopCoroutine(SteelFist);
+                SetUpSteelFist(-SteelFist_DamageBonus);
+                SteelFist = null;
+            }
 
-        SteelFist = StartCoroutine(IE_SteelFist());
+            SteelFist = StartCoroutine(IE_SteelFist());
+        }
     }
 
     public void Animation_SkillTwo()
     {
-        if (Blessing != null)
+        if (photonView.IsMine)
         {
-            // If a color change coroutine is already running, stop it
-            StopCoroutine(Blessing);
-            SetUpBlessing(Blessing_SpeedBonus, 0);
-            Blessing = null;
-        }
+            if (Blessing != null)
+            {
+                // If a color change coroutine is already running, stop it
+                StopCoroutine(Blessing);
+                SetUpBlessing(Blessing_SpeedBonus, 0);
+                Blessing = null;
+            }
 
-        Blessing = StartCoroutine(IE_Blessing());
+            Blessing = StartCoroutine(IE_Blessing());
+        }
     }
 
     public void Animation_SkillThree()
     {
-        GameObject skillThree = playerPool.GetSkillThreeFromPool();
-
-        FlipToMouse();
-
-        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-        SkillDirection.Normalize();
-
-        if (skillThree != null)
+        if (photonView.IsMine)
         {
-            skillThree.transform.position = AttackPoint.position;
-            skillThree.transform.rotation = AttackPoint.rotation;
-            skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
-            skillThree.SetActive(true);
-            skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
+            GameObject skillThree = playerPool.GetSkillThreeFromPool();
+
+            FlipToMouse();
+
+            SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+            SkillDirection.Normalize();
+
+            if (skillThree != null)
+            {
+                skillThree.transform.position = AttackPoint.position;
+                skillThree.transform.rotation = AttackPoint.rotation;
+                skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+                skillThree.SetActive(true);
+                skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
+            }
         }
     }
 
@@ -162,15 +174,21 @@ public class SupportCharacter : PlayerBase
 
     public void SetUpSteelFist(int Damage)
     {
-        DamageBonus += Damage;
-        Debug.Log(DamageBonus);
+        if (photonView.IsMine)
+        {
+            DamageBonus += Damage;
+            Debug.Log(DamageBonus);
+        }
     }
 
     public void SetUpBlessing(int Speed, int Health)
     {
-        SpeedBonus += Speed;
-        HealAmountOfHealth(Health);
-        Debug.Log(DamageBonus);
+        if (photonView.IsMine)
+        {
+            SpeedBonus += Speed;
+            HealAmountOfHealth(Health);
+            Debug.Log(DamageBonus);
+        }
     }
 
     private void OnDrawGizmos()
