@@ -64,9 +64,7 @@ public class Player_AllUIManagement : MonoBehaviour
         {
             ExperienceTxt.text = "Cấp tối đa!";
             CurrentExpBar.fillAmount = 1f;
-        }
-
-        
+        } 
     }
 
     public void LoadNameUI(string Name)

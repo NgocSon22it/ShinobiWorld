@@ -174,21 +174,17 @@ public class SupportCharacter : PlayerBase
 
     public void SetUpSteelFist(int Damage)
     {
-        if (photonView.IsMine)
-        {
-            DamageBonus += Damage;
-            Debug.Log(DamageBonus);
-        }
+
+        DamageBonus += Damage;
+        Debug.Log(DamageBonus);
+
     }
 
     public void SetUpBlessing(int Speed, int Health)
     {
-        if (photonView.IsMine)
-        {
-            SpeedBonus += Speed;
-            HealAmountOfHealth(Health);
-            Debug.Log(DamageBonus);
-        }
+        SpeedBonus += Speed;
+        HealAmountOfHealth(Health);
+        Debug.Log(DamageBonus);
     }
 
     private void OnDrawGizmos()
