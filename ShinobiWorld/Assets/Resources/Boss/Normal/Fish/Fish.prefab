@@ -284,7 +284,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.19348717, y: 0.23631}
@@ -406,7 +406,16 @@ MonoBehaviour:
     Image: 
     Description: 
     Delete: 0
-  CurrentHealth: 0
+  areaBoss_Entity:
+    ID: 
+    AreaID: 
+    BossID: 
+    isDead: 0
+    CurrentHealth: 0
+    Delete: 0
+  AreaName: 
+  EnemyID: 
+  PoolExtension: 
   movementBounds: {fileID: 8229143253340824304}
   isMoving: 1
   Break_CurrentTime: 0

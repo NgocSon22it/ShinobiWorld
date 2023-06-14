@@ -26,12 +26,13 @@ public class SwingSword : PlayerSkill
     {
         base.OnEnable();
         angle = 1.5f;
-        LifeTime = 5f;
+        LifeTime = 100f;
         StartCoroutine(LogTriggeredObjects());
     }
     new void OnDisable()
     {
         base.OnDisable();
+        StopAllCoroutines();
     }
 
     private void Update()

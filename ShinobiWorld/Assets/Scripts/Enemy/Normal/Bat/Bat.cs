@@ -6,25 +6,12 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
+
+    
     // Start is called before the first frame update
     new void Start()
     {
-        base.Start();
-        if (photonView.IsMine)
-        {
-            boss_Entity.ID = "Boss_Bat";
-            boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-            CurrentHealth = boss_Entity.Health;
-            boss_Pool.InitializeProjectilePool("Boss/Normal/Bat/");         
-            MovePosition = GetRandomPosition();
-
-            // Set initial Custom Properties for this NPC
-
-            SetUpNPC();
-        }
-
-        LoadHealthUI();
-
+        base.Start();       
     }
     new void Update()
     {

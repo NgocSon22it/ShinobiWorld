@@ -303,6 +303,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             player_LevelManagement.AddExperience(Amount);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
+        }
+    }
+
+    public void EarnAmountOfCoin(int Amount)
+    {
+        if (photonView.IsMine)
+        {
+            AccountEntity.Coin += Amount;
+            References.accountRefer.Coin += Amount;
+            LoadProperties();
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
 
         }
     }
@@ -355,15 +366,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                EarnAmountOfExperience(100);
-            }
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                TakeDamage(100);
-            }
-
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -407,8 +409,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (AccountEntity.CurrentHealth <= 0)
         {
             AccountEntity.CurrentHealth = 0;
-
-
+            References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
             CancelInvoke(nameof(RegenChakra));
             CancelInvoke(nameof(RegenHealth));
 
