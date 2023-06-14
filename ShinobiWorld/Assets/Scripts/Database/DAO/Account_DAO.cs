@@ -132,8 +132,8 @@ namespace Assets.Scripts.Database.DAO
                             Level = Convert.ToInt32(dr["Level"]),
                             Health = Convert.ToInt32(dr["Health"]),
                             CurrentHealth = Convert.ToInt32(dr["CurrentHealth"]),
-                            Charka = Convert.ToInt32(dr["Charka"]),
-                            CurrentCharka = Convert.ToInt32(dr["CurrentCharka"]),
+                            Chakra = Convert.ToInt32(dr["Chakra"]),
+                            CurrentChakra = Convert.ToInt32(dr["CurrentChakra"]),
                             Exp = Convert.ToInt32(dr["Exp"]),
                             Speed = Convert.ToInt32(dr["Speed"]),
                             Coin = Convert.ToInt32(dr["Coin"]),
@@ -230,14 +230,14 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set TrophiesID = @Trophie, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Charka = @Chakra, CurrentCharka = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
+                cmd.CommandText = "Update Account set TrophiesID = @Trophie, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Chakra = @Chakra, CurrentChakra = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
                 cmd.Parameters.AddWithValue("@Trophie", account_Entity.TrophiesID);
                 cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
                 cmd.Parameters.AddWithValue("@Health", account_Entity.Health);
                 cmd.Parameters.AddWithValue("@CurrentHealth", account_Entity.CurrentHealth);
-                cmd.Parameters.AddWithValue("@Chakra", account_Entity.Charka);
-                cmd.Parameters.AddWithValue("@CurrentChakra", account_Entity.CurrentCharka);
+                cmd.Parameters.AddWithValue("@Chakra", account_Entity.Chakra);
+                cmd.Parameters.AddWithValue("@CurrentChakra", account_Entity.CurrentChakra);
                 cmd.Parameters.AddWithValue("@Exp", account_Entity.Exp);
                 cmd.Parameters.AddWithValue("@Coin", account_Entity.Coin);
                 cmd.Parameters.AddWithValue("@Power", account_Entity.Power);

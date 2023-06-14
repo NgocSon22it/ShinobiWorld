@@ -32,6 +32,10 @@ public class Message
     public static string IsUsing = "Đang sử dụng";
     public static string Skill_Unlock = "Bạn cần đạt cấp độ {0} để mở khóa!";
 
-    public static string MissionFinish = "Hoàn thành";
+    public static string MissionFinish = "Trạng thái: Hoàn thành";
+    public static string MissionNone = "Bạn không có nhiệm vụ nào. \nVui lòng đến nhà Hokage để nhận nhiệm vụ.";
+    public static string MissionBonusEquipDupli = "Vì bạn đã sở hữu trang bị {0} nên hệ thống đã quy đổi thành vàng";
+    public static string MissionProgress = "Trạng thái: {0}/{1}";
+
 
 }
