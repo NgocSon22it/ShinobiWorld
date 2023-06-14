@@ -84,4 +84,8 @@ public class Player_AllUIManagement : MonoBehaviour
         ChakraNumberTxt.text = CurrentChakra + " / " + TotalChakra;
     }
 
+    public void ShowDetailInfo()
+    {
+        Player_Info.Instance.OnAvatarBtnClick();
+    }
 }
