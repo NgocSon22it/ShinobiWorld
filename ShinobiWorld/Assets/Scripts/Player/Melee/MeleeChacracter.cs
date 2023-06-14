@@ -86,7 +86,7 @@ public class MeleeChacracter : PlayerBase
                 {
                     if (Enemy.gameObject.CompareTag("Enemy"))
                     {
-                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage);
+                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
                     }
                 }
             }
@@ -153,14 +153,11 @@ public class MeleeChacracter : PlayerBase
 
     public void SetUpRighteous(Color color, float Intensity, int Damage)
     {
-        if (photonView.IsMine)
-        {
-            DamageBonus += Damage;
+        DamageBonus += Damage;
 
-            Sword.material.SetColor("_GlowColor", color * Intensity);
+        Sword.material.SetColor("_GlowColor", color * Intensity);
 
-            Debug.Log(DamageBonus);
-        }
+        Debug.Log(DamageBonus);
 
     }
 

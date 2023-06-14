@@ -49,6 +49,8 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
     public float LocalScaleX;
 
+    PlayerBase[] players;
+
     // MainPoint
     [SerializeField] Transform MainPoint;
 
@@ -125,13 +127,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Update()
     {
-        if (photonView.IsMine)
-        {
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                //ReloadNPCProperties();
-            }
-        }
     }
 
     public void LoadHealthUI()
@@ -150,7 +145,25 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     {
         areaBoss_Entity.CurrentHealth -= Damage;
         LoadProperties();
-        Debug.Log("1");
+        if (areaBoss_Entity.CurrentHealth <= 0)
+        {
+            players = GameObject.FindObjectsOfType<PlayerBase>();
+
+            // Iterate through the players and find the one with the desired ID
+            foreach (PlayerBase player in players)
+            {
+                if (player.AccountEntity.ID == UserID)
+                {
+                    // Player found, do something with it
+                    Debug.Log("Player found: " + player.gameObject.name);
+                    player.EarnAmountOfExperience(boss_Entity.ExpBonus);
+                    player.EarnAmountOfCoin(boss_Entity.CoinBonus);
+                    break;
+                }
+            }
+            gameObject.SetActive(false);
+
+        }
         LoadHealthUI();
     }
 

@@ -303,6 +303,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             player_LevelManagement.AddExperience(Amount);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
+        }
+    }
+
+    public void EarnAmountOfCoin(int Amount)
+    {
+        if (photonView.IsMine)
+        {
+            AccountEntity.Coin += Amount;
+            References.accountRefer.Coin += Amount;
+            LoadProperties();
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
 
         }
     }
@@ -354,15 +365,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillOne();
             SkillTwo();
             SkillThree();
-
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                EarnAmountOfExperience(100);
-            }
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                TakeDamage(100);
-            }
 
             if (!CanWalking)
             {
