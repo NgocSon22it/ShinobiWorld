@@ -213,7 +213,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
         Name_Player.text = "Thien";
         Level_Player.text = References.accountRefer.Level.ToString();
         Health_Player.text = References.accountRefer.Health.ToString();
-        Chakra_Player.text = References.accountRefer.Charka.ToString();
+        Chakra_Player.text = References.accountRefer.Chakra.ToString();
         Strength_Player.text = References.accountRefer.Strength.ToString();
         Power_Player.text = References.accountRefer.Power.ToString();
         Exp_Player.text = References.accountRefer.Exp.ToString();

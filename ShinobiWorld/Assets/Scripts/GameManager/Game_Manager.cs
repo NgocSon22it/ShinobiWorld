@@ -156,7 +156,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public void GoingOutHospital()
     {
         References.accountRefer.CurrentHealth = References.accountRefer.Health;
-        References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+        References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
         References.UpdateAccountToDB();
         ReloadPlayerProperties();
