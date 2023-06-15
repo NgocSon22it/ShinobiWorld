@@ -58,6 +58,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public bool IsBusy;
 
+    public Vector3 ObjectPool_Place;
+
     private void Awake()
     {
         Instance = this;

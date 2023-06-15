@@ -23,51 +23,54 @@ public class Bat : Enemy
 
     public void AttackAndMove()
     {
-        if (playerInRange)
+        if (photonView.IsMine)
         {
-            // Stop moving
-            isMoving = false;
-        }
-        else
-        {
-            if (isMoving)
+            if (playerInRange)
             {
-                transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
-
-                if (transform.position == MovePosition)
-                {
-                    Break_CurrentTime = Break_TotalTime;
-                    isMoving = false;
-                }
-
+                // Stop moving
+                isMoving = false;
             }
             else
             {
-                Break_CurrentTime -= Time.deltaTime;
-
-                if (Break_CurrentTime <= 0f)
+                if (isMoving)
                 {
-                    MovePosition = GetRandomPosition();
-                    isMoving = true;
+                    transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
+
+                    if (transform.position == MovePosition)
+                    {
+                        Break_CurrentTime = Break_TotalTime;
+                        isMoving = false;
+                    }
+
+                }
+                else
+                {
+                    Break_CurrentTime -= Time.deltaTime;
+
+                    if (Break_CurrentTime <= 0f)
+                    {
+                        MovePosition = GetRandomPosition();
+                        isMoving = true;
+                    }
                 }
             }
+            FindTarget_CurrentTime += Time.deltaTime;
+
+            // Check if the interval has passed
+            if (FindTarget_CurrentTime >= FindTarget_TotalTime)
+            {
+                TargetPosition = FindClostestTarget(detectionRadius, "Player");
+                FindTarget_CurrentTime = 0f;
+            }
+
+            playerInRange = TargetPosition != Vector3.zero;
+            // Restrict movement to the move area
+            clampedPosition = movementBounds.ClosestPoint(transform.position);
+            transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
+
+            animator.SetBool("PlayerInRange", playerInRange);
+            animator.SetBool("Walk", isMoving);
         }
-       /* FindTarget_CurrentTime += Time.deltaTime;
-
-        // Check if the interval has passed
-        if (FindTarget_CurrentTime >= FindTarget_TotalTime)
-        {
-            TargetPosition = FindClostestTarget(detectionRadius, "Player");
-            FindTarget_CurrentTime = 0f;
-        }*/
-
-        //playerInRange = TargetPosition != Vector3.zero;
-        // Restrict movement to the move area
-        clampedPosition = movementBounds.ClosestPoint(transform.position);
-        transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
-
-        //animator.SetBool("PlayerInRange", playerInRange);
-        animator.SetBool("Walk", isMoving);
     }
 
     public void Animation_SkillOne()

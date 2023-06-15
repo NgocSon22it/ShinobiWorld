@@ -148,20 +148,8 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         LoadProperties();
         if (areaBoss_Entity.CurrentHealth <= 0)
         {
-            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
-
-            players = GameObject.FindObjectsOfType<PlayerBase>();
-
-            // Iterate through the players and find the one with the desired ID
-            foreach (PlayerBase player in players)
-            {
-                if (player.AccountEntity.ID == UserID)
-                {
-                    player.EarnAmountOfExperience(boss_Entity.ExpBonus);
-                    player.EarnAmountOfCoin(boss_Entity.CoinBonus);
-                    break;
-                }
-            }
+            References.AddExperience(boss_Entity.ExpBonus);
+            References.AddCoin(boss_Entity.CoinBonus);
             gameObject.SetActive(false);
 
         }
