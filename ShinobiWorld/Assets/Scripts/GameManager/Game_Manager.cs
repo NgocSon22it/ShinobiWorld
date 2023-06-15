@@ -122,7 +122,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                 enemyScript.SetUpEnemy();
                 enemyScript.enabled = true;
             }
-        } 
+        }
     }
 
 
@@ -223,7 +223,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     private void OnApplicationQuit()
     {
-        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        References.UpdateAccountToDB();
+        if (References.accountRefer != null)
+        {
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+            References.UpdateAccountToDB();
+        }
     }
 }
