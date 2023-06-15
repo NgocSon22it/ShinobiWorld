@@ -11,12 +11,19 @@ using System.Security.Principal;
 using UnityEngine.InputSystem;
 using UnityEngine.LowLevel;
 using UnityEngine.Rendering;
+using Photon.Realtime;
 
 public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 {
     // Entity
-    protected Boss_Entity boss_Entity = new Boss_Entity();
-    protected int CurrentHealth;
+    public Boss_Entity boss_Entity = new Boss_Entity();
+
+    public AreaBoss_Entity areaBoss_Entity = new AreaBoss_Entity();
+
+    //Separate
+    public string AreaName;
+    public string EnemyID;
+    public string PoolExtension;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -25,14 +32,15 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     Vector2 randomPosition;
 
 
-    protected Vector3 MovePosition;
+    public Vector3 MovePosition;
     public bool isMoving = true;
 
     public float Break_CurrentTime;
     public float Break_TotalTime = 2f;
 
-    protected GameObject Target;
-    protected bool playerInRange = false;
+    public Vector3 TargetPosition;
+
+    public bool playerInRange = false;
     public Vector3 clampedPosition;
     public float detectionRadius = 5f;
 
@@ -71,21 +79,59 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         boss_Pool = GetComponent<Boss_Pool>();
     }
 
+    public void SetUpEntity(string EnemyID, string AreaName, string PoolExtension)
+    {
+        photonView.RPC(nameof(SyncEntity), RpcTarget.AllBuffered, EnemyID, AreaName, PoolExtension);
+    }
+
+    [PunRPC]
+    public void SyncEntity(string EnemyID, string AreaName, string PoolExtension)
+    {
+        this.EnemyID = EnemyID;
+        this.AreaName = AreaName;
+        this.PoolExtension = PoolExtension;
+        SetUpComponent();
+        boss_Pool.InitializeProjectilePool(PoolExtension);
+        boss_Entity = Boss_DAO.GetBossByID(EnemyID);
+        areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+    }
+
+    public void SetUpEnemy()
+    {
+        if (photonView.IsMine)
+        {
+            if (boss_Entity != null && areaBoss_Entity != null)
+            {             
+                LoadHealthUI();
+                
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void LoadProperties()
+    {
+        AreaBoss_DAO.UpdateAreaBoss(areaBoss_Entity);
+    }
+
     public void Start()
     {
-        SetUpComponent();      
+                
         LocalScaleX = transform.localScale.x;
+        MovePosition = GetRandomPosition();
     }
 
     public void Update()
     {
-
     }
 
     public void LoadHealthUI()
     {
-        HealthNumber.text = CurrentHealth + " / " + boss_Entity.Health;
-        CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)boss_Entity.Health;
+        HealthNumber.text = areaBoss_Entity.CurrentHealth + " / " + boss_Entity.Health;
+        CurrentHealth_UI.fillAmount = (float)areaBoss_Entity.CurrentHealth / (float)boss_Entity.Health;
     }
 
     public void TakeDamage(string UserID, int Damage)
@@ -93,16 +139,19 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, UserID, Damage);
     }
 
-
     [PunRPC]
     public void TakeDamageSync(string UserID, int Damage)
     {
-        CurrentHealth -= Damage;
-        LoadHealthUI();
-        if (CurrentHealth < 0)
+        areaBoss_Entity.CurrentHealth -= Damage;
+        LoadProperties();
+        if (areaBoss_Entity.CurrentHealth <= 0)
         {
-            Debug.Log(UserID);
+            References.AddExperience(boss_Entity.ExpBonus);
+            References.AddCoin(boss_Entity.CoinBonus);
+            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
+            gameObject.SetActive(false);
         }
+        LoadHealthUI();
     }
 
     public Vector2 GetRandomPosition()
@@ -152,58 +201,54 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            if (MainPoint.position.x < Target.transform.position.x  && !FacingRight)
+            if (MainPoint.position.x < TargetPosition.x && !FacingRight)
             {
                 Flip();
             }
-            else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
+            else if (MainPoint.position.x > TargetPosition.x && FacingRight)
             {
                 Flip();
             }
         }
     }
 
-    [PunRPC]
-    public void SyncFindTarget()
-    {
-        Target = FindClostestTarget(detectionRadius, "Player");
-    }
-
-
-    public GameObject FindClostestTarget(float Range, string TargetTag)
+    public Vector3 FindClostestTarget(float Range, string TargetTag)
     {
         float distanceToClosestTarget = Mathf.Infinity;
-        GameObject closestTarget = null;
+        Vector3 closestTargetPosition = Vector3.zero;
+
         GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
 
 
         foreach (GameObject currentTarget in allTarget)
         {
             float distanceToTarget = (currentTarget.transform.position - this.transform.position).sqrMagnitude;
-            if (distanceToTarget < distanceToClosestTarget 
+            if (distanceToTarget < distanceToClosestTarget
                 && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range
                 && currentTarget.GetComponent<BoxCollider2D>().enabled)
             {
                 distanceToClosestTarget = distanceToTarget;
-                closestTarget = currentTarget;
+                closestTargetPosition = currentTarget.transform.Find("MainPoint").position;
 
             }
         }
 
-        return closestTarget;
+        return closestTargetPosition;
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(CurrentHealth);
+            stream.SendNext(areaBoss_Entity.CurrentHealth);
+            stream.SendNext(boss_Entity.ID);
             stream.SendNext(boss_Entity.Health);
             stream.SendNext(transform.position);
 
             stream.SendNext(playerInRange);
             stream.SendNext(isMoving);
 
+            stream.SendNext(TargetPosition);
 
             stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
 
@@ -211,14 +256,20 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         }
         else
         {
-            CurrentHealth = (int)stream.ReceiveNext();
+            areaBoss_Entity.CurrentHealth = (int)stream.ReceiveNext();
+            boss_Entity.ID = (string)stream.ReceiveNext();
             boss_Entity.Health = (int)stream.ReceiveNext();
             MovePosition = (Vector3)stream.ReceiveNext();
 
             playerInRange = (bool)stream.ReceiveNext();
             isMoving = (bool)stream.ReceiveNext();
 
+            TargetPosition = (Vector3)stream.ReceiveNext();
+
             HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
+
+            LoadHealthUI();
+
         }
     }
 }

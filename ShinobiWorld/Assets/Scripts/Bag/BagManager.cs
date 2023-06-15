@@ -32,12 +32,14 @@ namespace Assets.Scripts.Shop
 
         public void OnBagBtnClick()
         {
+            Game_Manager.Instance.IsBusy = true;
             Panel.SetActive(true);
             OnItemBtnClick();
         }
 
         public void OnItemBtnClick()
         {
+            Game_Manager.Instance.IsBusy = true;
             References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
             CloseDetail();
@@ -50,6 +52,7 @@ namespace Assets.Scripts.Shop
 
         public void OnEquipmentBtnClick()
         {
+            Game_Manager.Instance.IsBusy = true;
             References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
             CloseDetail();
@@ -71,6 +74,7 @@ namespace Assets.Scripts.Shop
             Panel.SetActive(false);
             CloseDetail();
             DestroyContent();
+            Game_Manager.Instance.IsBusy = false;
         }
 
         public void ShowMessage()

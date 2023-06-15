@@ -24,9 +24,9 @@ public class Player_ButtonManagement : MonoBehaviour
     {
         if (Player != null)
         {
-            SkillOne();
-            SkillTwo();
-            SkillThree();
+           // SkillOne();
+           // SkillTwo();
+           // SkillThree();
         }
     }
 
@@ -35,7 +35,7 @@ public class Player_ButtonManagement : MonoBehaviour
         Player = player.GetComponent<PlayerBase>();
     }
 
-    public void SkillOne()
+    /*public void SkillOne()
     {
         if(Player.GetComponent<PlayerBase>().SkillOne_Entity != null)
         {
@@ -48,7 +48,7 @@ public class Player_ButtonManagement : MonoBehaviour
             else
             {
                 SkillOne_Cooldown.SetActive(false);
-                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillOne_Entity.Chakra)
+                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentChakra >= Player.GetComponent<PlayerBase>().SkillOne_Entity.Chakra)
                 {
                     SkillOne_LowChakra.SetActive(false);
                 }
@@ -62,9 +62,9 @@ public class Player_ButtonManagement : MonoBehaviour
         {
             SkillOne_Lock.SetActive(true);           
         }         
-    }
+    }*/
 
-    public void SkillTwo()
+   /* public void SkillTwo()
     {
         if(Player.GetComponent<PlayerBase>().SkillTwo_Entity != null)
         {
@@ -78,7 +78,7 @@ public class Player_ButtonManagement : MonoBehaviour
             else
             {
                 SkillTwo_Cooldown.SetActive(false);
-                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillTwo_Entity.Chakra)
+                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentChakra >= Player.GetComponent<PlayerBase>().SkillTwo_Entity.Chakra)
                 {
                     SkillTwo_LowChakra.SetActive(false);
                 }
@@ -94,9 +94,9 @@ public class Player_ButtonManagement : MonoBehaviour
 
         }
 
-    }
+    }*/
 
-    public void SkillThree()
+    /*public void SkillThree()
     {
         if (Player.GetComponent<PlayerBase>().SkillThree_Entity != null)
         {
@@ -109,7 +109,7 @@ public class Player_ButtonManagement : MonoBehaviour
             else
             {
                 SkillThree_Cooldown.SetActive(false);
-                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentCharka >= Player.GetComponent<PlayerBase>().SkillThree_Entity.Chakra)
+                if (Player.GetComponent<PlayerBase>().AccountEntity.CurrentChakra >= Player.GetComponent<PlayerBase>().SkillThree_Entity.Chakra)
                 {
                     SkillThree_LowChakra.SetActive(false);
                 }
@@ -123,6 +123,6 @@ public class Player_ButtonManagement : MonoBehaviour
         {
             SkillThree_Lock.SetActive(true);
         }
-    }
+    }*/
 
 }

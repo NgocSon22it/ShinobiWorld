@@ -29,9 +29,9 @@ public class Skill_Manager : MonoBehaviour
     [SerializeField] TMP_Text SkillDescriptionTxt;
     [SerializeField] TMP_Text ButtonCoinTxt;
 
-    [SerializeField] GameObject CanBuyPanel;
-    [SerializeField] GameObject CanNotBuyPanel;
-    [SerializeField] GameObject OwnPanel;
+    [Header("Status")]
+    [SerializeField] GameObject BuyButtonPanel;
+    [SerializeField] GameObject UpgradeButtonPanel;
 
     [Header("Upgrade Skill")]
     [SerializeField] GameObject UpgradePanel;
@@ -54,12 +54,7 @@ public class Skill_Manager : MonoBehaviour
     [SerializeField] GameObject CanUpgradePanel;
     [SerializeField] GameObject CanNotUpgradePanel;
 
-
-
-
-    [SerializeField] TMP_Text CanNotBuyText;
-
-    [SerializeField] TMP_Text BuySkillErrorTxt;
+    [SerializeField] TMP_Text ErrorTxt;
     [SerializeField] TMP_Text UpgradeSkillErrorTxt;
 
     public Skill_Entity SkillSelected;
@@ -85,28 +80,28 @@ public class Skill_Manager : MonoBehaviour
 
         if (!SkillSelected.RoleInGameID.Equals(References.accountRefer.RoleInGameID))
         {
-            SetUpBuyPanel(false, true, false);
-            CanNotBuyText.text = "Kỹ năng này không trong vai trò của bạn!";
+            SetUpBuyPanel(false, false);
+            ErrorTxt.text = "Kỹ năng này không trong vai trò của bạn!";
         }
         else
         {
             if (References.accountRefer.Level < SkillSelected.LevelUnlock)
             {
-                CanNotBuyText.text = "Bạn cần đạt cấp độ " + SkillSelected.LevelUnlock + " để mở khóa!";
-                SetUpBuyPanel(false, true, false);
+                ErrorTxt.text = "Bạn cần đạt cấp độ " + SkillSelected.LevelUnlock + " để mở khóa!";
+                SetUpBuyPanel(false, false);
             }
             else
             {
 
                 if (CheckSkillOwned())
                 {
-                    SetUpBuyPanel(false, false, true);
-                    CanNotBuyText.text = "";
+                    SetUpBuyPanel(false, true);
+                    ErrorTxt.text = "";
                 }
                 else
                 {
-                    SetUpBuyPanel(true, false, false);
-                    CanNotBuyText.text = "";
+                    SetUpBuyPanel(true,false);
+                    ErrorTxt.text = "";
                 }
             }
         }
@@ -198,16 +193,16 @@ public class Skill_Manager : MonoBehaviour
             Skill_DAO.BuySkill(References.accountRefer.ID, SkillSelected);
             References.accountRefer.Coin -= SkillSelected.BuyCost;
 
-            References.LoadAccount();
-            Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().LoadAccountSkill();
+            References.UpdateAccountToDB();
+            Game_Manager.Instance.ReloadPlayerProperties();
 
             LoadSkillList();
             SetUpSelectedSkill(SkillSelected);
-            BuySkillErrorTxt.text = "";
+            ErrorTxt.text = "";
         }
         else
         {
-            BuySkillErrorTxt.text = "Bạn không đủ xu để mua!";
+            ErrorTxt.text = "Bạn không đủ xu để mua!";
         }
     }
 
@@ -217,11 +212,11 @@ public class Skill_Manager : MonoBehaviour
         {
             Skill_DAO.UpgradeSkill(References.accountRefer.ID, SkillSelected.ID, DamageBonus, CooldownBonus, ChakraBonus);
             References.accountRefer.Coin -= SkillSelected.UpgradeCost;
-            References.LoadAccount();
+            References.UpdateAccountToDB();
 
             PlayerCoinTxt.text = References.accountRefer.Coin.ToString();
+            Game_Manager.Instance.ReloadPlayerProperties();
 
-            Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().LoadAccountSkill();
             Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(References.accountRefer.Coin);
             SetUpInformationUpgradeSkill();
             UpgradeSkillErrorTxt.text = "";
@@ -239,27 +234,27 @@ public class Skill_Manager : MonoBehaviour
             SetUpSelectedSkill(References.ListSkill[0]);
             LoadSkillList();
             SkillPanel.SetActive(true);
-
+            Game_Manager.Instance.IsBusy = true;
         }
     }
 
     public void CloseSkillPanel()
     {
         SkillPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
     }
 
 
     public void ResetErrorMessage()
     {
         UpgradeSkillErrorTxt.text = "";
-        BuySkillErrorTxt.text = "";
+        ErrorTxt.text = "";
     }
 
-    public void SetUpBuyPanel(bool CanBuyValue, bool CanNotBuyValue, bool OwnValue)
+    public void SetUpBuyPanel(bool buyValue, bool UpgradeValue)
     {
-        CanBuyPanel.SetActive(CanBuyValue);
-        CanNotBuyPanel.SetActive(CanNotBuyValue);
-        OwnPanel.SetActive(OwnValue);
+        BuyButtonPanel.SetActive(buyValue);
+        UpgradeButtonPanel.SetActive(UpgradeValue);
     }
 
     public void SetUpUpgradePanel(bool CanUpgradeValue, bool CanNotUpgradeValue)

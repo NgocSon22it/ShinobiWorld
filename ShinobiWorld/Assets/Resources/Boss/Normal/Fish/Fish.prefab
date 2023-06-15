@@ -269,8 +269,8 @@ MonoBehaviour:
   - {fileID: 6221241632378860529}
   - {fileID: 8497878158731083230}
   m_Bounds:
-    m_Center: {x: -0.05823803, y: 0.08201337, z: 0}
-    m_Extent: {x: 0.82856214, y: 0.7499466, z: 0}
+    m_Center: {x: -0.058238506, y: 0.08201337, z: 0}
+    m_Extent: {x: 0.82856166, y: 0.7499466, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -284,7 +284,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.19348717, y: 0.23631}
@@ -395,6 +395,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3c152cc6816429428e472f3d2afa54d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boss_Entity:
+    ID: 
+    TypeBossID: 
+    Name: 
+    Health: 0
+    Speed: 0
+    CoinBonus: 0
+    ExpBonus: 0
+    Image: 
+    Description: 
+    Delete: 0
+  areaBoss_Entity:
+    ID: 
+    AreaID: 
+    BossID: 
+    isDead: 0
+    CurrentHealth: 0
+    Delete: 0
+  AreaName: 
+  EnemyID: 
+  PoolExtension: 
   movementBounds: {fileID: 8229143253340824304}
   isMoving: 1
   Break_CurrentTime: 0
@@ -537,7 +558,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.06969738, y: -0.8084774}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -548,7 +569,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 10, y: 10}
+  m_Size: {x: 5.8461018, y: 8.383045}
   m_EdgeRadius: 0
 --- !u!1 &6366165767068804967
 GameObject:

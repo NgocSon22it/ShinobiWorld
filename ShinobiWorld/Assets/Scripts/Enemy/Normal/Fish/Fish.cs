@@ -1,5 +1,5 @@
-using Assets.Scripts.Database.Entity;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,25 +10,17 @@ public class Fish : Enemy
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            boss_Entity.ID = "Boss_Bat";
-            boss_Pool.InitializeProjectilePool("Boss/Normal/Fish/");
-            boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-            CurrentHealth = boss_Entity.Health;
-            MovePosition = GetRandomPosition();
-        }
-
-        LoadHealthUI();
     }
-
     new void Update()
     {
+        base.Update();
+
         if (photonView.IsMine)
         {
             AttackAndMove();
         }
     }
+
     public void AttackAndMove()
     {
         if (playerInRange)
@@ -65,44 +57,32 @@ public class Fish : Enemy
         // Check if the interval has passed
         if (FindTarget_CurrentTime >= FindTarget_TotalTime)
         {
-            if (FindClostestTarget(detectionRadius, "Player") != null)
-            {
-                photonView.RPC(nameof(SyncFindTarget), RpcTarget.AllBuffered);
-            }
-            else
-            {
-                Target = null;
-                Debug.Log("Reduce");
-            }
-            // Call the RPC and reset the timer
+            TargetPosition = FindClostestTarget(detectionRadius, "Player");
             FindTarget_CurrentTime = 0f;
         }
 
-        // Update the player in range status
-        playerInRange = Target != null;
-
+        playerInRange = TargetPosition != Vector3.zero;
         // Restrict movement to the move area
         clampedPosition = movementBounds.ClosestPoint(transform.position);
         transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
 
-        animator.SetBool("Attack", playerInRange);
+        //animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
     }
 
-
     public void Animation_SkillOne()
     {
-        if (Target != null)
+        if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
             FlipToTarget();
-            direction = Target.transform.Find("MainPoint").position - transform.Find("MainPoint").position;
+            direction = TargetPosition - transform.Find("MainPoint").position;
 
             if (SkillOne != null)
             {
                 SkillOne.transform.position = transform.position;
                 SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Fish_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }

@@ -11,18 +11,54 @@ using ExitGames.Client.Photon;
 using Photon.Pun.Demo.PunBasics;
 using System.Threading;
 using Assets.Scripts.Hospital;
+using UnityEngine.UIElements;
+using Assets.Scripts.Database.Entity;
+using System.Data;
+using Unity.VisualScripting;
+using System.Data.SqlTypes;
+using System;
+
+public class EnemyInfo
+{
+    public string EnemyID;
+    public string Extension;
+    public string AreaName;
+
+    public GameObject enemyPrefab;
+    public Vector3 SpawnPosition;
+
+    public Boss_Entity boss_Entity;
+    public AreaBoss_Entity areaBoss_Entity;
+
+    public void SetBossEntity() { boss_Entity = Boss_DAO.GetBossByID(EnemyID); }
+    public void SetAreaBossEntity() { areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID); }
+
+}
+
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
     public GameObject PlayerManager;
 
+    public string Role;
+
     [SerializeField] GameObject PlayerMelee;
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
+    [SerializeField] GameObject BossPrefabs_Bat;
+    [SerializeField] GameObject BossPrefabs_Fish;
+    [SerializeField] GameObject BossPrefabs_Crap;
+
     public static Game_Manager Instance;
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
+
+    [SerializeField] List<EnemyInfo> SpawnList_LangLa1 = new List<EnemyInfo>();
+
+    public bool IsBusy;
+
+
     private void Awake()
     {
         Instance = this;
@@ -41,12 +77,56 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
+
     public override void OnJoinedRoom()
     {
-        
-        PhotonPeer.RegisterType(typeof(Account_Entity), (byte) 'A', Account_Entity.Serialize, Account_Entity.Deserialize);
+        PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SpawnNPC();
+        }
+
     }
+
+    public void SpawnNPC()
+    {
+        SpawnList_LangLa1.AddRange(new List<EnemyInfo>
+        {
+            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat1", SpawnPosition = new Vector3(-16, -15, 0)},
+            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat2", SpawnPosition = new Vector3(-16, -15, 0) },
+           // new EnemyInfo { EnemyID = "Boss_Fish", Extension = "Boss/Normal/Fish/", enemyPrefab = BossPrefabs_Fish, AreaName = "LL1_Fish1", SpawnPosition = new Vector3(-15, -13, 0) }
+        });
+
+
+        foreach (EnemyInfo enemyInfo in SpawnList_LangLa1)
+        {
+            enemyInfo.SetBossEntity();
+            enemyInfo.SetAreaBossEntity();
+
+            SqlDateTime sqlDateTime = new SqlDateTime(DateTime.Now);
+            Debug.Log(sqlDateTime);
+            Debug.Log(enemyInfo.areaBoss_Entity.TimeSpawn);
+
+
+            if (enemyInfo.areaBoss_Entity.isDead == false && sqlDateTime >= enemyInfo.areaBoss_Entity.TimeSpawn)
+            {
+
+                GameObject EnemyObject = PhotonNetwork.InstantiateRoomObject(enemyInfo.Extension + enemyInfo.enemyPrefab.name, enemyInfo.SpawnPosition, Quaternion.identity);
+                Enemy enemyScript = EnemyObject.GetComponentInChildren<Enemy>();
+
+                enemyScript.EnemyID = enemyInfo.EnemyID;
+                enemyScript.AreaName = enemyInfo.AreaName;
+                enemyScript.PoolExtension = enemyInfo.Extension;
+                enemyScript.SetUpEntity(enemyInfo.EnemyID, enemyInfo.AreaName, enemyInfo.Extension);
+                enemyScript.SetUpEnemy();
+                enemyScript.enabled = true;
+            }
+        }
+    }
+
+
+
 
     public void SetupPlayer(Vector3 position)
     {
@@ -55,19 +135,16 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             switch (References.accountRefer.RoleInGameID)
             {
                 case "Role_Melee":
+                    Role = "Melee";
                     PlayerManager = PhotonNetwork.Instantiate("Player/Melee/" + Path.Combine(PlayerMelee.name), position, Quaternion.identity);
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Sword");
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_MeleeOne", "Skill_MeleeTwo", "Skill_MeleeThree");
                     break;
                 case "Role_Range":
+                    Role = "Range";
                     PlayerManager = PhotonNetwork.Instantiate("Player/Range/" + Path.Combine(PlayerRange.name), position, Quaternion.identity);
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Dart");
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_RangeOne", "Skill_RangeTwo", "Skill_RangeThree");
                     break;
                 case "Role_Support":
+                    Role = "Support";
                     PlayerManager = PhotonNetwork.Instantiate("Player/Support/" + Path.Combine(PlayerSupport.name), position, Quaternion.identity);
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountWeaponName("Weapon_Glove");
-                    PlayerManager.GetComponent<PlayerBase>().SetUpAccountSkillName("Skill_SupportOne", "Skill_SupportTwo", "Skill_SupportThree");
                     break;
             }
             ReloadPlayerProperties();
@@ -75,14 +152,26 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
+
+
     public void ReloadPlayerProperties()
     {
+        References.LoadAccountWeaponNSkill(Role);
+        References.LoadAccount();
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
+        string AccountWeaponJson = JsonUtility.ToJson(References.accountWeapon);
+        string AccountSkillOneJson = JsonUtility.ToJson(References.accountSkillOne);
+        string AccountSkillTwoJson = JsonUtility.ToJson(References.accountSkillTwo);
+        string AccountSkillThreeJson = JsonUtility.ToJson(References.accountSkillThree);
+
         PlayerProperties["Account"] = AccountJson;
+        PlayerProperties["AccountWeapon"] = AccountWeaponJson;
+        PlayerProperties["AccountSkillOne"] = AccountSkillOneJson;
+        PlayerProperties["AccountSkillTwo"] = AccountSkillTwoJson;
+        PlayerProperties["AccountSkillThree"] = AccountSkillThreeJson;
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
     }
-
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.Log("Create Room Failed");
@@ -95,6 +184,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
+        References.UpdateAccountToDB();
         ReloadPlayerProperties();
     }
 
@@ -123,8 +213,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public void GoingOutHospital()
     {
         References.accountRefer.CurrentHealth = References.accountRefer.Health;
-        References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+        References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+        References.UpdateAccountToDB();
         ReloadPlayerProperties();
         PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
@@ -132,6 +223,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     private void OnApplicationQuit()
     {
-        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        if (References.accountRefer != null)
+        {
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+            References.UpdateAccountToDB();
+        }
     }
 }

@@ -81,6 +81,7 @@ public class RangeCharacter : PlayerBase
 
     public void Animation_NormalAttack()
     {
+
         GameObject normalAttack = playerPool.GetNormalAttackFromPool();
         FlipToMouse();
 
@@ -91,7 +92,10 @@ public class RangeCharacter : PlayerBase
         {
             normalAttack.transform.position = AttackPoint.position;
             normalAttack.transform.rotation = AttackPoint.rotation;
-            normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, References.accountWeapon.Damage + DamageBonus);
+            if (photonView.IsMine)
+            {
+                normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
+            }
             normalAttack.SetActive(true);
             normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
@@ -111,15 +115,18 @@ public class RangeCharacter : PlayerBase
         {
             skillOne.transform.position = AttackPoint.position;
             skillOne.transform.rotation = AttackPoint.rotation;
-            skillOne.GetComponent<SuperDart>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+            if (photonView.IsMine)
+            {
+                skillOne.GetComponent<SuperDart>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+            }
             skillOne.SetActive(true);
             skillOne.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
+
     }
 
     public void Animation_SkillTwo()
     {
-        GameObject centerDarts = playerPool.GetSkillTwoFromPool();
 
         FlipToMouse();
 
@@ -127,10 +134,14 @@ public class RangeCharacter : PlayerBase
         SkillDirection.Normalize();
 
 
+        GameObject centerDarts = playerPool.GetSkillTwoFromPool();
         if (centerDarts != null)
         {
             centerDarts.transform.position = AttackPoint.position;
-            centerDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            if (photonView.IsMine)
+            {
+                centerDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            }
             centerDarts.SetActive(true);
             centerDarts.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
@@ -139,7 +150,10 @@ public class RangeCharacter : PlayerBase
         if (leftDarts != null)
         {
             leftDarts.transform.position = AttackPoint.position;
-            leftDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            if (photonView.IsMine)
+            {
+                leftDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            }
             leftDarts.SetActive(true);
             leftDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
@@ -148,7 +162,10 @@ public class RangeCharacter : PlayerBase
         if (rightDarts != null)
         {
             rightDarts.transform.position = AttackPoint.position;
-            rightDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            if (photonView.IsMine)
+            {
+                rightDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            }
             rightDarts.SetActive(true);
             rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
@@ -157,15 +174,17 @@ public class RangeCharacter : PlayerBase
 
     public void Animation_SkillThree()
     {
-
-        if (Hunter != null)
+        if (photonView.IsMine)
         {
-            StopCoroutine(Hunter);
-            SetUpHunter(-Hunter_DamageBonus, -Hunter_SpeedBonus);
-            Hunter = null;
-        }
+            if (Hunter != null)
+            {
+                StopCoroutine(Hunter);
+                SetUpHunter(-Hunter_DamageBonus, -Hunter_SpeedBonus);
+                Hunter = null;
+            }
 
-        Hunter = StartCoroutine(IE_Hunter());
+            Hunter = StartCoroutine(IE_Hunter());
+        }
     }
 
 

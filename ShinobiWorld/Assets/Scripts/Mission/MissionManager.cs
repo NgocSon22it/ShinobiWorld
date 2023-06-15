@@ -9,6 +9,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using WebSocketSharp;
 
@@ -21,10 +22,24 @@ public class MissionManager : MonoBehaviour
     public GameObject MissionPanel;
     public Transform Content;
 
-    [Header("Status")]
-    public GameObject MissionUIObject;
-    public TMP_Text MissionContent;
-    public TMP_Text Status;
+    [Header("Progress")]
+    public GameObject ProgressPanel;
+    public TMP_Text ContentTxt;
+    public TMP_Text CurrentTxt;
+    public Button ProgressBtn;
+
+    [Header("Bonus")]
+    public GameObject BonusPanel;
+    public TMP_Text CoinTxt;
+    public TMP_Text ExpTxt;
+    public TMP_Text EquipmentTxt;
+    public Image EquipmentImg;
+
+    [Header("BonusEquipDupli")]
+    public GameObject BonusEquipDupliPanel;
+    public TMP_Text MessageTxt;
+    public TMP_Text SellCostTxt;
+    public Image EquipmentDupliImg;
 
     public Mission_Entity HavingMission = null;
     public AccountMission_Entity CurrentMission = null;
@@ -36,8 +51,9 @@ public class MissionManager : MonoBehaviour
         Instance = this;
     }
 
-    public void Setup()
+    public void Open()
     {
+        Game_Manager.Instance.IsBusy = true;
         var filterlist = References.listAccountMission = AccountMission_DAO.GetAllByUserID(References.accountRefer.ID);
         listMission = References.listMission.FindAll(obj => filterlist.Any(filter => filter.MissionID == obj.ID));
 
@@ -46,12 +62,7 @@ public class MissionManager : MonoBehaviour
             CurrentMission = filterlist.Find(obj => obj.Status == StatusMission.Doing);
             HavingMission = References.listMission.Find(obj => obj.ID == CurrentMission.MissionID);
         }
-    }
 
-    public void Open()
-    {
-
-        Setup();
         MissionPanel.SetActive(true);
         GetList();
     }
@@ -89,19 +100,58 @@ public class MissionManager : MonoBehaviour
     {
         Destroy();
         MissionPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
     }
 
-    public void LoadMissionUI()
+    public void LoadProgress()
     {
-        MissionUIObject.SetActive(true);
-        MissionContent.text = HavingMission.Content;
-        LoadStatusUI();
+        Game_Manager.Instance.IsBusy = true;
+        ProgressPanel.SetActive(true);
+
+        if (HavingMission != null)
+        {
+            ContentTxt.text = HavingMission.Content;
+
+            if (CurrentMission.Current == CurrentMission.Target) CurrentTxt.text = Message.MissionFinish;
+            else CurrentTxt.text = string.Format(Message.MissionProgress, CurrentMission.Current, CurrentMission.Target);
+        }else
+        {
+            CurrentTxt.text = "";
+            ContentTxt.text = Message.MissionNone;
+        }
     }
 
-    public void LoadStatusUI()
+    public void CloseProgress()
     {
-        if (CurrentMission.Current == CurrentMission.Target) Status.text = Message.MissionFinish;
-        else Status.text = string.Format("{0}/{1}", CurrentMission.Current, CurrentMission.Target);
+        ProgressPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
+    }
+
+    public void ShowBonus(int Coin, int Exp, string Name, string Image)
+    {
+        BonusPanel.SetActive(true);
+        CoinTxt.text = Coin.ToString();
+        ExpTxt.text = Exp.ToString();
+        EquipmentTxt.text = Name;
+        EquipmentImg.sprite = Resources.Load<Sprite>(Image);
+    }
+
+    public void CloseBonus()
+    {
+        BonusPanel.SetActive(false);
+    }
+
+    public void ShowMessageEquipmetDuplicate(int Coin, string Name, string Image)
+    {
+        BonusEquipDupliPanel.SetActive(true);
+        MessageTxt.text = string.Format(Message.MissionBonusEquipDupli, Name);
+        SellCostTxt.text = Coin.ToString();
+        EquipmentDupliImg.sprite = Resources.Load<Sprite>(Image);
+    }
+
+    public void CloseMessageEquipmetDuplicate()
+    {
+        BonusEquipDupliPanel.SetActive(false);
     }
 
     public void TakeMission(Mission_Entity selected)
@@ -116,7 +166,6 @@ public class MissionManager : MonoBehaviour
         References.listAccountMission[index].Status = StatusMission.Doing;
         CurrentMission = References.listAccountMission[index];
 
-        LoadMissionUI();
         Reload();
     }
 
@@ -128,7 +177,6 @@ public class MissionManager : MonoBehaviour
         HavingMission = null;
         CurrentMission = null;
 
-        MissionUIObject.SetActive(false);
         Reload();
     }
 
@@ -137,12 +185,11 @@ public class MissionManager : MonoBehaviour
         if(HavingMission != null && BossID == HavingMission.BossID)
         {
             ++CurrentMission.Current;
-            LoadStatusUI();
             if(CurrentMission.Current >= CurrentMission.Target)
             {
                 AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, HavingMission.ID, 
                                                             StatusMission.Claim);
-                
+                LoadProgress();
                 HavingMission = null;
                 CurrentMission = null;
             }
@@ -151,20 +198,29 @@ public class MissionManager : MonoBehaviour
 
     public void TakeBonusMission(Mission_Entity selected)
     {
-        AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ExpBonus, selected.CoinBonus);
+        References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+        var equip = References.RandomEquipmentBonus(selected.CategoryEquipmentID, out int SellCost);
+       
+        if(References.accountRefer.TrophiesID == References.TrophyID_RemakeMission)
+        {
+            AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ID, (int)StatusMission.None, equip.ID);
+        }
+        else AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ID, (int) StatusMission.Done, equip.ID);
+
         References.accountRefer.Coin += selected.CoinBonus;
-        References.accountRefer.Exp += selected.ExpBonus;
+        Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+        References.AddExperience(selected.ExpBonus);
 
         var index = References.listAccountMission.FindIndex(obj => obj.MissionID == selected.ID);
-        References.listAccountMission[index].Status = StatusMission.Done;
-
-        Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
-
-        Player_AllUIManagement.Instance
-            .LoadExperienceUI(References.accountRefer.Level, References.accountRefer.Exp, 
-                                References.accountRefer.Level * 100);
 
         Reload();
+
+        ShowBonus(selected.CoinBonus, selected.ExpBonus, equip.Name, equip.Image);
+            
+        if (SellCost > 0)
+        {
+            ShowMessageEquipmetDuplicate(SellCost, equip.Name, equip.Image);
+        }
     }
 
     public void Check()

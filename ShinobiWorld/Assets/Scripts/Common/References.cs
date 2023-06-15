@@ -3,6 +3,8 @@ using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using UnityEngine;
 
 public static class References
@@ -31,17 +33,27 @@ public static class References
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
     public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
-    public static List<Mission_Entity> listMission= Mission_DAO.GetAll();
+    public static List<Mission_Entity> listMission = Mission_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
+
+    public static AccountSkill_Entity accountSkillOne = new AccountSkill_Entity();
+    public static AccountSkill_Entity accountSkillTwo = new AccountSkill_Entity();
+    public static AccountSkill_Entity accountSkillThree = new AccountSkill_Entity();
 
     public static float Uppercent_Skill_Damage = 3f, Uppercent_Skill_Chakra = 1f, Uppercent_Skill_CoolDown = 1f;
     public static float Uppercent_Account = 5f;
     public static float Uppercent_Equipment = 5f;
-    public static int MaxUpgradeLevel = 30;
+    public static int MaxUpgradeLevel = 30; 
 
     public static int RespawnTime = 20;
     public static int RespawnCost = 1000;
+
+    public static int HealthBonus, ChakraBonus, StrengthBonus;
+
+    public static int ExpercienceToNextLevel;
+
+    public static string TrophyID_RemakeMission = "Trophie_Jonin";
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
@@ -62,17 +74,107 @@ public static class References
                                                             {StatusMission.Claim.ToString(), "Nhận thưởng"},
                                                             {StatusMission.Done.ToString(), "Hoàn thành"},
                                                         };
-
-    public static void LoadAccount()
+    public static void UpdateAccountToDB()
     {
         if (accountRefer != null)
         {
-            Account_DAO.LoadAccount(accountRefer);
+            Account_DAO.UpdateAccountToDB(accountRefer);
         }
     }
 
-}
 
+
+    public static void BonusLevelUp()
+    {
+        if (accountRefer != null)
+        {
+
+            HealthBonus = Convert.ToInt32(accountRefer.Health * (Uppercent_Account / 100f));
+            ChakraBonus = Convert.ToInt32(accountRefer.Chakra * (Uppercent_Account / 100f));
+            StrengthBonus = 1;
+
+            Debug.Log(HealthBonus + " " + ChakraBonus + " " + StrengthBonus);
+
+            accountRefer.Health += HealthBonus;
+            accountRefer.Chakra += ChakraBonus;
+
+            accountRefer.CurrentHealth += HealthBonus;
+            accountRefer.CurrentChakra += ChakraBonus;
+
+            accountRefer.Strength += StrengthBonus;
+            accountRefer.CurrentStrength += StrengthBonus;
+
+            accountRefer.Level += 1;
+        }
+    }
+
+
+
+    public static void LoadAccount()
+    {
+        accountRefer = Account_DAO.GetAccountByID(accountRefer.ID);
+        ExpercienceToNextLevel = accountRefer.Level * 100;
+    }
+
+    public static void LoadAccountWeaponNSkill(string Role)
+    {
+        if (accountRefer != null)
+        {
+            accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(accountRefer.ID);
+            accountSkillOne = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "One");
+            accountSkillTwo = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "Two");
+            accountSkillThree = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "Three");
+        }
+
+    }
+
+    public static void AddExperience(int Amount)
+    {
+        if (accountRefer != null && accountRefer.Level < 30)
+        {
+            accountRefer.Exp += Amount;
+            while (accountRefer.Exp >= ExpercienceToNextLevel)
+            {
+                accountRefer.Level++;
+                accountRefer.Exp -= ExpercienceToNextLevel;
+                ExpercienceToNextLevel = accountRefer.Level * 100;
+                LevelUpReward();
+            }
+        }
+
+    }
+
+    public static void AddCoin(int Amount)
+    {
+        accountRefer.Coin += Amount;
+        UpdateAccountToDB();
+        Game_Manager.Instance.ReloadPlayerProperties();
+    }
+
+    public static void LevelUpReward()
+    {
+        BonusLevelUp();
+        UpdateAccountToDB();
+        Game_Manager.Instance.ReloadPlayerProperties();
+    }
+
+    public static Equipment_Entity RandomEquipmentBonus(string CategoryEquipmentID, out int SellCost)
+    {
+        SellCost = 0;
+        var listEquipCate = listEquipment.FindAll(obj => obj.CategoryEquipmentID == CategoryEquipmentID);
+
+        var index = UnityEngine.Random.Range(0, listEquipCate.Count);
+        Debug.Log("index: " + index);
+
+        if (listAccountEquipment.Any(obj => obj.EquipmentID == listEquipCate[index].ID))
+        {
+            SellCost = listEquipCate[index].SellCost;
+            accountRefer.Coin += SellCost;
+        }
+
+        return listEquipCate[index];
+    }
+}
 
 public enum TypeSell
 {

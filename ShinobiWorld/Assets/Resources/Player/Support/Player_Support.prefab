@@ -1171,7 +1171,6 @@ GameObject:
   - component: {fileID: 9178576785560787549}
   - component: {fileID: 1765921653329179999}
   - component: {fileID: 7713341436081449469}
-  - component: {fileID: -8033183920986694419}
   - component: {fileID: -1987454478111399211}
   m_Layer: 6
   m_Name: Player_Support
@@ -1189,7 +1188,7 @@ Transform:
   m_GameObject: {fileID: 1231443374405932938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1231443372386269981}
@@ -1320,8 +1319,8 @@ MonoBehaviour:
     Level: 0
     Health: 0
     CurrentHealth: 0
-    Charka: 0
-    CurrentCharka: 0
+    Chakra: 0
+    CurrentChakra: 0
     Exp: 0
     Speed: 0
     Coin: 0
@@ -1336,12 +1335,38 @@ MonoBehaviour:
     IsOnline: 0
     IsTicket: 0
     IsFirst: 0
-  WeaponName: 
-  SkillOneName: 
-  SkillTwoName: 
-  SkillThreeName: 
+  Weapon_Entity:
+    AccountID: 
+    WeaponID: 
+    Level: 0
+    Damage: 0
+    Delete: 0
+  SkillOne_Entity:
+    AccountID: 
+    SkillID: 
+    Level: 0
+    Cooldown: 0
+    Damage: 0
+    Chakra: 0
+    Delete: 0
+  SkillTwo_Entity:
+    AccountID: 
+    SkillID: 
+    Level: 0
+    Cooldown: 0
+    Damage: 0
+    Chakra: 0
+    Delete: 0
+  SkillThree_Entity:
+    AccountID: 
+    SkillID: 
+    Level: 0
+    Cooldown: 0
+    Damage: 0
+    Chakra: 0
+    Delete: 0
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
-  PlayerAllUIPrefabs: {fileID: 4182973934900452979, guid: bb173a98f7a86ba4c81c986cc2ac0c96, type: 3}
+  PlayerAllUIPrefabs: {fileID: 7741783450571619106, guid: a2ba03984607abb418145f4e10e68686, type: 3}
   PlayerNickName: {fileID: 4297340223795960367}
   PlayerHealthChakraUI: {fileID: 5378524188282478473}
   PlayerCameraInstance: {fileID: 0}
@@ -1359,8 +1384,6 @@ MonoBehaviour:
   AttackCooldown_Total: 0
   AttackCooldown_Current: 0
   MainPoint: {fileID: 3957536264760239255}
-  Quai: {fileID: 0}
-  Quai1: {fileID: 0}
   DamageBonus: 0
   SpeedBonus: 0
   animator: {fileID: 0}
@@ -1369,7 +1392,6 @@ MonoBehaviour:
   sortingGroup: {fileID: 0}
   playerInput: {fileID: 0}
   playerPool: {fileID: 0}
-  player_LevelManagement: {fileID: 0}
   MoveDirection: {x: 0, y: 0}
   CurrentHealth_UI: {fileID: 2228142697893722469}
   CurrentChakra_UI: {fileID: 7065326554227410012}
@@ -1384,6 +1406,8 @@ MonoBehaviour:
   Hair: {fileID: 1231443372577791272}
   Mouth: {fileID: 1231443372752192919}
   CanWalking: 0
+  LocalScaleX: 0
+  LocalScaleY: 0
   DetectGroundVector: {x: 2, y: 1}
 --- !u!114 &7124398666399494739
 MonoBehaviour:
@@ -1645,41 +1669,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.68462783, y: 0.57305443}
   m_EdgeRadius: 0
---- !u!114 &-8033183920986694419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231443374405932938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1268cfb93420c8d428f8db85402bde73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AccountEntity:
-    ID: 
-    RoleInGameID: 
-    TrophiesID: 
-    Level: 0
-    Health: 0
-    CurrentHealth: 0
-    Charka: 0
-    CurrentCharka: 0
-    Exp: 0
-    Speed: 0
-    Coin: 0
-    Power: 0
-    Strength: 0
-    CurrentStrength: 0
-    EyeID: 
-    HairID: 
-    MouthID: 
-    SkinID: 
-    IsDead: 0
-    IsOnline: 0
-    IsTicket: 0
-    IsFirst: 0
 --- !u!114 &-1987454478111399211
 MonoBehaviour:
   m_ObjectHideFlags: 0
