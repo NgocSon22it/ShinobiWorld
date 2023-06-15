@@ -70,6 +70,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void OnAvatarBtnClick()
     {
+        Game_Manager.Instance.IsBusy = true;
         References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
 
         References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
@@ -91,12 +92,14 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public void OnCloseBtnClick()
     {
         InfoPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
+
     }
 
     public void SetupPreview()
     {
-        //Name_Preview.text = photonView.Owner.NickName;
-        Name_Preview.text = "Thien";
+        Name_Preview.text = photonView.Owner.NickName;
+        //Name_Preview.text = "Thien";
         Role.text = References.listRole.Find(obj => obj.ID == References.accountRefer.RoleInGameID).Name;
         Trophy.text = References.listTrophy.Find(obj => obj.ID == References.accountRefer.TrophiesID).Name;
 
@@ -216,8 +219,8 @@ public class Player_Info : MonoBehaviourPunCallbacks
    
     public void ShowDetailPlayer()
     {
-        //Name_Player.text = photonView.Owner.NickName;
-        Name_Player.text = "Thien";
+        Name_Player.text = photonView.Owner.NickName;
+        //Name_Player.text = "Thien";
         Level_Player.text = References.accountRefer.Level.ToString();
         Health_Player.text = References.accountRefer.Health.ToString();
         Chakra_Player.text = References.accountRefer.Chakra.ToString();

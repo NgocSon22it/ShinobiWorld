@@ -148,6 +148,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         {
             References.AddExperience(boss_Entity.ExpBonus);
             References.AddCoin(boss_Entity.CoinBonus);
+            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
             gameObject.SetActive(false);
         }
         LoadHealthUI();

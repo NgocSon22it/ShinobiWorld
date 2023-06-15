@@ -201,19 +201,17 @@ public class MissionManager : MonoBehaviour
         References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
         var equip = References.RandomEquipmentBonus(selected.CategoryEquipmentID, out int SellCost);
        
-        AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ExpBonus, selected.CoinBonus+SellCost, equip.ID);
+        if(References.accountRefer.TrophiesID == References.TrophyID_RemakeMission)
+        {
+            AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ID, (int)StatusMission.None, equip.ID);
+        }
+        else AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ID, (int) StatusMission.Done, equip.ID);
 
         References.accountRefer.Coin += selected.CoinBonus;
-        References.accountRefer.Exp += selected.ExpBonus;
+        Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+        References.AddExperience(selected.ExpBonus);
 
         var index = References.listAccountMission.FindIndex(obj => obj.MissionID == selected.ID);
-        References.listAccountMission[index].Status = StatusMission.Done;
-
-        Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
-
-        Player_AllUIManagement.Instance
-            .LoadExperienceUI(References.accountRefer.Level, References.accountRefer.Exp, 
-                                References.accountRefer.Level * 100);
 
         Reload();
 
