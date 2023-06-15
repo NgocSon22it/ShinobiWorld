@@ -10,8 +10,9 @@ using UnityEngine.UI;
 
 public class Player_Info : MonoBehaviourPunCallbacks
 {
+    public static Player_Info Instance;
     public GameObject InfoPanel;
-    public string ID;
+    public string ID ;
 
     [Header("Preview")]
     public GameObject Preview;
@@ -53,6 +54,12 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public SpriteRenderer Mouth;
     //Weapon
     public SpriteRenderer Weapon;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public void Init()
     {
         DetailPlayer.SetActive(false);
@@ -63,7 +70,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void OnAvatarBtnClick()
     {
-        References.accountRefer = Account_DAO.GetAccountByID(ID);
+        References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
 
         References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
         References.listAccountSkill = AccountSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
@@ -98,7 +105,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
         SetupPreviewSkillBtn();
         SetupPreviewEquipmentBtn();
 
-        WeaponBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.weapon.Image +"Btn");
+        //WeaponBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.weapon.Image +"Btn");
     }
 
     public void SetupPreviewBtn()
@@ -213,7 +220,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
         Name_Player.text = "Thien";
         Level_Player.text = References.accountRefer.Level.ToString();
         Health_Player.text = References.accountRefer.Health.ToString();
-        Chakra_Player.text = References.accountRefer.Charka.ToString();
+        Chakra_Player.text = References.accountRefer.Chakra.ToString();
         Strength_Player.text = References.accountRefer.Strength.ToString();
         Power_Player.text = References.accountRefer.Power.ToString();
         Exp_Player.text = References.accountRefer.Exp.ToString();

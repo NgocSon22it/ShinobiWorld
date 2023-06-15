@@ -33,6 +33,7 @@ namespace Assets.Scripts.Database.DAO
                         {
                             ID = dr["ID"].ToString(),
                             TypeEquipmentID = dr["TypeEquipmentID"].ToString(),
+                            CategoryEquipmentID = dr["CategoryEquipmentID"].ToString(),
                             Name = dr["Name"].ToString(),
                             Health = Convert.ToInt32(dr["Health"]),
                             Damage = Convert.ToInt32(dr["Damage"]),
