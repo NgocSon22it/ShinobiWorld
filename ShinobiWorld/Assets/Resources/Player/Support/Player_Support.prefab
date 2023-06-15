@@ -1171,7 +1171,6 @@ GameObject:
   - component: {fileID: 9178576785560787549}
   - component: {fileID: 1765921653329179999}
   - component: {fileID: 7713341436081449469}
-  - component: {fileID: -8033183920986694419}
   - component: {fileID: -1987454478111399211}
   m_Layer: 6
   m_Name: Player_Support
@@ -1320,8 +1319,8 @@ MonoBehaviour:
     Level: 0
     Health: 0
     CurrentHealth: 0
-    Charka: 0
-    CurrentCharka: 0
+    Chakra: 0
+    CurrentChakra: 0
     Exp: 0
     Speed: 0
     Coin: 0
@@ -1669,41 +1668,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.68462783, y: 0.57305443}
   m_EdgeRadius: 0
---- !u!114 &-8033183920986694419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231443374405932938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1268cfb93420c8d428f8db85402bde73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AccountEntity:
-    ID: 
-    RoleInGameID: 
-    TrophiesID: 
-    Level: 0
-    Health: 0
-    CurrentHealth: 0
-    Charka: 0
-    CurrentCharka: 0
-    Exp: 0
-    Speed: 0
-    Coin: 0
-    Power: 0
-    Strength: 0
-    CurrentStrength: 0
-    EyeID: 
-    HairID: 
-    MouthID: 
-    SkinID: 
-    IsDead: 0
-    IsOnline: 0
-    IsTicket: 0
-    IsFirst: 0
 --- !u!114 &-1987454478111399211
 MonoBehaviour:
   m_ObjectHideFlags: 0

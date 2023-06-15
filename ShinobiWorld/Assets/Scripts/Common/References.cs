@@ -51,6 +51,8 @@ public static class References
 
     public static int HealthBonus, ChakraBonus, StrengthBonus;
 
+    public static int ExpercienceToNextLevel;
+
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
                                                             {"Hokage", new(0, 0, 0)},
@@ -74,15 +76,17 @@ public static class References
     {
         if (accountRefer != null)
         {
-            Account_DAO.UpdateAccountToDB(accountRefer);         
+            Account_DAO.UpdateAccountToDB(accountRefer);
         }
     }
+
+
 
     public static void BonusLevelUp()
     {
         if (accountRefer != null)
         {
-            
+
             HealthBonus = Convert.ToInt32(accountRefer.Health * (Uppercent_Account / 100f));
             ChakraBonus = Convert.ToInt32(accountRefer.Chakra * (Uppercent_Account / 100f));
             StrengthBonus = 1;
@@ -102,9 +106,12 @@ public static class References
         }
     }
 
+
+
     public static void LoadAccount()
     {
         accountRefer = Account_DAO.GetAccountByID(accountRefer.ID);
+        ExpercienceToNextLevel = accountRefer.Level * 100;
     }
 
     public static void LoadAccountWeaponNSkill(string Role)
@@ -119,15 +126,45 @@ public static class References
 
     }
 
+    public static void AddExperience(int Amount)
+    {
+        if (accountRefer != null && accountRefer.Level < 30)
+        {
+            accountRefer.Exp += Amount;
+            while (accountRefer.Exp >= ExpercienceToNextLevel)
+            {
+                accountRefer.Level++;
+                accountRefer.Exp -= ExpercienceToNextLevel;
+                ExpercienceToNextLevel = accountRefer.Level * 100;
+                LevelUpReward();
+            }
+        }
+
+    }
+
+    public static void AddCoin(int Amount)
+    {
+        accountRefer.Coin += Amount;
+        UpdateAccountToDB();
+        Game_Manager.Instance.ReloadPlayerProperties();
+    }
+
+    public static void LevelUpReward()
+    {
+        BonusLevelUp();
+        UpdateAccountToDB();
+        Game_Manager.Instance.ReloadPlayerProperties();
+    }
+
     public static Equipment_Entity RandomEquipmentBonus(string CategoryEquipmentID, out int SellCost)
     {
         SellCost = 0;
         var listEquipCate = listEquipment.FindAll(obj => obj.CategoryEquipmentID == CategoryEquipmentID);
 
         var index = UnityEngine.Random.Range(0, listEquipCate.Count);
-        Debug.Log("index: "+index);
+        Debug.Log("index: " + index);
 
-        if(listAccountEquipment.Any(obj => obj.EquipmentID == listEquipCate[index].ID))
+        if (listAccountEquipment.Any(obj => obj.EquipmentID == listEquipCate[index].ID))
         {
             SellCost = listEquipCate[index].SellCost;
             accountRefer.Coin += SellCost;
