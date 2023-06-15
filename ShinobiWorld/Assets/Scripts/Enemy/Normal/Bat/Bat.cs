@@ -9,68 +9,63 @@ public class Bat : Enemy
     // Start is called before the first frame update
     new void Start()
     {
-        base.Start();       
+        base.Start();
     }
     new void Update()
     {
         base.Update();
-           
-        if (photonView.IsMine)
-        {
-           AttackAndMove();
-        }
+        AttackAndMove();
+
     }
 
     public void AttackAndMove()
     {
-        if (photonView.IsMine)
+        if (playerInRange)
         {
-            if (playerInRange)
+            // Stop moving
+            isMoving = false;
+        }
+        else
+        {
+            if (isMoving)
             {
-                // Stop moving
-                isMoving = false;
+                transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
+
+                if (transform.position == MovePosition)
+                {
+                    Break_CurrentTime = Break_TotalTime;
+                    isMoving = false;
+                }
+
             }
             else
             {
-                if (isMoving)
+                Break_CurrentTime -= Time.deltaTime;
+
+                if (Break_CurrentTime <= 0f)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
-
-                    if (transform.position == MovePosition)
-                    {
-                        Break_CurrentTime = Break_TotalTime;
-                        isMoving = false;
-                    }
-
-                }
-                else
-                {
-                    Break_CurrentTime -= Time.deltaTime;
-
-                    if (Break_CurrentTime <= 0f)
-                    {
-                        MovePosition = GetRandomPosition();
-                        isMoving = true;
-                    }
+                    MovePosition = GetRandomPosition();
+                    isMoving = true;
                 }
             }
-            FindTarget_CurrentTime += Time.deltaTime;
-
-            // Check if the interval has passed
-            if (FindTarget_CurrentTime >= FindTarget_TotalTime)
-            {
-                TargetPosition = FindClostestTarget(detectionRadius, "Player");
-                FindTarget_CurrentTime = 0f;
-            }
-
-            playerInRange = TargetPosition != Vector3.zero;
-            // Restrict movement to the move area
-            clampedPosition = movementBounds.ClosestPoint(transform.position);
-            transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
-
-            animator.SetBool("PlayerInRange", playerInRange);
-            animator.SetBool("Walk", isMoving);
         }
+        FindTarget_CurrentTime += Time.deltaTime;
+
+        // Check if the interval has passed
+        if (FindTarget_CurrentTime >= FindTarget_TotalTime)
+        {
+            TargetPosition = FindClostestTarget(detectionRadius, "Player");
+            FindTarget_CurrentTime = 0f;
+        }
+
+        playerInRange = TargetPosition != Vector3.zero;
+        // Restrict movement to the move area
+        clampedPosition = movementBounds.ClosestPoint(transform.position);
+        transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
+
+        animator.SetBool("PlayerInRange", playerInRange);
+        animator.SetBool("Walk", isMoving);
+
     }
 
     public void Animation_SkillOne()
@@ -88,6 +83,10 @@ public class Bat : Enemy
                 SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
+            }
+            else
+            {
+                Debug.Log("No Damage");
             }
         }
     }

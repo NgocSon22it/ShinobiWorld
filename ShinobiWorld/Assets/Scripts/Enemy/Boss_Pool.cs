@@ -26,7 +26,7 @@ public class Boss_Pool : MonoBehaviourPunCallbacks
         {
             for (int i = 0; i < Amount; i++)
             {
-                obj = Instantiate(SkillOne, Vector3.zero, Quaternion.identity);
+                obj = PhotonNetwork.Instantiate(Extension + SkillOne.name, Vector3.zero, Quaternion.identity);
                 obj.SetActive(false);
                 List_SkillOne.Add(obj);
             }

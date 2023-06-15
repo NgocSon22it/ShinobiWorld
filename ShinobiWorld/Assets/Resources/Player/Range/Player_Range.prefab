@@ -205,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 1279341850644047415}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1279341852381874848}
@@ -409,7 +409,6 @@ MonoBehaviour:
   sortingGroup: {fileID: 0}
   playerInput: {fileID: 0}
   playerPool: {fileID: 0}
-  player_LevelManagement: {fileID: 0}
   MoveDirection: {x: 0, y: 0}
   CurrentHealth_UI: {fileID: 3552120919829914991}
   CurrentChakra_UI: {fileID: 6563202592029557458}
@@ -424,6 +423,8 @@ MonoBehaviour:
   Hair: {fileID: 1279341852525767829}
   Mouth: {fileID: 1279341852296999978}
   CanWalking: 0
+  LocalScaleX: 0
+  LocalScaleY: 0
   NormalAttackPrefabs: {fileID: 4593264165139950441, guid: c12536a09cb569e4f8cbb0e0f33145b1, type: 3}
   AttackRange: 5
   EndAngle: 25

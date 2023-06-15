@@ -58,7 +58,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public bool IsBusy;
 
-    public Vector3 ObjectPool_Place;
 
     private void Awake()
     {
@@ -120,7 +119,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                 enemyScript.AreaName = enemyInfo.AreaName;
                 enemyScript.PoolExtension = enemyInfo.Extension;
                 enemyScript.SetUpEntity(enemyInfo.EnemyID, enemyInfo.AreaName, enemyInfo.Extension);
-                enemyScript.SetUpComponent();
                 enemyScript.SetUpEnemy();
                 enemyScript.enabled = true;
             }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player_Pool : MonoBehaviour
 {
     [Header("Projectile Amount")]
-    int Amount = 20;
+    int Amount = 10;
 
     [SerializeField] GameObject NormalAttack;
     List<GameObject> List_NormalAttack = new List<GameObject>();

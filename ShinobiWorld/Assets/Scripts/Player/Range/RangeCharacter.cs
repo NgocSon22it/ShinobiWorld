@@ -81,84 +81,95 @@ public class RangeCharacter : PlayerBase
 
     public void Animation_NormalAttack()
     {
-        if (photonView.IsMine)
+
+        GameObject normalAttack = playerPool.GetNormalAttackFromPool();
+        FlipToMouse();
+
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
+
+        if (normalAttack != null)
         {
-            GameObject normalAttack = playerPool.GetNormalAttackFromPool();
-            FlipToMouse();
-
-            SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-            SkillDirection.Normalize();
-
-            if (normalAttack != null)
+            normalAttack.transform.position = AttackPoint.position;
+            normalAttack.transform.rotation = AttackPoint.rotation;
+            if (photonView.IsMine)
             {
-                normalAttack.transform.position = AttackPoint.position;
-                normalAttack.transform.rotation = AttackPoint.rotation;
                 normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
-                normalAttack.SetActive(true);
-                normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
             }
+            normalAttack.SetActive(true);
+            normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
+
     }
 
     public void Animation_SkillOne()
     {
-        if (photonView.IsMine)
+        GameObject skillOne = playerPool.GetSkillOneFromPool();
+
+        FlipToMouse();
+
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
+
+        if (skillOne != null)
         {
-            GameObject skillOne = playerPool.GetSkillOneFromPool();
-
-            FlipToMouse();
-
-            SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-            SkillDirection.Normalize();
-
-            if (skillOne != null && photonView.IsMine)
+            skillOne.transform.position = AttackPoint.position;
+            skillOne.transform.rotation = AttackPoint.rotation;
+            if (photonView.IsMine)
             {
-                skillOne.transform.position = AttackPoint.position;
-                skillOne.transform.rotation = AttackPoint.rotation;
                 skillOne.GetComponent<SuperDart>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
-                skillOne.SetActive(true);
-                skillOne.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
             }
+            skillOne.SetActive(true);
+            skillOne.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
+
     }
 
     public void Animation_SkillTwo()
     {
-        if (photonView.IsMine)
+
+        FlipToMouse();
+
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
+
+
+        GameObject centerDarts = playerPool.GetSkillTwoFromPool();
+        if (centerDarts != null)
         {
-            GameObject centerDarts = playerPool.GetSkillTwoFromPool();
-
-            FlipToMouse();
-
-            SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-            SkillDirection.Normalize();
-
-
-            if (centerDarts != null && photonView.IsMine)
+            centerDarts.transform.position = AttackPoint.position;
+            if (photonView.IsMine)
             {
-                centerDarts.transform.position = AttackPoint.position;
                 centerDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
-                centerDarts.SetActive(true);
-                centerDarts.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
             }
-            GameObject leftDarts = playerPool.GetSkillTwoFromPool();
-            if (leftDarts != null && photonView.IsMine)
-            {
-                leftDarts.transform.position = AttackPoint.position;
-                leftDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
-                leftDarts.SetActive(true);
-                leftDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
-            }
-
-            GameObject rightDarts = playerPool.GetSkillTwoFromPool();
-            if (rightDarts != null)
-            {
-                rightDarts.transform.position = AttackPoint.position;
-                rightDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
-                rightDarts.SetActive(true);
-                rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
-            }
+            centerDarts.SetActive(true);
+            centerDarts.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
+
+        GameObject leftDarts = playerPool.GetSkillTwoFromPool();
+        if (leftDarts != null)
+        {
+            leftDarts.transform.position = AttackPoint.position;
+            if (photonView.IsMine)
+            {
+                leftDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            }
+            leftDarts.SetActive(true);
+            leftDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
+        }
+
+        GameObject rightDarts = playerPool.GetSkillTwoFromPool();
+        if (rightDarts != null)
+        {
+            rightDarts.transform.position = AttackPoint.position;
+            if (photonView.IsMine)
+            {
+                rightDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            }
+            rightDarts.SetActive(true);
+            rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
+        }
+
     }
 
     public void Animation_SkillThree()
