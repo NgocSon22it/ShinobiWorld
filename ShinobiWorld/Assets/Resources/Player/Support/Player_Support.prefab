@@ -1188,7 +1188,7 @@ Transform:
   m_GameObject: {fileID: 1231443374405932938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1231443372386269981}
@@ -1366,7 +1366,7 @@ MonoBehaviour:
     Chakra: 0
     Delete: 0
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
-  PlayerAllUIPrefabs: {fileID: 4182973934900452979, guid: bb173a98f7a86ba4c81c986cc2ac0c96, type: 3}
+  PlayerAllUIPrefabs: {fileID: 7741783450571619106, guid: a2ba03984607abb418145f4e10e68686, type: 3}
   PlayerNickName: {fileID: 4297340223795960367}
   PlayerHealthChakraUI: {fileID: 5378524188282478473}
   PlayerCameraInstance: {fileID: 0}
@@ -1392,7 +1392,6 @@ MonoBehaviour:
   sortingGroup: {fileID: 0}
   playerInput: {fileID: 0}
   playerPool: {fileID: 0}
-  player_LevelManagement: {fileID: 0}
   MoveDirection: {x: 0, y: 0}
   CurrentHealth_UI: {fileID: 2228142697893722469}
   CurrentChakra_UI: {fileID: 7065326554227410012}
@@ -1407,6 +1406,8 @@ MonoBehaviour:
   Hair: {fileID: 1231443372577791272}
   Mouth: {fileID: 1231443372752192919}
   CanWalking: 0
+  LocalScaleX: 0
+  LocalScaleY: 0
   DetectGroundVector: {x: 2, y: 1}
 --- !u!114 &7124398666399494739
 MonoBehaviour:
