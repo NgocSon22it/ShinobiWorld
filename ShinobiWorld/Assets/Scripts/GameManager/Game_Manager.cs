@@ -54,15 +54,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
 
-    ExitGames.Client.Photon.Hashtable NPCProperties = new ExitGames.Client.Photon.Hashtable();
-
-
-    ExitGames.Client.Photon.Hashtable RoomProperties = new ExitGames.Client.Photon.Hashtable();
-
     [SerializeField] List<EnemyInfo> SpawnList_LangLa1 = new List<EnemyInfo>();
-    List<GameObject> ListBoss_LangLa1 = new List<GameObject>();
 
-
+    public bool IsBusy;
 
     private void Awake()
     {
@@ -98,8 +92,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         SpawnList_LangLa1.AddRange(new List<EnemyInfo>
         {
-            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat1", SpawnPosition = new Vector3(-1, -3, 0)},
-            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat2", SpawnPosition = new Vector3(2, -3, 0) }
+            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat1", SpawnPosition = new Vector3(-16, -15, 0)},
+            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat2", SpawnPosition = new Vector3(-16, -15, 0) },
+           // new EnemyInfo { EnemyID = "Boss_Fish", Extension = "Boss/Normal/Fish/", enemyPrefab = BossPrefabs_Fish, AreaName = "LL1_Fish1", SpawnPosition = new Vector3(-15, -13, 0) }
         });
 
 
@@ -109,6 +104,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             enemyInfo.SetAreaBossEntity();
 
             SqlDateTime sqlDateTime = new SqlDateTime(DateTime.Now);
+            Debug.Log(sqlDateTime);
+            Debug.Log(enemyInfo.areaBoss_Entity.TimeSpawn);
+
 
             if (enemyInfo.areaBoss_Entity.isDead == false && sqlDateTime >= enemyInfo.areaBoss_Entity.TimeSpawn)
             {
@@ -123,8 +121,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                 enemyScript.SetUpComponent();
                 enemyScript.SetUpEnemy();
                 enemyScript.enabled = true;
-
-                ListBoss_LangLa1.Add(EnemyObject);
             }
         } 
     }
