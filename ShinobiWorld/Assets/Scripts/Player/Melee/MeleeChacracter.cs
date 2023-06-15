@@ -86,7 +86,7 @@ public class MeleeChacracter : PlayerBase
                 {
                     if (Enemy.gameObject.CompareTag("Enemy"))
                     {
-                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage);
+                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
                     }
                 }
             }
@@ -109,31 +109,35 @@ public class MeleeChacracter : PlayerBase
 
     public void Animation_SkillTwo()
     {
-        GameObject skillTwo = playerPool.GetSkillTwoFromPool();
-
-        if (skillTwo != null)
+        if (photonView.IsMine)
         {
-            skillTwo.transform.position = AttackPoint.position;
-            skillTwo.transform.rotation = AttackPoint.rotation;
-            skillTwo.GetComponent<SwingSword>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
-            skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
-            skillTwo.SetActive(true);
+            GameObject skillTwo = playerPool.GetSkillTwoFromPool();
+
+            if (skillTwo != null)
+            {
+                skillTwo.transform.position = AttackPoint.position;
+                skillTwo.transform.rotation = AttackPoint.rotation;
+                skillTwo.GetComponent<SwingSword>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+                skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
+                skillTwo.SetActive(true);
+            }
         }
-        Debug.Log(SkillTwo_Entity.Damage + DamageBonus);
     }
 
     public void Animation_SkillThree()
     {
-        GameObject skillThree = playerPool.GetSkillThreeFromPool();
-        FlipToMouse();
-        if (skillThree != null)
+        if (photonView.IsMine)
         {
-            skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
-            skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
-            skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
-            skillThree.SetActive(true);
+            GameObject skillThree = playerPool.GetSkillThreeFromPool();
+            FlipToMouse();
+            if (skillThree != null)
+            {
+                skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
+                skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
+                skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
+                skillThree.SetActive(true);
+            }
         }
-        Debug.Log(SkillThree_Entity.Damage + DamageBonus);
     }
 
     public IEnumerator RighteousSword()
@@ -149,7 +153,6 @@ public class MeleeChacracter : PlayerBase
 
     public void SetUpRighteous(Color color, float Intensity, int Damage)
     {
-
         DamageBonus += Damage;
 
         Sword.material.SetColor("_GlowColor", color * Intensity);

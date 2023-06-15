@@ -287,13 +287,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void HealAmountOfChakra(int Amount)
     {
-        AccountEntity.CurrentCharka += Amount;
-        if (AccountEntity.CurrentCharka >= AccountEntity.Charka)
+        AccountEntity.CurrentChakra += Amount;
+        if (AccountEntity.CurrentChakra >= AccountEntity.Chakra)
         {
-            AccountEntity.CurrentCharka = AccountEntity.Charka;
+            AccountEntity.CurrentChakra = AccountEntity.Chakra;
 
         }
-        References.accountRefer.CurrentCharka = AccountEntity.CurrentCharka;
+        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
         LoadPlayerChakraUI();
     }
 
@@ -303,6 +303,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             player_LevelManagement.AddExperience(Amount);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
+        }
+    }
+
+    public void EarnAmountOfCoin(int Amount)
+    {
+        if (photonView.IsMine)
+        {
+            AccountEntity.Coin += Amount;
+            References.accountRefer.Coin += Amount;
+            LoadProperties();
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
 
         }
     }
@@ -315,13 +326,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (PlayerAllUIInstance != null)
             {
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-                LoadChakraUI((float)AccountEntity.Charka, (float)AccountEntity.CurrentCharka);
+                LoadChakraUI((float)AccountEntity.Chakra, (float)AccountEntity.CurrentChakra);
             }
         }
         else
         {
-            CurrentChakra_UI.fillAmount = (float)AccountEntity.CurrentCharka / (float)AccountEntity.Charka;
-            CurrentChakra_NumberUI.text = AccountEntity.CurrentCharka + " / " + AccountEntity.Charka;
+            CurrentChakra_UI.fillAmount = (float)AccountEntity.CurrentChakra / (float)AccountEntity.Chakra;
+            CurrentChakra_NumberUI.text = AccountEntity.CurrentChakra + " / " + AccountEntity.Chakra;
         }
     }
 
@@ -345,6 +356,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
+
             animator.SetFloat("Horizontal", MoveDirection.x);
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
@@ -354,16 +366,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillOne();
             SkillTwo();
             SkillThree();
-
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                EarnAmountOfExperience(100);
-            }
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                TakeDamage(100);
-            }
-
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -380,6 +382,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
+            if (Game_Manager.Instance.IsBusy == true) return;
             Walk();
         }
         else
@@ -407,8 +410,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (AccountEntity.CurrentHealth <= 0)
         {
             AccountEntity.CurrentHealth = 0;
-
-
+            References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
             CancelInvoke(nameof(RegenChakra));
             CancelInvoke(nameof(RegenHealth));
 
@@ -490,7 +492,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     #region Attack && Skill CanExecute
     public bool CanExecuteNormalAttack(float CurrentCooldown)
     {
-        if (CurrentCooldown <= 0 && Weapon_Entity != null && photonView.IsMine)
+        if (CurrentCooldown <= 0 && Weapon_Entity != null && photonView.IsMine && Game_Manager.Instance.IsBusy == false)
         {
             return true;
         }
@@ -500,7 +502,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool CanExecuteSkill(float CurrentCooldown, int Chakra)
     {
-        if (CurrentCooldown <= 0 && AccountEntity.CurrentCharka >= Chakra && photonView.IsMine)
+        if (CurrentCooldown <= 0 && AccountEntity.CurrentChakra >= Chakra && photonView.IsMine && Game_Manager.Instance.IsBusy == false)
         {
             return true;
         }
@@ -518,24 +520,24 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void SkillOne_Resources()
     {
         SkillOneCooldown_Current = SkillOneCooldown_Total;
-        AccountEntity.CurrentCharka -= SkillOne_Entity.Chakra;
-        References.accountRefer.CurrentCharka = AccountEntity.CurrentCharka;
+        AccountEntity.CurrentChakra -= SkillOne_Entity.Chakra;
+        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
         LoadPlayerChakraUI();
     }
 
     public void SkillTwo_Resources()
     {
         SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-        AccountEntity.CurrentCharka -= SkillTwo_Entity.Chakra;
-        References.accountRefer.CurrentCharka = AccountEntity.CurrentCharka;
+        AccountEntity.CurrentChakra -= SkillTwo_Entity.Chakra;
+        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
         LoadPlayerChakraUI();
     }
 
     public void SkillThree_Resources()
     {
         SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-        AccountEntity.CurrentCharka -= SkillThree_Entity.Chakra;
-        References.accountRefer.CurrentCharka = AccountEntity.CurrentCharka;
+        AccountEntity.CurrentChakra -= SkillThree_Entity.Chakra;
+        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
         LoadPlayerChakraUI();
     }
     #endregion
@@ -601,9 +603,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
 
             stream.SendNext(AccountEntity.CurrentHealth);
-            stream.SendNext(AccountEntity.CurrentCharka);
+            stream.SendNext(AccountEntity.CurrentChakra);
             stream.SendNext(AccountEntity.Health);
-            stream.SendNext(AccountEntity.Charka);
+            stream.SendNext(AccountEntity.Chakra);
 
         }
         else
@@ -618,9 +620,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
 
             AccountEntity.CurrentHealth = (int)stream.ReceiveNext();
-            AccountEntity.CurrentCharka = (int)stream.ReceiveNext();
+            AccountEntity.CurrentChakra = (int)stream.ReceiveNext();
             AccountEntity.Health = (int)stream.ReceiveNext();
-            AccountEntity.Charka = (int)stream.ReceiveNext();
+            AccountEntity.Chakra = (int)stream.ReceiveNext();
 
             //Lag compensation
             currentTime = 0.0f;
