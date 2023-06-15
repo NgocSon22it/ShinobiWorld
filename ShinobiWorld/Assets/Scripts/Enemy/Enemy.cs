@@ -105,7 +105,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             if (boss_Entity != null && areaBoss_Entity != null)
             {
                 boss_Pool.InitializeProjectilePool(PoolExtension);
-                LoadHealthUI();
+                LoadHealthUI();               
             }
             else
             {
@@ -123,6 +123,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public void Start()
     {
         LocalScaleX = transform.localScale.x;
+        MovePosition = GetRandomPosition();
     }
 
     public void Update()
@@ -154,8 +155,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             {
                 if (player.AccountEntity.ID == UserID)
                 {
-                    // Player found, do something with it
-                    Debug.Log("Player found: " + player.gameObject.name);
                     player.EarnAmountOfExperience(boss_Entity.ExpBonus);
                     player.EarnAmountOfCoin(boss_Entity.CoinBonus);
                     break;
