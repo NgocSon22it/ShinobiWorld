@@ -64,9 +64,7 @@ public class Player_AllUIManagement : MonoBehaviour
         {
             ExperienceTxt.text = "Cấp tối đa!";
             CurrentExpBar.fillAmount = 1f;
-        }
-
-        
+        } 
     }
 
     public void LoadNameUI(string Name)
@@ -86,4 +84,8 @@ public class Player_AllUIManagement : MonoBehaviour
         ChakraNumberTxt.text = CurrentChakra + " / " + TotalChakra;
     }
 
+    public void ShowDetailInfo()
+    {
+        Player_Info.Instance.OnAvatarBtnClick();
+    }
 }

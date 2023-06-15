@@ -184,7 +184,7 @@ namespace Assets.Scripts.Bag.Equipment
             {
                 AccountEquipment_DAO.RemoveEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
                 References.accountRefer.Health -= accountEquipment.Health;
-                References.accountRefer.Charka -= accountEquipment.Chakra;
+                References.accountRefer.Chakra -= accountEquipment.Chakra;
 
                 AccountEquipment_DAO.UpgradeEquipment(References.accountRefer.ID, accountEquipment.EquipmentID,
                                                     DamageBonus, HealthBonus, ChakraBonus);
@@ -234,16 +234,16 @@ namespace Assets.Scripts.Bag.Equipment
             DowngradePanel.SetActive(false);
         }
 
-        public void LoadUI(int Health, int Charka)
+        public void LoadUI(int Health, int Chakra)
         {
             References.accountRefer.Health += Health;
-            References.accountRefer.Charka += Charka;
+            References.accountRefer.Chakra += Chakra;
             Game_Manager.Instance.ReloadPlayerProperties();
 
             Player_AllUIManagement.Instance
                     .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
             Player_AllUIManagement.Instance
-                    .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
+                    .LoadChakraUI(References.accountRefer.Chakra, References.accountRefer.CurrentChakra);
         }
     }
 }

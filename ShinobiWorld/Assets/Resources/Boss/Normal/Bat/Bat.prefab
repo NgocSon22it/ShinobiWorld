@@ -296,9 +296,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3659108024181459253}
   - component: {fileID: 3659108024181459250}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bat
-  m_TagString: Untagged
+  m_TagString: Enemy_WorkingArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -513,7 +513,16 @@ MonoBehaviour:
     Image: 
     Description: 
     Delete: 0
-  CurrentHealth: 0
+  areaBoss_Entity:
+    ID: 
+    AreaID: 
+    BossID: 
+    isDead: 0
+    CurrentHealth: 0
+    Delete: 0
+  AreaName: 
+  EnemyID: 
+  PoolExtension: 
   movementBounds: {fileID: 3659108024181459250}
   isMoving: 1
   Break_CurrentTime: 0
@@ -543,7 +552,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.5086126, y: -0.040780306}

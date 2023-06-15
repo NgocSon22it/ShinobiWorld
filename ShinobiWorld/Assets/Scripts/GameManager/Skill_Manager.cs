@@ -234,13 +234,14 @@ public class Skill_Manager : MonoBehaviour
             SetUpSelectedSkill(References.ListSkill[0]);
             LoadSkillList();
             SkillPanel.SetActive(true);
-
+            Game_Manager.Instance.IsBusy = true;
         }
     }
 
     public void CloseSkillPanel()
     {
         SkillPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
     }
 
 

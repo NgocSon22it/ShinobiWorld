@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.Entity
 {
-    public class Rank_Entity
+    public class CategoryEquipment_Entity
     {
         public string ID;
-        public string EquipmentIDbonus;
-        public int CoinBonus;
+        public string Name;
         public bool Delete;
 
-        public Rank_Entity()
+        public CategoryEquipment_Entity()
         {
         }
     }

@@ -9,6 +9,7 @@ namespace Assets.Scripts.Database.Entity
     public class Equipment_Entity
     {
         public string ID;
+        public string CategoryEquipmentID;
         public string TypeEquipmentID;
         public string Name;
         public int Health;

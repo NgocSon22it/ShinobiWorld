@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using UnityEngine;
 
 public static class References
@@ -83,16 +84,16 @@ public static class References
         {
             
             HealthBonus = Convert.ToInt32(accountRefer.Health * (Uppercent_Account / 100f));
-            ChakraBonus = Convert.ToInt32(accountRefer.Charka * (Uppercent_Account / 100f));
+            ChakraBonus = Convert.ToInt32(accountRefer.Chakra * (Uppercent_Account / 100f));
             StrengthBonus = 1;
 
             Debug.Log(HealthBonus + " " + ChakraBonus + " " + StrengthBonus);
 
             accountRefer.Health += HealthBonus;
-            accountRefer.Charka += ChakraBonus;
+            accountRefer.Chakra += ChakraBonus;
 
             accountRefer.CurrentHealth += HealthBonus;
-            accountRefer.CurrentCharka += ChakraBonus;
+            accountRefer.CurrentChakra += ChakraBonus;
 
             accountRefer.Strength += StrengthBonus;
             accountRefer.CurrentStrength += StrengthBonus;
@@ -116,6 +117,23 @@ public static class References
             accountSkillThree = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "Three");
         }
 
+    }
+
+    public static Equipment_Entity RandomEquipmentBonus(string CategoryEquipmentID, out int SellCost)
+    {
+        SellCost = 0;
+        var listEquipCate = listEquipment.FindAll(obj => obj.CategoryEquipmentID == CategoryEquipmentID);
+
+        var index = UnityEngine.Random.Range(0, listEquipCate.Count);
+        Debug.Log("index: "+index);
+
+        if(listAccountEquipment.Any(obj => obj.EquipmentID == listEquipCate[index].ID))
+        {
+            SellCost = listEquipCate[index].SellCost;
+            accountRefer.Coin += SellCost;
+        }
+
+        return listEquipCate[index];
     }
 }
 

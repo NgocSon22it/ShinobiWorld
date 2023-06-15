@@ -119,10 +119,10 @@ namespace Assets.Scripts.Bag.Item
         {
             AccountItem_DAO.UseItem(References.accountRefer.ID, item.ID);
             
-            if(References.accountRefer.CurrentCharka + item.ChakraBonus > References.accountRefer.Charka)
+            if(References.accountRefer.CurrentChakra + item.ChakraBonus > References.accountRefer.Chakra)
             {
-                References.accountRefer.CurrentCharka = References.accountRefer.Charka;
-            } else References.accountRefer.CurrentCharka += item.ChakraBonus;
+                References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
+            } else References.accountRefer.CurrentChakra += item.ChakraBonus;
 
             if (References.accountRefer.CurrentHealth + item.HealthBonus > References.accountRefer.Health)
             {
@@ -141,7 +141,7 @@ namespace Assets.Scripts.Bag.Item
             Player_AllUIManagement.Instance
                     .LoadHealthUI(References.accountRefer.Health, References.accountRefer.CurrentHealth);
             Player_AllUIManagement.Instance
-                    .LoadChakraUI(References.accountRefer.Charka, References.accountRefer.CurrentCharka);
+                    .LoadChakraUI(References.accountRefer.Chakra, References.accountRefer.CurrentChakra);
             Player_AllUIManagement.Instance
                     .LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
 
