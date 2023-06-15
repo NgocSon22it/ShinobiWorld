@@ -129,24 +129,26 @@ public class SupportCharacter : PlayerBase
 
     public void Animation_SkillThree()
     {
-        if (photonView.IsMine)
+
+        GameObject skillThree = playerPool.GetSkillThreeFromPool();
+
+        FlipToMouse();
+
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
+
+        if (skillThree != null)
         {
-            GameObject skillThree = playerPool.GetSkillThreeFromPool();
-
-            FlipToMouse();
-
-            SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
-            SkillDirection.Normalize();
-
-            if (skillThree != null)
+            skillThree.transform.position = AttackPoint.position;
+            skillThree.transform.rotation = AttackPoint.rotation;
+            if (photonView.IsMine)
             {
-                skillThree.transform.position = AttackPoint.position;
-                skillThree.transform.rotation = AttackPoint.rotation;
                 skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
-                skillThree.SetActive(true);
-                skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
             }
+            skillThree.SetActive(true);
+            skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
+
     }
 
     IEnumerator IE_Blessing()

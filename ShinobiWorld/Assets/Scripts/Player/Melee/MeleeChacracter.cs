@@ -109,35 +109,39 @@ public class MeleeChacracter : PlayerBase
 
     public void Animation_SkillTwo()
     {
-        if (photonView.IsMine)
-        {
-            GameObject skillTwo = playerPool.GetSkillTwoFromPool();
 
-            if (skillTwo != null)
+        GameObject skillTwo = playerPool.GetSkillTwoFromPool();
+
+        if (skillTwo != null)
+        {
+            skillTwo.transform.position = AttackPoint.position;
+            skillTwo.transform.rotation = AttackPoint.rotation;
+            if (photonView.IsMine)
             {
-                skillTwo.transform.position = AttackPoint.position;
-                skillTwo.transform.rotation = AttackPoint.rotation;
                 skillTwo.GetComponent<SwingSword>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
-                skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
-                skillTwo.SetActive(true);
             }
+            skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
+            skillTwo.SetActive(true);
         }
+
     }
 
     public void Animation_SkillThree()
     {
-        if (photonView.IsMine)
+
+        GameObject skillThree = playerPool.GetSkillThreeFromPool();
+        FlipToMouse();
+        if (skillThree != null)
         {
-            GameObject skillThree = playerPool.GetSkillThreeFromPool();
-            FlipToMouse();
-            if (skillThree != null)
+            skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
+            if (photonView.IsMine)
             {
-                skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
                 skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
-                skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
-                skillThree.SetActive(true);
             }
+            skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
+            skillThree.SetActive(true);
         }
+
     }
 
     public IEnumerator RighteousSword()

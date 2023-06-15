@@ -524,9 +524,12 @@ MonoBehaviour:
   EnemyID: 
   PoolExtension: 
   movementBounds: {fileID: 3659108024181459250}
+  MovePosition: {x: 0, y: 0, z: 0}
   isMoving: 1
   Break_CurrentTime: 0
   Break_TotalTime: 2
+  TargetPosition: {x: 0, y: 0, z: 0}
+  playerInRange: 0
   clampedPosition: {x: 0, y: 0, z: 0}
   detectionRadius: 5
   FindTarget_CurrentTime: 0
@@ -646,13 +649,13 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Walk
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: PlayerInRange
   m_SynchronizeLayers:
-  - SynchronizeType: 1
+  - SynchronizeType: 2
     LayerIndex: 0
 --- !u!114 &3659108024285446450
 MonoBehaviour:
