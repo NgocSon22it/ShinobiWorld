@@ -53,6 +53,7 @@ public class MissionManager : MonoBehaviour
 
     public void Open()
     {
+        Game_Manager.Instance.IsBusy = true;
         var filterlist = References.listAccountMission = AccountMission_DAO.GetAllByUserID(References.accountRefer.ID);
         listMission = References.listMission.FindAll(obj => filterlist.Any(filter => filter.MissionID == obj.ID));
 
@@ -99,10 +100,12 @@ public class MissionManager : MonoBehaviour
     {
         Destroy();
         MissionPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
     }
 
     public void LoadProgress()
     {
+        Game_Manager.Instance.IsBusy = true;
         ProgressPanel.SetActive(true);
 
         if (HavingMission != null)
@@ -121,6 +124,7 @@ public class MissionManager : MonoBehaviour
     public void CloseProgress()
     {
         ProgressPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
     }
 
     public void ShowBonus(int Coin, int Exp, string Name, string Image)
@@ -129,7 +133,6 @@ public class MissionManager : MonoBehaviour
         CoinTxt.text = Coin.ToString();
         ExpTxt.text = Exp.ToString();
         EquipmentTxt.text = Name;
-        Debug.Log(Image);
         EquipmentImg.sprite = Resources.Load<Sprite>(Image);
     }
 
@@ -143,8 +146,6 @@ public class MissionManager : MonoBehaviour
         BonusEquipDupliPanel.SetActive(true);
         MessageTxt.text = string.Format(Message.MissionBonusEquipDupli, Name);
         SellCostTxt.text = Coin.ToString();
-        Debug.Log(Image);
-
         EquipmentDupliImg.sprite = Resources.Load<Sprite>(Image);
     }
 
@@ -204,7 +205,6 @@ public class MissionManager : MonoBehaviour
 
         References.accountRefer.Coin += selected.CoinBonus;
         References.accountRefer.Exp += selected.ExpBonus;
-        
 
         var index = References.listAccountMission.FindIndex(obj => obj.MissionID == selected.ID);
         References.listAccountMission[index].Status = StatusMission.Done;
