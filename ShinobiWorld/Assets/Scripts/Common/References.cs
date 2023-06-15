@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public static class References
 {
@@ -54,6 +55,11 @@ public static class References
     public static int ExpercienceToNextLevel;
 
     public static string TrophyID_RemakeMission = "Trophie_Jonin";
+
+    public static string UISkillDefault = "Background/UI_OrangeFill";
+    public static string UIEquipmentDefault = "Background/UI_GreenFill";
+    public static string UIEquipmentShow = "Background/UI_Green";
+    public static string UIInfoSelected = "Background/UI_Blue";
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
