@@ -79,7 +79,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     //Script Component
     public Player_Pool playerPool;
-    public Player_LevelManagement player_LevelManagement;
 
 
     //Player Input
@@ -187,7 +186,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         sortingGroup = GetComponent<SortingGroup>();
         playerInput = GetComponent<PlayerInput>();
         playerPool = GetComponent<Player_Pool>();
-        player_LevelManagement = GetComponent<Player_LevelManagement>();
     }
 
 
@@ -255,7 +253,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
-            player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
 
             LoadPlayerHealthUI();
             LoadPlayerChakraUI();
@@ -296,28 +293,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
         LoadPlayerChakraUI();
     }
-
-    public void EarnAmountOfExperience(int Amount)
-    {
-        if (photonView.IsMine)
-        {
-            player_LevelManagement.AddExperience(Amount);
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
-        }
-    }
-
-    public void EarnAmountOfCoin(int Amount)
-    {
-        if (photonView.IsMine)
-        {
-            AccountEntity.Coin += Amount;
-            References.accountRefer.Coin += Amount;
-            LoadProperties();
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
-
-        }
-    }
-
 
     public void LoadPlayerChakraUI()
     {
@@ -651,11 +626,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
         References.accountRefer.CurrentStrength = AccountEntity.CurrentStrength;
         LoadPlayerStrengthUI();
-    }
-
-    private void OnDestroy()
-    {
-        playerPool.DestroyPool();
     }
 
     public void LoadPlayerStrengthUI()
