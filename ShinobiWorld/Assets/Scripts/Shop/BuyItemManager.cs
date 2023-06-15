@@ -37,6 +37,8 @@ namespace Assets.Scripts.Shop
         public void Open()
         {
             GetListItem();
+            Game_Manager.Instance.IsBusy = true;
+
             ShowDetail(References.listItem[0].ID);
         }
 
@@ -198,6 +200,8 @@ namespace Assets.Scripts.Shop
         {
             DestroyItem();
             ShopManager.Instance.BuyPanel.SetActive(false);
+            Game_Manager.Instance.IsBusy = false;
+
         }
     }
 }

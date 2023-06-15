@@ -148,6 +148,8 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         LoadProperties();
         if (areaBoss_Entity.CurrentHealth <= 0)
         {
+            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
+
             players = GameObject.FindObjectsOfType<PlayerBase>();
 
             // Iterate through the players and find the one with the desired ID
