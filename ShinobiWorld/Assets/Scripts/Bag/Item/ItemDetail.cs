@@ -106,35 +106,40 @@ namespace Assets.Scripts.Bag.Item
             AccountItem_DAO.SellItem(References.accountRefer.ID, item.ID,
                                     int.Parse(Amount.text), int.Parse(Price.text));
 
-            References.accountRefer.Coin += int.Parse(Price.text);
-            Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+            //References.accountRefer.Coin += int.Parse(Price.text);
+            //Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
 
-            var index = References.listAccountItem.FindIndex(obj => obj.ItemID == item.ID);
-            References.listAccountItem[index].Amount -= int.Parse(Amount.text);
+            References.AddCoin(int.Parse(Price.text));
+
+            //var index = References.listAccountItem.FindIndex(obj => obj.ItemID == item.ID);
+            //References.listAccountItem[index].Amount -= int.Parse(Amount.text);
 
             BagManager.Instance.ReloadItem(item.ID);
         }
 
         public void Use()
         {
+            References.UpdateAccountToDB();
             AccountItem_DAO.UseItem(References.accountRefer.ID, item.ID);
-            
-            if(References.accountRefer.CurrentChakra + item.ChakraBonus > References.accountRefer.Chakra)
-            {
-                References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
-            } else References.accountRefer.CurrentChakra += item.ChakraBonus;
+            //References.listAccountItem.Find(obj => obj.ItemID == item.ID).Amount--;
 
-            if (References.accountRefer.CurrentHealth + item.HealthBonus > References.accountRefer.Health)
-            {
-                References.accountRefer.CurrentHealth = References.accountRefer.Health;
-            }
-            else References.accountRefer.CurrentHealth += item.HealthBonus;
+            //if (References.accountRefer.CurrentChakra + item.ChakraBonus > References.accountRefer.Chakra)
+            //{
+            //    References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
+            //}
+            //else References.accountRefer.CurrentChakra += item.ChakraBonus;
 
-            if (References.accountRefer.CurrentStrength + item.StrengthBonus > References.accountRefer.Strength)
-            {
-                References.accountRefer.CurrentStrength = References.accountRefer.Strength;
-            }
-            else References.accountRefer.CurrentStrength += item.StrengthBonus;
+            //if (References.accountRefer.CurrentHealth + item.HealthBonus > References.accountRefer.Health)
+            //{
+            //    References.accountRefer.CurrentHealth = References.accountRefer.Health;
+            //}
+            //else References.accountRefer.CurrentHealth += item.HealthBonus;
+
+            //if (References.accountRefer.CurrentStrength + item.StrengthBonus > References.accountRefer.Strength)
+            //{
+            //    References.accountRefer.CurrentStrength = References.accountRefer.Strength;
+            //}
+            //else References.accountRefer.CurrentStrength += item.StrengthBonus;
 
             Game_Manager.Instance.ReloadPlayerProperties();
 
