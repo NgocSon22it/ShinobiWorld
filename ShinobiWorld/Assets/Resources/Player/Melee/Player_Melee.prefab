@@ -1776,7 +1776,7 @@ Transform:
   m_GameObject: {fileID: 8538844862298929378}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8538844861352236149}
@@ -1954,7 +1954,7 @@ MonoBehaviour:
     Chakra: 0
     Delete: 0
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
-  PlayerAllUIPrefabs: {fileID: 4182973934900452979, guid: bb173a98f7a86ba4c81c986cc2ac0c96, type: 3}
+  PlayerAllUIPrefabs: {fileID: 7741783450571619106, guid: a2ba03984607abb418145f4e10e68686, type: 3}
   PlayerNickName: {fileID: 4373356765494000404}
   PlayerHealthChakraUI: {fileID: 8764373094491988010}
   PlayerCameraInstance: {fileID: 0}
@@ -1980,7 +1980,6 @@ MonoBehaviour:
   sortingGroup: {fileID: 0}
   playerInput: {fileID: 0}
   playerPool: {fileID: 0}
-  player_LevelManagement: {fileID: 0}
   MoveDirection: {x: 0, y: 0}
   CurrentHealth_UI: {fileID: 612702411517109825}
   CurrentChakra_UI: {fileID: 4314057655080928693}
@@ -1995,6 +1994,8 @@ MonoBehaviour:
   Hair: {fileID: 8538844861510742592}
   Mouth: {fileID: 8538844861818809087}
   CanWalking: 0
+  LocalScaleX: 0
+  LocalScaleY: 0
   AttackRange: 1
   Sword: {fileID: 8538844862244849140}
 --- !u!114 &380580311979023675
@@ -2247,41 +2248,6 @@ MonoBehaviour:
   SkillOne: {fileID: 0}
   SkillTwo: {fileID: 9190894436838358192, guid: 4aae09ace07e9284b82a9b0895a25e63, type: 3}
   SkillThree: {fileID: 1219175783894055487, guid: d3566b7a7934f2c4ebbba44f85d454b7, type: 3}
---- !u!114 &1463162354796029981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8538844862298929378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1268cfb93420c8d428f8db85402bde73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AccountEntity:
-    ID: 
-    RoleInGameID: 
-    TrophiesID: 
-    Level: 0
-    Health: 0
-    CurrentHealth: 0
-    Chakra: 0
-    CurrentChakra: 0
-    Exp: 0
-    Speed: 0
-    Coin: 0
-    Power: 0
-    Strength: 0
-    CurrentStrength: 0
-    EyeID: 
-    HairID: 
-    MouthID: 
-    SkinID: 
-    IsDead: 0
-    IsOnline: 0
-    IsTicket: 0
-    IsFirst: 0
 --- !u!61 &6238191496383072184
 BoxCollider2D:
   m_ObjectHideFlags: 0

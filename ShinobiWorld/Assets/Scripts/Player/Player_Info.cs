@@ -5,7 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class Player_Info : MonoBehaviourPunCallbacks
@@ -19,7 +21,20 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public TMP_Text Name_Preview;
     public TMP_Text Role;
     public TMP_Text Trophy;
-    public Button Skill_1Btn, Skill_2Btn, Skill_3Btn, Equip_ShirtBtn, Equip_PantBtn, Equip_WeaponBtn, WeaponBtn;
+    public Button WeaponBtn;
+
+    [Header("PreviewSkill")]
+    public Button Skill_1Btn;
+    public Button Skill_2Btn;
+    public Button Skill_3Btn;
+    public Image Skill_1Image, Skill_2Image, Skill_3Image;
+
+    [Header("PreviewEquipment")]
+    public Button Equip_ShirtBtn;
+    public Button Equip_HeadbandBtn;
+    public Button Equip_WeaponBtn;
+    public Image Equip_ShirtImage, Equip_HeadbandImage, Equip_WeaponImage;
+    public TMP_Text Equip_ShirtTxt, Equip_HeadbandTxt, Equip_WeaponTxt;
 
     [Header("DetailPlayer")]
     public GameObject DetailPlayer;
@@ -70,7 +85,8 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void OnAvatarBtnClick()
     {
-        References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
+        Game_Manager.Instance.IsBusy = true;
+        //References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
 
         References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
         References.listAccountSkill = AccountSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
@@ -91,12 +107,14 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public void OnCloseBtnClick()
     {
         InfoPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
+
     }
 
     public void SetupPreview()
     {
-        //Name_Preview.text = photonView.Owner.NickName;
-        Name_Preview.text = "Thien";
+        Name_Preview.text = PhotonNetwork.NickName;
+        //Name_Preview.text = "Thien";
         Role.text = References.listRole.Find(obj => obj.ID == References.accountRefer.RoleInGameID).Name;
         Trophy.text = References.listTrophy.Find(obj => obj.ID == References.accountRefer.TrophiesID).Name;
 
@@ -110,12 +128,58 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void SetupPreviewBtn()
     {
+        SetupPreviewBtnImage();
         Skill_1Btn.interactable = false;
+        Skill_1Image.color = new Color32(255,255,255,100);
+
         Skill_2Btn.interactable = false;
+        Skill_2Image.color = new Color32(255, 255, 255, 100);
+
         Skill_3Btn.interactable = false;
+        Skill_3Image.color = new Color32(255, 255, 255, 100);
+
         Equip_ShirtBtn.interactable = false;
-        Equip_PantBtn.interactable = false;
+        Equip_ShirtTxt.gameObject.SetActive(true);
+        Equip_ShirtImage.gameObject.SetActive(false);
+
+        Equip_HeadbandBtn.interactable = false;
+        Equip_HeadbandTxt.gameObject.SetActive(true);
+        Equip_HeadbandImage.gameObject.SetActive(false);
+
         Equip_WeaponBtn.interactable = false;
+        Equip_WeaponTxt.gameObject.SetActive(true);
+        Equip_WeaponImage.gameObject.SetActive(false);
+    }
+
+    public void SetupPreviewBtnImage()
+    {
+        WeaponBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
+        Skill_1Btn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UISkillDefault);
+        Skill_2Btn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UISkillDefault);
+        Skill_3Btn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UISkillDefault);
+
+        if (Equip_HeadbandImage.gameObject.activeSelf)
+        {
+            Equip_HeadbandBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
+        }
+        else Equip_HeadbandBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentDefault);
+
+        if(Equip_ShirtImage.gameObject.activeSelf)
+        {
+            Equip_ShirtBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
+        } else Equip_ShirtBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentDefault);
+
+        if (Equip_WeaponImage.gameObject.activeSelf)
+        {
+            Equip_WeaponBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
+        }
+        else Equip_WeaponBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentDefault);
+    }
+
+    public void SetupPreviewBtnSelected(Button btn)
+    {
+        SetupPreviewBtnImage();
+        btn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIInfoSelected);
     }
 
     public void SetupPreviewSkillBtn()
@@ -129,13 +193,13 @@ public class Player_Info : MonoBehaviourPunCallbacks
             switch (index)
             {
                 case "One":
-                    Skill_1Btn.GetComponentInChildren<TMP_Text>().text = skill.Name;
+                    Skill_1Image.sprite = Resources.Load<Sprite>(skill.Image);
                     break;
                 case "Two":
-                    Skill_2Btn.GetComponentInChildren<TMP_Text>().text = skill.Name;
+                    Skill_2Image.sprite = Resources.Load<Sprite>(skill.Image);
                     break;
                 case "Three":
-                    Skill_3Btn.GetComponentInChildren<TMP_Text>().text = skill.Name;
+                    Skill_3Image.sprite = Resources.Load<Sprite>(skill.Image);
                     break;
             }
         }
@@ -148,15 +212,31 @@ public class Player_Info : MonoBehaviourPunCallbacks
             {
                 case "One":
                     Skill_1Btn.interactable = true;
-                    Skill_1Btn.onClick.AddListener(() => ShowDetailSkill(skill));
+                    Skill_1Image.color = new Color32(255, 255, 255, 255);
+                    Skill_1Btn.onClick.AddListener
+                    (() =>
+                    {
+                        ShowDetailSkill(skill);
+                        SetupPreviewBtnSelected(Skill_1Btn);
+                    });
                     break;
                 case "Two":
                     Skill_2Btn.interactable = true;
-                    Skill_2Btn.onClick.AddListener(() => ShowDetailSkill(skill));
+                    Skill_2Image.color = new Color32(255, 255, 255, 255);
+                    Skill_2Btn.onClick.AddListener(() =>
+                    {
+                        ShowDetailSkill(skill);
+                        SetupPreviewBtnSelected(Skill_2Btn);
+                    });
                     break;
                 case "Three":
                     Skill_3Btn.interactable = true;
-                    Skill_3Btn.onClick.AddListener(() => ShowDetailSkill(skill));
+                    Skill_3Image.color = new Color32(255, 255, 255, 255);
+                    Skill_3Btn.onClick.AddListener(() =>
+                    {
+                        ShowDetailSkill(skill);
+                        SetupPreviewBtnSelected(Skill_3Btn);
+                    });
                     break;
             }
         }
@@ -194,21 +274,48 @@ public class Player_Info : MonoBehaviourPunCallbacks
         
         foreach (var equip in listUsing)
         {
-            var type = References.listEquipment.Find(obj => obj.ID == equip.EquipmentID).TypeEquipmentID;
+            var equipment = References.listEquipment.Find(obj => obj.ID == equip.EquipmentID);
 
-            switch(type)
+            switch(equipment.TypeEquipmentID)
             {
+                case "Headband":
+                    Equip_HeadbandBtn.interactable = true;
+                    Equip_HeadbandBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
+                    Equip_HeadbandImage.gameObject.SetActive(true); 
+                    Equip_HeadbandImage.sprite = Resources.Load<Sprite>(equipment.Image);
+                    Equip_HeadbandTxt.gameObject.SetActive(false);
+
+                    Equip_HeadbandBtn.onClick.AddListener(() =>
+                    {
+                        ShowDetailEquipment(equip);
+                        SetupPreviewBtnSelected(Equip_HeadbandBtn);
+                    });
+                    break;
                 case "Shirt":
                     Equip_ShirtBtn.interactable = true;
-                    Equip_ShirtBtn.onClick.AddListener(() => ShowDetailEquipment(equip));
-                    break;
-                case "Pant":
-                    Equip_PantBtn.interactable = true;
-                    Equip_PantBtn.onClick.AddListener(() => ShowDetailEquipment(equip));
+                    Equip_ShirtBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
+                    Equip_ShirtImage.gameObject.SetActive(true);
+                    Equip_ShirtImage.sprite = Resources.Load<Sprite>(equipment.Image);
+                    Equip_ShirtTxt.gameObject.SetActive(false);
+
+                    Equip_ShirtBtn.onClick.AddListener(() =>
+                    {
+                        ShowDetailEquipment(equip);
+                        SetupPreviewBtnSelected(Equip_ShirtBtn);
+                    });
                     break;
                 case "Weapon":
                     Equip_WeaponBtn.interactable = true;
-                    Equip_WeaponBtn.onClick.AddListener(() => ShowDetailEquipment(equip));
+                    Equip_WeaponBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
+                    Equip_WeaponImage.gameObject.SetActive(true);
+                    Equip_WeaponImage.sprite = Resources.Load<Sprite>(equipment.Image);
+                    Equip_WeaponTxt.gameObject.SetActive(false);
+
+                    Equip_WeaponBtn.onClick.AddListener(() => 
+                        { 
+                            ShowDetailEquipment(equip);
+                            SetupPreviewBtnSelected(Equip_WeaponBtn);
+                        } );
                     break;
             }
         } 
@@ -216,8 +323,12 @@ public class Player_Info : MonoBehaviourPunCallbacks
    
     public void ShowDetailPlayer()
     {
-        //Name_Player.text = photonView.Owner.NickName;
-        Name_Player.text = "Thien";
+        Init();
+
+        DetailPlayer.SetActive(true);
+
+        Name_Player.text = PhotonNetwork.NickName;
+        //Name_Player.text = "Thien";
         Level_Player.text = References.accountRefer.Level.ToString();
         Health_Player.text = References.accountRefer.Health.ToString();
         Chakra_Player.text = References.accountRefer.Chakra.ToString();
@@ -231,6 +342,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
     {
         //Name_Skill, Level_Skill, Damage_Skill, Chakra_Skill, Cooldown_Skill
         Init();
+        
         DetailSkill.SetActive(true);
 
         Name_Skill.text = References.ListSkill.Find(obj => obj.ID == skill.SkillID).Name;
@@ -244,19 +356,23 @@ public class Player_Info : MonoBehaviourPunCallbacks
     {
         //Name_Equipment, Level_Equipment, Damage_Equipment, Health_Equipment, Chakra_Equipment;
         Init();
+        
         DetailEquipment.SetActive(true);
 
         Name_Equipment.text = References.listEquipment.Find(obj => obj.ID == equip.EquipmentID).Name;
         Level_Equipment.text = equip.Level.ToString();
         Damage_Equipment.text = equip.Damage.ToString();
         Health_Equipment.text = equip.Health.ToString();
-        Chakra_Equipment.text = equip.Chakra.ToString();
+        Chakra_Equipment.text = equip.Chakra.ToString(); 
     }
 
     public void ShowDetailWeapon()
     {
         //Name_Weapon, Level_Weapon, Damage_Weapon;
         Init();
+        SetupPreviewBtnImage();
+        WeaponBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIInfoSelected);
+
         DetailWeapon.SetActive(true);
 
         Name_Weapon.text = References.weapon.Name;

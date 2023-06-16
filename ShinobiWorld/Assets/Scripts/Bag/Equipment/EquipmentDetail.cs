@@ -83,13 +83,18 @@ namespace Assets.Scripts.Bag.Equipment
 
         public void Sell()
         {
+            Debug.Log(References.accountRefer.ID);
+            Debug.Log(accountEquipment.EquipmentID);
+            Debug.Log(Price.text);
             AccountEquipment_DAO.SellEquipment(References.accountRefer.ID, accountEquipment.EquipmentID, int.Parse(Price.text));
-            
-            References.accountRefer.Coin += int.Parse(Price.text);
-            Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
 
-            var index = References.listAccountEquipment.FindIndex(obj => obj.EquipmentID == accountEquipment.EquipmentID);
-            References.listAccountEquipment[index].Delete = true;
+            //References.accountRefer.Coin += int.Parse(Price.text);
+            //Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+
+            //var index = References.listAccountEquipment.FindIndex(obj => obj.EquipmentID == accountEquipment.EquipmentID);
+            //References.listAccountEquipment[index].Delete = true;
+
+            References.AddCoin(int.Parse(Price.text));
 
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
         }
@@ -102,35 +107,40 @@ namespace Assets.Scripts.Bag.Equipment
 
         public void Use()
         {
+            References.UpdateAccountToDB();
             var type = References.listEquipment.Find(obj => obj.ID == accountEquipment.EquipmentID).TypeEquipmentID;
             var list = References.listEquipment.FindAll(obj => obj.TypeEquipmentID == type);
 
             var equip = References.listAccountEquipment.Find(obj => list.Any(filter => filter.ID == obj.EquipmentID) && obj.IsUse == true);
 
-            if(equip !=  null)
+            if (equip != null)
             {
+                Debug.Log(equip.EquipmentID);
+
                 AccountEquipment_DAO.RemoveEquipment(References.accountRefer.ID, equip.EquipmentID);
-                LoadUI(equip.Health * (-1), equip.Chakra * (-1));
             }
+                Debug.Log(accountEquipment.EquipmentID);
 
             AccountEquipment_DAO.UseEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
 
-            var index = References.listAccountEquipment.FindIndex(obj => obj.EquipmentID == accountEquipment.EquipmentID);
-            References.listAccountEquipment[index].IsUse = true;
+            //var index = References.listAccountEquipment.FindIndex(obj => obj.EquipmentID == accountEquipment.EquipmentID);
+            //References.listAccountEquipment[index].IsUse = true;
 
-            LoadUI(accountEquipment.Health, accountEquipment.Chakra);
+            LoadUI();
 
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
         }
 
         public void Remove()
         {
+            References.UpdateAccountToDB();
+
             AccountEquipment_DAO.RemoveEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
 
-            var index = References.listAccountEquipment.FindIndex(obj => obj.EquipmentID == accountEquipment.EquipmentID);
-            References.listAccountEquipment[index].IsUse = false;
+            //var index = References.listAccountEquipment.FindIndex(obj => obj.EquipmentID == accountEquipment.EquipmentID);
+            //References.listAccountEquipment[index].IsUse = false;
 
-            LoadUI(accountEquipment.Health*(-1), accountEquipment.Chakra * (-1));
+            LoadUI();
 
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
         }
@@ -193,17 +203,18 @@ namespace Assets.Scripts.Bag.Equipment
             else AccountEquipment_DAO.UpgradeEquipment(References.accountRefer.ID, accountEquipment.EquipmentID,
                                                     DamageBonus, HealthBonus, ChakraBonus);
 
-            References.accountRefer.Coin -= int.Parse(CostUpgrade.text);
-            Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+            //References.accountRefer.Coin -= int.Parse(CostUpgrade.text);
+            //Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
 
             var index = References.listAccountEquipment.FindIndex(obj => obj.EquipmentID == accountEquipment.EquipmentID);
             References.listAccountEquipment[index].Health = HealthBonus;
             References.listAccountEquipment[index].Damage = DamageBonus;
             References.listAccountEquipment[index].Chakra = ChakraBonus;
 
+            //BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
+            References.AddCoin(-int.Parse(CostUpgrade.text));
+            LoadUI();
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
-            LoadUI(accountEquipment.Health, accountEquipment.Chakra);
-
             UpgradePanel.SetActive(false);
         }
 
@@ -221,23 +232,25 @@ namespace Assets.Scripts.Bag.Equipment
             AccountEquipment_DAO.DowngradeEquipment(References.accountRefer.ID, accountEquipment.EquipmentID,
                                                     equipment.Damage, equipment.Health, equipment.Chakra);
 
-            References.accountRefer.Coin += int.Parse(CostReturn.text);
-            Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
+            //References.accountRefer.Coin += int.Parse(CostReturn.text);
+            //Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
 
             var index = References.listAccountEquipment.FindIndex(obj => obj.EquipmentID == accountEquipment.EquipmentID);
             References.listAccountEquipment[index].Health = equipment.Health;
             References.listAccountEquipment[index].Damage = equipment.Damage;
             References.listAccountEquipment[index].Chakra = equipment.Chakra;
 
+            //BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
+            References.AddCoin(int.Parse(CostReturn.text));
             BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
 
             DowngradePanel.SetActive(false);
         }
 
-        public void LoadUI(int Health, int Chakra)
+        public void LoadUI()
         {
-            References.accountRefer.Health += Health;
-            References.accountRefer.Chakra += Chakra;
+            //References.accountRefer.Health += Health;
+            //References.accountRefer.Chakra += Chakra;
             Game_Manager.Instance.ReloadPlayerProperties();
 
             Player_AllUIManagement.Instance
