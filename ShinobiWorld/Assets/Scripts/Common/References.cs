@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public static class References
 {
@@ -44,7 +45,7 @@ public static class References
     public static float Uppercent_Skill_Damage = 3f, Uppercent_Skill_Chakra = 1f, Uppercent_Skill_CoolDown = 1f;
     public static float Uppercent_Account = 5f;
     public static float Uppercent_Equipment = 5f;
-    public static int MaxUpgradeLevel = 30;
+    public static int MaxUpgradeLevel = 30; 
 
     public static int RespawnTime = 20;
     public static int RespawnCost = 1000;
@@ -52,6 +53,13 @@ public static class References
     public static int HealthBonus, ChakraBonus, StrengthBonus;
 
     public static int ExpercienceToNextLevel;
+
+    public static string TrophyID_RemakeMission = "Trophie_Jonin";
+
+    public static string UISkillDefault = "Background/UI_OrangeFill";
+    public static string UIEquipmentDefault = "Background/UI_GreenFill";
+    public static string UIEquipmentShow = "Background/UI_Green";
+    public static string UIInfoSelected = "Background/UI_Blue";
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
