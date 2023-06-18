@@ -438,7 +438,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (targetPosition.x > MainPoint.position.x && !FacingRight)
             {
-                Flip();
+                Flip(); 
             }
             else if (targetPosition.x < MainPoint.position.x && FacingRight)
             {
@@ -581,6 +581,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             stream.SendNext(targetPosition);
             stream.SendNext(SkillDirection);
+            stream.SendNext(FacingRight);
 
 
             stream.SendNext(AccountEntity.CurrentHealth);
@@ -598,6 +599,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             targetPosition = (Vector3)stream.ReceiveNext();
             SkillDirection = (Vector2)stream.ReceiveNext();
+            FacingRight = (bool)stream.ReceiveNext();
 
 
             AccountEntity.CurrentHealth = (int)stream.ReceiveNext();
@@ -632,11 +634,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
         References.accountRefer.CurrentStrength = AccountEntity.CurrentStrength;
         LoadPlayerStrengthUI();
-    }
-
-    private void OnDestroy()
-    {
-        playerPool.DestroyPool();
     }
 
     public void LoadPlayerStrengthUI()

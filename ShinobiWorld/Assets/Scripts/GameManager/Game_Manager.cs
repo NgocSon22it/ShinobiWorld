@@ -56,6 +56,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     [SerializeField] List<EnemyInfo> SpawnList_LangLa1 = new List<EnemyInfo>();
 
+
+    [SerializeField] List<GameObject> List_LangLa1 = new List<GameObject>();
+
     public bool IsBusy;
 
 
@@ -82,48 +85,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SpawnNPC();
-        }
-
     }
 
-    public void SpawnNPC()
-    {
-        SpawnList_LangLa1.AddRange(new List<EnemyInfo>
-        {
-            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat1", SpawnPosition = new Vector3(-16, -15, 0)},
-            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat2", SpawnPosition = new Vector3(-16, -15, 0) },
-           // new EnemyInfo { EnemyID = "Boss_Fish", Extension = "Boss/Normal/Fish/", enemyPrefab = BossPrefabs_Fish, AreaName = "LL1_Fish1", SpawnPosition = new Vector3(-15, -13, 0) }
-        });
 
 
-        foreach (EnemyInfo enemyInfo in SpawnList_LangLa1)
-        {
-            enemyInfo.SetBossEntity();
-            enemyInfo.SetAreaBossEntity();
 
-            SqlDateTime sqlDateTime = new SqlDateTime(DateTime.Now);
-            Debug.Log(sqlDateTime);
-            Debug.Log(enemyInfo.areaBoss_Entity.TimeSpawn);
-
-
-            if (enemyInfo.areaBoss_Entity.isDead == false && sqlDateTime >= enemyInfo.areaBoss_Entity.TimeSpawn)
-            {
-
-                GameObject EnemyObject = PhotonNetwork.InstantiateRoomObject(enemyInfo.Extension + enemyInfo.enemyPrefab.name, enemyInfo.SpawnPosition, Quaternion.identity);
-                Enemy enemyScript = EnemyObject.GetComponentInChildren<Enemy>();
-
-                enemyScript.EnemyID = enemyInfo.EnemyID;
-                enemyScript.AreaName = enemyInfo.AreaName;
-                enemyScript.PoolExtension = enemyInfo.Extension;
-                enemyScript.SetUpEntity(enemyInfo.EnemyID, enemyInfo.AreaName, enemyInfo.Extension);
-                enemyScript.SetUpEnemy();
-                enemyScript.enabled = true;
-            }
-        }
-    }
 
 
 
