@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
+    new void Awake()
+    {
+        EnemyID = "Boss_Bat";
+        AreaName = "LL1_Bat1";
+        SetUp(EnemyID, AreaName);
+    }
     // Start is called before the first frame update
     new void Start()
     {
