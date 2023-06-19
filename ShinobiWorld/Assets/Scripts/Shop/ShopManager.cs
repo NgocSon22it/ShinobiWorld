@@ -1,3 +1,4 @@
+
 using Assets.Scripts.Bag;
 using Assets.Scripts.Bag.Equipment;
 using Assets.Scripts.Bag.Item;
@@ -37,6 +38,7 @@ public class ShopManager : MonoBehaviour
     public void OnShopBtnClick()
     {
         Init();
+        Game_Manager.Instance.IsBusy = true;
         ShopPanel.SetActive(true);
     }
 
@@ -55,7 +57,12 @@ public class ShopManager : MonoBehaviour
     }
 
     public void CloseConfirmPanel() { ConfirmPanel.SetActive(false); }
-    public void CloseShopPanel() { ShopPanel.SetActive(false); }
+
+    public void CloseShopPanel() 
+    { 
+        ShopPanel.SetActive(false); 
+        Game_Manager.Instance.IsBusy = false;
+    }
 
     public void OnConfirmSellBtnClick()
     {

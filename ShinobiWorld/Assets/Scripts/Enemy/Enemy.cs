@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     //Separate
     public string AreaName;
     public string EnemyID;
-    public string PoolExtension;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -32,15 +31,15 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     Vector2 randomPosition;
 
 
-    protected Vector3 MovePosition;
+    public Vector3 MovePosition;
     public bool isMoving = true;
 
     public float Break_CurrentTime;
     public float Break_TotalTime = 2f;
 
-    protected Vector3 TargetPosition;
+    public Vector3 TargetPosition;
 
-    protected bool playerInRange = false;
+    public bool playerInRange = false;
     public Vector3 clampedPosition;
     public float detectionRadius = 5f;
 
@@ -48,8 +47,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public float FindTarget_TotalTime = 1f;
 
     public float LocalScaleX;
-
-    PlayerBase[] players;
 
     // MainPoint
     [SerializeField] Transform MainPoint;
@@ -73,8 +70,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     // Facing
     public bool FacingRight = false;
 
-
-
     public void SetUpComponent()
     {
         animator = GetComponent<Animator>();
@@ -83,29 +78,24 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         boss_Pool = GetComponent<Boss_Pool>();
     }
 
-    public void SetUpEntity(string EnemyID, string AreaName, string PoolExtension)
+    public void SetUp(string EnemyID, string AreaName)
     {
-        photonView.RPC(nameof(SyncEntity), RpcTarget.AllBuffered, EnemyID, AreaName, PoolExtension);
-    }
-
-    [PunRPC]
-    public void SyncEntity(string EnemyID, string AreaName, string PoolExtension)
-    {
-        this.EnemyID = EnemyID;
-        this.AreaName = AreaName;
-        this.PoolExtension = PoolExtension;
+        SetUpComponent();
         boss_Entity = Boss_DAO.GetBossByID(EnemyID);
         areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
-    }
-
-    public void SetUpEnemy()
-    {
         if (photonView.IsMine)
         {
             if (boss_Entity != null && areaBoss_Entity != null)
             {
-                boss_Pool.InitializeProjectilePool(PoolExtension);
-                LoadHealthUI();               
+                if (areaBoss_Entity.CurrentHealth <= 0)
+                {
+                    gameObject.SetActive(false);
+                }
+                else
+                {
+                    LoadHealthUI();
+                }
+
             }
             else
             {
@@ -119,9 +109,14 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         AreaBoss_DAO.UpdateAreaBoss(areaBoss_Entity);
     }
 
+    public void Awake()
+    {
+
+    }
 
     public void Start()
     {
+
         LocalScaleX = transform.localScale.x;
         MovePosition = GetRandomPosition();
     }
@@ -148,20 +143,10 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         LoadProperties();
         if (areaBoss_Entity.CurrentHealth <= 0)
         {
-            players = GameObject.FindObjectsOfType<PlayerBase>();
-
-            // Iterate through the players and find the one with the desired ID
-            foreach (PlayerBase player in players)
-            {
-                if (player.AccountEntity.ID == UserID)
-                {
-                    player.EarnAmountOfExperience(boss_Entity.ExpBonus);
-                    player.EarnAmountOfCoin(boss_Entity.CoinBonus);
-                    break;
-                }
-            }
+            References.AddExperience(boss_Entity.ExpBonus);
+            References.AddCoin(boss_Entity.CoinBonus);
+            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
             gameObject.SetActive(false);
-
         }
         LoadHealthUI();
     }

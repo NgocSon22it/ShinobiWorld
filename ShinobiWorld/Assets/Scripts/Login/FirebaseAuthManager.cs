@@ -445,7 +445,10 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private void OnApplicationQuit()
     {
-        Account_DAO.ChangeStateOnline(user.UserId, false);
+        if (References.accountRefer != null)
+        {
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
     }
 
     public void Logout()

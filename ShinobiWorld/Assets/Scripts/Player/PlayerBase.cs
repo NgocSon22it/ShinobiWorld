@@ -79,7 +79,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     //Script Component
     public Player_Pool playerPool;
-    public Player_LevelManagement player_LevelManagement;
 
 
     //Player Input
@@ -110,6 +109,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     //Walk Interaction
     public bool CanWalking;
+
+    public float LocalScaleX, LocalScaleY;
 
     // Lag
     Vector3 realPosition;
@@ -187,7 +188,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         sortingGroup = GetComponent<SortingGroup>();
         playerInput = GetComponent<PlayerInput>();
         playerPool = GetComponent<Player_Pool>();
-        player_LevelManagement = GetComponent<Player_LevelManagement>();
     }
 
 
@@ -226,6 +226,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (AccountEntity != null)
             {
                 AttackCooldown_Total = 0.5f;
+                LocalScaleX = transform.localScale.x;
+                LocalScaleY = transform.localScale.y;
                 PlayerCameraInstance = Instantiate(PlayerCameraPrefabs);
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
@@ -255,7 +257,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
-            player_LevelManagement.GetComponent<Player_LevelManagement>().SetUpAccountEntity(AccountEntity);
 
             LoadPlayerHealthUI();
             LoadPlayerChakraUI();
@@ -296,28 +297,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
         LoadPlayerChakraUI();
     }
-
-    public void EarnAmountOfExperience(int Amount)
-    {
-        if (photonView.IsMine)
-        {
-            player_LevelManagement.AddExperience(Amount);
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
-        }
-    }
-
-    public void EarnAmountOfCoin(int Amount)
-    {
-        if (photonView.IsMine)
-        {
-            AccountEntity.Coin += Amount;
-            References.accountRefer.Coin += Amount;
-            LoadProperties();
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
-
-        }
-    }
-
 
     public void LoadPlayerChakraUI()
     {
@@ -435,20 +414,22 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             Flip();
         }
     }
+
     public void Flip()
     {
         FacingRight = !FacingRight;
-        if (FacingRight)
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-            PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-        }
-        else
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-            PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
-        }
+        LocalScaleX *= -1f;
 
+        SetUpFlip(LocalScaleX, LocalScaleY, 1f);
+    }
+
+    public void SetUpFlip(float x, float y, float z)
+    {
+        transform.localScale = new Vector3(x, y, z);
+        if (PlayerHealthChakraUI != null)
+        {
+            PlayerHealthChakraUI.GetComponent<RectTransform>().localScale = new Vector3(x, y, z);
+        }
     }
 
     public void FlipToMouse()
@@ -457,7 +438,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (targetPosition.x > MainPoint.position.x && !FacingRight)
             {
-                Flip();
+                Flip(); 
             }
             else if (targetPosition.x < MainPoint.position.x && FacingRight)
             {
@@ -600,6 +581,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             stream.SendNext(targetPosition);
             stream.SendNext(SkillDirection);
+            stream.SendNext(FacingRight);
 
 
             stream.SendNext(AccountEntity.CurrentHealth);
@@ -617,6 +599,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             targetPosition = (Vector3)stream.ReceiveNext();
             SkillDirection = (Vector2)stream.ReceiveNext();
+            FacingRight = (bool)stream.ReceiveNext();
 
 
             AccountEntity.CurrentHealth = (int)stream.ReceiveNext();
@@ -651,11 +634,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
         References.accountRefer.CurrentStrength = AccountEntity.CurrentStrength;
         LoadPlayerStrengthUI();
-    }
-
-    private void OnDestroy()
-    {
-        playerPool.DestroyPool();
     }
 
     public void LoadPlayerStrengthUI()

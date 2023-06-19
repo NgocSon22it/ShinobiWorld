@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7318915688042792121}
   - component: {fileID: 1130529996071736188}
-  - component: {fileID: 9118081555469929412}
   - component: {fileID: -1872693212821009049}
   - component: {fileID: 2244870565867702708}
   - component: {fileID: 1692044560095878735}
+  - component: {fileID: 8592483933257085312}
   m_Layer: 7
   m_Name: Range_NormalAttack
   m_TagString: Bullet
@@ -57,35 +57,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!68 &9118081555469929412
-EdgeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4593264165139950441}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -1.0867335, y: 0.124054745}
-  - {x: -0.38574517, y: 0.5528027}
-  - {x: 0.04392326, y: 1.2354127}
-  - {x: 0.48587018, y: 0.5468522}
-  - {x: 1.1754713, y: 0.12856945}
-  - {x: 0.4725957, y: -0.31044313}
-  - {x: 0.04526472, y: -0.99225736}
-  - {x: -0.37885463, y: -0.30716377}
-  - {x: -1.0845807, y: 0.12518431}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
 --- !u!114 &-1872693212821009049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,6 +71,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackAble_Tag:
   - Enemy
+  - Ground
 --- !u!2083052967 &2244870565867702708
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -177,3 +149,19 @@ VFXRenderer:
   m_SortingLayerID: 178467679
   m_SortingLayer: 3
   m_SortingOrder: 0
+--- !u!58 &8592483933257085312
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4593264165139950441}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.008661509, y: 0.0038611293}
+  serializedVersion: 2
+  m_Radius: 0.4184087

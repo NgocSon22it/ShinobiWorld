@@ -6,19 +6,22 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
+    new void Awake()
+    {
+        EnemyID = "Boss_Bat";
+        AreaName = "LL1_Bat1";
+        SetUp(EnemyID, AreaName);
+    }
     // Start is called before the first frame update
     new void Start()
     {
-        base.Start();       
+        base.Start();
     }
     new void Update()
     {
         base.Update();
-           
-        if (photonView.IsMine)
-        {
-           AttackAndMove();
-        }
+        AttackAndMove();
+
     }
 
     public void AttackAndMove()
@@ -52,22 +55,23 @@ public class Bat : Enemy
                 }
             }
         }
-       /* FindTarget_CurrentTime += Time.deltaTime;
+        FindTarget_CurrentTime += Time.deltaTime;
 
         // Check if the interval has passed
         if (FindTarget_CurrentTime >= FindTarget_TotalTime)
         {
             TargetPosition = FindClostestTarget(detectionRadius, "Player");
             FindTarget_CurrentTime = 0f;
-        }*/
+        }
 
-        //playerInRange = TargetPosition != Vector3.zero;
+        playerInRange = TargetPosition != Vector3.zero;
         // Restrict movement to the move area
         clampedPosition = movementBounds.ClosestPoint(transform.position);
         transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
 
-        //animator.SetBool("PlayerInRange", playerInRange);
+        animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
+
     }
 
     public void Animation_SkillOne()
@@ -85,6 +89,10 @@ public class Bat : Enemy
                 SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
+            }
+            else
+            {
+                Debug.Log("No Damage");
             }
         }
     }
