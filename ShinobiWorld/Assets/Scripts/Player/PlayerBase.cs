@@ -41,6 +41,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     //Attack
     [SerializeField] public Transform AttackPoint;
 
+    [SerializeField] Transform ObjectPool_Runtime;
+
     //Skill
     public float SkillOneCooldown_Total;
     public float SkillOneCooldown_Current;
@@ -174,12 +176,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    public void LoadProperties()
-    {
-        References.UpdateAccountToDB();
-        Game_Manager.Instance.ReloadPlayerProperties();
-    }
-
     public void SetUpComponent()
     {
         animator = GetComponent<Animator>();
@@ -220,7 +216,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Start()
     {
         SetUpComponent();
-
+        ObjectPool_Runtime.SetParent(null);
         if (photonView.IsMine)
         {
             if (AccountEntity != null)
@@ -383,7 +379,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
             AccountEntity.CurrentHealth -= Damage;
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
-            LoadProperties();
+            References.UpdateAccountToDB();
+            Game_Manager.Instance.ReloadPlayerProperties();
         }
 
         if (AccountEntity.CurrentHealth <= 0)
@@ -646,6 +643,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(ObjectPool_Runtime.gameObject);
     }
 
 }

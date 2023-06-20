@@ -122,6 +122,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public void ReloadPlayerProperties()
     {
+        References.UpdateAccountToDB();
         References.LoadAccountWeaponNSkill(Role);
         References.LoadAccount();
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
