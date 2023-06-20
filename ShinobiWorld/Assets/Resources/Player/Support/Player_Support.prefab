@@ -173,7 +173,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1231443372386269981}
-  - component: {fileID: 9131134238191787726}
   m_Layer: 0
   m_Name: Body_Below
   m_TagString: Untagged
@@ -199,17 +198,6 @@ Transform:
   m_Father: {fileID: 1231443374405932950}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &9131134238191787726
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231443372386269982}
-  m_Enabled: 1
-  m_SortingLayerID: 178467679
-  m_SortingLayer: 3
-  m_SortingOrder: 0
 --- !u!1 &1231443372389573727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,6 +1171,7 @@ GameObject:
   - component: {fileID: 9178576785560787549}
   - component: {fileID: 7713341436081449469}
   - component: {fileID: -1987454478111399211}
+  - component: {fileID: 6557555598321508280}
   m_Layer: 6
   m_Name: Player_Support
   m_TagString: Player
@@ -1248,8 +1237,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 178467679
-  m_SortingLayer: 3
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4ea6c3b8e03de784696e2f9e8914f78e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1698,6 +1687,17 @@ MonoBehaviour:
   - {fileID: 3551823992678444064}
   - {fileID: 4132240168673934279}
   List_SkillThreeExplosion: []
+--- !u!210 &6557555598321508280
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231443374405932938}
+  m_Enabled: 1
+  m_SortingLayerID: 178467679
+  m_SortingLayer: 3
+  m_SortingOrder: 0
 --- !u!1 &1785329040892814512
 GameObject:
   m_ObjectHideFlags: 0
