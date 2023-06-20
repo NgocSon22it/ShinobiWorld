@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     //Separate
     public string AreaName;
     public string EnemyID;
-    public string PoolExtension;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -79,31 +78,24 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         boss_Pool = GetComponent<Boss_Pool>();
     }
 
-    public void SetUpEntity(string EnemyID, string AreaName, string PoolExtension)
+    public void SetUp(string EnemyID, string AreaName)
     {
-        photonView.RPC(nameof(SyncEntity), RpcTarget.AllBuffered, EnemyID, AreaName, PoolExtension);
-    }
-
-    [PunRPC]
-    public void SyncEntity(string EnemyID, string AreaName, string PoolExtension)
-    {
-        this.EnemyID = EnemyID;
-        this.AreaName = AreaName;
-        this.PoolExtension = PoolExtension;
         SetUpComponent();
-        boss_Pool.InitializeProjectilePool(PoolExtension);
         boss_Entity = Boss_DAO.GetBossByID(EnemyID);
         areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
-    }
-
-    public void SetUpEnemy()
-    {
         if (photonView.IsMine)
         {
             if (boss_Entity != null && areaBoss_Entity != null)
-            {             
-                LoadHealthUI();
-                
+            {
+                if (areaBoss_Entity.CurrentHealth <= 0)
+                {
+                    gameObject.SetActive(false);
+                }
+                else
+                {
+                    LoadHealthUI();
+                }
+
             }
             else
             {
@@ -117,9 +109,14 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         AreaBoss_DAO.UpdateAreaBoss(areaBoss_Entity);
     }
 
+    public void Awake()
+    {
+
+    }
+
     public void Start()
     {
-                
+
         LocalScaleX = transform.localScale.x;
         MovePosition = GetRandomPosition();
     }
