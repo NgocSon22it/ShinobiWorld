@@ -109,7 +109,6 @@ public class MeleeChacracter : PlayerBase
 
     public void Animation_SkillTwo()
     {
-
         GameObject skillTwo = playerPool.GetSkillTwoFromPool();
 
         if (skillTwo != null)
@@ -118,9 +117,8 @@ public class MeleeChacracter : PlayerBase
             skillTwo.transform.rotation = AttackPoint.rotation;
             if (photonView.IsMine)
             {
-                skillTwo.GetComponent<SwingSword>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+                skillTwo.GetComponent<Melee_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             }
-            skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
             skillTwo.SetActive(true);
         }
 
@@ -136,9 +134,9 @@ public class MeleeChacracter : PlayerBase
             skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
             if (photonView.IsMine)
             {
-                skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
+                skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
             }
-            skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
+            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition, playerPool.GetSkillThreeExplosionFromPool());
             skillThree.SetActive(true);
         }
 
