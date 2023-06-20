@@ -18,23 +18,6 @@ using Unity.VisualScripting;
 using System.Data.SqlTypes;
 using System;
 
-public class EnemyInfo
-{
-    public string EnemyID;
-    public string Extension;
-    public string AreaName;
-
-    public GameObject enemyPrefab;
-    public Vector3 SpawnPosition;
-
-    public Boss_Entity boss_Entity;
-    public AreaBoss_Entity areaBoss_Entity;
-
-    public void SetBossEntity() { boss_Entity = Boss_DAO.GetBossByID(EnemyID); }
-    public void SetAreaBossEntity() { areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID); }
-
-}
-
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
@@ -46,16 +29,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
-    [SerializeField] GameObject BossPrefabs_Bat;
-    [SerializeField] GameObject BossPrefabs_Fish;
-    [SerializeField] GameObject BossPrefabs_Crap;
 
     public static Game_Manager Instance;
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
-
-    [SerializeField] List<EnemyInfo> SpawnList_LangLa1 = new List<EnemyInfo>();
-
 
     [SerializeField] List<GameObject> List_LangLa1 = new List<GameObject>();
 
@@ -80,19 +57,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
-
     public override void OnJoinedRoom()
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
     }
-
-
-
-
-
-
-
 
     public void SetupPlayer(Vector3 position)
     {
@@ -118,6 +87,17 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void Spawn_Enemy(string AreaID, string BossID)
+    {
+        foreach(GameObject enemy in List_LangLa1)
+        {
+            if(enemy.GetComponentInChildren<Enemy>().areaBoss_Entity.ID.Equals(AreaID) 
+                && enemy.GetComponentInChildren<Enemy>().areaBoss_Entity.BossID.Equals(BossID))
+            {
+               
+            }
+        }
+    }
 
 
     public void ReloadPlayerProperties()
@@ -154,7 +134,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         References.UpdateAccountToDB();
         ReloadPlayerProperties();
     }
-
 
     public override void OnLeftRoom()
     {

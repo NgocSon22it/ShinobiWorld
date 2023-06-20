@@ -41,7 +41,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     //Attack
     [SerializeField] public Transform AttackPoint;
 
-    [SerializeField] Transform ObjectPool_Runtime;
+    [SerializeField] GameObject ObjectPool_Runtime;
 
     //Skill
     public float SkillOneCooldown_Total;
@@ -216,7 +216,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Start()
     {
         SetUpComponent();
-        ObjectPool_Runtime.SetParent(null);
+        ObjectPool_Runtime.transform.SetParent(null);
         if (photonView.IsMine)
         {
             if (AccountEntity != null)
@@ -435,7 +435,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (targetPosition.x > MainPoint.position.x && !FacingRight)
             {
-                Flip(); 
+                Flip();
             }
             else if (targetPosition.x < MainPoint.position.x && FacingRight)
             {
@@ -647,7 +647,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnDestroy()
     {
-        Destroy(ObjectPool_Runtime.gameObject);
+        if (ObjectPool_Runtime != null)
+        {
+            Destroy(ObjectPool_Runtime);
+        }
     }
 
 }
