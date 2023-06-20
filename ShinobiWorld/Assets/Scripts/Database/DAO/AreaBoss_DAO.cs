@@ -54,17 +54,30 @@ public static class AreaBoss_DAO
         return null;
     }
 
-    public static void UpdateAreaBoss(AreaBoss_Entity areaBoss_Entity)
+    public static void UpdateHealthAreaBoss(AreaBoss_Entity areaBoss_Entity)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Update AreaBoss set isDead = @isDead, TimeSpawn = @TimeSpawn, CurrentHealth = @CurrentHealth where ID = @ID and BossID = @BossID";
+            cmd.CommandText = "Update AreaBoss set isDead = @isDead, CurrentHealth = @CurrentHealth where ID = @ID and BossID = @BossID";
             cmd.Parameters.AddWithValue("@ID", areaBoss_Entity.ID);
-            cmd.Parameters.AddWithValue("@BossID", areaBoss_Entity.BossID);
             cmd.Parameters.AddWithValue("@isDead", areaBoss_Entity.isDead);
-            cmd.Parameters.AddWithValue("@TimeSpawn", (SqlDateTime) areaBoss_Entity.TimeSpawn);
+            cmd.Parameters.AddWithValue("@BossID", areaBoss_Entity.BossID);
             cmd.Parameters.AddWithValue("@CurrentHealth", areaBoss_Entity.CurrentHealth);
+            connection.Open();
+            cmd.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
+
+    public static void SetAreaBossDie(string AreaID, string BossID)
+    {
+        using (SqlConnection connection = new SqlConnection(ConnectionStr))
+        {
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "Update AreaBoss set isDead = 1, TimeSpawn = DATEADD(minute, 5, GETDATE()) where ID = @ID and BossID = @BossID";
+            cmd.Parameters.AddWithValue("@ID", AreaID);
+            cmd.Parameters.AddWithValue("@BossID", BossID);
             connection.Open();
             cmd.ExecuteNonQuery();
             connection.Close();
