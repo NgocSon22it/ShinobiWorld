@@ -5,9 +5,8 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SwingSword : PlayerSkill
+public class Melee_SkillTwo : PlayerSkill
 {
-
     public Transform Center;
     Collider2D collider2;
 
@@ -24,10 +23,10 @@ public class SwingSword : PlayerSkill
 
     new void OnEnable()
     {
-        base.OnEnable();
         angle = 1.5f;
-        LifeTime = 100f;
+        LifeTime = 5f;
         StartCoroutine(LogTriggeredObjects());
+        base.OnEnable();
     }
     new void OnDisable()
     {
@@ -50,11 +49,6 @@ public class SwingSword : PlayerSkill
                 angle = 1.5f;
             }
         }
-    }
-
-    public void SetUpCenter(Transform transform)
-    {
-        Center = transform;
     }
 
     private IEnumerator LogTriggeredObjects()

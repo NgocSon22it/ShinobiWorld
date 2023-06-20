@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class Boss_Pool : MonoBehaviourPunCallbacks
 {
-    [Header("Projectile Amount")]
-    int Amount = 5;
 
     [SerializeField] List<GameObject> List_SkillOne = new List<GameObject>();
 
