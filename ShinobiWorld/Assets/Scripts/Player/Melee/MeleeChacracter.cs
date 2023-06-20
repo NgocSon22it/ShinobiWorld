@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public class MeleeChacracter : PlayerBase
 {
     [SerializeField] float AttackRange;
+    
 
     //Skill One
     [SerializeField] SpriteRenderer Sword;
@@ -19,6 +20,7 @@ public class MeleeChacracter : PlayerBase
     new void Start()
     {
         base.Start();
+        
     }
 
     // Update is called once per frame
