@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public AreaBoss_Entity areaBoss_Entity = new AreaBoss_Entity();
 
     //Separate
-    public string AreaName;
+    public string AreaName = "";
     public string EnemyID;
 
     // Move Area
@@ -72,33 +72,27 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     // Facing
     public bool FacingRight = false;
 
-    public void SetUpComponent()
-    {
-        animator = GetComponent<Animator>();
-        rigidbody2d = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        boss_Pool = GetComponent<Boss_Pool>();
-    }
-
-    private void OnEnable()
-    {
-        SetUpComponent();
-    }
 
     public void SetUp(string EnemyID, string AreaName)
     {
-        SetUpComponent();
-        boss_Entity = Boss_DAO.GetBossByID(EnemyID);
-        areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
-
-        if (boss_Entity != null && areaBoss_Entity != null)
+        if (!string.IsNullOrEmpty(AreaName))
         {
-            SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
+            boss_Entity = Boss_DAO.GetBossByID(EnemyID);
+            areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
 
-            if (dateTime >= areaBoss_Entity.TimeSpawn && areaBoss_Entity.isDead == false && areaBoss_Entity.CurrentHealth > 0)
+            if (boss_Entity != null && areaBoss_Entity != null)
             {
-                gameObject.SetActive(true);
-                LoadHealthUI();
+                SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
+
+                if (dateTime >= areaBoss_Entity.TimeSpawn && areaBoss_Entity.isDead == false && areaBoss_Entity.CurrentHealth > 0)
+                {
+                    gameObject.SetActive(true);
+                    LoadHealthUI();
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
             }
             else
             {

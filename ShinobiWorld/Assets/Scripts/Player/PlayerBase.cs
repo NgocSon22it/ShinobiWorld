@@ -176,17 +176,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    public void SetUpComponent()
-    {
-        animator = GetComponent<Animator>();
-        rigidbody2d = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        sortingGroup = GetComponent<SortingGroup>();
-        playerInput = GetComponent<PlayerInput>();
-        playerPool = GetComponent<Player_Pool>();
-    }
-
-
     public void LoadLayout()
     {
         if (AccountEntity != null)
@@ -215,7 +204,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Start()
     {
-        SetUpComponent();
         ObjectPool_Runtime.transform.SetParent(null);
         if (photonView.IsMine)
         {

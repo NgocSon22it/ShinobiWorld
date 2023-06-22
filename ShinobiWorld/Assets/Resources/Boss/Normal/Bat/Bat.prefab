@@ -441,7 +441,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &3659108024285446474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,7 +521,7 @@ MonoBehaviour:
     isDead: 0
     CurrentHealth: 0
     Delete: 0
-  AreaName: 
+  AreaName: LL1_Bat1
   EnemyID: 
   movementBounds: {fileID: 3659108024181459250}
   ObjectPool: {fileID: 6338442717189406660}
@@ -541,10 +541,10 @@ MonoBehaviour:
   HealthNumber: {fileID: 4316932124958939512}
   direction: {x: 0, y: 0}
   HealthChakraUI: {fileID: 8323037505171814722}
-  spriteRenderer: {fileID: 0}
-  rigidbody2d: {fileID: 0}
-  animator: {fileID: 0}
-  boss_Pool: {fileID: 0}
+  spriteRenderer: {fileID: 3659108024285446477}
+  rigidbody2d: {fileID: 3659108024285446454}
+  animator: {fileID: 3659108024285446475}
+  boss_Pool: {fileID: 3659108024285446450}
   FacingRight: 0
 --- !u!61 &3659108024285446473
 BoxCollider2D:
