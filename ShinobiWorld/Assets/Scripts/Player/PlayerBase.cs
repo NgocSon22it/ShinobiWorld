@@ -639,6 +639,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Destroy(ObjectPool_Runtime);
         }
+        if (References.IsDisconnect)
+        {
+            Game_Manager.Instance.PlayerReconnectPosition = transform.position;
+        }
     }
 
 }
