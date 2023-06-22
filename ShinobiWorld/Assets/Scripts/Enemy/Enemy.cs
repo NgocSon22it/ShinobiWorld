@@ -12,8 +12,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.LowLevel;
 using UnityEngine.Rendering;
 using Photon.Realtime;
+using System.Data.SqlTypes;
 
-public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
+public class Enemy : MonoBehaviourPun, IPunObservable
 {
     // Entity
     public Boss_Entity boss_Entity = new Boss_Entity();
@@ -30,6 +31,7 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     float randomX, randomY;
     Vector2 randomPosition;
 
+    [SerializeField] GameObject ObjectPool;
 
     public Vector3 MovePosition;
     public bool isMoving = true;
@@ -78,36 +80,37 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         boss_Pool = GetComponent<Boss_Pool>();
     }
 
+    private void OnEnable()
+    {
+        SetUpComponent();
+    }
+
     public void SetUp(string EnemyID, string AreaName)
     {
         SetUpComponent();
         boss_Entity = Boss_DAO.GetBossByID(EnemyID);
         areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
-        if (photonView.IsMine)
-        {
-            if (boss_Entity != null && areaBoss_Entity != null)
-            {
-                if (areaBoss_Entity.CurrentHealth <= 0)
-                {
-                    gameObject.SetActive(false);
-                }
-                else
-                {
-                    LoadHealthUI();
-                }
 
+        if (boss_Entity != null && areaBoss_Entity != null)
+        {
+            SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
+
+            if (dateTime >= areaBoss_Entity.TimeSpawn && areaBoss_Entity.isDead == false && areaBoss_Entity.CurrentHealth > 0)
+            {
+                gameObject.SetActive(true);
+                LoadHealthUI();
             }
             else
             {
                 gameObject.SetActive(false);
             }
         }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
-    public void LoadProperties()
-    {
-        AreaBoss_DAO.UpdateAreaBoss(areaBoss_Entity);
-    }
 
     public void Awake()
     {
@@ -116,13 +119,17 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Start()
     {
-
         LocalScaleX = transform.localScale.x;
         MovePosition = GetRandomPosition();
+        if (ObjectPool != null)
+        {
+            ObjectPool.transform.SetParent(null);
+        }
     }
 
     public void Update()
     {
+
     }
 
     public void LoadHealthUI()
@@ -140,14 +147,17 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     public void TakeDamageSync(string UserID, int Damage)
     {
         areaBoss_Entity.CurrentHealth -= Damage;
-        LoadProperties();
+        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
+
         if (areaBoss_Entity.CurrentHealth <= 0)
         {
             References.AddExperience(boss_Entity.ExpBonus);
             References.AddCoin(boss_Entity.CoinBonus);
             MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
+            AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
             gameObject.SetActive(false);
         }
+
         LoadHealthUI();
     }
 
@@ -233,13 +243,19 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         return closestTargetPosition;
     }
 
+    private void OnDisable()
+    {
+        areaBoss_Entity.CurrentHealth = boss_Entity.Health;
+        areaBoss_Entity.isDead = false;
+        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
+        areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
             stream.SendNext(areaBoss_Entity.CurrentHealth);
-            stream.SendNext(boss_Entity.ID);
-            stream.SendNext(boss_Entity.Health);
             stream.SendNext(transform.position);
 
             stream.SendNext(playerInRange);
@@ -254,8 +270,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             areaBoss_Entity.CurrentHealth = (int)stream.ReceiveNext();
-            boss_Entity.ID = (string)stream.ReceiveNext();
-            boss_Entity.Health = (int)stream.ReceiveNext();
             MovePosition = (Vector3)stream.ReceiveNext();
 
             playerInRange = (bool)stream.ReceiveNext();
@@ -266,7 +280,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
 
             LoadHealthUI();
-
         }
     }
 }

@@ -41,6 +41,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     //Attack
     [SerializeField] public Transform AttackPoint;
 
+    [SerializeField] GameObject ObjectPool_Runtime;
+
     //Skill
     public float SkillOneCooldown_Total;
     public float SkillOneCooldown_Current;
@@ -174,12 +176,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    public void LoadProperties()
-    {
-        References.UpdateAccountToDB();
-        Game_Manager.Instance.ReloadPlayerProperties();
-    }
-
     public void SetUpComponent()
     {
         animator = GetComponent<Animator>();
@@ -220,7 +216,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Start()
     {
         SetUpComponent();
-
+        ObjectPool_Runtime.transform.SetParent(null);
         if (photonView.IsMine)
         {
             if (AccountEntity != null)
@@ -383,7 +379,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
             AccountEntity.CurrentHealth -= Damage;
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
-            LoadProperties();
+            References.UpdateAccountToDB();
+            Game_Manager.Instance.ReloadPlayerProperties();
         }
 
         if (AccountEntity.CurrentHealth <= 0)
@@ -438,7 +435,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             if (targetPosition.x > MainPoint.position.x && !FacingRight)
             {
-                Flip(); 
+                Flip();
             }
             else if (targetPosition.x < MainPoint.position.x && FacingRight)
             {
@@ -645,6 +642,14 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
             LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (ObjectPool_Runtime != null)
+        {
+            Destroy(ObjectPool_Runtime);
         }
     }
 

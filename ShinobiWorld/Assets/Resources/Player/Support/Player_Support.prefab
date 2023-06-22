@@ -1169,9 +1169,9 @@ GameObject:
   - component: {fileID: 214855683999186503}
   - component: {fileID: 7715097966755718480}
   - component: {fileID: 9178576785560787549}
-  - component: {fileID: 1765921653329179999}
   - component: {fileID: 7713341436081449469}
   - component: {fileID: -1987454478111399211}
+  - component: {fileID: 6557555598321508280}
   m_Layer: 6
   m_Name: Player_Support
   m_TagString: Player
@@ -1376,6 +1376,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   AttackPoint: {fileID: 8699623757859872075}
+  ObjectPool_Runtime: {fileID: 7322648281566184726}
   SkillOneCooldown_Total: 0
   SkillOneCooldown_Current: 0
   SkillTwoCooldown_Total: 0
@@ -1633,17 +1634,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!210 &1765921653329179999
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231443374405932938}
-  m_Enabled: 1
-  m_SortingLayerID: 178467679
-  m_SortingLayer: 3
-  m_SortingOrder: 0
 --- !u!61 &7713341436081449469
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1697,6 +1687,17 @@ MonoBehaviour:
   - {fileID: 3551823992678444064}
   - {fileID: 4132240168673934279}
   List_SkillThreeExplosion: []
+--- !u!210 &6557555598321508280
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231443374405932938}
+  m_Enabled: 1
+  m_SortingLayerID: 178467679
+  m_SortingLayer: 3
+  m_SortingOrder: 0
 --- !u!1 &1785329040892814512
 GameObject:
   m_ObjectHideFlags: 0

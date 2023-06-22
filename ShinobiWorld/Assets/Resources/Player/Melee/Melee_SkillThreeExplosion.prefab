@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 3530210673735134885}
   - component: {fileID: 7441435086184852990}
   - component: {fileID: 711235620428314221}
+  - component: {fileID: 6206256777387600783}
+  - component: {fileID: -4752568191336771911}
   m_Layer: 0
   m_Name: Melee_SkillThreeExplosion
   m_TagString: Untagged
@@ -26,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1156668143294373472}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.89, y: -0.21, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -110,3 +112,33 @@ VFXRenderer:
   m_SortingLayerID: 178467679
   m_SortingLayer: 3
   m_SortingOrder: 0
+--- !u!114 &6206256777387600783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156668143294373472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8419f32c856906b4891ac41c729a16fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AttackAble_Tag:
+  - Enemy
+--- !u!70 &-4752568191336771911
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156668143294373472}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.032749902, y: -0.13099791}
+  m_Size: {x: 1.4076318, y: 1.5240004}
+  m_Direction: 1
