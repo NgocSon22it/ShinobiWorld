@@ -75,7 +75,7 @@ public static class AreaBoss_DAO
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Update AreaBoss set isDead = 1, TimeSpawn = DATEADD(minute, 5, GETDATE()) where ID = @ID and BossID = @BossID";
+            cmd.CommandText = "Update AreaBoss set isDead = 1, TimeSpawn = DATEADD(minute, 1, GETDATE()) where ID = @ID and BossID = @BossID";
             cmd.Parameters.AddWithValue("@ID", AreaID);
             cmd.Parameters.AddWithValue("@BossID", BossID);
             connection.Open();

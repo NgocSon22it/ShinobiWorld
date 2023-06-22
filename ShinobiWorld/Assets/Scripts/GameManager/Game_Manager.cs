@@ -38,6 +38,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public bool IsBusy;
 
+    SqlDateTime dateTime;
 
     private void Awake()
     {
@@ -61,6 +62,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
+        StartCoroutine(SpawnEnemy());
     }
 
     public void SetupPlayer(Vector3 position)
@@ -87,15 +89,28 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void Spawn_Enemy(string AreaID, string BossID)
+    public IEnumerator SpawnEnemy()
     {
-        foreach(GameObject enemy in List_LangLa1)
+        while (true)
         {
-            if(enemy.GetComponentInChildren<Enemy>().areaBoss_Entity.ID.Equals(AreaID) 
-                && enemy.GetComponentInChildren<Enemy>().areaBoss_Entity.BossID.Equals(BossID))
+            // Get the current time
+            dateTime = new SqlDateTime(System.DateTime.Now);
+            foreach (GameObject enemy in List_LangLa1)
             {
-               
+                Enemy enemyScript = enemy.GetComponent<Enemy>();
+                if (enemyScript != null)
+                {
+                    if (dateTime >= enemyScript.areaBoss_Entity.TimeSpawn
+                        && enemyScript.areaBoss_Entity.isDead == false
+                        && enemyScript.areaBoss_Entity.CurrentHealth > 0)
+                    {
+                        enemyScript.LoadHealthUI();
+                        enemy.SetActive(true);
+                    }
+                }
             }
+            // Wait for the next frame
+            yield return new WaitForSecondsRealtime(0.1f);
         }
     }
 
