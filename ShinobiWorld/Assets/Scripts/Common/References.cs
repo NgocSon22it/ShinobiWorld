@@ -33,7 +33,10 @@ public static class References
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
+
+    public static IDictionary<string, string> BtnTrophies = new Dictionary<string, string>();
     public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
+
     public static List<Mission_Entity> listMission = Mission_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
@@ -80,6 +83,8 @@ public static class References
                                                             {StatusMission.Claim.ToString(), "Nhận thưởng"},
                                                             {StatusMission.Done.ToString(), "Hoàn thành"},
                                                         };
+
+
     public static void UpdateAccountToDB()
     {
         if (accountRefer != null)
@@ -164,19 +169,11 @@ public static class References
         Game_Manager.Instance.ReloadPlayerProperties();
     }
 
-    public static Equipment_Entity RandomEquipmentBonus(string CategoryEquipmentID, out int SellCost)
+    public static Equipment_Entity RandomEquipmentBonus(string CategoryEquipmentID)
     {
-        SellCost = 0;
         var listEquipCate = listEquipment.FindAll(obj => obj.CategoryEquipmentID == CategoryEquipmentID);
 
         var index = UnityEngine.Random.Range(0, listEquipCate.Count);
-        Debug.Log("index: " + index);
-
-        if (listAccountEquipment.Any(obj => obj.EquipmentID == listEquipCate[index].ID))
-        {
-            SellCost = listEquipCate[index].SellCost;
-            accountRefer.Coin += SellCost;
-        }
 
         return listEquipCate[index];
     }
@@ -200,4 +197,9 @@ public enum House
 public enum StatusMission
 {
     None, Doing, Claim, Done
+}
+
+public enum TrophiesID
+{
+    Trophie_None, Trophie_Genin, Trophie_Chunin, Trophie_Jonin
 }
