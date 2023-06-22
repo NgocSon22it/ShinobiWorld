@@ -65,15 +65,16 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
-        public static void TakeBonus(string UserID, int ExpBonus, int CoinBonus)
+        public static void TakeBonus(string UserID, string MissionID, int Status, string EquipmentID1)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[Account] SET [Exp] += @ExpBonus, [Coin] += @CoinBonus WHERE ID = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@ExpBonus", ExpBonus);
-                cmd.Parameters.AddWithValue("@CoinBonus", CoinBonus);
+                cmd.CommandText = "EXECUTE [dbo].[TakeBonus]  @AccountID ,@MissionID ,@Status ,@EquipmentID1 ,null ,null";
+                cmd.Parameters.AddWithValue("@AccountID", UserID);
+                cmd.Parameters.AddWithValue("@MissionID", MissionID);
+                cmd.Parameters.AddWithValue("@Status", Status);
+                cmd.Parameters.AddWithValue("@EquipmentID1", EquipmentID1);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();

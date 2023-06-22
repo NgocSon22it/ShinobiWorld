@@ -5,31 +5,43 @@ using UnityEngine;
 
 public class Crap : Enemy
 {
-
-
+    new void Awake()
+    {
+        EnemyID = "Boss_Crap";
+        AreaName = "";
+        SetUp(EnemyID, AreaName);
+    }
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            
-            boss_Entity.ID = "Boss_Bat";
-            boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-            CurrentHealth = boss_Entity.Health;
-            MovePosition = GetRandomPosition();
-        }
-
-        LoadHealthUI();
     }
 
     new void Update()
     {
-        if (photonView.IsMine)
+        base.Update();
+        Move();
+    }
+
+    public void Animation_SkillOne()
+    {
+        if (TargetPosition != Vector3.zero)
         {
-            Move();
+            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
+            FlipToTarget();
+            direction = TargetPosition - transform.Find("MainPoint").position;
+
+            if (SkillOne != null)
+            {
+                SkillOne.transform.position = transform.position;
+                SkillOne.transform.rotation = transform.rotation;
+                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
+                SkillOne.SetActive(true);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
+            }
         }
     }
+
     public void Move()
     {
 

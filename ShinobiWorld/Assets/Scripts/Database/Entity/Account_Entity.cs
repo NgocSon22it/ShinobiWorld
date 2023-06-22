@@ -12,8 +12,8 @@ public class Account_Entity
     public int Level;
     public int Health;
     public int CurrentHealth;
-    public int Charka;
-    public int CurrentCharka;
+    public int Chakra;
+    public int CurrentChakra;
     public int Exp;
     public int Speed;
     public int Coin;

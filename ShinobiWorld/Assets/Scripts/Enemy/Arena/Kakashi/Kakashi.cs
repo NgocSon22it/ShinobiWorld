@@ -11,13 +11,7 @@ public class Kakashi : Enemy
     {
         base.Start();
 
-        if (photonView.IsMine)
-        {
-            boss_Entity.ID = "Boss_Kakashi";
-            boss_Pool.InitializeProjectilePool("Boss/Arena/Kakashi/");
-            boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-            CurrentHealth = boss_Entity.Health;
-        }
+
     }
 
     new void Update()

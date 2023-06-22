@@ -12,12 +12,18 @@ using UnityEngine.InputSystem;
 using UnityEngine.LowLevel;
 using UnityEngine.Rendering;
 using Photon.Realtime;
+using System.Data.SqlTypes;
 
 public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 {
     // Entity
     public Boss_Entity boss_Entity = new Boss_Entity();
-    public int CurrentHealth;
+
+    public AreaBoss_Entity areaBoss_Entity = new AreaBoss_Entity();
+
+    //Separate
+    public string AreaName;
+    public string EnemyID;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -25,16 +31,17 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
     float randomX, randomY;
     Vector2 randomPosition;
 
+    [SerializeField] GameObject ObjectPool;
 
-    protected Vector3 MovePosition;
+    public Vector3 MovePosition;
     public bool isMoving = true;
 
     public float Break_CurrentTime;
     public float Break_TotalTime = 2f;
 
-    protected Vector3 TargetPosition;
+    public Vector3 TargetPosition;
 
-    protected bool playerInRange = false;
+    public bool playerInRange = false;
     public Vector3 clampedPosition;
     public float detectionRadius = 5f;
 
@@ -73,52 +80,79 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         boss_Pool = GetComponent<Boss_Pool>();
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    public void SetUp(string EnemyID, string AreaName)
     {
-        if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
-        {
-            if (changedProps.ContainsKey("Enemy"))
-            {
-                string NPCJson = (string)changedProps["Enemy"];
-                boss_Entity = JsonUtility.FromJson<Boss_Entity>(NPCJson);
-                CurrentHealth = (int)changedProps["CurrentHealth"];
-                LoadHealthUI();
-            }
+        SetUpComponent();
+        boss_Entity = Boss_DAO.GetBossByID(EnemyID);
+        areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
 
+        if (photonView.IsMine)
+        {
+            if (boss_Entity != null && areaBoss_Entity != null)
+            {
+                SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
+
+                if (dateTime >= areaBoss_Entity.TimeSpawn && areaBoss_Entity.isDead == false && areaBoss_Entity.CurrentHealth > 0)
+                {
+                    gameObject.SetActive(true);
+                    LoadHealthUI();
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
+    }
+
+
+    public void Awake()
+    {
 
     }
 
     public void Start()
     {
-        SetUpComponent();
         LocalScaleX = transform.localScale.x;
+        MovePosition = GetRandomPosition();
+        ObjectPool.transform.SetParent(null);
     }
 
     public void Update()
     {
-        if (photonView.IsMine)
-        {
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                TakeDamage("1", 100);
-            }
-        }
+
     }
 
     public void LoadHealthUI()
     {
-        HealthNumber.text = CurrentHealth + " / " + boss_Entity.Health;
-        CurrentHealth_UI.fillAmount = (float)CurrentHealth / (float)boss_Entity.Health;
+        HealthNumber.text = areaBoss_Entity.CurrentHealth + " / " + boss_Entity.Health;
+        CurrentHealth_UI.fillAmount = (float)areaBoss_Entity.CurrentHealth / (float)boss_Entity.Health;
     }
 
     public void TakeDamage(string UserID, int Damage)
     {
-        if (photonView.IsMine)
+        photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, UserID, Damage);
+    }
+
+    [PunRPC]
+    public void TakeDamageSync(string UserID, int Damage)
+    {
+        areaBoss_Entity.CurrentHealth -= Damage;
+        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
+
+        if (areaBoss_Entity.CurrentHealth <= 0)
         {
-            CurrentHealth -= Damage;
-            Game_Manager.Instance.ReloadNPCProperties(photonView, boss_Entity, CurrentHealth);
+            References.AddExperience(boss_Entity.ExpBonus);
+            References.AddCoin(boss_Entity.CoinBonus);
+            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
+            AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
+            gameObject.SetActive(false);
         }
+        LoadHealthUI();
     }
 
     public Vector2 GetRandomPosition()
@@ -203,11 +237,14 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
         return closestTargetPosition;
     }
 
+
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(CurrentHealth);
+            stream.SendNext(areaBoss_Entity.CurrentHealth);
+            stream.SendNext(boss_Entity.ID);
             stream.SendNext(boss_Entity.Health);
             stream.SendNext(transform.position);
 
@@ -218,10 +255,12 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
 
             stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
 
+
         }
         else
         {
-            CurrentHealth = (int)stream.ReceiveNext();
+            areaBoss_Entity.CurrentHealth = (int)stream.ReceiveNext();
+            boss_Entity.ID = (string)stream.ReceiveNext();
             boss_Entity.Health = (int)stream.ReceiveNext();
             MovePosition = (Vector3)stream.ReceiveNext();
 
@@ -233,7 +272,6 @@ public class Enemy : MonoBehaviourPunCallbacks, IPunObservable
             HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
 
             LoadHealthUI();
-
         }
     }
 }

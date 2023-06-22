@@ -10,14 +10,7 @@ public class Locusts : Enemy
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            boss_Entity.ID = "Boss_Bat";
-            boss_Pool.InitializeProjectilePool("Boss/Locusts/");
-            boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-            CurrentHealth = boss_Entity.Health;
-            MovePosition = GetRandomPosition();
-        }
+
 
         LoadHealthUI();
     }

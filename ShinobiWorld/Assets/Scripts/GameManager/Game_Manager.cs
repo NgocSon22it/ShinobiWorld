@@ -14,6 +14,10 @@ using Assets.Scripts.Hospital;
 using UnityEngine.UIElements;
 using Assets.Scripts.Database.Entity;
 using System.Data;
+using Unity.VisualScripting;
+using System.Data.SqlTypes;
+using System;
+
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
@@ -25,14 +29,16 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
-    [SerializeField] GameObject Quai;
-    [SerializeField] GameObject Quai1;
 
     public static Game_Manager Instance;
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
 
-    ExitGames.Client.Photon.Hashtable EnemyProperties = new ExitGames.Client.Photon.Hashtable();
+    [SerializeField] List<GameObject> List_LangLa1 = new List<GameObject>();
+
+    public bool IsBusy;
+
+
     private void Awake()
     {
         Instance = this;
@@ -55,18 +61,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            //SpawnNPC();
-        }
-    }
-
-
-    public void SpawnNPC()
-    {
-        GameObject npc = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Bat/" + Quai.name, new(-1, -3, 0), Quaternion.identity);
-        GameObject npc1 = PhotonNetwork.InstantiateRoomObject("Boss/Normal/Fish/" + Quai1.name, new(2, -3, 0), Quaternion.identity);
     }
 
     public void SetupPlayer(Vector3 position)
@@ -93,10 +87,22 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void Spawn_Enemy(string AreaID, string BossID)
+    {
+        foreach(GameObject enemy in List_LangLa1)
+        {
+            if(enemy.GetComponentInChildren<Enemy>().areaBoss_Entity.ID.Equals(AreaID) 
+                && enemy.GetComponentInChildren<Enemy>().areaBoss_Entity.BossID.Equals(BossID))
+            {
+               
+            }
+        }
+    }
 
 
     public void ReloadPlayerProperties()
     {
+        References.UpdateAccountToDB();
         References.LoadAccountWeaponNSkill(Role);
         References.LoadAccount();
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
@@ -111,24 +117,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PlayerProperties["AccountSkillTwo"] = AccountSkillTwoJson;
         PlayerProperties["AccountSkillThree"] = AccountSkillThreeJson;
 
-        Debug.Log("GameManager_Reload"); 
-        Debug.Log(AccountJson);
-        Debug.Log(AccountWeaponJson);
-        Debug.Log(AccountSkillOneJson);
-        Debug.Log(AccountSkillTwoJson);
-        Debug.Log(AccountSkillThreeJson);
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
     }
-
-    public void ReloadNPCProperties(PhotonView photonView, Boss_Entity boss_Entity, int CurrentHealth)
-    {
-        string NPCJson = JsonUtility.ToJson(boss_Entity);
-        EnemyProperties["Enemy"] = NPCJson;
-        EnemyProperties["CurrentHealth"] = CurrentHealth;
-
-        photonView.Owner.SetCustomProperties(EnemyProperties);
-    }
-
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.Log("Create Room Failed");
@@ -141,9 +131,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
+        References.UpdateAccountToDB();
         ReloadPlayerProperties();
     }
-
 
     public override void OnLeftRoom()
     {
@@ -169,8 +159,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public void GoingOutHospital()
     {
         References.accountRefer.CurrentHealth = References.accountRefer.Health;
-        References.accountRefer.CurrentCharka = References.accountRefer.Charka;
+        References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+        References.UpdateAccountToDB();
         ReloadPlayerProperties();
         PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
@@ -178,7 +169,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     private void OnApplicationQuit()
     {
-        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        References.UpdateAccountToDB();
+        if (References.accountRefer != null)
+        {
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+            References.UpdateAccountToDB();
+        }
     }
 }

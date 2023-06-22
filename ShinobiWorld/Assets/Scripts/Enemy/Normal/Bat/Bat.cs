@@ -6,32 +6,21 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
-    public GameObject a;
+    new void Awake()
+    {
+        EnemyID = "Boss_Bat";
+        AreaName = "LL1_Bat1";
+        SetUp(EnemyID, AreaName);
+    }
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            boss_Entity.ID = "Boss_Bat";
-            boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-            CurrentHealth = boss_Entity.Health;
-            boss_Pool.InitializeProjectilePool("Boss/Normal/Bat/");         
-            MovePosition = GetRandomPosition();
-            Game_Manager.Instance.ReloadNPCProperties(photonView, boss_Entity, CurrentHealth);
-        }
-
-        LoadHealthUI();
-
     }
     new void Update()
     {
         base.Update();
-           
-        if (photonView.IsMine)
-        {
-           // AttackAndMove();
-        }
+        AttackAndMove();
     }
 
     public void AttackAndMove()
@@ -81,13 +70,14 @@ public class Bat : Enemy
 
         animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
+
     }
 
     public void Animation_SkillOne()
     {
         if (TargetPosition != Vector3.zero)
         {
-            GameObject SkillOne = PhotonNetwork.Instantiate(a.name, Vector3.zero, Quaternion.identity);
+            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
             FlipToTarget();
             direction = TargetPosition - transform.Find("MainPoint").position;
 

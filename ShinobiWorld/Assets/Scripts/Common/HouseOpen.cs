@@ -23,7 +23,7 @@ namespace Assets.Scripts.Mission
                 switch (house)
                 {
                     case House.Hokage:
-                        Panel.GetComponent<MissionManager>().Open();
+                        GetComponent<MissionManager>().Open();
                         break;
                     case House.Shop:
                         Panel.GetComponent<ShopManager>().OnShopBtnClick();

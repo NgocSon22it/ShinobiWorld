@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public class MeleeChacracter : PlayerBase
 {
     [SerializeField] float AttackRange;
+    
 
     //Skill One
     [SerializeField] SpriteRenderer Sword;
@@ -19,6 +20,7 @@ public class MeleeChacracter : PlayerBase
     new void Start()
     {
         base.Start();
+        
     }
 
     // Update is called once per frame
@@ -86,7 +88,7 @@ public class MeleeChacracter : PlayerBase
                 {
                     if (Enemy.gameObject.CompareTag("Enemy"))
                     {
-                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage);
+                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
                     }
                 }
             }
@@ -115,25 +117,31 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
-            skillTwo.GetComponent<SwingSword>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
-            skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
+            if (photonView.IsMine)
+            {
+                skillTwo.GetComponent<Melee_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            }
             skillTwo.SetActive(true);
         }
-        Debug.Log(SkillTwo_Entity.Damage + DamageBonus);
+
     }
 
     public void Animation_SkillThree()
     {
+
         GameObject skillThree = playerPool.GetSkillThreeFromPool();
         FlipToMouse();
         if (skillThree != null)
         {
             skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
-            skillThree.GetComponent<JudgmentJustice>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
-            skillThree.GetComponent<JudgmentJustice>().SetUpPoint(targetPosition);
+            if (photonView.IsMine)
+            {
+                skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
+            }
+            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition, playerPool.GetSkillThreeExplosionFromPool());
             skillThree.SetActive(true);
         }
-        Debug.Log(SkillThree_Entity.Damage + DamageBonus);
+
     }
 
     public IEnumerator RighteousSword()
@@ -149,7 +157,6 @@ public class MeleeChacracter : PlayerBase
 
     public void SetUpRighteous(Color color, float Intensity, int Damage)
     {
-
         DamageBonus += Damage;
 
         Sword.material.SetColor("_GlowColor", color * Intensity);

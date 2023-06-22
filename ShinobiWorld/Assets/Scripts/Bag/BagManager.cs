@@ -32,13 +32,15 @@ namespace Assets.Scripts.Shop
 
         public void OnBagBtnClick()
         {
+            Game_Manager.Instance.IsBusy = true;
             Panel.SetActive(true);
             OnItemBtnClick();
         }
 
         public void OnItemBtnClick()
         {
-            References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
+            Game_Manager.Instance.IsBusy = true;
+            //References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
             CloseDetail();
             prefabItemDetail.SetActive(true);
@@ -50,6 +52,7 @@ namespace Assets.Scripts.Shop
 
         public void OnEquipmentBtnClick()
         {
+            Game_Manager.Instance.IsBusy = true;
             References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
             CloseDetail();
@@ -71,6 +74,7 @@ namespace Assets.Scripts.Shop
             Panel.SetActive(false);
             CloseDetail();
             DestroyContent();
+            Game_Manager.Instance.IsBusy = false;
         }
 
         public void ShowMessage()
@@ -94,7 +98,7 @@ namespace Assets.Scripts.Shop
 
         public void GetListItem()
         {
-            //References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
+            References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
 
             listItem = References.listAccountItem.FindAll(obj => obj.Amount > 0);
 
@@ -112,7 +116,7 @@ namespace Assets.Scripts.Shop
 
         public void GetListEquipment()
         {
-            //References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
             listEquipment = References.listAccountEquipment;
 

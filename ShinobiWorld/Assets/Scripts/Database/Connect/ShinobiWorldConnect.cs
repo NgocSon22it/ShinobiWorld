@@ -11,6 +11,6 @@ public static class ShinobiWorldConnect
 
     public static string GetConnectShinobiWorld()
     {
-        return $"Server = {Server}; uid = {id}; pwd = {password}; Database = {database}; Trusted_Connection = False;";
+        return $"Server = {Server}; uid = {id}; pwd = {password}; Database = {database};";
     }
 }
