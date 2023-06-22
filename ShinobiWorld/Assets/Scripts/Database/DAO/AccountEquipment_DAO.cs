@@ -32,6 +32,7 @@ namespace Assets.Scripts.Database.DAO
                     {
                         var obj = new AccountEquipment_Entity
                         {
+                            ID = Convert.ToInt32(dr["ID"]),
                             AccountID = dr["AccountID"].ToString(),
                             EquipmentID = dr["EquipmentID"].ToString(),
                             Level = Convert.ToInt32(dr["Level"]),
@@ -54,79 +55,92 @@ namespace Assets.Scripts.Database.DAO
 
             return list;
         }
-        public static void SellEquipment(string UserID, string EquipmentID, int price)
+        public static void SellEquipment(int ID, string UserID, string EquipmentID, int price)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[SellEquipment] @UserID,@EquipmentID,@price";
+                cmd.CommandText = "EXECUTE [dbo].[SellEquipment] @ID,@UserID,@EquipmentID,@price";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
                 cmd.Parameters.AddWithValue("@price", price);
+                cmd.Parameters.AddWithValue("@ID", ID);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
             }
         }
 
-        public static void UseEquipment(string UserID, string EquipmentID)
+        public static void UseEquipment(int ID, string UserID, string EquipmentID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[UseEquipment]  @UserID ,@EquipmentID";
+                cmd.CommandText = "EXECUTE [dbo].[UseEquipment]  @ID, @UserID ,@EquipmentID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                cmd.Parameters.AddWithValue("@ID", ID);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
             }
         }
 
-        public static void RemoveEquipment(string UserID, string EquipmentID)
+        public static void RemoveEquipment(int ID, string UserID, string EquipmentID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[RemoveEquipment]  @UserID ,@EquipmentID";
+                cmd.CommandText = "EXECUTE [dbo].[RemoveEquipment]  @ID ,@UserID ,@EquipmentID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                cmd.Parameters.AddWithValue("@ID", ID);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
             }
         }
 
-        public static void UpgradeEquipment(string UserID, string EquipmentID, 
+        public static void UpgradeEquipment(int ID, string UserID, string EquipmentID, 
                                             int Damage, int Health, int Chakra)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update AccountEquipment set [Level] += 1, Damage = @Damage, Health = @Health, Chakra = @Chakra where AccountID = @UserID and EquipmentID = @EquipmentID";
+                cmd.CommandText = "Update AccountEquipment " +
+                                    "set [Level] += 1, Damage = @Damage, Health = @Health, Chakra = @Chakra " +
+                                    "where AccountID = @UserID " +
+                                    "and EquipmentID = @EquipmentID " +
+                                    "and ID = @ID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@Damage", Damage);
                 cmd.Parameters.AddWithValue("@Health", Health);
                 cmd.Parameters.AddWithValue("@Chakra", Chakra);
                 cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                cmd.Parameters.AddWithValue("@ID", ID);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
             }
         }
 
-        public static void DowngradeEquipment(string UserID, string EquipmentID,
+        public static void DowngradeEquipment(int ID, string UserID, string EquipmentID,
                                            int Damage, int Health, int Chakra)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update AccountEquipment set [Level] = 1, Damage = @Damage, Health = @Health, Chakra = @Chakra where AccountID = @UserID and EquipmentID = @EquipmentID";
+                cmd.CommandText = "Update AccountEquipment " +
+                                    "set [Level] = 1, Damage = @Damage, Health = @Health, Chakra = @Chakra " +
+                                    "where AccountID = @UserID " +
+                                    "and EquipmentID = @EquipmentID " +
+                                    "and ID = @ID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@Damage", Damage);
                 cmd.Parameters.AddWithValue("@Health", Health);
                 cmd.Parameters.AddWithValue("@Chakra", Chakra);
                 cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                cmd.Parameters.AddWithValue("@ID", ID);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
