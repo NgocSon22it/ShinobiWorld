@@ -83,7 +83,7 @@ namespace Assets.Scripts.Bag.Equipment
 
         public void Sell()
         {
-            AccountEquipment_DAO.SellEquipment(References.accountRefer.ID, accountEquipment.EquipmentID, int.Parse(Price.text));
+            AccountEquipment_DAO.SellEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID, int.Parse(Price.text));
 
             References.AddCoin(int.Parse(Price.text));
 
@@ -104,9 +104,9 @@ namespace Assets.Scripts.Bag.Equipment
 
             var equip = References.listAccountEquipment.Find(obj => list.Any(filter => filter.ID == obj.EquipmentID) && obj.IsUse == true);
 
-            if (equip != null) AccountEquipment_DAO.RemoveEquipment(References.accountRefer.ID, equip.EquipmentID);
+            if (equip != null) AccountEquipment_DAO.RemoveEquipment(accountEquipment.ID, References.accountRefer.ID, equip.EquipmentID);
 
-            AccountEquipment_DAO.UseEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
+            AccountEquipment_DAO.UseEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
 
             Game_Manager.Instance.ReloadPlayerProperties();
 
@@ -117,7 +117,7 @@ namespace Assets.Scripts.Bag.Equipment
         {
             References.UpdateAccountToDB();
 
-            AccountEquipment_DAO.RemoveEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
+            AccountEquipment_DAO.RemoveEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
 
             Game_Manager.Instance.ReloadPlayerProperties();
 
@@ -171,17 +171,17 @@ namespace Assets.Scripts.Bag.Equipment
         {
             if(accountEquipment.IsUse)
             {
-                AccountEquipment_DAO.RemoveEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
+                AccountEquipment_DAO.RemoveEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
                 References.accountRefer.Health -= accountEquipment.Health;
                 References.accountRefer.Chakra -= accountEquipment.Chakra;
 
                 References.UpdateAccountToDB();
 
-                AccountEquipment_DAO.UpgradeEquipment(References.accountRefer.ID, accountEquipment.EquipmentID,
+                AccountEquipment_DAO.UpgradeEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID,
                                                     DamageBonus, HealthBonus, ChakraBonus);
-                AccountEquipment_DAO.UseEquipment(References.accountRefer.ID, accountEquipment.EquipmentID);
+                AccountEquipment_DAO.UseEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
             } 
-            else AccountEquipment_DAO.UpgradeEquipment(References.accountRefer.ID, accountEquipment.EquipmentID,
+            else AccountEquipment_DAO.UpgradeEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID,
                                                     DamageBonus, HealthBonus, ChakraBonus);
 
             References.AddCoin(-int.Parse(CostUpgrade.text));
@@ -200,7 +200,8 @@ namespace Assets.Scripts.Bag.Equipment
         {
             var equipment = References.listEquipment.Find(obj => obj.ID == accountEquipment.EquipmentID);
 
-            AccountEquipment_DAO.DowngradeEquipment(References.accountRefer.ID, accountEquipment.EquipmentID,
+            AccountEquipment_DAO
+                .DowngradeEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID,
                                                     equipment.Damage, equipment.Health, equipment.Chakra);
 
             References.AddCoin(int.Parse(CostReturn.text));
