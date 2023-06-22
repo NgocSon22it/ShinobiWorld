@@ -1,23 +1,20 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Locusts : Enemy
+public class Magician : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Locusts";
+        EnemyID = "Boss_Magician";
         SetUp(EnemyID, AreaName);
     }
-
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
     }
-
     new void Update()
     {
         base.Update();
@@ -71,6 +68,7 @@ public class Locusts : Enemy
 
         animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
+
     }
 
     public void Animation_SkillOne()
@@ -85,7 +83,7 @@ public class Locusts : Enemy
             {
                 SkillOne.transform.position = transform.position;
                 SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Fish_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }

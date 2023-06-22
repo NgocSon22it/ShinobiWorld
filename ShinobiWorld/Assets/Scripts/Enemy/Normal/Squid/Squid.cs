@@ -1,14 +1,12 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
-public class Locusts : Enemy
+public class Squid : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Locusts";
+        EnemyID = "Boss_Squid";
         SetUp(EnemyID, AreaName);
     }
 
@@ -91,4 +89,5 @@ public class Locusts : Enemy
             }
         }
     }
+
 }

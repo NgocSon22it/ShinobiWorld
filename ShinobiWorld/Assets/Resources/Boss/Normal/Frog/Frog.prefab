@@ -30,7 +30,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7138820542677328665}
-  - {fileID: 4705785203607742736}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -83,7 +82,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8785609758403711812}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -93,8 +92,8 @@ Transform:
   - {fileID: 9103160766750058616}
   - {fileID: 5042184061485579341}
   - {fileID: 309293546886168918}
-  m_Father: {fileID: 387981075339056202}
-  m_RootOrder: 1
+  m_Father: {fileID: 7138820542677328665}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &387981074146383454
 PrefabInstance:
@@ -147,6 +146,10 @@ PrefabInstance:
       propertyPath: m_SynchronizeParameters.Array.data[0].SynchronizeType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 387981074146383444, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 387981074146383445, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
       propertyPath: m_BodyType
       value: 1
@@ -156,13 +159,29 @@ PrefabInstance:
       value: Frog_Main
       objectReference: {fileID: 0}
     - target: {fileID: 4596496643929076860, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: AreaName
+      value: LL1_Frog1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596496643929076860, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 5155527073436380451}
+    - target: {fileID: 4596496643929076860, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
       propertyPath: ObjectPool
       value: 
       objectReference: {fileID: 8785609758403711812}
     - target: {fileID: 4596496643929076860, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: rigidbody2d
+      value: 
+      objectReference: {fileID: 11}
+    - target: {fileID: 4596496643929076860, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
       propertyPath: movementBounds
       value: 
       objectReference: {fileID: 387981075339056201}
+    - target: {fileID: 4596496643929076860, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 7132838921616596386}
     - target: {fileID: 7381485340069655879, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -207,8 +226,43 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7466560873437875196, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026093400138488074, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: m_Bounds.m_Center.x
+      value: 0.001734972
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026093400138488074, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: m_Bounds.m_Center.y
+      value: -0.022286952
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026093400138488074, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: m_Bounds.m_Extent.x
+      value: 1.0452294
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026093400138488074, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+      propertyPath: m_Bounds.m_Extent.y
+      value: 0.92627895
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+--- !u!50 &11 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 387981074146383445, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+  m_PrefabInstance: {fileID: 387981074146383454}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5155527073436380451 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4822931020716473213, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+  m_PrefabInstance: {fileID: 387981074146383454}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7132838921616596386 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7466560873437875196, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
+  m_PrefabInstance: {fileID: 387981074146383454}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7138820542677328665 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7381485340069655879, guid: 30ae86a3ccfce96469ee32cd680f2398, type: 3}
@@ -223,6 +277,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8047985871003142245, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
       propertyPath: AttackAble_Tag.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 470331870429043450, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
+      propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2458842513146125682, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
@@ -304,6 +362,10 @@ PrefabInstance:
       propertyPath: AttackAble_Tag.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 470331870429043450, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2458842513146125682, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
       propertyPath: m_Name
       value: Frog_Bullet
@@ -381,6 +443,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8047985871003142245, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
       propertyPath: AttackAble_Tag.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 470331870429043450, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
+      propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2458842513146125682, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
@@ -462,6 +528,10 @@ PrefabInstance:
       propertyPath: AttackAble_Tag.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 470331870429043450, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2458842513146125682, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
       propertyPath: m_Name
       value: Frog_Bullet (2)
@@ -539,6 +609,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8047985871003142245, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
       propertyPath: AttackAble_Tag.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 470331870429043450, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
+      propertyPath: sceneViewId
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2458842513146125682, guid: 1d602edb1005d6c4b8de0e74f5ac5795, type: 3}
