@@ -6,22 +6,24 @@ using UnityEngine;
 
 public class Locusts : Enemy
 {
+    new void Awake()
+    {
+        EnemyID = "Boss_Locusts";
+        SetUp(EnemyID, AreaName);
+    }
+
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-
-
-        LoadHealthUI();
     }
 
     new void Update()
     {
-        if (photonView.IsMine)
-        {
-            AttackAndMove();
-        }
+        base.Update();
+        AttackAndMove();
     }
+
     public void AttackAndMove()
     {
         if (playerInRange)
@@ -59,26 +61,34 @@ public class Locusts : Enemy
         if (FindTarget_CurrentTime >= FindTarget_TotalTime)
         {
             TargetPosition = FindClostestTarget(detectionRadius, "Player");
-            // Call the RPC and reset the timer
             FindTarget_CurrentTime = 0f;
         }
 
         playerInRange = TargetPosition != Vector3.zero;
-
         // Restrict movement to the move area
         clampedPosition = movementBounds.ClosestPoint(transform.position);
         transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
 
-        animator.SetBool("Attack", playerInRange);
+        animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
     }
-
 
     public void Animation_SkillOne()
     {
         if (TargetPosition != Vector3.zero)
         {
-            
+            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
+            FlipToTarget();
+            direction = TargetPosition - transform.Find("MainPoint").position;
+
+            if (SkillOne != null)
+            {
+                SkillOne.transform.position = transform.position;
+                SkillOne.transform.rotation = transform.rotation;
+                SkillOne.GetComponent<Fish_SkillOne>().SetUp(100);
+                SkillOne.SetActive(true);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
+            }
         }
     }
 }
