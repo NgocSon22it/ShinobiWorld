@@ -54,6 +54,8 @@ public static class References
 
     public static int ExpercienceToNextLevel;
 
+    public static bool IsDisconnect = false;
+
     public static string TrophyID_RemakeMission = "Trophie_Jonin";
 
     public static string UISkillDefault = "Background/UI_OrangeFill";
