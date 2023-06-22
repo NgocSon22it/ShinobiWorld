@@ -451,6 +451,23 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        // Handle the disconnect cause
+        if (cause == DisconnectCause.MaxCcuReached)
+        {
+            Debug.LogError("Failed to connect to Photon: Full");
+        }
+        else if (cause == DisconnectCause.ExceptionOnConnect)
+        {
+            Debug.LogError("Failed to connect to Photon: Exception on connect");
+        }
+        else
+        {
+            Debug.LogError("Failed to connect to Photon: " + cause.ToString());
+        }
+    }
+
     public void Logout()
     {
         if (auth != null && user != null)

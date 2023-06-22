@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 9202841333967612896}
   - component: {fileID: -950656005346357845}
   - component: {fileID: 3692972100021170367}
+  - component: {fileID: 7811907042379717320}
   m_Layer: 6
   m_Name: Player_Range
   m_TagString: Player
@@ -253,8 +254,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 178467679
-  m_SortingLayer: 3
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4ea6c3b8e03de784696e2f9e8914f78e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -392,6 +393,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   AttackPoint: {fileID: 3492982990349116334}
+  ObjectPool_Runtime: {fileID: 7611856333125496856}
   SkillOneCooldown_Total: 0
   SkillOneCooldown_Current: 0
   SkillTwoCooldown_Total: 0
@@ -403,12 +405,12 @@ MonoBehaviour:
   MainPoint: {fileID: 6106406955024491114}
   DamageBonus: 0
   SpeedBonus: 0
-  animator: {fileID: 0}
-  rigidbody2d: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  sortingGroup: {fileID: 0}
-  playerInput: {fileID: 0}
-  playerPool: {fileID: 0}
+  animator: {fileID: 1279341850644047412}
+  rigidbody2d: {fileID: 9202841333967612896}
+  spriteRenderer: {fileID: 1279341850644047402}
+  sortingGroup: {fileID: 7811907042379717320}
+  playerInput: {fileID: 7064220701377856494}
+  playerPool: {fileID: -950656005346357845}
   MoveDirection: {x: 0, y: 0}
   CurrentHealth_UI: {fileID: 3552120919829914991}
   CurrentChakra_UI: {fileID: 6563202592029557458}
@@ -724,6 +726,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.68462783, y: 0.57305443}
   m_EdgeRadius: 0
+--- !u!210 &7811907042379717320
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279341850644047415}
+  m_Enabled: 1
+  m_SortingLayerID: 178467679
+  m_SortingLayer: 3
+  m_SortingOrder: 0
 --- !u!1 &1279341850719893980
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,7 +1380,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1279341852381874848}
-  - component: {fileID: 2399451419238515584}
   m_Layer: 0
   m_Name: Body_Below
   m_TagString: Untagged
@@ -1393,17 +1405,6 @@ Transform:
   m_Father: {fileID: 1279341850644047403}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &2399451419238515584
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1279341852381874851}
-  m_Enabled: 1
-  m_SortingLayerID: 178467679
-  m_SortingLayer: 3
-  m_SortingOrder: 0
 --- !u!1 &1279341852387874274
 GameObject:
   m_ObjectHideFlags: 0
