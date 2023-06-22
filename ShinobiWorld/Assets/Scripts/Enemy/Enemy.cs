@@ -121,7 +121,10 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     {
         LocalScaleX = transform.localScale.x;
         MovePosition = GetRandomPosition();
-        ObjectPool.transform.SetParent(null);
+        if (ObjectPool != null)
+        {
+            ObjectPool.transform.SetParent(null);
+        }
     }
 
     public void Update()
@@ -154,6 +157,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
             AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
             gameObject.SetActive(false);
         }
+
         LoadHealthUI();
     }
 

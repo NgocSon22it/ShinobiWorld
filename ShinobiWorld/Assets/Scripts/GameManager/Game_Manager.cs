@@ -36,6 +36,12 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     [SerializeField] List<GameObject> List_LangLa1 = new List<GameObject>();
 
+    [SerializeField] List<GameObject> List_LangLa2 = new List<GameObject>();
+
+    [SerializeField] List<GameObject> List_LangLa3 = new List<GameObject>();
+
+    [SerializeField] List<GameObject> List_LangLa4 = new List<GameObject>();
+
     public bool IsBusy;
 
     SqlDateTime dateTime;
