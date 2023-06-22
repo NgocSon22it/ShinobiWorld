@@ -8,6 +8,7 @@ public class Fish : Enemy
 {
     new void Awake()
     {
+
         EnemyID = "Boss_Fish";
         AreaName = "LL1_Fish1";
         SetUp(EnemyID, AreaName);
@@ -17,17 +18,12 @@ public class Fish : Enemy
     new void Start()
     {
         base.Start();
-
     }
 
     new void Update()
     {
         base.Update();
-
-        if (photonView.IsMine)
-        {
-            AttackAndMove();
-        }
+        AttackAndMove();
     }
 
     public void AttackAndMove()
