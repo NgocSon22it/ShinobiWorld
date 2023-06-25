@@ -150,9 +150,18 @@ public class Enemy : MonoBehaviourPun, IPunObservable
             MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
             AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
             gameObject.SetActive(false);
+            Die();
         }
 
         LoadHealthUI();
+    }
+
+    public void Die()
+    {
+        areaBoss_Entity.CurrentHealth = boss_Entity.Health;
+        areaBoss_Entity.isDead = false;
+        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
+        areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
     }
 
     public Vector2 GetRandomPosition()
@@ -235,14 +244,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         }
 
         return closestTargetPosition;
-    }
-
-    private void OnDisable()
-    {
-        areaBoss_Entity.CurrentHealth = boss_Entity.Health;
-        areaBoss_Entity.isDead = false;
-        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
-        areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

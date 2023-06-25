@@ -71,16 +71,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
 
-        if (References.IsDisconnect)
-        {
-            SetupPlayer(PlayerReconnectPosition);
-            References.IsDisconnect = false;
-        }
-        else
-        {
-            SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
-        }
-
+        SetupPlayer(References.PlayerSpawnPosition);
+        ChatManager.Instance.ConnectToChat();
         StartCoroutine(SpawnEnemy());
     }
 
@@ -172,7 +164,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         if (PlayerManager != null && PhotonNetwork.IsConnectedAndReady)
-        {           
+        {
             PhotonNetwork.Destroy(PlayerManager);
             PlayerManager = null;
         }
@@ -182,7 +174,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.InRoom)
         {
-            PhotonNetwork.LeaveRoom(false);
+            PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(Scenes.Login);
         }
     }

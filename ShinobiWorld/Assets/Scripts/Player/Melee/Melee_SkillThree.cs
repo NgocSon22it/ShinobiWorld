@@ -21,7 +21,7 @@ public class Melee_SkillThree : PlayerSkill
     {
         if (EndPoint != null)
         {
-            transform.position = Vector3.MoveTowards(transform.position, EndPoint, 2 * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, EndPoint, 8 * Time.deltaTime);
         }
 
         if(transform.position == EndPoint && !Reach)
