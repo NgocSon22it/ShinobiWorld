@@ -85,6 +85,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             {
                 References.accountRefer.ID = user.UserId;
                 PhotonNetwork.NickName = user.DisplayName;
+                References.PlayerName = user.DisplayName;
                 Account_DAO.ChangeStateOnline(user.UserId, true);
                 References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
 
@@ -202,7 +203,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     References.accountRefer.ID = user.UserId;
 
                     PhotonNetwork.NickName = user.DisplayName; //Set name user
-
+                    References.PlayerName = user.DisplayName;
                     var isOnline = Account_DAO.StateOnline(user.UserId);
 
                     if (isOnline)
@@ -435,6 +436,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (playerCount > 0 && playerCount < References.Maxserver)
         {
+            References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
             if (Account_DAO.IsFirstLogin(user.UserId))
             {
                 PhotonNetwork.LoadLevel(Scenes.Creator);
