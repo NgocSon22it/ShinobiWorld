@@ -12,6 +12,8 @@ public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
 
+    public static string PlayerName;
+
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
 
@@ -57,12 +59,16 @@ public static class References
 
     public static int ExpercienceToNextLevel;
 
+    public static bool IsDisconnect = false;
+
     public static string TrophyID_RemakeMission = "Trophie_Jonin";
 
     public static string UISkillDefault = "Background/UI_OrangeFill";
     public static string UIEquipmentDefault = "Background/UI_GreenFill";
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
+
+    public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {

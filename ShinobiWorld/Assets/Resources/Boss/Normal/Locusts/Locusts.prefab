@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &903738431170227957
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3209995743653563985}
-  m_Layer: 3
-  m_Name: ObjectPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3209995743653563985
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 903738431170227957}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8408779437226863506}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3327852931111354359
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,12 +67,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 3327852931111354353}
     m_Modifications:
     - target: {fileID: 881844767601767127, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: m_Bounds.m_Center.x
-      value: 0.18247652
-      objectReference: {fileID: 0}
-    - target: {fileID: 881844767601767127, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: 0.80422926
+      value: 0.8042307
       objectReference: {fileID: 0}
     - target: {fileID: 881844767601767127, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
       propertyPath: m_Bounds.m_Extent.x
@@ -111,59 +76,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 881844767601767127, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 0.9657899
+      value: 0.96578944
       objectReference: {fileID: 0}
-    - target: {fileID: 1075751035281417083, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: AreaName
-      value: LL1_Locusts1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1075751035281417083, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: animator
-      value: 
-      objectReference: {fileID: 5798005368866775388}
-    - target: {fileID: 1075751035281417083, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: ObjectPool
-      value: 
-      objectReference: {fileID: 903738431170227957}
-    - target: {fileID: 1075751035281417083, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: rigidbody2d
-      value: 
-      objectReference: {fileID: 11}
     - target: {fileID: 1075751035281417083, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
       propertyPath: movementBounds
       value: 
       objectReference: {fileID: 3327852931111354358}
-    - target: {fileID: 1075751035281417083, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: spriteRenderer
-      value: 
-      objectReference: {fileID: 1683474239222298524}
     - target: {fileID: 3327852929766553273, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
       propertyPath: sceneViewId
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3327852929766553278, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[0].Name
-      value: Walk
-      objectReference: {fileID: 0}
-    - target: {fileID: 3327852929766553278, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[1].Name
-      value: PlayerInRange
-      objectReference: {fileID: 0}
-    - target: {fileID: 3327852929766553278, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: m_SynchronizeLayers.Array.data[0].SynchronizeType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3327852929766553278, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[0].SynchronizeType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3327852929766553278, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[1].SynchronizeType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3327852929766553279, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-      propertyPath: m_SynchronizeScale
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6529960813166222625, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
       propertyPath: m_RootOrder
@@ -215,21 +136,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
---- !u!50 &11 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 3327852929766553272, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-  m_PrefabInstance: {fileID: 3327852929766553267}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &1683474239222298524 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 4139386938314965295, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-  m_PrefabInstance: {fileID: 3327852929766553267}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &5798005368866775388 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 9104114274504464367, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
-  m_PrefabInstance: {fileID: 3327852929766553267}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8408779437226863506 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6529960813166222625, guid: 64357f0549cf0164ea5912c4c02a3dc8, type: 3}
