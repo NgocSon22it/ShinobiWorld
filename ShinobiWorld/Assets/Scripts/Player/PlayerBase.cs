@@ -16,6 +16,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Photon.Pun.Demo.PunBasics;
 using WebSocketSharp;
+using UnityEngine.SceneManagement;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -319,7 +320,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-
+            if (Game_Manager.Instance.IsBusy == true) return;
             animator.SetFloat("Horizontal", MoveDirection.x);
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
@@ -329,6 +330,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillOne();
             SkillTwo();
             SkillThree();
+
+            /*if (Input.GetKeyDown(KeyCode.U))
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("BossArena_Kakashi");
+            }*/
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -638,6 +646,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (ObjectPool_Runtime != null)
         {
             Destroy(ObjectPool_Runtime);
+        }
+        if (References.IsDisconnect)
+        {
+            References.PlayerSpawnPosition = transform.position;
         }
     }
 
