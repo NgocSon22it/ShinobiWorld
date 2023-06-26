@@ -61,7 +61,7 @@ public static class References
 
     public static bool IsDisconnect = false;
 
-    public static string TrophyID_RemakeMission = "Trophie_Jonin";
+    public static string TrophyID_RemakeMission = TrophiesID.Trophie_Jonin.ToString();
 
     public static string UISkillDefault = "Background/UI_OrangeFill";
     public static string UIEquipmentDefault = "Background/UI_GreenFill";

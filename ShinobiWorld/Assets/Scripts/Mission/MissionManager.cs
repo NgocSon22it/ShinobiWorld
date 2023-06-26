@@ -48,6 +48,8 @@ public class MissionManager : MonoBehaviour
 
     public List<Mission_Entity> listMission;
 
+    TrophiesID TrophiesID;
+
     private void Awake()
     {
         Instance = this;
@@ -55,6 +57,8 @@ public class MissionManager : MonoBehaviour
 
     public void GetCurrentMission()
     {
+        Player_AllUIManagement.Instance.CloseMission();
+
         var filterlist = References.listAccountMission = AccountMission_DAO.GetAllByUserID(References.accountRefer.ID);
         listMission = References.listMission.FindAll(obj => filterlist.Any(filter => filter.MissionID == obj.ID));
 
@@ -62,6 +66,7 @@ public class MissionManager : MonoBehaviour
         {
             CurrentMission = filterlist.Find(obj => obj.Status == StatusMission.Doing);
             HavingMission = References.listMission.Find(obj => obj.ID == CurrentMission.MissionID);
+            Player_AllUIManagement.Instance.ShowMission(HavingMission.Content);
         }
     }
 
@@ -77,6 +82,7 @@ public class MissionManager : MonoBehaviour
     {
         ResetColorBtnTrophies();
         button.Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        TrophiesID = button.ID;
         GetList(button.ID);
     }
 
@@ -91,18 +97,16 @@ public class MissionManager : MonoBehaviour
 
             button.Btn.onClick.AddListener(() =>
             {
-                Debug.Log(button.ID.ToString());
-                Debug.Log(References.accountRefer.TrophiesID);
                 SelectedColorBtnTrophies(button);
             });
         }
 
-        GetCurrentMission();
+        //GetCurrentMission();
         ResetColorBtnTrophies();
 
-        TrophiesID trophiesID = (TrophiesID) Enum.Parse(typeof(TrophiesID), References.accountRefer.TrophiesID);
-        BtnTrophies[(int)trophiesID].Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);  
-        GetList(trophiesID);
+        TrophiesID = (TrophiesID) Enum.Parse(typeof(TrophiesID), References.accountRefer.TrophiesID);
+        BtnTrophies[(int)TrophiesID].Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);  
+        GetList(TrophiesID);
 
         MissionPanel.SetActive(true);
     }
@@ -134,7 +138,7 @@ public class MissionManager : MonoBehaviour
 
     public void Reload() {
         GetCurrentMission();
-        GetList((TrophiesID)Enum.Parse(typeof(TrophiesID), References.accountRefer.TrophiesID));
+        GetList(TrophiesID);
     }
 
     public void ResetColor()
@@ -162,7 +166,11 @@ public class MissionManager : MonoBehaviour
         {
             ContentTxt.text = HavingMission.Content;
 
-            if (CurrentMission.Current == CurrentMission.Target) CurrentTxt.text = Message.MissionFinish;
+            if (CurrentMission.Current == CurrentMission.Target)
+            {
+                CurrentTxt.text = Message.MissionFinish;
+                Player_AllUIManagement.Instance.CloseMission();
+            }
             else CurrentTxt.text = string.Format(Message.MissionProgress, CurrentMission.Current, CurrentMission.Target);
         }else
         {
