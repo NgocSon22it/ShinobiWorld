@@ -32,6 +32,10 @@ public class Player_AllUIManagement : MonoBehaviour
     [Header("Power")]
     [SerializeField] TMP_Text PowerTxt;
 
+    [Header("Mission")]
+    [SerializeField] GameObject Mission;
+    [SerializeField] TMP_Text MissionTxt;
+
     private void Awake()
     {
         Instance = this;
@@ -87,5 +91,17 @@ public class Player_AllUIManagement : MonoBehaviour
     public void ShowDetailInfo()
     {
         Player_Info.Instance.OnAvatarBtnClick();
+    }
+
+    public void ShowMission(string content)
+    {
+        Mission.SetActive(true);
+        MissionTxt.text = content;
+    }
+
+    public void CloseMission()
+    {
+        Mission.SetActive(false);
+        MissionTxt.text = string.Empty;
     }
 }
