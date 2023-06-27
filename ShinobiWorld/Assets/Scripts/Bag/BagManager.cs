@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ namespace Assets.Scripts.Shop
         public GameObject Panel, prefabItemBag, prefabItemDetail, 
                             prefabEquipmentBag, prefabEquipmentDetail, MessageError;
         public Transform Content;
+        public Button ItemBtn, EquipmentBtn;
 
         public List<AccountItem_Entity> listItem;
         public List<AccountEquipment_Entity> listEquipment;
@@ -37,10 +39,17 @@ namespace Assets.Scripts.Shop
             OnItemBtnClick();
         }
 
+        public void  ResetColorBtn()
+        {
+            EquipmentBtn.GetComponent<Image>().color = new Color32(185, 183, 183, 255);
+            ItemBtn.GetComponent<Image>().color = new Color32(185, 183, 183, 255);
+        }
+
         public void OnItemBtnClick()
         {
+            if(!ItemBtn.IsUnityNull())ItemBtn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
             Game_Manager.Instance.IsBusy = true;
-            References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
+            //References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
             CloseDetail();
             prefabItemDetail.SetActive(true);
@@ -52,6 +61,7 @@ namespace Assets.Scripts.Shop
 
         public void OnEquipmentBtnClick()
         {
+            EquipmentBtn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
             Game_Manager.Instance.IsBusy = true;
             References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
@@ -98,7 +108,7 @@ namespace Assets.Scripts.Shop
 
         public void GetListItem()
         {
-            //References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
+            References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
 
             listItem = References.listAccountItem.FindAll(obj => obj.Amount > 0);
 
@@ -116,7 +126,7 @@ namespace Assets.Scripts.Shop
 
         public void GetListEquipment()
         {
-            //References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
             listEquipment = References.listAccountEquipment;
 

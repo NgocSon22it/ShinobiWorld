@@ -5,34 +5,25 @@ using UnityEngine;
 
 public class Crap : Enemy
 {
-
-
+    new void Awake()
+    {
+        EnemyID = "Boss_Crap";
+        SetUp(EnemyID, AreaName);
+    }
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-        if (photonView.IsMine)
-        {
-            
-            boss_Entity.ID = "Boss_Bat";
-            boss_Entity = Boss_DAO.GetBossByID(boss_Entity.ID);
-            //CurrentHealth = boss_Entity.Health;
-            MovePosition = GetRandomPosition();
-        }
-
-        LoadHealthUI();
     }
 
     new void Update()
     {
-        if (photonView.IsMine)
-        {
-            Move();
-        }
+        base.Update();
+        Move();
     }
+
     public void Move()
     {
-
             if (isMoving)
             {
                 transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);

@@ -18,23 +18,6 @@ using Unity.VisualScripting;
 using System.Data.SqlTypes;
 using System;
 
-public class EnemyInfo
-{
-    public string EnemyID;
-    public string Extension;
-    public string AreaName;
-
-    public GameObject enemyPrefab;
-    public Vector3 SpawnPosition;
-
-    public Boss_Entity boss_Entity;
-    public AreaBoss_Entity areaBoss_Entity;
-
-    public void SetBossEntity() { boss_Entity = Boss_DAO.GetBossByID(EnemyID); }
-    public void SetAreaBossEntity() { areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID); }
-
-}
-
 
 public class Game_Manager : MonoBehaviourPunCallbacks
 {
@@ -46,18 +29,26 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
-    [SerializeField] GameObject BossPrefabs_Bat;
-    [SerializeField] GameObject BossPrefabs_Fish;
-    [SerializeField] GameObject BossPrefabs_Crap;
 
     public static Game_Manager Instance;
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
 
-    [SerializeField] List<EnemyInfo> SpawnList_LangLa1 = new List<EnemyInfo>();
+    [SerializeField] List<GameObject> List_LangLa1 = new List<GameObject>();
+
+    [SerializeField] List<GameObject> List_LangLa2 = new List<GameObject>();
+
+    [SerializeField] List<GameObject> List_LangLa3 = new List<GameObject>();
+
+    [SerializeField] List<GameObject> List_LangLa4 = new List<GameObject>();
 
     public bool IsBusy;
 
+    SqlDateTime dateTime;
+
+    public Vector3 PlayerReconnectPosition;
+
+    RoomOptions roomOptions = new RoomOptions();
 
     private void Awake()
     {
@@ -69,7 +60,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            RoomOptions roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
@@ -77,56 +67,14 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
-
     public override void OnJoinedRoom()
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
-        SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SpawnNPC();
-        }
 
+        SetupPlayer(References.PlayerSpawnPosition);
+        ChatManager.Instance.ConnectToChat();
+        StartCoroutine(SpawnEnemy());
     }
-
-    public void SpawnNPC()
-    {
-        SpawnList_LangLa1.AddRange(new List<EnemyInfo>
-        {
-            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat1", SpawnPosition = new Vector3(-16, -15, 0)},
-            new EnemyInfo { EnemyID = "Boss_Bat", Extension = "Boss/Normal/Bat/", enemyPrefab = BossPrefabs_Bat, AreaName = "LL1_Bat2", SpawnPosition = new Vector3(-16, -15, 0) },
-           // new EnemyInfo { EnemyID = "Boss_Fish", Extension = "Boss/Normal/Fish/", enemyPrefab = BossPrefabs_Fish, AreaName = "LL1_Fish1", SpawnPosition = new Vector3(-15, -13, 0) }
-        });
-
-
-        foreach (EnemyInfo enemyInfo in SpawnList_LangLa1)
-        {
-            enemyInfo.SetBossEntity();
-            enemyInfo.SetAreaBossEntity();
-
-            SqlDateTime sqlDateTime = new SqlDateTime(DateTime.Now);
-            Debug.Log(sqlDateTime);
-            Debug.Log(enemyInfo.areaBoss_Entity.TimeSpawn);
-
-
-            if (enemyInfo.areaBoss_Entity.isDead == false && sqlDateTime >= enemyInfo.areaBoss_Entity.TimeSpawn)
-            {
-
-                GameObject EnemyObject = PhotonNetwork.InstantiateRoomObject(enemyInfo.Extension + enemyInfo.enemyPrefab.name, enemyInfo.SpawnPosition, Quaternion.identity);
-                Enemy enemyScript = EnemyObject.GetComponentInChildren<Enemy>();
-
-                enemyScript.EnemyID = enemyInfo.EnemyID;
-                enemyScript.AreaName = enemyInfo.AreaName;
-                enemyScript.PoolExtension = enemyInfo.Extension;
-                enemyScript.SetUpEntity(enemyInfo.EnemyID, enemyInfo.AreaName, enemyInfo.Extension);
-                enemyScript.SetUpEnemy();
-                enemyScript.enabled = true;
-            }
-        }
-    }
-
-
-
 
     public void SetupPlayer(Vector3 position)
     {
@@ -152,10 +100,35 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
+    public IEnumerator SpawnEnemy()
+    {
+        while (true)
+        {
+            // Get the current time
+            dateTime = new SqlDateTime(System.DateTime.Now);
+            foreach (GameObject enemy in List_LangLa1)
+            {
+                Enemy enemyScript = enemy.GetComponent<Enemy>();
+                if (enemyScript != null)
+                {
+                    if (dateTime >= enemyScript.areaBoss_Entity.TimeSpawn
+                        && enemyScript.areaBoss_Entity.isDead == false
+                        && enemyScript.areaBoss_Entity.CurrentHealth > 0)
+                    {
+                        enemyScript.LoadHealthUI();
+                        enemy.SetActive(true);
+                    }
+                }
+            }
+            // Wait for the next frame
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+    }
 
 
     public void ReloadPlayerProperties()
     {
+        References.UpdateAccountToDB();
         References.LoadAccountWeaponNSkill(Role);
         References.LoadAccount();
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
@@ -188,7 +161,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         ReloadPlayerProperties();
     }
 
-
     public override void OnLeftRoom()
     {
         if (PlayerManager != null && PhotonNetwork.IsConnectedAndReady)
@@ -200,8 +172,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public void GoToMenu()
     {
-        PhotonNetwork.LeaveRoom(false);
-        PhotonNetwork.LoadLevel(Scenes.Login);
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel(Scenes.Login);
+        }
     }
 
     public void GoingToHospital()
@@ -221,12 +196,42 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        if (cause != DisconnectCause.DisconnectByClientLogic)
+        {
+            Debug.Log(Message.LostWifi);
+            References.IsDisconnect = true;
+            if (References.IsDisconnect && !PhotonNetwork.IsConnected)
+            {
+                StartCoroutine(RetryConnection());
+            }
+        }
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log(Message.HaveWifi);
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
+        }
+    }
+
+    private IEnumerator RetryConnection()
+    {
+        yield return new WaitForSeconds(5f);  // Wait for 5 seconds before retrying
+
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null)
+        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
         {
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
             References.UpdateAccountToDB();
         }
+
     }
 }

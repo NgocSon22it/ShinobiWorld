@@ -6,19 +6,22 @@ using UnityEngine;
 
 public class Fish : Enemy
 {
+    new void Awake()
+    {
+        EnemyID = "Boss_Fish";
+        SetUp(EnemyID, AreaName);
+    }
+
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
     }
+
     new void Update()
     {
         base.Update();
-
-        if (photonView.IsMine)
-        {
-            AttackAndMove();
-        }
+        AttackAndMove();
     }
 
     public void AttackAndMove()
@@ -66,7 +69,7 @@ public class Fish : Enemy
         clampedPosition = movementBounds.ClosestPoint(transform.position);
         transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
 
-        //animator.SetBool("PlayerInRange", playerInRange);
+        animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
     }
 
@@ -82,7 +85,7 @@ public class Fish : Enemy
             {
                 SkillOne.transform.position = transform.position;
                 SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Fish_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }

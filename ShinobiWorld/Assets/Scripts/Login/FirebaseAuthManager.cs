@@ -85,9 +85,14 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             {
                 References.accountRefer.ID = user.UserId;
                 PhotonNetwork.NickName = user.DisplayName;
+                References.PlayerName = user.DisplayName;
                 Account_DAO.ChangeStateOnline(user.UserId, true);
                 References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
-                PhotonNetwork.ConnectUsingSettings();
+
+                if (!PhotonNetwork.IsConnected)
+                {
+                    PhotonNetwork.ConnectUsingSettings(); 
+                }
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
             }
@@ -198,7 +203,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     References.accountRefer.ID = user.UserId;
 
                     PhotonNetwork.NickName = user.DisplayName; //Set name user
-
+                    References.PlayerName = user.DisplayName;
                     var isOnline = Account_DAO.StateOnline(user.UserId);
 
                     if (isOnline)
@@ -209,7 +214,10 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
-                        PhotonNetwork.ConnectUsingSettings(); //Connect server photon
+                        if (!PhotonNetwork.IsConnected)
+                        {
+                            PhotonNetwork.ConnectUsingSettings();
+                        }
                     }
                 }
                 else
@@ -419,7 +427,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        playerCount = PhotonNetwork.CountOfPlayersOnMaster;
+        playerCount = PhotonNetwork.CountOfPlayers;
         Debug.Log("Number of players on master server: " + playerCount);
         UIManager.Instance.OpenGamePanel();
     }
@@ -428,6 +436,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (playerCount > 0 && playerCount < References.Maxserver)
         {
+            References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
             if (Account_DAO.IsFirstLogin(user.UserId))
             {
                 PhotonNetwork.LoadLevel(Scenes.Creator);
@@ -445,9 +454,26 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null)
+        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
         {
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        // Handle the disconnect cause
+        if (cause == DisconnectCause.MaxCcuReached)
+        {
+            Debug.LogError("Failed to connect to Photon: Full");
+        }
+        else if (cause == DisconnectCause.ExceptionOnConnect)
+        {
+            Debug.LogError("Failed to connect to Photon: Exception on connect");
+        }
+        else
+        {
+            Debug.LogError("Failed to connect to Photon: " + cause.ToString());
         }
     }
 

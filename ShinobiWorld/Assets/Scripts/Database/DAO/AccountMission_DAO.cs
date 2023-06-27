@@ -80,5 +80,20 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+        public static void DoingMission(string UserID, string MissionID, int Current)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE [dbo].[AccountMission] SET [Current] = @Current WHERE AccountID = @UserID and MissionID = @MissionID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@MissionID", MissionID);
+                cmd.Parameters.AddWithValue("@Current", Current);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }

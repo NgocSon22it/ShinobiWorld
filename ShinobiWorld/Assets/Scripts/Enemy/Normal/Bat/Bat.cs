@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
+    new void Awake()
+    {
+        EnemyID = "Boss_Bat";
+        SetUp(EnemyID, AreaName);
+    }
     // Start is called before the first frame update
     new void Start()
     {
@@ -15,7 +20,6 @@ public class Bat : Enemy
     {
         base.Update();
         AttackAndMove();
-
     }
 
     public void AttackAndMove()
@@ -83,10 +87,6 @@ public class Bat : Enemy
                 SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
-            }
-            else
-            {
-                Debug.Log("No Damage");
             }
         }
     }
