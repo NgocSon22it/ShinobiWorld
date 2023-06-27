@@ -17,6 +17,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Photon.Pun.Demo.PunBasics;
 using WebSocketSharp;
 using UnityEngine.SceneManagement;
+using System;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -242,7 +243,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpPlayer(this);
 
+            LoadSkillCooldown();
             LoadPlayerHealthUI();
             LoadPlayerChakraUI();
             LoadPlayerStrengthUI();
@@ -257,6 +260,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void RegenChakra()
     {
         HealAmountOfChakra(1);
+    }
+
+    public void LoadSkillCooldown()
+    {
+        SkillOneCooldown_Total = (float)SkillOne_Entity.Cooldown;
+        SkillTwoCooldown_Total = (float)SkillTwo_Entity.Cooldown;
+        SkillThreeCooldown_Total = (float)SkillThree_Entity.Cooldown;
     }
 
     public void HealAmountOfHealth(int Amount)
