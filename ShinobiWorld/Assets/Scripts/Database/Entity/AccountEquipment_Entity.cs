@@ -8,6 +8,7 @@ namespace Assets.Scripts.Database.Entity
 {
     public class AccountEquipment_Entity
     {
+        public int ID;
         public string AccountID;
         public string EquipmentID;
         public int Level;

@@ -20,7 +20,9 @@ public class MissionManager : MonoBehaviour
     [Header("Mission")]
     public GameObject MissionItemPrefab;
     public GameObject MissionPanel;
+    public GameObject MissionMessage;
     public Transform Content;
+    public List<ButtonTrophies> BtnTrophies;
 
     [Header("Progress")]
     public GameObject ProgressPanel;
@@ -46,14 +48,17 @@ public class MissionManager : MonoBehaviour
 
     public List<Mission_Entity> listMission;
 
+    TrophiesID TrophiesID;
+
     private void Awake()
     {
         Instance = this;
     }
 
-    public void Open()
+    public void GetCurrentMission()
     {
-        Game_Manager.Instance.IsBusy = true;
+        Player_AllUIManagement.Instance.CloseMission();
+
         var filterlist = References.listAccountMission = AccountMission_DAO.GetAllByUserID(References.accountRefer.ID);
         listMission = References.listMission.FindAll(obj => filterlist.Any(filter => filter.MissionID == obj.ID));
 
@@ -61,10 +66,49 @@ public class MissionManager : MonoBehaviour
         {
             CurrentMission = filterlist.Find(obj => obj.Status == StatusMission.Doing);
             HavingMission = References.listMission.Find(obj => obj.ID == CurrentMission.MissionID);
+            Player_AllUIManagement.Instance.ShowMission(HavingMission.Content);
+        }
+    }
+
+    public void ResetColorBtnTrophies()
+    {
+        foreach (ButtonTrophies button in BtnTrophies)
+        {
+            button.Btn.GetComponent<Image>().color = new Color32(185, 183, 183, 255);
+        }
+    }
+
+    public void SelectedColorBtnTrophies(ButtonTrophies button)
+    {
+        ResetColorBtnTrophies();
+        button.Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        TrophiesID = button.ID;
+        GetList(button.ID);
+    }
+
+    public void Open()
+    {
+        MissionMessage.SetActive(false);
+        Game_Manager.Instance.IsBusy = true;
+
+        foreach (ButtonTrophies button in BtnTrophies)
+        {
+            button.Btn.GetComponentInChildren<TMP_Text>().text = References.BtnTrophies[button.ID.ToString()];
+
+            button.Btn.onClick.AddListener(() =>
+            {
+                SelectedColorBtnTrophies(button);
+            });
         }
 
+        //GetCurrentMission();
+        ResetColorBtnTrophies();
+
+        TrophiesID = (TrophiesID) Enum.Parse(typeof(TrophiesID), References.accountRefer.TrophiesID);
+        BtnTrophies[(int)TrophiesID].Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);  
+        GetList(TrophiesID);
+
         MissionPanel.SetActive(true);
-        GetList();
     }
 
     public void Destroy()
@@ -75,17 +119,26 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    public void GetList()
+    public void GetList(TrophiesID TrophiesID)
     {
-        foreach (var mission in listMission)
+        Destroy();
+        var list = listMission.FindAll(obj => obj.TrophiesID == TrophiesID.ToString());
+        
+        if(list.Count <= 0) MissionMessage.SetActive(true);
+        else 
         {
-            Instantiate(MissionItemPrefab, Content).GetComponent<MissionItem>().Setup(mission);
+            MissionMessage.SetActive(false);
+            foreach (var mission in list)
+            {
+                Instantiate(MissionItemPrefab, Content).GetComponent<MissionItem>().Setup(mission);
+            }
         }
+        
     }
 
     public void Reload() {
-        Destroy();
-        GetList();
+        GetCurrentMission();
+        GetList(TrophiesID);
     }
 
     public void ResetColor()
@@ -107,12 +160,17 @@ public class MissionManager : MonoBehaviour
     {
         Game_Manager.Instance.IsBusy = true;
         ProgressPanel.SetActive(true);
+        if (HavingMission == null) GetCurrentMission();
 
         if (HavingMission != null)
         {
             ContentTxt.text = HavingMission.Content;
 
-            if (CurrentMission.Current == CurrentMission.Target) CurrentTxt.text = Message.MissionFinish;
+            if (CurrentMission.Current == CurrentMission.Target)
+            {
+                CurrentTxt.text = Message.MissionFinish;
+                Player_AllUIManagement.Instance.CloseMission();
+            }
             else CurrentTxt.text = string.Format(Message.MissionProgress, CurrentMission.Current, CurrentMission.Target);
         }else
         {
@@ -185,7 +243,8 @@ public class MissionManager : MonoBehaviour
         if(HavingMission != null && BossID == HavingMission.BossID)
         {
             ++CurrentMission.Current;
-            if(CurrentMission.Current >= CurrentMission.Target)
+            AccountMission_DAO.DoingMission(References.accountRefer.ID, HavingMission.ID, CurrentMission.Current);
+            if (CurrentMission.Current >= CurrentMission.Target)
             {
                 AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, HavingMission.ID, 
                                                             StatusMission.Claim);
@@ -198,8 +257,7 @@ public class MissionManager : MonoBehaviour
 
     public void TakeBonusMission(Mission_Entity selected)
     {
-        References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-        var equip = References.RandomEquipmentBonus(selected.CategoryEquipmentID, out int SellCost);
+        var equip = References.RandomEquipmentBonus(selected.CategoryEquipmentID);
        
         if(References.accountRefer.TrophiesID == References.TrophyID_RemakeMission)
         {
@@ -211,16 +269,9 @@ public class MissionManager : MonoBehaviour
         Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
         References.AddExperience(selected.ExpBonus);
 
-        var index = References.listAccountMission.FindIndex(obj => obj.MissionID == selected.ID);
-
         Reload();
 
         ShowBonus(selected.CoinBonus, selected.ExpBonus, equip.Name, equip.Image);
-            
-        if (SellCost > 0)
-        {
-            ShowMessageEquipmetDuplicate(SellCost, equip.Name, equip.Image);
-        }
     }
 
     public void Check()
@@ -228,4 +279,10 @@ public class MissionManager : MonoBehaviour
         DoingMission(HavingMission.BossID);
     }
 
+}
+[System.Serializable]
+public struct ButtonTrophies
+{
+    public TrophiesID ID;
+    public Button Btn;
 }

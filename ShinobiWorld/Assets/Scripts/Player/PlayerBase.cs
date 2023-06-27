@@ -16,6 +16,8 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Photon.Pun.Demo.PunBasics;
 using WebSocketSharp;
+using UnityEngine.SceneManagement;
+using System;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -241,7 +243,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
 
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpPlayer(this);
 
+            LoadSkillCooldown();
             LoadPlayerHealthUI();
             LoadPlayerChakraUI();
             LoadPlayerStrengthUI();
@@ -256,6 +260,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void RegenChakra()
     {
         HealAmountOfChakra(1);
+    }
+
+    public void LoadSkillCooldown()
+    {
+        SkillOneCooldown_Total = (float)SkillOne_Entity.Cooldown;
+        SkillTwoCooldown_Total = (float)SkillTwo_Entity.Cooldown;
+        SkillThreeCooldown_Total = (float)SkillThree_Entity.Cooldown;
     }
 
     public void HealAmountOfHealth(int Amount)
@@ -319,7 +330,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-
+            if (Game_Manager.Instance.IsBusy == true) return;
             animator.SetFloat("Horizontal", MoveDirection.x);
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
@@ -329,6 +340,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillOne();
             SkillTwo();
             SkillThree();
+
+            /*if (Input.GetKeyDown(KeyCode.U))
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("BossArena_Kakashi");
+            }*/
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -638,6 +656,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (ObjectPool_Runtime != null)
         {
             Destroy(ObjectPool_Runtime);
+        }
+        if (References.IsDisconnect)
+        {
+            References.PlayerSpawnPosition = transform.position;
         }
     }
 
