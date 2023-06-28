@@ -11,6 +11,7 @@ public class Skill_Item : MonoBehaviour, IPointerDownHandler
     [SerializeField] Image SkillImage;
     [SerializeField] GameObject SelectedObject;
     [SerializeField] TMP_Text CostTxt;
+    [SerializeField] TMP_Text NameTxt;
 
     Skill_Entity skill_Entity;
 
@@ -24,6 +25,7 @@ public class Skill_Item : MonoBehaviour, IPointerDownHandler
         this.skill_Entity = skill_Entity;
         SkillImage.sprite = Resources.Load<Sprite>(skill_Entity.Image);
         CostTxt.text = skill_Entity.BuyCost.ToString();
+        NameTxt.text = skill_Entity.Name.ToString();
         SetUpSelected();
     }
 
