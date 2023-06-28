@@ -26,6 +26,21 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
+        public static void UpgradeTrophyRegister(string UserID, int status)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set IsTicket = @status where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@status", status);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+
         public static void UpdateAccountCoin(string UserID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
