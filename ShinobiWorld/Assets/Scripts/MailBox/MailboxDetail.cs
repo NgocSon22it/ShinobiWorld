@@ -55,49 +55,64 @@ namespace Assets.Scripts.MailBox
             if (isSystem || accountMail.IsClaim) ClaimBtn.SetActive(false);
         }
 
+        public void SetupBonus(Equipment_Entity equip, bool isDouble = false)
+        {
+            BonusDoublePanel.SetActive(false);
+            BonusPanel.SetActive(true);
+
+            Coin.text = selectedMail.CoinBonus.ToString();
+
+            EquipmentTxt.text = equip.Name + ((isDouble) ? " (x2)" : "");
+            EquipmentImg.sprite = Resources.Load<Sprite>(equip.Image);
+        }
+
+        public void SetupBonusDouble(Equipment_Entity equip1, Equipment_Entity equip2)
+        {
+            BonusDoublePanel.SetActive(true);
+            BonusPanel.SetActive(false);
+
+            CoinDouble.text = selectedMail.CoinBonus.ToString();
+
+            EquipmentTxt1.text = equip1.Name;
+            EquipmentImg1.sprite = Resources.Load<Sprite>(equip1.Image);
+
+            EquipmentTxt2.text = equip2.Name;
+            EquipmentImg2.sprite = Resources.Load<Sprite>(equip2.Image);
+        }
+
         public void ShowBonus()
         {
-            var equip1 = References.RandomEquipmentBonus(selectedMail.CategoryEquipmentID);
-            var equip2 = References.RandomEquipmentBonus(selectedMail.CategoryEquipmentID);
 
-            if(equip1 != equip2)
+            if (selectedMail.Amount == 1)
             {
-                BonusDoublePanel.SetActive(true);
-                BonusPanel.SetActive(false);
-
-                CoinDouble.text = selectedMail.CoinBonus.ToString();
-
-                EquipmentTxt1.text = equip1.Name;
-                EquipmentImg1.sprite = Resources.Load<Sprite>(equip1.Image);
-
-                EquipmentTxt2.text = equip2.Name;
-                EquipmentImg2.sprite = Resources.Load<Sprite>(equip2.Image);
+                var equip = References.RandomEquipmentBonus(selectedMail.CategoryEquipmentID);
+                SetupBonus(equip);
+                AccountMailBox_DAO.TakeBonus(selectedAccountMail.ID,
+                                        selectedAccountMail.AccountID, selectedAccountMail.MailBoxID,
+                                        equip.ID, null);
             }
             else
             {
-                BonusDoublePanel.SetActive(false);
-                BonusPanel.SetActive(true);
+                var equip1 = References.RandomEquipmentBonus(selectedMail.CategoryEquipmentID);
+                var equip2 = References.RandomEquipmentBonus(selectedMail.CategoryEquipmentID);
 
-                Coin.text = selectedMail.CoinBonus.ToString();
-
-                EquipmentTxt.text = equip1.Name + " (x2)";
-                EquipmentImg.sprite = Resources.Load<Sprite>(equip1.Image);
+                if (equip1 != equip2) SetupBonusDouble(equip1, equip2);
+                else SetupBonus(equip1, true);
+                
+                AccountMailBox_DAO.TakeBonus(selectedAccountMail.ID,
+                                        selectedAccountMail.AccountID, selectedAccountMail.MailBoxID,
+                                        equip1.ID, equip2.ID);
             }
 
             References.AddCoin(selectedMail.CoinBonus);
-
-            AccountMailBox_DAO.TakeBonus(selectedAccountMail.ID,
-                                        selectedAccountMail.AccountID, selectedAccountMail.MailBoxID,
-                                        equip1.ID, equip2.ID);
-
-            MailBoxManager.Instance.Reload();
+            MailBoxManager.Instance.Reload(selectedAccountMail.ID);
         }
 
         public void Delete()
         {
             AccountMailBox_DAO.Delete(selectedAccountMail.ID,
                                         selectedAccountMail.AccountID, selectedAccountMail.MailBoxID);
-            MailBoxManager.Instance.Reload();
+            MailBoxManager.Instance.Reload(selectedAccountMail.ID);
         }
 
         public void Close()
