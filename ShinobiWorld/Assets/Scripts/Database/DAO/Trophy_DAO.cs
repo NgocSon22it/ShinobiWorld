@@ -41,6 +41,7 @@ namespace Assets.Scripts.Database.DAO
                             Delete = Convert.ToBoolean(dr["Delete"])
                         };
                         list.Add(obj);
+                        References.BtnTrophies.Add(obj.ID, obj.Name);
                     }
                 }
                 finally

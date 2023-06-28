@@ -70,11 +70,31 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[TakeBonus]  @AccountID ,@MissionID ,@Status ,@EquipmentID1 ,null ,null";
+                cmd.CommandText = "EXECUTE [dbo].[TakeBonus]  @AccountID, @MissionID, @Status, " +
+                                                                "@EquipmentID1, @EquipmentID2," +
+                                                                "@ID_AccountMailBox, @MailBoxID";
                 cmd.Parameters.AddWithValue("@AccountID", UserID);
                 cmd.Parameters.AddWithValue("@MissionID", MissionID);
                 cmd.Parameters.AddWithValue("@Status", Status);
                 cmd.Parameters.AddWithValue("@EquipmentID1", EquipmentID1);
+                cmd.Parameters.AddWithValue("@EquipmentID2", null);
+                cmd.Parameters.AddWithValue("@ID_AccountMailBox", null);
+                cmd.Parameters.AddWithValue("@MailBoxID", null);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public static void DoingMission(string UserID, string MissionID, int Current)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE [dbo].[AccountMission] SET [Current] = @Current WHERE AccountID = @UserID and MissionID = @MissionID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@MissionID", MissionID);
+                cmd.Parameters.AddWithValue("@Current", Current);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();

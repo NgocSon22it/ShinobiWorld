@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4338305331038297510
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4338305331038296664}
+  - component: {fileID: 4338305331038297511}
+  m_Layer: 0
+  m_Name: Magician
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4338305331038296664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4338305331038297510}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.9017477, y: 1.3866491, z: 0.10516755}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7739730886368997368}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &4338305331038297511
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4338305331038297510}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 1.9139585, y: -2.2577834}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 4.827917, y: 5.515567}
+  m_EdgeRadius: 0
+--- !u!1001 &4338305332045474271
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4338305331038296664}
+    m_Modifications:
+    - target: {fileID: 89775553013017554, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_Name
+      value: Magician_Main
+      objectReference: {fileID: 0}
+    - target: {fileID: 962888621319663316, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: movementBounds
+      value: 
+      objectReference: {fileID: 4338305331038297511}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8680656400298609253, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: sceneViewId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8840122417472981132, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_Bounds.m_Center.x
+      value: -0.032902956
+      objectReference: {fileID: 0}
+    - target: {fileID: 8840122417472981132, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_Bounds.m_Center.y
+      value: 0.42094386
+      objectReference: {fileID: 0}
+    - target: {fileID: 8840122417472981132, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_Bounds.m_Extent.x
+      value: 1.0762355
+      objectReference: {fileID: 0}
+    - target: {fileID: 8840122417472981132, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+      propertyPath: m_Bounds.m_Extent.y
+      value: 1.3296386
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+--- !u!4 &7739730886368997368 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6295413860293953063, guid: 8570d7ea0f4a12d428cbe42a292d7890, type: 3}
+  m_PrefabInstance: {fileID: 4338305332045474271}
+  m_PrefabAsset: {fileID: 0}

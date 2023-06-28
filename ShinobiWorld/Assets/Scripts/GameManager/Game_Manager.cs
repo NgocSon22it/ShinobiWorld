@@ -36,8 +36,19 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     [SerializeField] List<GameObject> List_LangLa1 = new List<GameObject>();
 
+    [SerializeField] List<GameObject> List_LangLa2 = new List<GameObject>();
+
+    [SerializeField] List<GameObject> List_LangLa3 = new List<GameObject>();
+
+    [SerializeField] List<GameObject> List_LangLa4 = new List<GameObject>();
+
     public bool IsBusy;
 
+    SqlDateTime dateTime;
+
+    public Vector3 PlayerReconnectPosition;
+
+    RoomOptions roomOptions = new RoomOptions();
 
     private void Awake()
     {
@@ -49,7 +60,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            RoomOptions roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
@@ -60,7 +70,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
-        SetupPlayer(References.HouseAddress[House.Hokage.ToString()]);
+
+        SetupPlayer(References.PlayerSpawnPosition);
+        ChatManager.Instance.ConnectToChat();
+        StartCoroutine(SpawnEnemy());
     }
 
     public void SetupPlayer(Vector3 position)
@@ -87,15 +100,28 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void Spawn_Enemy(string AreaID, string BossID)
+    public IEnumerator SpawnEnemy()
     {
-        foreach(GameObject enemy in List_LangLa1)
+        while (true)
         {
-            if(enemy.GetComponentInChildren<Enemy>().areaBoss_Entity.ID.Equals(AreaID) 
-                && enemy.GetComponentInChildren<Enemy>().areaBoss_Entity.BossID.Equals(BossID))
+            // Get the current time
+            dateTime = new SqlDateTime(System.DateTime.Now);
+            foreach (GameObject enemy in List_LangLa1)
             {
-               
+                Enemy enemyScript = enemy.GetComponent<Enemy>();
+                if (enemyScript != null)
+                {
+                    if (dateTime >= enemyScript.areaBoss_Entity.TimeSpawn
+                        && enemyScript.areaBoss_Entity.isDead == false
+                        && enemyScript.areaBoss_Entity.CurrentHealth > 0)
+                    {
+                        enemyScript.LoadHealthUI();
+                        enemy.SetActive(true);
+                    }
+                }
             }
+            // Wait for the next frame
+            yield return new WaitForSecondsRealtime(0.1f);
         }
     }
 
@@ -146,8 +172,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public void GoToMenu()
     {
-        PhotonNetwork.LeaveRoom(false);
-        PhotonNetwork.LoadLevel(Scenes.Login);
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel(Scenes.Login);
+        }
     }
 
     public void GoingToHospital()
@@ -167,12 +196,42 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        if (cause != DisconnectCause.DisconnectByClientLogic)
+        {
+            Debug.Log(Message.LostWifi);
+            References.IsDisconnect = true;
+            if (References.IsDisconnect && !PhotonNetwork.IsConnected)
+            {
+                StartCoroutine(RetryConnection());
+            }
+        }
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log(Message.HaveWifi);
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
+        }
+    }
+
+    private IEnumerator RetryConnection()
+    {
+        yield return new WaitForSeconds(5f);  // Wait for 5 seconds before retrying
+
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null)
+        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
         {
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
             References.UpdateAccountToDB();
         }
+
     }
 }

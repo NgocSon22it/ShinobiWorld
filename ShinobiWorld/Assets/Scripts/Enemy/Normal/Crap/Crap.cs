@@ -8,7 +8,6 @@ public class Crap : Enemy
     new void Awake()
     {
         EnemyID = "Boss_Crap";
-        AreaName = "";
         SetUp(EnemyID, AreaName);
     }
     // Start is called before the first frame update
@@ -23,28 +22,8 @@ public class Crap : Enemy
         Move();
     }
 
-    public void Animation_SkillOne()
-    {
-        if (TargetPosition != Vector3.zero)
-        {
-            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = TargetPosition - transform.Find("MainPoint").position;
-
-            if (SkillOne != null)
-            {
-                SkillOne.transform.position = transform.position;
-                SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
-                SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
-            }
-        }
-    }
-
     public void Move()
     {
-
             if (isMoving)
             {
                 transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);

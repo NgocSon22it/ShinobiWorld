@@ -37,5 +37,10 @@ public class Message
     public static string MissionBonusEquipDupli = "Vì bạn đã sở hữu trang bị {0} nên hệ thống đã quy đổi thành vàng";
     public static string MissionProgress = "Trạng thái: {0}/{1}";
 
+    public static string LostWifi = "Trạng thái: Mất Wifi rồi!";
+    public static string HaveWifi = "Trạng thái: Có Wifi rồi!";
+
+
+
 
 }

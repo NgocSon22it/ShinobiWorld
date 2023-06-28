@@ -12,6 +12,8 @@ public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
 
+    public static string PlayerName;
+
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
 
@@ -21,6 +23,7 @@ public static class References
 
     public static Weapon_Entity weapon = new Weapon_Entity();
     public static List<AccountMission_Entity> listAccountMission = new List<AccountMission_Entity>();
+    public static List<AccountMailBox_Entity> listAccountMailBox = new List<AccountMailBox_Entity>();
 
     public static int Maxserver = 20;
 
@@ -33,7 +36,11 @@ public static class References
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
+    public static List<MailBox_Entity> listMailBox = MailBox_DAO.GetAll();
+
+    public static IDictionary<string, string> BtnTrophies = new Dictionary<string, string>();
     public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
+
     public static List<Mission_Entity> listMission = Mission_DAO.GetAll();
 
     public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
@@ -54,12 +61,18 @@ public static class References
 
     public static int ExpercienceToNextLevel;
 
-    public static string TrophyID_RemakeMission = "Trophie_Jonin";
+    public static bool IsDisconnect = false;
+
+    public static string TrophyID_RemakeMission = TrophiesID.Trophie_Jonin.ToString();
 
     public static string UISkillDefault = "Background/UI_OrangeFill";
     public static string UIEquipmentDefault = "Background/UI_GreenFill";
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
+
+    public static string MailSystem = "System";
+
+    public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
@@ -80,6 +93,8 @@ public static class References
                                                             {StatusMission.Claim.ToString(), "Nhận thưởng"},
                                                             {StatusMission.Done.ToString(), "Hoàn thành"},
                                                         };
+
+
     public static void UpdateAccountToDB()
     {
         if (accountRefer != null)
@@ -164,19 +179,11 @@ public static class References
         Game_Manager.Instance.ReloadPlayerProperties();
     }
 
-    public static Equipment_Entity RandomEquipmentBonus(string CategoryEquipmentID, out int SellCost)
+    public static Equipment_Entity RandomEquipmentBonus(string CategoryEquipmentID)
     {
-        SellCost = 0;
         var listEquipCate = listEquipment.FindAll(obj => obj.CategoryEquipmentID == CategoryEquipmentID);
 
         var index = UnityEngine.Random.Range(0, listEquipCate.Count);
-        Debug.Log("index: " + index);
-
-        if (listAccountEquipment.Any(obj => obj.EquipmentID == listEquipCate[index].ID))
-        {
-            SellCost = listEquipCate[index].SellCost;
-            accountRefer.Coin += SellCost;
-        }
 
         return listEquipCate[index];
     }
@@ -200,4 +207,9 @@ public enum House
 public enum StatusMission
 {
     None, Doing, Claim, Done
+}
+
+public enum TrophiesID
+{
+    Trophie_None, Trophie_Genin, Trophie_Chunin, Trophie_Jonin
 }
