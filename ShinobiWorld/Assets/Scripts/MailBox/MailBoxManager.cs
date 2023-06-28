@@ -17,6 +17,9 @@ public class MailBoxManager : MonoBehaviour
     public GameObject SystemPrefab;
     public GameObject BXHPrefab;
     public GameObject MessageTxt;
+    public GameObject ScrollView;
+    public GameObject Detail;
+    public GameObject DeleteReadBtn;
     public Transform Content;
 
     private void Awake()
@@ -29,10 +32,10 @@ public class MailBoxManager : MonoBehaviour
         Game_Manager.Instance.IsBusy = true;
         MessageTxt.SetActive(false);
         MailBoxPanel.SetActive(true);
-        GetList();
-        
-        if (References.listAccountMailBox.Count <= 0) MessageTxt.SetActive(true);
-       
+        ScrollView.SetActive(true);
+        Detail.SetActive(true);
+        DeleteReadBtn.SetActive(true);
+        GetList(0);
     }
 
     public void Destroy()
@@ -43,7 +46,7 @@ public class MailBoxManager : MonoBehaviour
         }
     }
 
-    public void GetList()
+    public void GetList(int ID)
     {
         References.listAccountMailBox = AccountMailBox_DAO.GetAllByUserID(References.accountRefer.ID);
         var list = References.listAccountMailBox;
@@ -53,16 +56,23 @@ public class MailBoxManager : MonoBehaviour
             if (list[i].MailBoxID.Contains(References.MailSystem))
                 Instantiate(SystemPrefab, Content)
                     .GetComponent<MailBoxItem>()
-                    .Setup(list[i], (i == 0));
+                    .Setup(list[i], (list[i].ID == ID)? true: (i == 0));
             else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>().Setup(list[i], (i == 0), false);
         }
 
+        if (References.listAccountMailBox.Count <= 0)
+        {
+            MessageTxt.SetActive(true);
+            ScrollView.SetActive(false);
+            Detail.SetActive(false);
+            DeleteReadBtn.SetActive(false);
+        }
     }
 
-    public void Reload()
+    public void Reload(int ID)
     {
         Destroy();
-        GetList();
+        GetList(ID);
     }
 
     public void ResetColor()
@@ -70,7 +80,16 @@ public class MailBoxManager : MonoBehaviour
         foreach (Transform child in Content)
         {
             child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
+            
+            if(child.gameObject.GetComponent<MailBoxItem>().accountMail.IsRead)
+                child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 150);
         }
+    }
+
+    public void DeleteRead()
+    {
+        AccountMailBox_DAO.DeleteRead( References.accountRefer.ID);
+        Reload(0);
     }
 
     public void Close()

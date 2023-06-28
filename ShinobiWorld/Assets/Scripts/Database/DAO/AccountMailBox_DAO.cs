@@ -85,6 +85,19 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
+        public static void DeleteRead(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE [dbo].[AccountMailBox] SET [Delete] = 1 WHERE AccountID = @UserID and IsRead = 1";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
         public static void TakeBonus(int ID, string UserID, string MailBoxID, string EquipmentID1, string EquipmentID2)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
@@ -94,10 +107,10 @@ namespace Assets.Scripts.Database.DAO
                                                                 "@EquipmentID1, @EquipmentID2," +
                                                                 "@ID_AccountMailBox, @MailBoxID";
                 cmd.Parameters.AddWithValue("@AccountID", UserID);
-                cmd.Parameters.AddWithValue("@MissionID", string.Empty);
-                cmd.Parameters.AddWithValue("@Status", string.Empty);
+                cmd.Parameters.AddWithValue("@MissionID", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Status", DBNull.Value);
                 cmd.Parameters.AddWithValue("@EquipmentID1", EquipmentID1);
-                cmd.Parameters.AddWithValue("@EquipmentID2", EquipmentID2);
+                cmd.Parameters.AddWithValue("@EquipmentID2", (string.IsNullOrEmpty(EquipmentID2)? DBNull.Value: EquipmentID2));
                 cmd.Parameters.AddWithValue("@ID_AccountMailBox", ID);
                 cmd.Parameters.AddWithValue("@MailBoxID", MailBoxID);
                 connection.Open();

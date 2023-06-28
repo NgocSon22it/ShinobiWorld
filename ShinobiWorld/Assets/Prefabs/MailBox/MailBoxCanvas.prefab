@@ -111,7 +111,7 @@ RectTransform:
   - {fileID: 7684698438362578167}
   - {fileID: 8598135532192654133}
   m_Father: {fileID: 3144778483304316591}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -327,7 +327,7 @@ RectTransform:
   - {fileID: 2578768737091453552}
   - {fileID: 7989538059752417870}
   m_Father: {fileID: 3144778483304316591}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -1151,7 +1151,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7263183227770013765}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2075,6 +2075,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7263183227770013765}
+  - {fileID: 192824746763013002}
   - {fileID: 3690289145341307100}
   - {fileID: 5532846544353533281}
   - {fileID: 4252139400178471640}
@@ -2142,6 +2143,9 @@ MonoBehaviour:
   SystemPrefab: {fileID: 1187193313088468290, guid: 0cf9dc0bb69609d42aa0bfc8b02c545c, type: 3}
   BXHPrefab: {fileID: 8419998051899535196, guid: 0d87d607e4b2e4448af99b2284c0a0c0, type: 3}
   MessageTxt: {fileID: 8790437858888978066}
+  ScrollView: {fileID: 7928994364260104653}
+  Detail: {fileID: 1147658816018495430}
+  DeleteReadBtn: {fileID: 6210182059984351015}
   Content: {fileID: 4719398989826390526}
 --- !u!1 &4521436752831710541
 GameObject:
@@ -2313,7 +2317,7 @@ RectTransform:
   - {fileID: 7933773545806178667}
   - {fileID: 5692248876920131341}
   m_Father: {fileID: 3144778483304316591}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2661,7 +2665,7 @@ RectTransform:
   m_Children:
   - {fileID: 1946149213902694690}
   m_Father: {fileID: 3144778483304316591}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -2923,18 +2927,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6210182059984351015}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8140751450461471606}
   m_Father: {fileID: 7263183227770013765}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -558, y: 0.0000095367}
+  m_AnchoredPosition: {x: -558.00006, y: -0.000030517578}
   m_SizeDelta: {x: 215.7, y: 58.395}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4816692155131586629
@@ -3019,9 +3023,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Assets.Scripts.Shop.SellManager, Assembly-CSharp
-        m_MethodName: OnItemBtnClick
+      - m_Target: {fileID: 3525976810751470727}
+        m_TargetAssemblyTypeName: MailBoxManager, Assembly-CSharp
+        m_MethodName: DeleteRead
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3059,8 +3063,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8064426865097702281}
   - {fileID: 2212361830971721605}
+  - {fileID: 8064426865097702281}
   m_Father: {fileID: 3144778483304316591}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4228,9 +4232,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7216848796787560625}
-  - {fileID: 192824746763013002}
   m_Father: {fileID: 3144778483304316591}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -4258,7 +4261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4598,13 +4601,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3690289145341307100}
+  m_Father: {fileID: 3144778483304316591}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -54}
-  m_SizeDelta: {x: 460.01, y: 75}
+  m_AnchoredPosition: {x: 789.11, y: -311.9243}
+  m_SizeDelta: {x: 1312.2, y: 78.8486}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2373719583760556384
 CanvasRenderer:
