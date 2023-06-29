@@ -5,12 +5,10 @@ using UnityEngine;
 
 public class Kakashi : Enemy
 {
-
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-
 
     }
 
@@ -43,6 +41,8 @@ public class Kakashi : Enemy
             if (Break_CurrentTime <= 0f)
             {
                 MovePosition = GetRandomPosition();
+                TargetPosition = FindClostestTarget(100f, "Player");
+                animator.SetTrigger("Skill1");
                 isMoving = true;
             }
         }
@@ -68,10 +68,49 @@ public class Kakashi : Enemy
             {
                 SkillOne.transform.position = transform.position;
                 SkillOne.transform.rotation = transform.rotation;
+                SkillOne.GetComponent<Kakashi_SkillOne>().SetUp(100);
+                SkillOne.SetActive(true);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 1);
+            }
+        }
+    }
+
+    public void Animation_SkillTwo()
+    {
+        if (TargetPosition != Vector3.zero)
+        {
+            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
+            FlipToTarget();
+            direction = TargetPosition - transform.Find("MainPoint").position;
+
+            if (SkillOne != null)
+            {
+                SkillOne.transform.position = transform.position;
+                SkillOne.transform.rotation = transform.rotation;
                 SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }
         }
     }
+
+    public void Animation_SkillThree()
+    {
+        if (TargetPosition != Vector3.zero)
+        {
+            GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
+            FlipToTarget();
+            direction = TargetPosition - transform.Find("MainPoint").position;
+
+            if (SkillOne != null)
+            {
+                SkillOne.transform.position = transform.position;
+                SkillOne.transform.rotation = transform.rotation;
+                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
+                SkillOne.SetActive(true);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
+            }
+        }
+    }
+
 }
