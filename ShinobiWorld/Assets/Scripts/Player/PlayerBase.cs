@@ -264,9 +264,18 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void LoadSkillCooldown()
     {
-        SkillOneCooldown_Total = (float)SkillOne_Entity.Cooldown;
-        SkillTwoCooldown_Total = (float)SkillTwo_Entity.Cooldown;
-        SkillThreeCooldown_Total = (float)SkillThree_Entity.Cooldown;
+        if (SkillOne_Entity != null)
+        {
+            SkillOneCooldown_Total = (float)SkillOne_Entity.Cooldown;
+        }
+        if (SkillTwo_Entity != null)
+        {
+            SkillTwoCooldown_Total = (float)SkillTwo_Entity.Cooldown;
+        }
+        if (SkillThree_Entity != null)
+        {
+            SkillThreeCooldown_Total = (float)SkillThree_Entity.Cooldown;
+        }
     }
 
     public void HealAmountOfHealth(int Amount)
@@ -503,26 +512,35 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void SkillOne_Resources()
     {
-        SkillOneCooldown_Current = SkillOneCooldown_Total;
-        AccountEntity.CurrentChakra -= SkillOne_Entity.Chakra;
-        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
-        LoadPlayerChakraUI();
+        if (SkillOne_Entity != null)
+        {
+            SkillOneCooldown_Current = SkillOneCooldown_Total;
+            AccountEntity.CurrentChakra -= SkillOne_Entity.Chakra;
+            References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
+            LoadPlayerChakraUI();
+        }
     }
 
     public void SkillTwo_Resources()
     {
-        SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-        AccountEntity.CurrentChakra -= SkillTwo_Entity.Chakra;
-        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
-        LoadPlayerChakraUI();
+        if (SkillTwo_Entity != null)
+        {
+            SkillTwoCooldown_Current = SkillTwoCooldown_Total;
+            AccountEntity.CurrentChakra -= SkillTwo_Entity.Chakra;
+            References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
+            LoadPlayerChakraUI();
+        }
     }
 
     public void SkillThree_Resources()
     {
-        SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-        AccountEntity.CurrentChakra -= SkillThree_Entity.Chakra;
-        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
-        LoadPlayerChakraUI();
+        if (SkillThree_Entity != null)
+        {
+            SkillThreeCooldown_Current = SkillThreeCooldown_Total;
+            AccountEntity.CurrentChakra -= SkillThree_Entity.Chakra;
+            References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
+            LoadPlayerChakraUI();
+        }
     }
     #endregion
 

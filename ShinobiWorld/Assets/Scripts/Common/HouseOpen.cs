@@ -12,15 +12,28 @@ namespace Assets.Scripts.Mission
     public class HouseOpen : MonoBehaviour
     {
         public GameObject Panel;
-        public GameObject Message;
         public House house;
         private bool isOpen = false;
+
+        public string HouseName;
+
+        public void OpenHousePanel()
+        {
+            Panel.SetActive(true);
+        }
+
+        public void CloseHousePanel()
+        {
+            Panel.SetActive(false);
+        }
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.O) && isOpen)
             {
-                switch (house)
+                OpenHousePanel();
+
+                /*switch (house)
                 {
                     case House.Hokage:
                         GetComponent<MissionManager>().Open();
@@ -28,7 +41,7 @@ namespace Assets.Scripts.Mission
                     case House.Shop:
                         Panel.GetComponent<ShopManager>().OnShopBtnClick();
                         break;
-                }
+                }*/
             }
         }
 
@@ -36,8 +49,11 @@ namespace Assets.Scripts.Mission
         {
             if (collision.CompareTag("Player"))
             {
-                Message.SetActive(true);
-                isOpen = true;
+                if (collision.GetComponent<PlayerBase>().PlayerAllUIInstance != null)
+                {
+                    collision.GetComponent<PlayerBase>().PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowHouseMessage(HouseName);
+                    isOpen = true;
+                }
             }
         }
 
@@ -45,8 +61,11 @@ namespace Assets.Scripts.Mission
         {
             if (collision.CompareTag("Player"))
             {
-                Message.SetActive(false);
-                isOpen = false;
+                if (collision.GetComponent<PlayerBase>().PlayerAllUIInstance != null)
+                {
+                    collision.GetComponent<PlayerBase>().PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().CloseHouseMessage();
+                    isOpen = false;
+                }
             }
         }
 
