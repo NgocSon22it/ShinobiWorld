@@ -467,6 +467,37 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8190508789205964927, guid: 0d5f115403c479642a3d6d8fe89205d3, type: 3}
   m_PrefabInstance: {fileID: 362889208}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &415383754
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 415383755}
+  m_Layer: 0
+  m_Name: Kakashi_SkillThree
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &415383755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415383754}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.43430558, y: 0.32491785, z: 0.033232618}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &530369194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -673,7 +704,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029588634}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.17, y: 3.16, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -795,6 +826,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3746117953091587699, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8999312876728114232, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
       propertyPath: ObjectPool
       value: 
@@ -802,10 +837,6 @@ PrefabInstance:
     - target: {fileID: 8999312876728114235, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
       propertyPath: sceneViewId
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8999312876728114238, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
-      propertyPath: List_SkillOne.Array.size
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8999312876728114238, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
       propertyPath: List_SkillOne.Array.data[0]
@@ -830,6 +861,14 @@ PrefabInstance:
     - target: {fileID: 8999312878208413350, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
       propertyPath: m_Name
       value: Kakashi
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999312878208413350, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999312878208413350, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
+      propertyPath: m_TagString
+      value: Enemy_WorkingArea
       objectReference: {fileID: 0}
     - target: {fileID: 8999312878208413351, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
       propertyPath: m_RootOrder
@@ -874,6 +913,22 @@ PrefabInstance:
     - target: {fileID: 8999312878208413351, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999312878208413368, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
+      propertyPath: m_Size.x
+      value: 5.459655
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999312878208413368, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
+      propertyPath: m_Size.y
+      value: 10.090763
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999312878208413368, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.58408916
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999312878208413368, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.8172684
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11a601d6b71ef1848bce0de0631a6415, type: 3}
