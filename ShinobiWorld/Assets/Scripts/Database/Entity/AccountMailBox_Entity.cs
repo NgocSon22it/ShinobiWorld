@@ -8,10 +8,10 @@ namespace Assets.Scripts.Database.Entity
 {
     public class AccountMailBox_Entity
     {
+        public int ID;
         public string AccountID;
         public string MailBoxID;
-        public string RankID;
-        public int Rank;
+        public DateTime DateAdd;
         public bool IsClaim;
         public bool IsRead;
         public bool Delete;

@@ -72,6 +72,7 @@ public class RangeCharacter : PlayerBase
     {
         if (SkillThree_Entity != null)
         {
+
             if (context.started && CanExecuteSkill(SkillThreeCooldown_Current, SkillThree_Entity.Chakra))
             {
                 CallSyncAnimation("Skill3_Range");
