@@ -71,7 +71,7 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void ShowHouseMessage(string HouseName)
     {
-        House_Message.text = "Bấm O để vào " + HouseName;
+        House_Message.text = Message.OpenHouse + HouseName;
     }
 
     public void CloseHouseMessage()
@@ -161,7 +161,7 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void ShowDetailInfo()
     {
-        Player_Info.Instance.OnAvatarBtnClick();
+        Player_Info.Instance.Open();
     }
 
     public void ShowMission(string content)
