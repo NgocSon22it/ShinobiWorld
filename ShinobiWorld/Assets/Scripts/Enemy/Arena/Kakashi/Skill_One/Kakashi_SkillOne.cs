@@ -1,9 +1,20 @@
+using Photon.Pun.Demo.Asteroids;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Kakashi_SkillOne : Boss_Skill
 {
+    Quaternion rotation;
+    public void SetUpDirection(Vector3 direction)
+    {
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        rotation.eulerAngles = new Vector3(0, 0, angle);
+        transform.rotation = rotation;
+        transform.Rotate(0, 0, 90);
+    }
+
     new void OnEnable()
     {
         LifeTime = 3f;
@@ -14,7 +25,6 @@ public class Kakashi_SkillOne : Boss_Skill
     {
         base.OnDisable();
     }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
