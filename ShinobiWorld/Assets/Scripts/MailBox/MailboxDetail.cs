@@ -18,6 +18,8 @@ namespace Assets.Scripts.MailBox
         public TMP_Text Title;
         public TMP_Text Content;
         public GameObject ClaimBtn;
+        public GameObject ConfirmDeletePanel;
+        public TMP_Text ConfirmDeleteMessage;
 
         [Header("Bonus")]
         public GameObject BonusPanel;
@@ -108,11 +110,25 @@ namespace Assets.Scripts.MailBox
             MailBoxManager.Instance.Reload(selectedAccountMail.ID);
         }
 
+        public void ConfirmDelete()
+        {
+            ConfirmDeletePanel.SetActive(true);
+            if (!selectedAccountMail.IsClaim) ConfirmDeleteMessage.text = Message.MailboxDeleteNotReceivedBonus;
+            else ConfirmDeleteMessage.text = Message.MailboxDelete;
+        }
+
+        public void CloseConfirmDelete()
+        {
+            ConfirmDeletePanel.SetActive(false);
+        }
+
         public void Delete()
         {
             AccountMailBox_DAO.Delete(selectedAccountMail.ID,
                                         selectedAccountMail.AccountID, selectedAccountMail.MailBoxID);
             MailBoxManager.Instance.Reload(selectedAccountMail.ID);
+            CloseConfirmDelete();
+
         }
 
         public void Close()

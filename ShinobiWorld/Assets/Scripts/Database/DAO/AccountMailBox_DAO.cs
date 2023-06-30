@@ -85,12 +85,25 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
-        public static void DeleteRead(string UserID)
+        public static void DeleteReadAll(string UserID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
                 cmd.CommandText = "UPDATE [dbo].[AccountMailBox] SET [Delete] = 1 WHERE AccountID = @UserID and IsRead = 1";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public static void DeleteReadAndReceivedBonus(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE [dbo].[AccountMailBox] SET [Delete] = 1 WHERE AccountID = @UserID and IsRead = 1 and IsClaim = 1";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 connection.Open();
                 cmd.ExecuteNonQuery();

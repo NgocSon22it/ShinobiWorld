@@ -40,7 +40,6 @@ public class Message
     public static string LostWifi = "Trạng thái: Mất Wifi rồi!";
     public static string HaveWifi = "Trạng thái: Có Wifi rồi!";
 
-
-
-
+    public static string MailboxDeleteNotReceivedBonus = "Bạn có phần thưởng chưa nhận, bạn có muốn tiếp tục xóa không?";
+    public static string MailboxDelete = "Bạn có muốn tiếp tục xóa không?";
 }
