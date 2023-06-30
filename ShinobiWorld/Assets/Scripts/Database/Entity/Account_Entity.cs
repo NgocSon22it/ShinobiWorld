@@ -28,6 +28,7 @@ public class Account_Entity
     public bool IsOnline;
     public bool IsTicket;
     public bool IsFirst;
+    public bool IsUpgradeTrophy;
     public DateTime DateReset;
 
     public Account_Entity() { }
