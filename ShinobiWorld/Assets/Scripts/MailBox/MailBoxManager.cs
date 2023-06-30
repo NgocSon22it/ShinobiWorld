@@ -4,6 +4,7 @@ using Assets.Scripts.Mission;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -21,6 +22,8 @@ public class MailBoxManager : MonoBehaviour
     public GameObject Detail;
     public GameObject DeleteReadBtn;
     public Transform Content;
+    public GameObject ConfirmDeletePanel;
+    public TMP_Text ConfirmDeleteMessage;
 
     private void Awake()
     {
@@ -57,7 +60,7 @@ public class MailBoxManager : MonoBehaviour
                 Instantiate(SystemPrefab, Content)
                     .GetComponent<MailBoxItem>()
                     .Setup(list[i], (list[i].ID == ID)? true: (i == 0));
-            else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>().Setup(list[i], (i == 0), false);
+            else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>().Setup(list[i], (list[i].ID == ID) ? true : (i == 0), false);
         }
 
         if (References.listAccountMailBox.Count <= 0)
@@ -85,10 +88,32 @@ public class MailBoxManager : MonoBehaviour
                 child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 150);
         }
     }
-
-    public void DeleteRead()
+    public void ConfirmDelete()
     {
-        AccountMailBox_DAO.DeleteRead( References.accountRefer.ID);
+        ConfirmDeletePanel.SetActive(true);
+
+        var isClaim = References.listAccountMailBox.Any(obj => !obj.IsClaim);
+
+        if (isClaim) ConfirmDeleteMessage.text = Message.MailboxDeleteNotReceivedBonus;
+        else ConfirmDeleteMessage.text = Message.MailboxDelete;
+    }
+
+    public void CloseConfirmDelete()
+    {
+        ConfirmDeletePanel.SetActive(false);
+    }
+
+    public void DeleteReadAndReceivedBonus()
+    {
+        AccountMailBox_DAO.DeleteReadAndReceivedBonus(References.accountRefer.ID);
+        CloseConfirmDelete();
+        Reload(0);
+    }
+
+    public void DeleteReadAll()
+    {
+        AccountMailBox_DAO.DeleteReadAll(References.accountRefer.ID); 
+        CloseConfirmDelete();
         Reload(0);
     }
 
