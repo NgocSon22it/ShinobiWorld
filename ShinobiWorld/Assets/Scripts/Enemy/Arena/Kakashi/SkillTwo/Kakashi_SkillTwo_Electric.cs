@@ -11,7 +11,7 @@ public class Kakashi_SkillTwo_Electric : Boss_Skill
 
     new void OnEnable()
     {
-        LifeTime = 3f;
+        LifeTime = 2.5f;
         Electric = StartCoroutine(StartDamage());
         base.OnEnable();
     }
