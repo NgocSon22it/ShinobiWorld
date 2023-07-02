@@ -16,6 +16,8 @@ public class Melee_SkillTwo : PlayerSkill
 
     float DamageSeconds = 0.2f;
 
+    Coroutine FlyCoroutine;
+
     private void Awake()
     {
         collider2 = GetComponent<Collider2D>();
@@ -25,13 +27,13 @@ public class Melee_SkillTwo : PlayerSkill
     {
         angle = 1.5f;
         LifeTime = 5f;
-        StartCoroutine(LogTriggeredObjects());
+        FlyCoroutine = StartCoroutine(LogTriggeredObjects());
         base.OnEnable();
     }
     new void OnDisable()
     {
         base.OnDisable();
-        StopAllCoroutines();
+        StopCoroutine(FlyCoroutine);
     }
 
     private void Update()

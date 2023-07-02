@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.School;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace Assets.Scripts.Mission
             {
                 OpenHousePanel();
 
-                /*switch (house)
+                switch (house)
                 {
                     case House.Hokage:
                         GetComponent<MissionManager>().Open();
@@ -41,7 +42,10 @@ namespace Assets.Scripts.Mission
                     case House.Shop:
                         Panel.GetComponent<ShopManager>().OnShopBtnClick();
                         break;
-                }*/
+                    case House.School:
+                        GetComponent<SchoolManager>().Open();
+                        break;
+                }
             }
         }
 
