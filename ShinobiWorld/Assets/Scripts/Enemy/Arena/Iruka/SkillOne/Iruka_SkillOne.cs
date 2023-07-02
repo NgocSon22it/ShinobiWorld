@@ -1,10 +1,8 @@
-using Photon.Pun.Demo.Asteroids;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
-public class Kakashi_SkillOne : Boss_Skill
+public class Iruka_SkillOne : Boss_Skill
 {
     Quaternion rotation;
     [SerializeField] GameObject Explosion;
@@ -13,7 +11,7 @@ public class Kakashi_SkillOne : Boss_Skill
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         rotation.eulerAngles = new Vector3(0, 0, angle);
         transform.rotation = rotation;
-        transform.Rotate(0, 0, 90);
+        transform.Rotate(0, 0, -90);
     }
 
     new void OnEnable()
