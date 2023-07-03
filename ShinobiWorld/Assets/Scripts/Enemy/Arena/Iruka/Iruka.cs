@@ -11,7 +11,7 @@ public class Iruka : Enemy
 
     //SkillTwo
     public Vector2 SkillRandomPosition;
-    public Vector2 Skill_MinPosition, Skill_MaxPosition;
+    Vector2 Skill_MinPosition, Skill_MaxPosition;
     float X, Y;
 
     //Skill Three
@@ -23,7 +23,7 @@ public class Iruka : Enemy
     [SerializeField] float Angle = 30f;
 
     bool IsSkilling;
-
+    int RandomState;
     // Start is called before the first frame update
     new void Start()
     {
@@ -85,7 +85,7 @@ public class Iruka : Enemy
     {
         if (TargetPosition != Vector3.negativeInfinity)
         {
-           StartCoroutine(SkillTwo_Fire());
+            StartCoroutine(SkillTwo_Fire());
         }
     }
 
@@ -101,7 +101,7 @@ public class Iruka : Enemy
     public IEnumerator RandomAttack()
     {
         IsStartCoroutine = true;
-        int RandomState = Random.Range(1, 4);
+        RandomState = Random.Range(1, 4);
 
         TargetPosition = FindClostestTarget(100f, "Player");
         animator.SetTrigger("Skill" + RandomState);
@@ -150,20 +150,17 @@ public class Iruka : Enemy
     {
         isDashing = true;
         dashTimer = 0f;
-        MovePosition = GetRandomPosition();
-        Vector3 direction = (MovePosition - transform.Find("MainPoint").position).normalized;
+        SkillRandomPosition = GetRandomSkillPosition();
+        Vector3 direction = (SkillRandomPosition - (Vector2)transform.Find("MainPoint").position).normalized;
 
         while (dashTimer < dashDuration)
         {
-            // Move the player towards the target at the dash speed
             transform.Translate(direction * dashSpeed * Time.deltaTime);
 
-            // Update the dash timer
             dashTimer += Time.deltaTime;
 
             yield return null;
         }
-
         isDashing = false;
 
         TargetPosition = FindClostestTarget(100f, "Player");
@@ -202,7 +199,8 @@ public class Iruka : Enemy
             right.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(Angle, Vector3.forward) * center.GetComponent<Rigidbody2D>().velocity;
         }
 
-            SetUpSkilling(3f);
+        SetUpSkilling(3f);
+
     }
 
     public void SetUpSkilling(float Seconds)
