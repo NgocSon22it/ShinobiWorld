@@ -1,33 +1,24 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class Kakashi : Enemy
+public class Asuma : Enemy
 {
 
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
 
-    //SkillTwo
+    //SkillThree
+    bool IsSummonClone;
+    [SerializeField] List<GameObject> List_SmokeSummon = new List<GameObject>();
+
+    //Get Skill Position
     public Vector2 SkillRandomPosition;
     Vector2 Skill_MinPosition, Skill_MaxPosition;
     float X, Y;
-    [SerializeField] List<GameObject> List_Electric = new List<GameObject>();
-    [SerializeField] List<GameObject> List_Fire = new List<GameObject>();
-
-    //Skill Three
-    public GameObject ChidoriPrefabs;
-    public float dashSpeed;
-    public float dashDuration;
-
-    private float dashTimer = 0f;
-    private bool isDashing = false;
 
     bool IsSkilling;
     int RandomState;
-
     // Start is called before the first frame update
     new void Start()
     {
@@ -64,7 +55,6 @@ public class Kakashi : Enemy
         animator.SetBool("Walk", isMoving);
     }
 
-
     public void Animation_SkillOne()
     {
         if (TargetPosition != Vector3.negativeInfinity)
@@ -77,8 +67,8 @@ public class Kakashi : Enemy
             {
                 SkillOne.transform.position = transform.Find("MainPoint").position;
                 SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Kakashi_SkillOne>().SetUp(100);
-                SkillOne.GetComponent<Kakashi_SkillOne>().SetUpDirection(direction);
+                SkillOne.GetComponent<Asuma_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Asuma_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 5);
                 SetUpSkilling(3f);
@@ -90,31 +80,40 @@ public class Kakashi : Enemy
     {
         if (TargetPosition != Vector3.negativeInfinity)
         {
-            int random = Random.Range(0, 2);
-            if (random == 0)
-            {
-                SkillTwo_Fire();
-            }
-            else
-            {
-                SkillTwo_Electric();
-            }
+            SkillTwo_Fire();
         }
     }
 
     public void Animation_SkillThree()
     {
-        if (TargetPosition != Vector3.negativeInfinity && !isDashing)
+        if (TargetPosition != Vector3.negativeInfinity)
         {
-            StartCoroutine(Chidori());
+            SkillThree_Clone();
+
         }
-
     }
-
+    public GameObject GetSmokeSummon()
+    {
+        for (int i = 0; i < List_SmokeSummon.Count; i++)
+        {
+            if (!List_SmokeSummon[i].activeInHierarchy)
+            {
+                return List_SmokeSummon[i];
+            }
+        }
+        return null;
+    }
     public IEnumerator RandomAttack()
     {
         IsStartCoroutine = true;
-        RandomState = Random.Range(1, 4);
+        if (IsSummonClone)
+        {
+            RandomState = Random.Range(1, 3);
+        }
+        else
+        {
+            RandomState = Random.Range(1, 4);
+        }
 
         TargetPosition = FindClostestTarget(100f, "Player");
         animator.SetTrigger("Skill" + RandomState);
@@ -129,63 +128,43 @@ public class Kakashi : Enemy
         isMoving = true;
         IsStartCoroutine = false;
     }
-
-    IEnumerator Chidori()
+    public void SkillThree_Clone()
     {
-        isDashing = true;
-        ChidoriPrefabs.SetActive(true);
-        dashTimer = 0f;
-
-        Vector3 direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
-
-        while (dashTimer < dashDuration)
+        for (int i = 0; i < 2; i++)
         {
-            // Move the player towards the target at the dash speed
-            transform.Translate(direction * dashSpeed * Time.deltaTime);
+            GameObject SkillThree = boss_Pool.GetSkillThreeFromPool();
+            GameObject Smoke = GetSmokeSummon();
 
-            // Update the dash timer
-            dashTimer += Time.deltaTime;
-
-            yield return null;
-        }
-
-        ChidoriPrefabs.SetActive(false);
-        isDashing = false;
-
-        SetUpSkilling(3f);
-    }
-
-    public void SkillTwo_Electric()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            GameObject SkillOne = GetElectric();
-            if (SkillOne != null)
+            if (SkillThree != null)
             {
                 SkillRandomPosition = GetRandomSkillPosition();
 
-                SkillOne.transform.position = SkillRandomPosition;
-                SkillOne.SetActive(true);
+                Smoke.transform.position = SkillRandomPosition;
+                Smoke.SetActive(true);
+
+                SkillThree.transform.position = SkillRandomPosition;
+                SkillThree.SetActive(true);
             }
         }
+        IsSummonClone = true;
         SetUpSkilling(3f);
 
     }
     public void SkillTwo_Fire()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 3; i++)
         {
-            GameObject SkillOne = GetFire();
-            if (SkillOne != null)
+            GameObject Skillwo = boss_Pool.GetSkillTwoFromPool();
+            if (Skillwo != null)
             {
                 SkillRandomPosition = GetRandomSkillPosition();
 
-                SkillOne.transform.position = SkillRandomPosition;
-                SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUpPoint(SkillRandomPosition);
-                SkillOne.SetActive(true);
+                Skillwo.transform.position = SkillRandomPosition;
+                Skillwo.SetActive(true);
             }
         }
         SetUpSkilling(3f);
+
     }
     public Vector2 GetRandomSkillPosition()
     {
@@ -198,38 +177,13 @@ public class Kakashi : Enemy
 
         return new Vector2(X, Y);
     }
-    public GameObject GetElectric()
-    {
-        for (int i = 0; i < List_Electric.Count; i++)
-        {
-            if (!List_Electric[i].activeInHierarchy)
-            {
-                return List_Electric[i];
-            }
-        }
-        return null;
-    }
-    public GameObject GetFire()
-    {
-        for (int i = 0; i < List_Fire.Count; i++)
-        {
-            if (!List_Fire[i].activeInHierarchy)
-            {
-                return List_Fire[i];
-            }
-        }
-        return null;
-    }
-
     public void SetUpSkilling(float Seconds)
     {
         StartCoroutine(WaitMomentForSkill(Seconds));
     }
-
     IEnumerator WaitMomentForSkill(float Seconds)
     {
         yield return new WaitForSeconds(Seconds);
         IsSkilling = false;
     }
-
 }

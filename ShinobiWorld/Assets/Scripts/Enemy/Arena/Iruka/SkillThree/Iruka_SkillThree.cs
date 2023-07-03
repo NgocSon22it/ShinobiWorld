@@ -7,6 +7,7 @@ public class Iruka_SkillThree : Boss_Skill
 {
     Quaternion rotation;
     [SerializeField] GameObject Explosion;
+    [SerializeField] public Transform MainPoint;
     public void SetUpDirection(Vector3 direction, float Angle)
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;

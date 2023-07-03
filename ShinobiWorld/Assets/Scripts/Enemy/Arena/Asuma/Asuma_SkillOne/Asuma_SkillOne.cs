@@ -1,10 +1,8 @@
-using Photon.Pun.Demo.Asteroids;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
-public class Kakashi_SkillOne : Boss_Skill
+public class Asuma_SkillOne : Boss_Skill
 {
     Quaternion rotation;
     [SerializeField] GameObject Explosion;

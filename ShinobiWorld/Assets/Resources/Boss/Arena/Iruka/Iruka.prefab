@@ -56,7 +56,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7431167237733626225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.09, y: -0.61, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -84,7 +84,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0a760562f145a5643b3f7f0a60377141, type: 2}
+  - {fileID: 2100000, guid: 935ab430b9a17de4caf00054e74116f4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -279,11 +279,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6310835980504034744, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.79
+      value: -3.65
       objectReference: {fileID: 0}
     - target: {fileID: 6310835980504034744, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.86
+      value: 3.61
       objectReference: {fileID: 0}
     - target: {fileID: 6310835980504034744, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}
       propertyPath: m_LocalPosition.z
@@ -469,6 +469,9 @@ MonoBehaviour:
   animator: {fileID: 790516720726591556}
   boss_Pool: {fileID: 7257081647078314960}
   FacingRight: 0
+  SkillRandomPosition: {x: 0, y: 0}
+  Skill_MinPosition: {x: 0, y: 0}
+  Skill_MaxPosition: {x: 0, y: 0}
   dashSpeed: 10
   dashDuration: 0.5
   Angle: 25
@@ -506,11 +509,18 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  List_SkillTwo: []
+  List_SkillTwo:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   List_SkillThree:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

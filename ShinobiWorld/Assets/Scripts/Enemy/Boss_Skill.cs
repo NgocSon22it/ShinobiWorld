@@ -5,7 +5,7 @@ using UnityEngine;
 public class Boss_Skill : MonoBehaviour
 {
     [SerializeField] protected List<string> AttackAble_Tag = new List<string>();
-    [SerializeField] public Transform MainPoint;
+    
     protected int Damage;
 
     protected float LifeTime;
