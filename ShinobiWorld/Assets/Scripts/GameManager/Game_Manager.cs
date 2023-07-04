@@ -181,7 +181,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public void GoingToHospital()
     {
-        PlayerManager.GetComponent<BoxCollider2D>().enabled = false;
         Hospital.Instance.SetDuration(References.RespawnTime).Begin();
     }
 
@@ -192,7 +191,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
         References.UpdateAccountToDB();
         ReloadPlayerProperties();
-        PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
+        PlayerManager.GetComponent<PlayerBase>().SetUpPlayerLive();
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
 

@@ -10,6 +10,7 @@ using UnityEngine.TextCore.Text;
 
 public class RangeCharacter : PlayerBase
 {
+    //Normal Attack
     [SerializeField] GameObject NormalAttackPrefabs;
 
     [SerializeField] float AttackRange;
@@ -92,10 +93,9 @@ public class RangeCharacter : PlayerBase
         if (normalAttack != null)
         {
             normalAttack.transform.position = AttackPoint.position;
-            normalAttack.transform.rotation = AttackPoint.rotation;
             if (photonView.IsMine)
             {
-                normalAttack.GetComponent<Dart>().SetUp(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
+                normalAttack.GetComponent<Range_NormalAttack>().SetUp(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
             }
             normalAttack.SetActive(true);
             normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
@@ -206,7 +206,6 @@ public class RangeCharacter : PlayerBase
         SpeedBonus += Speed;
         Debug.Log(DamageBonus);
     }
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class Dart : PlayerSkill
+public class Range_NormalAttack : PlayerSkill
 {
     new void OnEnable()
     {
-        LifeTime = 5f;
+        LifeTime = 1.5f;
         base.OnEnable();
     }
 
@@ -17,14 +17,20 @@ public class Dart : PlayerSkill
         base.OnDisable();
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (AttackAble_Tag.Contains(collision.gameObject.tag))
         {
-            if (collision.gameObject.tag == "Enemy")
+            if (collision.CompareTag("Enemy"))
             {
                 collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+
+                HitEffect = player_Pool.GetNormalAttack_Hit_FromPool();
+                if (HitEffect != null)
+                {
+                    HitEffect.transform.position = transform.position;
+                    HitEffect.SetActive(true);
+                }
             }
             TurnOff();
         }

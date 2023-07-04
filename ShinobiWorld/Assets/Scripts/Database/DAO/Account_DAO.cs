@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Assets.Scripts.Database.Entity;
 
 namespace Assets.Scripts.Database.DAO
 {
@@ -13,13 +14,14 @@ namespace Assets.Scripts.Database.DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-        public static void CreateAccount(string UserID)
+        public static void CreateAccount(string UserID, string Name)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID]) VALUES (@UserID)";
+                cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID], [Name]) VALUES (@UserID, @Name)";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@Name", Name);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
@@ -142,6 +144,7 @@ namespace Assets.Scripts.Database.DAO
                         var obj = new Account_Entity
                         {
                             ID = dr["ID"].ToString(),
+                            Name = dr["Name"].ToString(),
                             RoleInGameID = dr["RoleInGameID"].ToString(),
                             TrophiesID = dr["TrophiesID"].ToString(),
                             Level = Convert.ToInt32(dr["Level"]),
@@ -277,6 +280,45 @@ namespace Assets.Scripts.Database.DAO
                 cmd.ExecuteNonQuery();
                 connection.Close();
             }
+        }
+
+        public static List<Account_Entity> GetAllAccount()
+        {
+            var list = new List<Account_Entity>();
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM [dbo].[Account]";
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        var obj = new Account_Entity
+                        {
+                            ID = dr["ID"].ToString(),
+                            Name = dr["Name"].ToString(),
+                            TrophiesID = dr["TrophiesID"].ToString(),
+                            Level = Convert.ToInt32(dr["Level"]),
+                            Power = Convert.ToInt32(dr["Power"])
+                        };
+
+                        list.Add(obj);
+                    }
+                }
+
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+
+            return list;
         }
     }
 }
