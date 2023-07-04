@@ -9,7 +9,6 @@ public class MeleeChacracter : PlayerBase
 {
     [SerializeField] float AttackRange;
     
-
     //Skill One
     [SerializeField] SpriteRenderer Sword;
     float TimeCount = 5f;
@@ -138,7 +137,7 @@ public class MeleeChacracter : PlayerBase
             {
                 skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
             }
-            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition, playerPool.GetSkillThreeExplosionFromPool());
+            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition, playerPool.GetSkillThree_Hit_FromPool());
             skillThree.SetActive(true);
         }
 
@@ -164,7 +163,7 @@ public class MeleeChacracter : PlayerBase
         Debug.Log(DamageBonus);
 
     }
-
+   
 
     private void OnDrawGizmosSelected()
     {
