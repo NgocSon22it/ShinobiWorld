@@ -26,6 +26,21 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
+        public static void UpgradeTrophyRegister(string UserID, bool status)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set IsTicket = @status where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@status", status);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+
         public static void UpdateAccountCoin(string UserID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
@@ -148,6 +163,7 @@ namespace Assets.Scripts.Database.DAO
                             IsOnline = Convert.ToBoolean(dr["IsOnline"]),
                             IsTicket = Convert.ToBoolean(dr["IsTicket"]),
                             IsFirst = Convert.ToBoolean(dr["IsFirst"]),
+                            IsUpgradeTrophy = Convert.ToBoolean(dr["IsUpgradeTrophy"]),
                             DateReset = Convert.ToDateTime(dr["DateReset"])
                         };
                         connection.Close();
@@ -243,6 +259,20 @@ namespace Assets.Scripts.Database.DAO
                 cmd.Parameters.AddWithValue("@Power", account_Entity.Power);
                 cmd.Parameters.AddWithValue("@Strenth", account_Entity.Strength);
                 cmd.Parameters.AddWithValue("@CurrentStrength", account_Entity.CurrentStrength);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public static void UpgradeTrophy(string UserID, string TrophiesID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set TrophiesID = @TrophiesID, IsUpgradeTrophy = 0 where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@TrophiesID", TrophiesID);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();

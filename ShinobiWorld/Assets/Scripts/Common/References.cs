@@ -23,6 +23,7 @@ public static class References
 
     public static Weapon_Entity weapon = new Weapon_Entity();
     public static List<AccountMission_Entity> listAccountMission = new List<AccountMission_Entity>();
+    public static List<AccountMailBox_Entity> listAccountMailBox = new List<AccountMailBox_Entity>();
 
     public static int Maxserver = 20;
 
@@ -35,6 +36,7 @@ public static class References
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
+    public static List<MailBox_Entity> listMailBox = MailBox_DAO.GetAll();
 
     public static IDictionary<string, string> BtnTrophies = new Dictionary<string, string>();
     public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
@@ -67,6 +69,8 @@ public static class References
     public static string UIEquipmentDefault = "Background/UI_GreenFill";
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
+
+    public static string MailSystem = "System";
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
@@ -184,6 +188,7 @@ public static class References
         return listEquipCate[index];
     }
 }
+
 
 public enum TypeSell
 {

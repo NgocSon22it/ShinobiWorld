@@ -18,6 +18,7 @@ using Photon.Pun.Demo.PunBasics;
 using WebSocketSharp;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.InputSystem.Controls;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -125,7 +126,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     Vector3 positionAtLastPacket = Vector3.zero;
     Quaternion rotationAtLastPacket = Quaternion.identity;
 
-
+    private bool isWaitingForKeyPress = false;
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
@@ -264,9 +265,18 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void LoadSkillCooldown()
     {
-        SkillOneCooldown_Total = (float)SkillOne_Entity.Cooldown;
-        SkillTwoCooldown_Total = (float)SkillTwo_Entity.Cooldown;
-        SkillThreeCooldown_Total = (float)SkillThree_Entity.Cooldown;
+        if (SkillOne_Entity != null)
+        {
+            SkillOneCooldown_Total = (float)SkillOne_Entity.Cooldown;
+        }
+        if (SkillTwo_Entity != null)
+        {
+            SkillTwoCooldown_Total = (float)SkillTwo_Entity.Cooldown;
+        }
+        if (SkillThree_Entity != null)
+        {
+            SkillThreeCooldown_Total = (float)SkillThree_Entity.Cooldown;
+        }
     }
 
     public void HealAmountOfHealth(int Amount)
@@ -346,6 +356,50 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PhotonNetwork.LeaveRoom();
                 PhotonNetwork.LoadLevel("BossArena_Kakashi");
             }*/
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                Debug.Log(playerInput.actions["Attack"].GetBindingDisplayString());
+
+            }
+
+            if (isWaitingForKeyPress)
+            {
+                var mouse = Mouse.current;
+                if (mouse != null)
+                {
+                    foreach (var button in mouse.allControls)
+                    {
+                        if (button is ButtonControl buttonControl && buttonControl.wasPressedThisFrame)
+                        {
+                            isWaitingForKeyPress = false;
+                            playerInput.actions["Attack"].ApplyBindingOverride($"<Mouse>/{buttonControl.name}");
+                            Debug.Log($"Mouse button '{buttonControl.name}' binding set.");
+                            return;
+                        }
+                    }
+                }
+                
+                foreach (var device in InputSystem.devices)
+                {
+                    foreach (var control in device.allControls)
+                    {
+                        if (control is KeyControl keyControl && keyControl.wasPressedThisFrame)
+                        {
+                            isWaitingForKeyPress = false;
+                            playerInput.actions["Attack"].ApplyBindingOverride(keyControl.path);
+                            Debug.Log($"Key binding set to: {keyControl.path}");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                isWaitingForKeyPress = true;
+                Debug.Log("Press a key to bind...");
+            }
 
             if (!CanWalking)
             {
@@ -503,26 +557,35 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void SkillOne_Resources()
     {
-        SkillOneCooldown_Current = SkillOneCooldown_Total;
-        AccountEntity.CurrentChakra -= SkillOne_Entity.Chakra;
-        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
-        LoadPlayerChakraUI();
+        if (SkillOne_Entity != null)
+        {
+            SkillOneCooldown_Current = SkillOneCooldown_Total;
+            AccountEntity.CurrentChakra -= SkillOne_Entity.Chakra;
+            References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
+            LoadPlayerChakraUI();
+        }
     }
 
     public void SkillTwo_Resources()
     {
-        SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-        AccountEntity.CurrentChakra -= SkillTwo_Entity.Chakra;
-        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
-        LoadPlayerChakraUI();
+        if (SkillTwo_Entity != null)
+        {
+            SkillTwoCooldown_Current = SkillTwoCooldown_Total;
+            AccountEntity.CurrentChakra -= SkillTwo_Entity.Chakra;
+            References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
+            LoadPlayerChakraUI();
+        }
     }
 
     public void SkillThree_Resources()
     {
-        SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-        AccountEntity.CurrentChakra -= SkillThree_Entity.Chakra;
-        References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
-        LoadPlayerChakraUI();
+        if (SkillThree_Entity != null)
+        {
+            SkillThreeCooldown_Current = SkillThreeCooldown_Total;
+            AccountEntity.CurrentChakra -= SkillThree_Entity.Chakra;
+            References.accountRefer.CurrentChakra = AccountEntity.CurrentChakra;
+            LoadPlayerChakraUI();
+        }
     }
     #endregion
 

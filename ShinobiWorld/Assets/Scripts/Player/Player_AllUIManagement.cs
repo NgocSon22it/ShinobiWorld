@@ -59,10 +59,24 @@ public class Player_AllUIManagement : MonoBehaviour
     [SerializeField] TMP_Text SkillThree_CostChakra;
     [SerializeField] TMP_Text SkillThree_CooldownNumber;
 
+    [Header("House Open")]
+    [SerializeField] TMP_Text House_Message;
 
+
+    string image;
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void ShowHouseMessage(string HouseName)
+    {
+        House_Message.text = Message.OpenHouse + HouseName;
+    }
+
+    public void CloseHouseMessage()
+    {
+        House_Message.text = "";
     }
 
     private void Update()
@@ -78,19 +92,24 @@ public class Player_AllUIManagement : MonoBehaviour
     public void SetUpPlayer(PlayerBase player)
     {
         Player = player;
-        
-        string image = References.ListSkill.Find(obj => obj.ID == player.SkillOne_Entity.SkillID).Image;
-        SkillOne_Image.sprite = Resources.Load<Sprite>(image);
-        SkillOne_CostChakra.text = player.SkillOne_Entity.Chakra.ToString();
-
-        image = References.ListSkill.Find(obj => obj.ID == player.SkillTwo_Entity.SkillID).Image;
-        SkillTwo_Image.sprite = Resources.Load<Sprite>(image);
-        SkillTwo_CostChakra.text = player.SkillTwo_Entity.Chakra.ToString();
-
-        image = References.ListSkill.Find(obj => obj.ID == player.SkillThree_Entity.SkillID).Image;
-        SkillThree_Image.sprite = Resources.Load<Sprite>(image);
-        SkillThree_CostChakra.text = player.SkillThree_Entity.Chakra.ToString();
-
+        if (player.SkillOne_Entity != null)
+        {
+            image = References.ListSkill.Find(obj => obj.ID == player.SkillOne_Entity.SkillID).Image;
+            SkillOne_Image.sprite = Resources.Load<Sprite>(image);
+            SkillOne_CostChakra.text = player.SkillOne_Entity.Chakra.ToString();
+        }
+        if (player.SkillTwo_Entity != null)
+        {
+            image = References.ListSkill.Find(obj => obj.ID == player.SkillTwo_Entity.SkillID).Image;
+            SkillTwo_Image.sprite = Resources.Load<Sprite>(image);
+            SkillTwo_CostChakra.text = player.SkillTwo_Entity.Chakra.ToString();
+        }
+        if (player.SkillThree_Entity != null)
+        {
+            image = References.ListSkill.Find(obj => obj.ID == player.SkillThree_Entity.SkillID).Image;
+            SkillThree_Image.sprite = Resources.Load<Sprite>(image);
+            SkillThree_CostChakra.text = player.SkillThree_Entity.Chakra.ToString();
+        }
     }
 
     public void SetUpCoinUI(int Coin)
@@ -142,7 +161,7 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void ShowDetailInfo()
     {
-        Player_Info.Instance.OnAvatarBtnClick();
+        Player_Info.Instance.Open();
     }
 
     public void ShowMission(string content)
