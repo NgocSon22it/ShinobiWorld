@@ -85,7 +85,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             {
                 References.accountRefer.ID = user.UserId;
                 PhotonNetwork.NickName = user.DisplayName;
-                References.PlayerName = user.DisplayName;
                 Account_DAO.ChangeStateOnline(user.UserId, true);
                 References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
 
@@ -203,7 +202,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     References.accountRefer.ID = user.UserId;
 
                     PhotonNetwork.NickName = user.DisplayName; //Set name user
-                    References.PlayerName = user.DisplayName;
                     var isOnline = Account_DAO.StateOnline(user.UserId);
 
                     if (isOnline)
@@ -373,7 +371,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     }
                     else
                     {
-                        Account_DAO.CreateAccount(user.UserId);
+                        Account_DAO.CreateAccount(user.UserId, user.DisplayName);
                         SendEmailForVerification();
                     }
                 }

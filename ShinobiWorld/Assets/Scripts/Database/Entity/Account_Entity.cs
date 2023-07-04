@@ -7,6 +7,7 @@ using UnityEngine;
 public class Account_Entity
 {
     public string ID;
+    public string Name;
     public string RoleInGameID;
     public string TrophiesID;
     public int Level;
