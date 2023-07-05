@@ -144,12 +144,15 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
 
         if (areaBoss_Entity.CurrentHealth <= 0)
-        {
+        {          
             References.AddExperience(boss_Entity.ExpBonus);
             References.AddCoin(boss_Entity.CoinBonus);
+
             MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
+
             AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
             gameObject.SetActive(false);
+            Debug.Log(UserID);
             Die();
         }
 
@@ -158,6 +161,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     public void Die()
     {
+        
         areaBoss_Entity.CurrentHealth = boss_Entity.Health;
         areaBoss_Entity.isDead = false;
         AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
