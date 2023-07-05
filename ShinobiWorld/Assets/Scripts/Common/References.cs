@@ -12,8 +12,6 @@ public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
 
-    public static string PlayerName;
-
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
 
@@ -94,6 +92,13 @@ public static class References
                                                             {StatusMission.Done.ToString(), "Hoàn thành"},
                                                         };
 
+    public static IDictionary<string, Color32> Rank = new Dictionary<string, Color32>()
+                                                        {
+                                                            {"Background/Top1", new Color32(200, 145, 20, 255)},
+                                                            {"Background/Top2", new Color32(146, 146, 174, 255)},
+                                                            {"Background/Top3", new Color32(205, 110, 50, 255)},
+                                                            {"Background/TopNone", new Color32(190, 160, 120, 255)},
+                                                         };
 
     public static void UpdateAccountToDB()
     {
