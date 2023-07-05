@@ -12,12 +12,10 @@ public class Kakashi : Enemy
 
     //SkillTwo
     public Vector2 SkillRandomPosition;
-    public Vector2 Skill_MinPosition, Skill_MaxPosition;
+    Vector2 Skill_MinPosition, Skill_MaxPosition;
     float X, Y;
     [SerializeField] List<GameObject> List_Electric = new List<GameObject>();
     [SerializeField] List<GameObject> List_Fire = new List<GameObject>();
-
-    [SerializeField] List<GameObject> List_FireExplosion = new List<GameObject>();
 
     //Skill Three
     public GameObject ChidoriPrefabs;
@@ -27,8 +25,8 @@ public class Kakashi : Enemy
     private float dashTimer = 0f;
     private bool isDashing = false;
 
-
-
+    bool IsSkilling;
+    int RandomState;
 
     // Start is called before the first frame update
     new void Start()
@@ -83,6 +81,7 @@ public class Kakashi : Enemy
                 SkillOne.GetComponent<Kakashi_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 5);
+                SetUpSkilling(3f);
             }
         }
     }
@@ -115,12 +114,16 @@ public class Kakashi : Enemy
     public IEnumerator RandomAttack()
     {
         IsStartCoroutine = true;
-        int RandomState = Random.Range(1, 4);
+        RandomState = Random.Range(1, 4);
 
         TargetPosition = FindClostestTarget(100f, "Player");
         animator.SetTrigger("Skill" + RandomState);
+        IsSkilling = true;
 
-        yield return new WaitForSeconds(3f);
+        while (IsSkilling)
+        {
+            yield return null;
+        }
 
         MovePosition = GetRandomPosition();
         isMoving = true;
@@ -148,6 +151,8 @@ public class Kakashi : Enemy
 
         ChidoriPrefabs.SetActive(false);
         isDashing = false;
+
+        SetUpSkilling(3f);
     }
 
     public void SkillTwo_Electric()
@@ -157,12 +162,13 @@ public class Kakashi : Enemy
             GameObject SkillOne = GetElectric();
             if (SkillOne != null)
             {
-                SkillRandomPosition = GetRandomPosition();
+                SkillRandomPosition = GetRandomSkillPosition();
 
                 SkillOne.transform.position = SkillRandomPosition;
                 SkillOne.SetActive(true);
             }
         }
+        SetUpSkilling(3f);
 
     }
     public void SkillTwo_Fire()
@@ -172,13 +178,14 @@ public class Kakashi : Enemy
             GameObject SkillOne = GetFire();
             if (SkillOne != null)
             {
-                SkillRandomPosition = GetRandomPosition();
+                SkillRandomPosition = GetRandomSkillPosition();
 
                 SkillOne.transform.position = SkillRandomPosition;
                 SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUpPoint(SkillRandomPosition);
                 SkillOne.SetActive(true);
             }
         }
+        SetUpSkilling(3f);
     }
     public Vector2 GetRandomSkillPosition()
     {
@@ -212,6 +219,17 @@ public class Kakashi : Enemy
             }
         }
         return null;
+    }
+
+    public void SetUpSkilling(float Seconds)
+    {
+        StartCoroutine(WaitMomentForSkill(Seconds));
+    }
+
+    IEnumerator WaitMomentForSkill(float Seconds)
+    {
+        yield return new WaitForSeconds(Seconds);
+        IsSkilling = false;
     }
 
 }

@@ -8,6 +8,7 @@ public class Kakashi_SkillOne : Boss_Skill
 {
     Quaternion rotation;
     [SerializeField] GameObject Explosion;
+    [SerializeField] public Transform MainPoint;
     public void SetUpDirection(Vector3 direction)
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -33,7 +34,7 @@ public class Kakashi_SkillOne : Boss_Skill
         {
             if (collision.gameObject.tag == "Player")
             {
-                Explosion.transform.position = transform.position;
+                Explosion.transform.position = MainPoint.position;
                 Explosion.SetActive(true);
             }
             TurnOff();
