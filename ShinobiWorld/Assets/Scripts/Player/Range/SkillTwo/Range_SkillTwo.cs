@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SuperDart : PlayerSkill
+public class Range_SkillTwo : PlayerSkill
 {
-
     new void OnEnable()
     {
         LifeTime = 5f;
@@ -25,6 +24,13 @@ public class SuperDart : PlayerSkill
             if (collision.gameObject.tag == "Enemy")
             {
                 collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+
+                HitEffect = player_Pool.GetSkillTwo_Hit_FromPool();
+                if (HitEffect != null)
+                {
+                    HitEffect.transform.position = transform.position;
+                    HitEffect.SetActive(true);
+                }
             }
             TurnOff();
         }

@@ -16,7 +16,8 @@ public class RangeCharacter : PlayerBase
     [SerializeField] float AttackRange;
     [SerializeField] float EndAngle = 25f;
 
-    //Skill One
+    //Skill Three
+    [SerializeField] GameObject HunterEffect;
     float Hunter_Time = 10f;
     private Coroutine Hunter;
     int Hunter_DamageBonus = 70;
@@ -118,7 +119,7 @@ public class RangeCharacter : PlayerBase
             skillOne.transform.rotation = AttackPoint.rotation;
             if (photonView.IsMine)
             {
-                skillOne.GetComponent<SuperDart>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+                skillOne.GetComponent<Range_SkillOne>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
             }
             skillOne.SetActive(true);
             skillOne.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
@@ -141,7 +142,7 @@ public class RangeCharacter : PlayerBase
             centerDarts.transform.position = AttackPoint.position;
             if (photonView.IsMine)
             {
-                centerDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+                centerDarts.GetComponent<Range_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             }
             centerDarts.SetActive(true);
             centerDarts.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
@@ -153,7 +154,7 @@ public class RangeCharacter : PlayerBase
             leftDarts.transform.position = AttackPoint.position;
             if (photonView.IsMine)
             {
-                leftDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+                leftDarts.GetComponent<Range_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             }
             leftDarts.SetActive(true);
             leftDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
@@ -165,7 +166,7 @@ public class RangeCharacter : PlayerBase
             rightDarts.transform.position = AttackPoint.position;
             if (photonView.IsMine)
             {
-                rightDarts.GetComponent<RedDart>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+                rightDarts.GetComponent<Range_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             }
             rightDarts.SetActive(true);
             rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
@@ -191,10 +192,12 @@ public class RangeCharacter : PlayerBase
 
     IEnumerator IE_Hunter()
     {
+        HunterEffect.SetActive(true);
         SetUpHunter(Hunter_DamageBonus, Hunter_SpeedBonus);
 
         yield return new WaitForSeconds(Hunter_Time);
 
+        HunterEffect.SetActive(false);
         SetUpHunter(-Hunter_DamageBonus, -Hunter_SpeedBonus);
 
         Hunter = null;
