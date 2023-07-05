@@ -197,7 +197,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        if (cause != DisconnectCause.DisconnectByClientLogic)
+        /*if (cause != DisconnectCause.DisconnectByClientLogic)
         {
             Debug.Log(Message.LostWifi);
             References.IsDisconnect = true;
@@ -205,16 +205,16 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             {
                 StartCoroutine(RetryConnection());
             }
-        }
+        }*/
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log(Message.HaveWifi);
+        /*Debug.Log(Message.HaveWifi);
         if (PhotonNetwork.IsConnected)
         {
             PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
-        }
+        }*/
     }
 
     private IEnumerator RetryConnection()

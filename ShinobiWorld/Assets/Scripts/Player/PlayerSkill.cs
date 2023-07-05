@@ -9,7 +9,7 @@ public class PlayerSkill : MonoBehaviour
         "Enemy", "Ground"
     };
 
-    protected string UserID;
+    protected string UserID;  
     protected int Damage;
 
     protected float LifeTime;

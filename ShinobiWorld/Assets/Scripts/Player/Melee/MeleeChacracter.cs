@@ -15,6 +15,7 @@ public class MeleeChacracter : PlayerBase
     private Coroutine Righteous;
     int Righteous_BonusDamage = 50;
 
+
     // Start is called before the first frame update
     new void Start()
     {
