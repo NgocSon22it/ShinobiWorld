@@ -28,7 +28,7 @@ namespace Assets.Scripts.MailBox
                                     accountMail.AccountID, accountMail.MailBoxID);
         }
 
-        public void Setup(AccountMailBox_Entity accountMail, bool isFirst, bool isSystem = true)
+        public void Setup(AccountMailBox_Entity accountMail, bool isShow, bool isSystem = true)
         {
             this.isSystem = isSystem;
             this.accountMail = accountMail;
@@ -36,8 +36,9 @@ namespace Assets.Scripts.MailBox
 
             Title.text = string.Format(mail.Title,
                             accountMail.DateAdd.Month.ToString(), accountMail.DateAdd.Year.ToString());
-
-            if(isFirst) OnClick();
+            
+            if (accountMail.IsRead) GetComponent<Image>().color = new Color32(110, 80, 60, 150);
+            if (isShow) OnClick();
         }
     }
 }

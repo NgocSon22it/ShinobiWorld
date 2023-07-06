@@ -44,10 +44,11 @@ namespace Assets.Scripts.Bag.Equipment
             Instance = this;
         }
 
-        public void ShowDetail(string ID)
+        public void ShowDetail(int ID, string EquipmentID)
         {
-            var equipment = References.listEquipment.Find(obj => obj.ID == ID);
-            accountEquipment = References.listAccountEquipment.Find(obj => obj.EquipmentID == ID);
+            var equipment = References.listEquipment.Find(obj => obj.ID == EquipmentID);
+            accountEquipment = References.listAccountEquipment.Find(obj => obj.ID == ID &&
+                                                                        obj.EquipmentID == EquipmentID);
 
             MessageError.text = "";
             Image.sprite = Resources.Load<Sprite>(equipment.Image);
@@ -87,7 +88,7 @@ namespace Assets.Scripts.Bag.Equipment
 
             References.AddCoin(int.Parse(Price.text));
 
-            BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
+            BagManager.Instance.ReloadEquipment(accountEquipment.ID, accountEquipment.EquipmentID, true);
         }
 
         public void OnUseBtnClick()
@@ -99,6 +100,7 @@ namespace Assets.Scripts.Bag.Equipment
         public void Use()
         {
             References.UpdateAccountToDB();
+
             var type = References.listEquipment.Find(obj => obj.ID == accountEquipment.EquipmentID).TypeEquipmentID;
             var list = References.listEquipment.FindAll(obj => obj.TypeEquipmentID == type);
 
@@ -108,9 +110,11 @@ namespace Assets.Scripts.Bag.Equipment
 
             AccountEquipment_DAO.UseEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
 
+            References.LoadAccount();
             Game_Manager.Instance.ReloadPlayerProperties();
 
-            BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
+            //References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            BagManager.Instance.ReloadEquipment(accountEquipment.ID, accountEquipment.EquipmentID);
         }
 
         public void Remove()
@@ -119,9 +123,11 @@ namespace Assets.Scripts.Bag.Equipment
 
             AccountEquipment_DAO.RemoveEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
 
+            References.LoadAccount();
             Game_Manager.Instance.ReloadPlayerProperties();
 
-            BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
+            //References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            BagManager.Instance.ReloadEquipment(accountEquipment.ID, accountEquipment.EquipmentID);
         }
 
         public void OnCloseBtnClick()
@@ -185,8 +191,12 @@ namespace Assets.Scripts.Bag.Equipment
                                                     DamageBonus, HealthBonus, ChakraBonus);
 
             References.AddCoin(-int.Parse(CostUpgrade.text));
-            BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
-            UpgradePanel.SetActive(false);
+            
+            //References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            
+            BagManager.Instance.ReloadEquipment(accountEquipment.ID, accountEquipment.EquipmentID);
+            OnUpgradeBtnClick();
+            //UpgradePanel.SetActive(false);
         }
 
         public void OnDowngradeBtnClick()
@@ -205,7 +215,10 @@ namespace Assets.Scripts.Bag.Equipment
                                                     equipment.Damage, equipment.Health, equipment.Chakra);
 
             References.AddCoin(int.Parse(CostReturn.text));
-            BagManager.Instance.ReloadEquipment(accountEquipment.EquipmentID);
+
+            //References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+
+            BagManager.Instance.ReloadEquipment(accountEquipment.ID, accountEquipment.EquipmentID);
 
             DowngradePanel.SetActive(false);
         }

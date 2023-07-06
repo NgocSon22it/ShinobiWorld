@@ -108,7 +108,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         isConnected = true;
         chatClient = new ChatClient(this);
-        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(References.PlayerName));
+        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(References.accountRefer.Name));
         Debug.Log("Connecting");
     }
 

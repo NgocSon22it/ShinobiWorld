@@ -18,6 +18,7 @@ using Photon.Pun.Demo.PunBasics;
 using WebSocketSharp;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.InputSystem.Controls;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -80,10 +81,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer spriteRenderer;
     public SortingGroup sortingGroup;
     public PlayerInput playerInput;
-
-    //Script Component
+    public Collider2D playerCollider;
     public Player_Pool playerPool;
-
 
     //Player Input
     [SerializeField] Vector2 MoveDirection;
@@ -125,7 +124,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     Vector3 positionAtLastPacket = Vector3.zero;
     Quaternion rotationAtLastPacket = Quaternion.identity;
 
-
+    private bool isWaitingForKeyPress = false;
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
@@ -350,11 +349,54 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
-            /*if (Input.GetKeyDown(KeyCode.U))
+            if (Input.GetKeyDown(KeyCode.U))
             {
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("BossArena_Kakashi");
-            }*/
+                Debug.Log(References.accountRefer.ID);
+            }
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                Debug.Log(playerInput.actions["Attack"].GetBindingDisplayString());
+
+            }
+
+            if (isWaitingForKeyPress)
+            {
+                var mouse = Mouse.current;
+                if (mouse != null)
+                {
+                    foreach (var button in mouse.allControls)
+                    {
+                        if (button is ButtonControl buttonControl && buttonControl.wasPressedThisFrame)
+                        {
+                            isWaitingForKeyPress = false;
+                            playerInput.actions["Attack"].ApplyBindingOverride($"<Mouse>/{buttonControl.name}");
+                            Debug.Log($"Mouse button '{buttonControl.name}' binding set.");
+                            return;
+                        }
+                    }
+                }
+                
+                foreach (var device in InputSystem.devices)
+                {
+                    foreach (var control in device.allControls)
+                    {
+                        if (control is KeyControl keyControl && keyControl.wasPressedThisFrame)
+                        {
+                            isWaitingForKeyPress = false;
+                            playerInput.actions["Attack"].ApplyBindingOverride(keyControl.path);
+                            Debug.Log($"Key binding set to: {keyControl.path}");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                isWaitingForKeyPress = true;
+                Debug.Log("Press a key to bind...");
+            }
 
             if (!CanWalking)
             {
@@ -404,7 +446,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
             CancelInvoke(nameof(RegenChakra));
             CancelInvoke(nameof(RegenHealth));
-
+            SetUpPlayerDie();
             Game_Manager.Instance.GoingToHospital();
         }
 
@@ -675,10 +717,18 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Destroy(ObjectPool_Runtime);
         }
-        if (References.IsDisconnect)
-        {
-            References.PlayerSpawnPosition = transform.position;
-        }
     }
 
+    public void SetUpPlayerDie()
+    {
+        animator.SetTrigger("Die");
+        playerCollider.enabled = false;
+        this.enabled = false;     
+    }
+    public void SetUpPlayerLive()
+    {
+        animator.SetTrigger("Live");
+        playerCollider.enabled = true;
+        this.enabled = true;
+    }
 }

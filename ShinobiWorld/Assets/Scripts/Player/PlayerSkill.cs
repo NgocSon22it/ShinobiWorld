@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class PlayerSkill : MonoBehaviour
 {
-    [SerializeField] protected List<string> AttackAble_Tag = new List<string>();
+    protected List<string> AttackAble_Tag = new List<string>()
+    {
+        "Enemy", "Ground"
+    };
 
-    protected string UserID;
+    protected string UserID;  
     protected int Damage;
 
     protected float LifeTime;
+
+    [SerializeField] protected Player_Pool player_Pool;
+    protected GameObject HitEffect;
 
     public void SetUp(string UserID, int Damage)
     {

@@ -59,10 +59,24 @@ public class Player_AllUIManagement : MonoBehaviour
     [SerializeField] TMP_Text SkillThree_CostChakra;
     [SerializeField] TMP_Text SkillThree_CooldownNumber;
 
+    [Header("House Open")]
+    [SerializeField] TMP_Text House_Message;
+
+
     string image;
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void ShowHouseMessage(string HouseName)
+    {
+        House_Message.text = Message.OpenHouse + HouseName;
+    }
+
+    public void CloseHouseMessage()
+    {
+        House_Message.text = "";
     }
 
     private void Update()
@@ -147,7 +161,7 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void ShowDetailInfo()
     {
-        Player_Info.Instance.OnAvatarBtnClick();
+        Player_Info.Instance.Open();
     }
 
     public void ShowMission(string content)

@@ -4,6 +4,7 @@ using Assets.Scripts.Mission;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,7 +18,12 @@ public class MailBoxManager : MonoBehaviour
     public GameObject SystemPrefab;
     public GameObject BXHPrefab;
     public GameObject MessageTxt;
+    public GameObject ScrollView;
+    public GameObject Detail;
+    public GameObject DeleteReadBtn;
     public Transform Content;
+    public GameObject ConfirmDeletePanel;
+    public TMP_Text ConfirmDeleteMessage;
 
     private void Awake()
     {
@@ -29,10 +35,10 @@ public class MailBoxManager : MonoBehaviour
         Game_Manager.Instance.IsBusy = true;
         MessageTxt.SetActive(false);
         MailBoxPanel.SetActive(true);
-        GetList();
-        
-        if (References.listAccountMailBox.Count <= 0) MessageTxt.SetActive(true);
-       
+        ScrollView.SetActive(true);
+        Detail.SetActive(true);
+        DeleteReadBtn.SetActive(true);
+        GetList(0);
     }
 
     public void Destroy()
@@ -43,7 +49,7 @@ public class MailBoxManager : MonoBehaviour
         }
     }
 
-    public void GetList()
+    public void GetList(int ID)
     {
         References.listAccountMailBox = AccountMailBox_DAO.GetAllByUserID(References.accountRefer.ID);
         var list = References.listAccountMailBox;
@@ -53,16 +59,23 @@ public class MailBoxManager : MonoBehaviour
             if (list[i].MailBoxID.Contains(References.MailSystem))
                 Instantiate(SystemPrefab, Content)
                     .GetComponent<MailBoxItem>()
-                    .Setup(list[i], (i == 0));
-            else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>().Setup(list[i], (i == 0), false);
+                    .Setup(list[i], (list[i].ID == ID)? true: (i == 0));
+            else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>().Setup(list[i], (list[i].ID == ID) ? true : (i == 0), false);
         }
 
+        if (References.listAccountMailBox.Count <= 0)
+        {
+            MessageTxt.SetActive(true);
+            ScrollView.SetActive(false);
+            Detail.SetActive(false);
+            DeleteReadBtn.SetActive(false);
+        }
     }
 
-    public void Reload()
+    public void Reload(int ID)
     {
         Destroy();
-        GetList();
+        GetList(ID);
     }
 
     public void ResetColor()
@@ -70,7 +83,38 @@ public class MailBoxManager : MonoBehaviour
         foreach (Transform child in Content)
         {
             child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
+            
+            if(child.gameObject.GetComponent<MailBoxItem>().accountMail.IsRead)
+                child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 150);
         }
+    }
+    public void ConfirmDelete()
+    {
+        ConfirmDeletePanel.SetActive(true);
+
+        var isClaim = References.listAccountMailBox.Any(obj => !obj.IsClaim);
+
+        if (isClaim) ConfirmDeleteMessage.text = Message.MailboxDeleteNotReceivedBonus;
+        else ConfirmDeleteMessage.text = Message.MailboxDelete;
+    }
+
+    public void CloseConfirmDelete()
+    {
+        ConfirmDeletePanel.SetActive(false);
+    }
+
+    public void DeleteReadAndReceivedBonus()
+    {
+        AccountMailBox_DAO.DeleteReadAndReceivedBonus(References.accountRefer.ID);
+        CloseConfirmDelete();
+        Reload(0);
+    }
+
+    public void DeleteReadAll()
+    {
+        AccountMailBox_DAO.DeleteReadAll(References.accountRefer.ID); 
+        CloseConfirmDelete();
+        Reload(0);
     }
 
     public void Close()

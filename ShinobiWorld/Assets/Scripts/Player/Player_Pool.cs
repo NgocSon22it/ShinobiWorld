@@ -7,14 +7,17 @@ public class Player_Pool : MonoBehaviour
 {
 
     [SerializeField] List<GameObject> List_NormalAttack = new List<GameObject>();
+    [SerializeField] List<GameObject> List_NormalAttack_Hit = new List<GameObject>();
 
     [SerializeField] List<GameObject> List_SkillOne = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillOne_Hit = new List<GameObject>();
 
     [SerializeField] List<GameObject> List_SkillTwo = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillTwo_Hit = new List<GameObject>();
 
     [SerializeField] List<GameObject> List_SkillThree = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillThree_Hit = new List<GameObject>();
 
-    [SerializeField] List<GameObject> List_SkillThreeExplosion = new List<GameObject>();
 
     public GameObject GetNormalAttackFromPool()
     {
@@ -27,7 +30,17 @@ public class Player_Pool : MonoBehaviour
         }
         return null;
     }
-
+    public GameObject GetNormalAttack_Hit_FromPool()
+    {
+        for (int i = 0; i < List_NormalAttack_Hit.Count; i++)
+        {
+            if (!List_NormalAttack_Hit[i].activeInHierarchy)
+            {
+                return List_NormalAttack_Hit[i];
+            }
+        }
+        return null;
+    }
     public GameObject GetSkillOneFromPool()
     {
         for (int i = 0; i < List_SkillOne.Count; i++)
@@ -39,7 +52,17 @@ public class Player_Pool : MonoBehaviour
         }
         return null;
     }
-
+    public GameObject GetSkillOne_Hit_FromPool()
+    {
+        for (int i = 0; i < List_SkillOne_Hit.Count; i++)
+        {
+            if (!List_SkillOne_Hit[i].activeInHierarchy)
+            {
+                return List_SkillOne_Hit[i];
+            }
+        }
+        return null;
+    }
     public GameObject GetSkillTwoFromPool()
     {
         for (int i = 0; i < List_SkillTwo.Count; i++)
@@ -47,6 +70,17 @@ public class Player_Pool : MonoBehaviour
             if (!List_SkillTwo[i].activeInHierarchy)
             {
                 return List_SkillTwo[i];
+            }
+        }
+        return null;
+    }
+    public GameObject GetSkillTwo_Hit_FromPool()
+    {
+        for (int i = 0; i < List_SkillTwo_Hit.Count; i++)
+        {
+            if (!List_SkillTwo_Hit[i].activeInHierarchy)
+            {
+                return List_SkillTwo_Hit[i];
             }
         }
         return null;
@@ -62,14 +96,13 @@ public class Player_Pool : MonoBehaviour
         }
         return null;
     }
-
-    public GameObject GetSkillThreeExplosionFromPool()
+    public GameObject GetSkillThree_Hit_FromPool()
     {
-        for (int i = 0; i < List_SkillThreeExplosion.Count; i++)
+        for (int i = 0; i < List_SkillThree_Hit.Count; i++)
         {
-            if (!List_SkillThreeExplosion[i].activeInHierarchy)
+            if (!List_SkillThree_Hit[i].activeInHierarchy)
             {
-                return List_SkillThreeExplosion[i];
+                return List_SkillThree_Hit[i];
             }
         }
         return null;

@@ -44,11 +44,12 @@ public class Frog : Enemy
 
     public void Animation_SkillOne()
     {
-        if (TargetPosition != Vector3.zero)
+        if (TargetPosition != Vector3.negativeInfinity)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
             FlipToTarget();
-            direction = TargetPosition - transform.Find("MainPoint").position;
+            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
+
 
             if (SkillOne != null)
             {

@@ -7,6 +7,7 @@ using UnityEngine;
 public class Account_Entity
 {
     public string ID;
+    public string Name;
     public string RoleInGameID;
     public string TrophiesID;
     public int Level;
@@ -28,6 +29,7 @@ public class Account_Entity
     public bool IsOnline;
     public bool IsTicket;
     public bool IsFirst;
+    public bool IsUpgradeTrophy;
     public DateTime DateReset;
 
     public Account_Entity() { }
