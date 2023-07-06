@@ -169,7 +169,7 @@ namespace Assets.Scripts.Shop
             {
                 DestroyContent();
                 GetListEquipment();
-            }else listAccountEquipment = References.listAccountEquipment;
+            }else listAccountEquipment = References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
             if (listAccountEquipment.Count <= 0) { ShowMessage(); }
             else
