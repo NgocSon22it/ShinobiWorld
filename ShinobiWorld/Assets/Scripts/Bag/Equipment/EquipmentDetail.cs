@@ -59,7 +59,7 @@ namespace Assets.Scripts.Bag.Equipment
             Description.text = equipment.Description;
 
             if (!UseBtn_Text.IsUnityNull()) UseBtn_Text.text = "Sử dụng";
-      
+
             if (accountEquipment.IsUse)
             {
                 if (!UseBtn_Text.IsUnityNull()) UseBtn_Text.text = "Gỡ";
@@ -69,10 +69,10 @@ namespace Assets.Scripts.Bag.Equipment
             if (!UpgradeBtn.IsUnityNull()) UpgradeBtn.interactable = true;
             if (!DowngradeBtn.IsUnityNull()) DowngradeBtn.interactable = true;
 
-            if (accountEquipment.Level  >= 30 ) 
+            if (accountEquipment.Level >= 30)
                 if (!UpgradeBtn.IsUnityNull()) UpgradeBtn.interactable = false;
 
-            if(accountEquipment.IsUse || accountEquipment.Level <= 1) 
+            if (accountEquipment.IsUse || accountEquipment.Level <= 1)
                 if (!DowngradeBtn.IsUnityNull()) DowngradeBtn.interactable = false;
         }
 
@@ -106,9 +106,12 @@ namespace Assets.Scripts.Bag.Equipment
 
             var equip = References.listAccountEquipment.Find(obj => list.Any(filter => filter.ID == obj.EquipmentID) && obj.IsUse == true);
 
-            if (equip != null) AccountEquipment_DAO.RemoveEquipment(accountEquipment.ID, References.accountRefer.ID, equip.EquipmentID);
+
+            if (equip != null) AccountEquipment_DAO.RemoveEquipment(equip.ID, References.accountRefer.ID, equip.EquipmentID);
 
             AccountEquipment_DAO.UseEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
+
+            Account_DAO.GetAccountPowerByID(References.accountRefer.ID);
 
             References.LoadAccount();
             Game_Manager.Instance.ReloadPlayerProperties();
@@ -122,6 +125,8 @@ namespace Assets.Scripts.Bag.Equipment
             References.UpdateAccountToDB();
 
             AccountEquipment_DAO.RemoveEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
+
+            Account_DAO.GetAccountPowerByID(References.accountRefer.ID);
 
             References.LoadAccount();
             Game_Manager.Instance.ReloadPlayerProperties();
@@ -148,7 +153,7 @@ namespace Assets.Scripts.Bag.Equipment
             LevelCurrent.text = Level.text;
             LevelUpgrade.text = (accountEquipment.Level + 1).ToString();
 
-            if(accountEquipment.Health != 0)
+            if (accountEquipment.Health != 0)
             {
                 HealthBonus = Convert.ToInt32(accountEquipment.Health * (1 + References.Uppercent_Equipment / 100f));
                 HealthObj.SetActive(true);
@@ -175,7 +180,7 @@ namespace Assets.Scripts.Bag.Equipment
 
         public void Upgrade()
         {
-            if(accountEquipment.IsUse)
+            if (accountEquipment.IsUse)
             {
                 AccountEquipment_DAO.RemoveEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
                 References.accountRefer.Health -= accountEquipment.Health;
@@ -186,14 +191,14 @@ namespace Assets.Scripts.Bag.Equipment
                 AccountEquipment_DAO.UpgradeEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID,
                                                     DamageBonus, HealthBonus, ChakraBonus);
                 AccountEquipment_DAO.UseEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID);
-            } 
+            }
             else AccountEquipment_DAO.UpgradeEquipment(accountEquipment.ID, References.accountRefer.ID, accountEquipment.EquipmentID,
                                                     DamageBonus, HealthBonus, ChakraBonus);
 
             References.AddCoin(-int.Parse(CostUpgrade.text));
-            
+
             //References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-            
+
             BagManager.Instance.ReloadEquipment(accountEquipment.ID, accountEquipment.EquipmentID);
             OnUpgradeBtnClick();
             //UpgradePanel.SetActive(false);

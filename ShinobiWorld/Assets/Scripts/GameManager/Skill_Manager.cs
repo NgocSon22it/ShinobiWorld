@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Database.Entity;
+﻿using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -206,6 +207,7 @@ public class Skill_Manager : MonoBehaviour
             References.accountRefer.Coin -= SkillSelected.BuyCost;
 
             References.UpdateAccountToDB();
+            Account_DAO.GetAccountPowerByID(References.accountRefer.ID);
             Game_Manager.Instance.ReloadPlayerProperties();
 
             LoadSkillList();
@@ -224,8 +226,9 @@ public class Skill_Manager : MonoBehaviour
         {
             Skill_DAO.UpgradeSkill(References.accountRefer.ID, SkillSelected.ID, DamageBonus, CooldownBonus, ChakraBonus);
             References.accountRefer.Coin -= SkillSelected.UpgradeCost;
+            
             References.UpdateAccountToDB();
-
+            Account_DAO.GetAccountPowerByID(References.accountRefer.ID);
             Game_Manager.Instance.ReloadPlayerProperties();
 
             Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(References.accountRefer.Coin);
