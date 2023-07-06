@@ -349,11 +349,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
-            /*if (Input.GetKeyDown(KeyCode.U))
+            if (Input.GetKeyDown(KeyCode.U))
             {
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("BossArena_Kakashi");
-            }*/
+                Debug.Log(References.accountRefer.ID);
+            }
 
             if (Input.GetKeyDown(KeyCode.I))
             {

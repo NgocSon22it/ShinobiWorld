@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RedDart : PlayerSkill
+public class Range_SkillOne : PlayerSkill
 {
+
     new void OnEnable()
     {
-        LifeTime = 5f;
+        LifeTime = 1.5f;
         base.OnEnable();
     }
 
@@ -24,6 +25,13 @@ public class RedDart : PlayerSkill
             if (collision.gameObject.tag == "Enemy")
             {
                 collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+
+                HitEffect = player_Pool.GetSkillOne_Hit_FromPool();
+                if (HitEffect != null)
+                {
+                    HitEffect.transform.position = transform.position;
+                    HitEffect.SetActive(true);
+                }
             }
             TurnOff();
         }
