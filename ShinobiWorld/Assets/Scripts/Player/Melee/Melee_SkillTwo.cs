@@ -7,48 +7,30 @@ using UnityEngine.UIElements;
 
 public class Melee_SkillTwo : PlayerSkill
 {
-    public Transform Center;
-    Collider2D collider2;
-
-    float posX, posY, angle = 1.5f;
-    public float rotationRadius = 2f;
-    public float angularSpeed = 2f;
+    [SerializeField] Collider2D collider2;
+    [SerializeField] Transform PlayerTransform;
 
     float DamageSeconds = 0.2f;
+    Coroutine FlyCoroutine;
 
-    private void Awake()
-    {
-        collider2 = GetComponent<Collider2D>();
-    } 
 
     new void OnEnable()
     {
-        angle = 1.5f;
         LifeTime = 5f;
-        StartCoroutine(LogTriggeredObjects());
+        FlyCoroutine = StartCoroutine(LogTriggeredObjects());
         base.OnEnable();
     }
+
+    private void FixedUpdate()
+    {
+        transform.position = PlayerTransform.position;
+    }
+
+
     new void OnDisable()
     {
         base.OnDisable();
-        StopAllCoroutines();
-    }
-
-    private void Update()
-    {
-        if (Center != null)
-        {
-            posX = Center.position.x + Mathf.Cos(angle) * rotationRadius;
-            posY = Center.position.y + Mathf.Sin(angle) * rotationRadius;
-            transform.position = new Vector2(posX, posY);
-
-            angle = angle + Time.deltaTime * angularSpeed;
-
-            if (angle >= 360f)
-            {
-                angle = 1.5f;
-            }
-        }
+        StopCoroutine(FlyCoroutine);
     }
 
     private IEnumerator LogTriggeredObjects()
@@ -63,9 +45,10 @@ public class Melee_SkillTwo : PlayerSkill
             {
                 if (AttackAble_Tag.Contains(collider.gameObject.tag))
                 {
-                    if (collider.gameObject.tag == "Enemy")
+                    if (collider.CompareTag("Enemy"))
                     {
                         collider.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+                        Debug.Log(collider.name);
                     }
                 }
             }

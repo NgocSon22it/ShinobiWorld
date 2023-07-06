@@ -82,7 +82,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
         DetailEquipment.SetActive(false);
     }
 
-    public void OnAvatarBtnClick()
+    public void Open()
     {
         Game_Manager.Instance.IsBusy = true;
         //References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
@@ -103,11 +103,10 @@ public class Player_Info : MonoBehaviourPunCallbacks
         ShowDetailPlayer();
     }
 
-    public void OnCloseBtnClick()
+    public void Close()
     {
         InfoPanel.SetActive(false);
         Game_Manager.Instance.IsBusy = false;
-
     }
 
     public void SetupPreview()

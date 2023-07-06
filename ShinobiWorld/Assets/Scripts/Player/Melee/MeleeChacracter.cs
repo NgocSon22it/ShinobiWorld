@@ -9,12 +9,12 @@ public class MeleeChacracter : PlayerBase
 {
     [SerializeField] float AttackRange;
     
-
     //Skill One
     [SerializeField] SpriteRenderer Sword;
     float TimeCount = 5f;
     private Coroutine Righteous;
     int Righteous_BonusDamage = 50;
+
 
     // Start is called before the first frame update
     new void Start()
@@ -138,7 +138,7 @@ public class MeleeChacracter : PlayerBase
             {
                 skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
             }
-            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition, playerPool.GetSkillThreeExplosionFromPool());
+            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition, playerPool.GetSkillThree_Hit_FromPool());
             skillThree.SetActive(true);
         }
 
@@ -164,7 +164,7 @@ public class MeleeChacracter : PlayerBase
         Debug.Log(DamageBonus);
 
     }
-
+   
 
     private void OnDrawGizmosSelected()
     {

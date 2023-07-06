@@ -12,8 +12,6 @@ public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
 
-    public static string PlayerName;
-
     public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
     public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
 
@@ -23,6 +21,7 @@ public static class References
 
     public static Weapon_Entity weapon = new Weapon_Entity();
     public static List<AccountMission_Entity> listAccountMission = new List<AccountMission_Entity>();
+    public static List<AccountMailBox_Entity> listAccountMailBox = new List<AccountMailBox_Entity>();
 
     public static int Maxserver = 20;
 
@@ -35,6 +34,7 @@ public static class References
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
+    public static List<MailBox_Entity> listMailBox = MailBox_DAO.GetAll();
 
     public static IDictionary<string, string> BtnTrophies = new Dictionary<string, string>();
     public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
@@ -68,6 +68,8 @@ public static class References
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
 
+    public static string MailSystem = "System";
+
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
@@ -90,6 +92,13 @@ public static class References
                                                             {StatusMission.Done.ToString(), "Hoàn thành"},
                                                         };
 
+    public static IDictionary<string, Color32> Rank = new Dictionary<string, Color32>()
+                                                        {
+                                                            {"Background/Top1", new Color32(200, 145, 20, 255)},
+                                                            {"Background/Top2", new Color32(146, 146, 174, 255)},
+                                                            {"Background/Top3", new Color32(205, 110, 50, 255)},
+                                                            {"Background/TopNone", new Color32(190, 160, 120, 255)},
+                                                         };
 
     public static void UpdateAccountToDB()
     {
@@ -184,6 +193,7 @@ public static class References
         return listEquipCate[index];
     }
 }
+
 
 public enum TypeSell
 {

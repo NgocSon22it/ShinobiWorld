@@ -5,7 +5,6 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.XR;
 using UnityEngine;
 
 public class BossArena_Manager : MonoBehaviourPunCallbacks
