@@ -101,7 +101,7 @@ public class MissionManager : MonoBehaviour
             });
         }
 
-        //GetCurrentMission();
+        GetCurrentMission();
         ResetColorBtnTrophies();
 
         TrophiesID = (TrophiesID) Enum.Parse(typeof(TrophiesID), References.accountRefer.TrophiesID);
