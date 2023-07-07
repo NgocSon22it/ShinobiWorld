@@ -57,7 +57,12 @@ namespace Assets.Scripts.Shop
             DestroyContent();
             GetListItem();
             if (listAccountItem.Count <= 0) { ShowMessage(); }
-            else ItemDetail.Instance.ShowDetail(listAccountItem[0].ItemID);
+            else
+            {
+                Content.GetChild(0).gameObject.GetComponent<Image>().color = new Color32(190, 140, 10, 255);
+                ItemDetail.Instance.ShowDetail(listAccountItem[0].ItemID);
+                
+            }
         }
 
         public void OnEquipmentBtnClick()
@@ -71,7 +76,12 @@ namespace Assets.Scripts.Shop
             DestroyContent();
             GetListEquipment();
             if (listAccountEquipment.Count <= 0) { ShowMessage(); }
-            else EquipmentDetail.Instance.ShowDetail(listAccountEquipment[0].ID, listAccountEquipment[0].EquipmentID);
+            else
+            {
+                Content.GetChild(0).gameObject.GetComponent<Image>().color = new Color32(190, 140, 10, 255);
+                EquipmentDetail.Instance.ShowDetail(listAccountEquipment[0].ID, listAccountEquipment[0].EquipmentID);
+                
+            }
         }
 
         public void CloseDetail()
@@ -153,10 +163,14 @@ namespace Assets.Scripts.Shop
             }
         }
 
-        public void ReloadEquipment(int ID, string EquipmentID)
+        public void ReloadEquipment(int ID, string EquipmentID, bool isReloadContent = false)
         {
-            DestroyContent();
-            GetListEquipment();
+            if(isReloadContent)
+            {
+                DestroyContent();
+                GetListEquipment();
+            }else listAccountEquipment = References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+
             if (listAccountEquipment.Count <= 0) { ShowMessage(); }
             else
             {

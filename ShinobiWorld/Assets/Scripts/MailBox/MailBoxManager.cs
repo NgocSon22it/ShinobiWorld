@@ -59,7 +59,7 @@ public class MailBoxManager : MonoBehaviour
             if (list[i].MailBoxID.Contains(References.MailSystem))
                 Instantiate(SystemPrefab, Content)
                     .GetComponent<MailBoxItem>()
-                    .Setup(list[i], (list[i].ID == ID)? true: (i == 0));
+                    .Setup(list[i], (list[i].ID == ID) ? true : (i == 0));
             else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>().Setup(list[i], (list[i].ID == ID) ? true : (i == 0), false);
         }
 
@@ -83,8 +83,8 @@ public class MailBoxManager : MonoBehaviour
         foreach (Transform child in Content)
         {
             child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
-            
-            if(child.gameObject.GetComponent<MailBoxItem>().accountMail.IsRead)
+
+            if (child.gameObject.GetComponent<MailBoxItem>().accountMail.IsRead)
                 child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 150);
         }
     }
@@ -112,7 +112,7 @@ public class MailBoxManager : MonoBehaviour
 
     public void DeleteReadAll()
     {
-        AccountMailBox_DAO.DeleteReadAll(References.accountRefer.ID); 
+        AccountMailBox_DAO.DeleteReadAll(References.accountRefer.ID);
         CloseConfirmDelete();
         Reload(0);
     }

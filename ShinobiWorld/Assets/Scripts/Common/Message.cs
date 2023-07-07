@@ -31,6 +31,8 @@ public class Message
     public static string OverLimit = "Bạn đã hết lượt mua hôm nay";
     public static string IsUsing = "Đang sử dụng";
     public static string Skill_Unlock = "Bạn cần đạt cấp độ {0} để mở khóa!";
+    public static string Skill_NotForRole = "Kỹ năng này không trong vai trò của bạn!";
+    public static string Skill_MaxLevel = "Kỹ năng này đã đạt đến cấp độ tối đa!";
     public static string NotEnoughLevel = "Bạn cần đạt cấp độ {0}";
 
     public static string MissionFinish = "Trạng thái: Hoàn thành";
