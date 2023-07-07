@@ -173,7 +173,7 @@ public static class References
     public static void AddCoin(int Amount)
     {
         accountRefer.Coin += Amount;
-        UpdateAccountToDB();
+        //UpdateAccountToDB();
         Game_Manager.Instance.ReloadPlayerProperties();
     }
 
@@ -181,6 +181,7 @@ public static class References
     {
         BonusLevelUp();
         UpdateAccountToDB();
+        Account_DAO.GetAccountPowerByID(accountRefer.ID);
         Game_Manager.Instance.ReloadPlayerProperties();
     }
 
