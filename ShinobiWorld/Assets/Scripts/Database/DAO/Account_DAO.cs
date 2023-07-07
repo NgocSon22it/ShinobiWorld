@@ -6,36 +6,43 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using static UnityEngine.InputManagerEntry;
+using Assets.Scripts.Database.Entity;
 
 namespace Assets.Scripts.Database.DAO
 {
     public static class Account_DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
-      
-        public static void CreateAccount(string UserID)
+
+        public static void CreateAccount(string UserID, string Name)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText =   "INSERT INTO [Account] ([ID],[RoleInGameID],[TrophiesID],[Level],[Health],[Charka],[Exp],[Speed],[Coin],[Power],[Strength]," +
-                                                            "[EyeID],[HairID],[MouthID],[SkinID],[IsDead],[IsOnline],[IsTicket],[IsFirst])" +
-                                    "VALUES (@UserID,@RoleInGameID,@TrophiesID,1,100,100,0,5,0,0,100," +
-                                            "@EyeID,@HairID,@MouthID,@SkinID,0,0,0,1)";
+                cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID], [Name]) VALUES (@UserID, @Name)";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@RoleInGameID", 1);
-                cmd.Parameters.AddWithValue("@TrophiesID", 1);
-                cmd.Parameters.AddWithValue("@EyeID", 1);
-                cmd.Parameters.AddWithValue("@HairID", 1);
-                cmd.Parameters.AddWithValue("@MouthID", 1);
-                cmd.Parameters.AddWithValue("@SkinID", 1);
-
+                cmd.Parameters.AddWithValue("@Name", Name);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
             }
         }
+
+        public static void UpgradeTrophyRegister(string UserID, bool status)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set IsTicket = @status where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@status", status);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+
         public static void UpdateAccountCoin(string UserID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
@@ -97,7 +104,7 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText =   "UPDATE [dbo].[Account]   " +
+                cmd.CommandText = "UPDATE [dbo].[Account]   " +
                                     "SET [RoleInGameID] = @RoleInGameID," +
                                     "[EyeID]   = @EyeID," +
                                     "[HairID]  = @HairID," +
@@ -136,25 +143,31 @@ namespace Assets.Scripts.Database.DAO
                     {
                         var obj = new Account_Entity
                         {
-                            ID              = dr["ID"].ToString(),
-                            RoleInGameID    = dr["RoleInGameID"].ToString(),
-                            TrophiesID      = dr["TrophiesID"].ToString(),
-                            Level           = Convert.ToInt32(dr["Level"]),
-                            Health          = Convert.ToInt32(dr["Health"]),
-                            Charka          = Convert.ToInt32(dr["Charka"]),
-                            Exp             = Convert.ToInt32(dr["Exp"]),
-                            Speed           = Convert.ToInt32(dr["Speed"]),
-                            Coin            = Convert.ToInt32(dr["Coin"]),
-                            Power           = Convert.ToInt32(dr["Power"]),
-                            Strength        = Convert.ToInt32(dr["Strength"]),
-                            EyeID           = dr["EyeID"].ToString(),
-                            HairID          = dr["HairID"].ToString(),
-                            MouthID         = dr["MouthID"].ToString(),
-                            SkinID          = dr["SkinID"].ToString(),
-                            IsDead          = Convert.ToBoolean(dr["IsDead"]),
-                            IsOnline        = Convert.ToBoolean(dr["IsOnline"]),
-                            IsTicket        = Convert.ToBoolean(dr["IsTicket"]),
-                            IsFirst         = Convert.ToBoolean(dr["IsFirst"])
+                            ID = dr["ID"].ToString(),
+                            Name = dr["Name"].ToString(),
+                            RoleInGameID = dr["RoleInGameID"].ToString(),
+                            TrophiesID = dr["TrophiesID"].ToString(),
+                            Level = Convert.ToInt32(dr["Level"]),
+                            Health = Convert.ToInt32(dr["Health"]),
+                            CurrentHealth = Convert.ToInt32(dr["CurrentHealth"]),
+                            Chakra = Convert.ToInt32(dr["Chakra"]),
+                            CurrentChakra = Convert.ToInt32(dr["CurrentChakra"]),
+                            Exp = Convert.ToInt32(dr["Exp"]),
+                            Speed = Convert.ToInt32(dr["Speed"]),
+                            Coin = Convert.ToInt32(dr["Coin"]),
+                            Power = Convert.ToInt32(dr["Power"]),
+                            Strength = Convert.ToInt32(dr["Strength"]),
+                            CurrentStrength = Convert.ToInt32(dr["CurrentStrength"]),
+                            EyeID = dr["EyeID"].ToString(),
+                            HairID = dr["HairID"].ToString(),
+                            MouthID = dr["MouthID"].ToString(),
+                            SkinID = dr["SkinID"].ToString(),
+                            IsDead = Convert.ToBoolean(dr["IsDead"]),
+                            IsOnline = Convert.ToBoolean(dr["IsOnline"]),
+                            IsTicket = Convert.ToBoolean(dr["IsTicket"]),
+                            IsFirst = Convert.ToBoolean(dr["IsFirst"]),
+                            IsUpgradeTrophy = Convert.ToBoolean(dr["IsUpgradeTrophy"]),
+                            DateReset = Convert.ToDateTime(dr["DateReset"])
                         };
                         connection.Close();
                         return obj;
@@ -168,6 +181,37 @@ namespace Assets.Scripts.Database.DAO
             }
 
             return null;
+        }
+
+        public static int GetAccountPowerByID(string UserID)
+        {
+            int Power = 0;
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Exec GetPower @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        if (dr["Power"] != DBNull.Value)
+                        {
+                            Power = Convert.ToInt32(dr["Power"]);
+                        }
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return Power;
         }
 
         public static bool IsFirstLogin(string UserID)
@@ -199,6 +243,82 @@ namespace Assets.Scripts.Database.DAO
 
             }
             return IsFirst;
+        }
+        public static void UpdateAccountToDB(Account_Entity account_Entity)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set TrophiesID = @Trophie, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Chakra = @Chakra, CurrentChakra = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
+                cmd.Parameters.AddWithValue("@Trophie", account_Entity.TrophiesID);
+                cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
+                cmd.Parameters.AddWithValue("@Health", account_Entity.Health);
+                cmd.Parameters.AddWithValue("@CurrentHealth", account_Entity.CurrentHealth);
+                cmd.Parameters.AddWithValue("@Chakra", account_Entity.Chakra);
+                cmd.Parameters.AddWithValue("@CurrentChakra", account_Entity.CurrentChakra);
+                cmd.Parameters.AddWithValue("@Exp", account_Entity.Exp);
+                cmd.Parameters.AddWithValue("@Coin", account_Entity.Coin);
+                cmd.Parameters.AddWithValue("@Power", account_Entity.Power);
+                cmd.Parameters.AddWithValue("@Strenth", account_Entity.Strength);
+                cmd.Parameters.AddWithValue("@CurrentStrength", account_Entity.CurrentStrength);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public static void UpgradeTrophy(string UserID, string TrophiesID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Account set TrophiesID = @TrophiesID, IsUpgradeTrophy = 0 where ID = @UserID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@TrophiesID", TrophiesID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public static List<Account_Entity> GetAllAccount()
+        {
+            var list = new List<Account_Entity>();
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM [dbo].[Account]";
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        var obj = new Account_Entity
+                        {
+                            ID = dr["ID"].ToString(),
+                            Name = dr["Name"].ToString(),
+                            TrophiesID = dr["TrophiesID"].ToString(),
+                            Level = Convert.ToInt32(dr["Level"]),
+                            Power = Convert.ToInt32(dr["Power"])
+                        };
+
+                        list.Add(obj);
+                    }
+                }
+
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+
+            return list;
         }
     }
 }

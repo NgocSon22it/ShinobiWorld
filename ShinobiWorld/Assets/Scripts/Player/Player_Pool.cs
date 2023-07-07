@@ -1,67 +1,23 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_Pool : MonoBehaviour
 {
-    [Header("Projectile Amount")]
-    int Amount = 20;
 
-    [SerializeField] GameObject NormalAttack;
-    List<GameObject> List_NormalAttack = new List<GameObject>();
+    [SerializeField] List<GameObject> List_NormalAttack = new List<GameObject>();
+    [SerializeField] List<GameObject> List_NormalAttack_Hit = new List<GameObject>();
 
-    [SerializeField] GameObject SkillOne;
-    List<GameObject> List_SkillOne = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillOne = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillOne_Hit = new List<GameObject>();
 
-    [SerializeField] GameObject SkillTwo;
-    List<GameObject> List_SkillTwo = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillTwo = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillTwo_Hit = new List<GameObject>();
 
-    [SerializeField] GameObject SkillThree;
-    List<GameObject> List_SkillThree = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillThree = new List<GameObject>();
+    [SerializeField] List<GameObject> List_SkillThree_Hit = new List<GameObject>();
 
-
-    private void Start()
-    {
-        GameObject obj;
-
-        if (NormalAttack != null)
-        {
-            for (int i = 0; i < Amount; i++)
-            {
-                obj = Instantiate(NormalAttack);
-                obj.SetActive(false);
-                List_NormalAttack.Add(obj);
-            }
-        }
-        if (SkillOne != null)
-        {
-            for (int i = 0; i < Amount; i++)
-            {
-                obj = Instantiate(SkillOne);
-                obj.SetActive(false);
-                List_SkillOne.Add(obj);
-            }
-        }
-        if (SkillTwo != null)
-        {
-            for (int i = 0; i < Amount; i++)
-            {
-                obj = Instantiate(SkillTwo);
-                obj.SetActive(false);
-                List_SkillTwo.Add(obj);
-            }
-        }
-        if (SkillThree != null)
-        {
-            for (int i = 0; i < Amount; i++)
-            {
-                obj = Instantiate(SkillThree);
-                obj.SetActive(false);
-                List_SkillThree.Add(obj);
-            }
-        }
-
-    }
 
     public GameObject GetNormalAttackFromPool()
     {
@@ -74,7 +30,17 @@ public class Player_Pool : MonoBehaviour
         }
         return null;
     }
-
+    public GameObject GetNormalAttack_Hit_FromPool()
+    {
+        for (int i = 0; i < List_NormalAttack_Hit.Count; i++)
+        {
+            if (!List_NormalAttack_Hit[i].activeInHierarchy)
+            {
+                return List_NormalAttack_Hit[i];
+            }
+        }
+        return null;
+    }
     public GameObject GetSkillOneFromPool()
     {
         for (int i = 0; i < List_SkillOne.Count; i++)
@@ -86,7 +52,17 @@ public class Player_Pool : MonoBehaviour
         }
         return null;
     }
-
+    public GameObject GetSkillOne_Hit_FromPool()
+    {
+        for (int i = 0; i < List_SkillOne_Hit.Count; i++)
+        {
+            if (!List_SkillOne_Hit[i].activeInHierarchy)
+            {
+                return List_SkillOne_Hit[i];
+            }
+        }
+        return null;
+    }
     public GameObject GetSkillTwoFromPool()
     {
         for (int i = 0; i < List_SkillTwo.Count; i++)
@@ -98,6 +74,17 @@ public class Player_Pool : MonoBehaviour
         }
         return null;
     }
+    public GameObject GetSkillTwo_Hit_FromPool()
+    {
+        for (int i = 0; i < List_SkillTwo_Hit.Count; i++)
+        {
+            if (!List_SkillTwo_Hit[i].activeInHierarchy)
+            {
+                return List_SkillTwo_Hit[i];
+            }
+        }
+        return null;
+    }
     public GameObject GetSkillThreeFromPool()
     {
         for (int i = 0; i < List_SkillThree.Count; i++)
@@ -105,6 +92,17 @@ public class Player_Pool : MonoBehaviour
             if (!List_SkillThree[i].activeInHierarchy)
             {
                 return List_SkillThree[i];
+            }
+        }
+        return null;
+    }
+    public GameObject GetSkillThree_Hit_FromPool()
+    {
+        for (int i = 0; i < List_SkillThree_Hit.Count; i++)
+        {
+            if (!List_SkillThree_Hit[i].activeInHierarchy)
+            {
+                return List_SkillThree_Hit[i];
             }
         }
         return null;

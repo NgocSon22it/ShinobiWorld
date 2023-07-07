@@ -14,7 +14,6 @@ namespace Assets.Scripts.Database.Entity
         public double Cooldown;
         public int Damage;
         public int Chakra;
-        public int Uppercent;
         public int LevelUnlock;
         public int UpgradeCost;
         public int BuyCost;

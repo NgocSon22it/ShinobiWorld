@@ -7,26 +7,27 @@ using UnityEngine.InputSystem;
 
 public class MeleeChacracter : PlayerBase
 {
-
     [SerializeField] float AttackRange;
+    
+    //Skill One
+    [SerializeField] SpriteRenderer Sword;
+    float TimeCount = 5f;
+    private Coroutine Righteous;
+    int Righteous_BonusDamage = 50;
+
 
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-        WeaponEntity = Weapon_DAO.GetWeaponByID("Weapon_Sword");
+        
     }
 
     // Update is called once per frame
     new void Update()
     {
         base.Update();
-        if (PV.IsMine)
-        {
-            SkillOne();
-            SkillTwo();
-            SkillThree();
-        }
+
     }
     new void FixedUpdate()
     {
@@ -35,81 +36,80 @@ public class MeleeChacracter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started && PV.IsMine)
+        if (context.performed && CanExecuteNormalAttack(AttackCooldown_Current))
         {
             CallSyncAnimation("Attack_Melee");
         }
+
     }
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
-        if (context.started && SkillOneCooldown_Current <= 0f && PV.IsMine)
+        if (SkillOne_Entity != null)
         {
-
-            SkillOneCooldown_Current = SkillOneCooldown_Total;
-            CallSyncAnimation("Skill1_Melee");
+            if (context.started && CanExecuteSkill(SkillOneCooldown_Current, SkillOne_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill1_Melee");
+            }
         }
     }
 
     public void OnSkillTwo(InputAction.CallbackContext context)
     {
-        if (context.started && SkillTwoCooldown_Current <= 0f && PV.IsMine)
+        if (SkillTwo_Entity != null)
         {
-            SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            CallSyncAnimation("Skill2_Melee");
-
+            if (context.started && CanExecuteSkill(SkillTwoCooldown_Current, SkillTwo_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill2_Melee");
+            }
         }
     }
 
     public void OnSkillThree(InputAction.CallbackContext context)
     {
-        if (context.started && SkillThreeCooldown_Current <= 0f && PV.IsMine)
+        if (SkillThree_Entity != null)
         {
-            SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            CallSyncAnimation("Skill3_Melee");
+            if (context.started && CanExecuteSkill(SkillThreeCooldown_Current, SkillThree_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill3_Melee");
+            }
         }
     }
 
-    public void SkillOne()
-    {
-        if (SkillOneCooldown_Current > 0)
-        {
-            SkillOneCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillTwo()
-    {
-        if (SkillTwoCooldown_Current > 0)
-        {
-            SkillTwoCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillThree()
-    {
-        if (SkillThreeCooldown_Current > 0)
-        {
-            SkillThreeCooldown_Current -= Time.deltaTime;
-        }
-    }
     public void DamageNormalAttack()
     {
-        Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, AttackableLayer);
-
-        if (HitEnemy != null)
+        if (photonView.IsMine)
         {
-            foreach (Collider2D Enemy in HitEnemy)
+            Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, AttackableLayer);
+
+            if (HitEnemy != null)
             {
-                if (Enemy.gameObject.CompareTag("Enemy"))
+                foreach (Collider2D Enemy in HitEnemy)
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(this , WeaponEntity.Damage); 
+                    if (Enemy.gameObject.CompareTag("Enemy"))
+                    {
+                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
+                    }
                 }
             }
         }
     }
 
-    public void ExecuteSkillTwo()
+    public void Animation_SkillOne()
+    {
+
+        if (Righteous != null)
+        {
+            // If a color change coroutine is already running, stop it
+            StopCoroutine(Righteous);
+            SetUpRighteous(Color.black, 0f, -Righteous_BonusDamage);
+            Righteous = null;
+        }
+
+        Righteous = StartCoroutine(RighteousSword());
+    }
+
+    public void Animation_SkillTwo()
     {
         GameObject skillTwo = playerPool.GetSkillTwoFromPool();
 
@@ -117,11 +117,54 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
-            skillTwo.GetComponent<SwingSword>().SetUpCenter(transform);
+            if (photonView.IsMine)
+            {
+                skillTwo.GetComponent<Melee_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            }
             skillTwo.SetActive(true);
         }
+
     }
 
+    public void Animation_SkillThree()
+    {
+
+        GameObject skillThree = playerPool.GetSkillThreeFromPool();
+        FlipToMouse();
+        if (skillThree != null)
+        {
+            skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
+            if (photonView.IsMine)
+            {
+                skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
+            }
+            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition, playerPool.GetSkillThree_Hit_FromPool());
+            skillThree.SetActive(true);
+        }
+
+    }
+
+    public IEnumerator RighteousSword()
+    {
+        SetUpRighteous(Color.yellow, 3f, Righteous_BonusDamage);
+
+        yield return new WaitForSeconds(TimeCount);
+
+        SetUpRighteous(Color.black, 0f, -Righteous_BonusDamage);
+
+        Righteous = null;
+    }
+
+    public void SetUpRighteous(Color color, float Intensity, int Damage)
+    {
+        DamageBonus += Damage;
+
+        Sword.material.SetColor("_GlowColor", color * Intensity);
+
+        Debug.Log(DamageBonus);
+
+    }
+   
 
     private void OnDrawGizmosSelected()
     {

@@ -12,7 +12,7 @@ namespace Assets.Scripts.Database.Entity
         public string Name;
         public int HealthBonus;
         public int ChakraBonus;
-        public int DamageBonus;
+        public int StrengthBonus;
         public int BuyCost;
         public int Limit;
         public string Image;

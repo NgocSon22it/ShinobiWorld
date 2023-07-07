@@ -9,6 +9,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+using System;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -61,14 +63,15 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private IEnumerator CheckForAutoLogin()
     {
-        if(user != null)
+        if (user != null)
         {
             var reloadUserTask = user.ReloadAsync();
 
             yield return new WaitUntil(() => reloadUserTask.IsCompleted);
 
             AutoLogin();
-        } else
+        }
+        else
         {
             UIManager.Instance.OpenLoginPanel();
         }
@@ -76,7 +79,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private void AutoLogin()
     {
-        if(user != null)
+        if (user != null)
         {
             if (user.IsEmailVerified)
             {
@@ -84,14 +87,18 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.NickName = user.DisplayName;
                 Account_DAO.ChangeStateOnline(user.UserId, true);
                 References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
-                PhotonNetwork.ConnectUsingSettings();
+
+                if (!PhotonNetwork.IsConnected)
+                {
+                    PhotonNetwork.ConnectUsingSettings(); 
+                }
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
             }
             else
             {
                 SendEmailForVerification();
-            } 
+            }
         }
         else
         {
@@ -193,20 +200,23 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 if (user.IsEmailVerified)
                 {
                     References.accountRefer.ID = user.UserId;
-                 
-                    PhotonNetwork.NickName = user.DisplayName; //Set name user
 
+                    PhotonNetwork.NickName = user.DisplayName; //Set name user
                     var isOnline = Account_DAO.StateOnline(user.UserId);
 
                     if (isOnline)
                     {
                         UIManager.Instance.OpenPopupPanel(Message.Logined);
-                    } else
+                    }
+                    else
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
-                        PhotonNetwork.ConnectUsingSettings(); //Connect server photon
-                    } 
+                        if (!PhotonNetwork.IsConnected)
+                        {
+                            PhotonNetwork.ConnectUsingSettings();
+                        }
+                    }
                 }
                 else
                 {
@@ -355,12 +365,14 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 else
                 {
                     Debug.Log("Registration Sucessful Welcome " + user.DisplayName);
-                    if(user.IsEmailVerified)
+                    if (user.IsEmailVerified)
                     {
                         UIManager.Instance.OpenLoginPanel();
-                    }else
+                    }
+                    else
                     {
-                        Account_DAO.CreateAccount(user.UserId);
+                        Account_DAO.CreateAccount(user.UserId, user.DisplayName);
+                        AccountMailBox_DAO.AddMailbox(user.UserId, References.MailSystem, true);
                         SendEmailForVerification();
                     }
                 }
@@ -375,17 +387,17 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private IEnumerator SendEmailForVerificatioAsync()
     {
-        if(user != null)
+        if (user != null)
         {
             var sendEmailTask = user.SendEmailVerificationAsync();
 
             yield return new WaitUntil(() => sendEmailTask.IsCompleted);
 
-            if(sendEmailTask.Exception != null)
+            if (sendEmailTask.Exception != null)
             {
                 FirebaseException firebaseException = sendEmailTask.Exception.GetBaseException() as FirebaseException;
 
-                AuthError error = (AuthError) firebaseException.ErrorCode;
+                AuthError error = (AuthError)firebaseException.ErrorCode;
 
                 string errorMessage = Message.ErrorSystem;
 
@@ -414,34 +426,62 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        playerCount = PhotonNetwork.CountOfPlayersOnMaster;
+        playerCount = PhotonNetwork.CountOfPlayers;
         Debug.Log("Number of players on master server: " + playerCount);
         UIManager.Instance.OpenGamePanel();
     }
-   
+
     public void OpenGameScene()
-    {  
-        if(playerCount > 0 && playerCount < References.Maxserver )
+    {
+        if (playerCount > 0 && playerCount < References.Maxserver)
         {
+            References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
             if (Account_DAO.IsFirstLogin(user.UserId))
             {
                 PhotonNetwork.LoadLevel(Scenes.Creator);
             }
             else
             {
-                PhotonNetwork.LoadLevel(Scenes.Game);
+                PhotonNetwork.LoadLevel(Scenes.Konoha);
             }
-        } else {
+        }
+        else
+        {
             UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
         }
     }
-    
+
+    private void OnApplicationQuit()
+    {
+        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
+        {
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        // Handle the disconnect cause
+        if (cause == DisconnectCause.MaxCcuReached)
+        {
+            Debug.LogError("Failed to connect to Photon: Full");
+        }
+        else if (cause == DisconnectCause.ExceptionOnConnect)
+        {
+            Debug.LogError("Failed to connect to Photon: Exception on connect");
+        }
+        else
+        {
+            Debug.LogError("Failed to connect to Photon: " + cause.ToString());
+        }
+    }
+
     public void Logout()
     {
-        if(auth != null && user != null)
+        if (auth != null && user != null)
         {
-            auth.SignOut();
             Account_DAO.ChangeStateOnline(user.UserId, false);
+            auth.SignOut();
             PhotonNetwork.Disconnect();
         }
     }

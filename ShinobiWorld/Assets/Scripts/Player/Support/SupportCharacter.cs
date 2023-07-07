@@ -8,19 +8,27 @@ public class SupportCharacter : PlayerBase
 {
     [SerializeField] protected Vector2 DetectGroundVector;
 
+    //Skill One
+    float SteelFist_Time = 5f;
+    private Coroutine SteelFist;
+    int SteelFist_DamageBonus = 60;
+
+    //Skill Two
+    float Blessing_Time = 7f;
+    private Coroutine Blessing;
+    int Blessing_SpeedBonus = 5;
+    int Blessing_HealthBonus = 200;
 
     new void Start()
     {
         base.Start();
+
     }
 
     // Update is called once per frame
     new void Update()
     {
         base.Update();
-        SkillOne();
-        SkillTwo();
-        SkillThree();
     }
 
     new void FixedUpdate()
@@ -30,7 +38,7 @@ public class SupportCharacter : PlayerBase
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && CanExecuteNormalAttack(AttackCooldown_Current))
         {
             CallSyncAnimation("Attack_Support");
         }
@@ -38,105 +46,147 @@ public class SupportCharacter : PlayerBase
 
     public void OnSkillOne(InputAction.CallbackContext context)
     {
-        if (context.started && SkillOneCooldown_Current <= 0f)
+        if (SkillOne_Entity != null)
         {
-            SkillOneCooldown_Current = SkillOneCooldown_Total;
-            CallSyncAnimation("Skill1_Support");
+            if (context.started && CanExecuteSkill(SkillOneCooldown_Current, SkillOne_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill1_Support");
+            }
         }
     }
 
     public void OnSkillTwo(InputAction.CallbackContext context)
     {
-        if (context.started && SkillTwoCooldown_Current <= 0f)
+        if (SkillTwo_Entity != null)
         {
-            SkillTwoCooldown_Current = SkillTwoCooldown_Total;
-            CallSyncAnimation("Skill2_Support");
+            if (context.started && CanExecuteSkill(SkillTwoCooldown_Current, SkillTwo_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill2_Support");
+            }
         }
     }
 
     public void OnSkillThree(InputAction.CallbackContext context)
     {
-        if (context.started && SkillThreeCooldown_Current <= 0f)
+        if (SkillThree_Entity != null)
         {
-            SkillThreeCooldown_Current = SkillThreeCooldown_Total;
-            CallSyncAnimation("Skill3_Support");
-        }
-    }
-
-    public void SkillOne()
-    {
-        if (SkillOneCooldown_Current > 0)
-        {
-            SkillOneCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillTwo()
-    {
-        if (SkillTwoCooldown_Current > 0)
-        {
-            SkillTwoCooldown_Current -= Time.deltaTime;
-        }
-    }
-
-    public void SkillThree()
-    {
-        if (SkillThreeCooldown_Current > 0)
-        {
-            SkillThreeCooldown_Current -= Time.deltaTime;
+            if (context.started && CanExecuteSkill(SkillThreeCooldown_Current, SkillThree_Entity.Chakra))
+            {
+                CallSyncAnimation("Skill3_Support");
+            }
         }
     }
 
     public void NormalAttackDamage()
     {
-        RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
-
-        if (HitEnemy != null)
+        if (photonView.IsMine)
         {
-            foreach (RaycastHit2D Enemy in HitEnemy)
+            RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
+
+            if (HitEnemy != null)
             {
-                if (Enemy.transform.CompareTag("Enemy"))
+                foreach (RaycastHit2D Enemy in HitEnemy)
                 {
-                    Debug.Log(Enemy.transform.name);
+                    if (Enemy.transform.CompareTag("Enemy"))
+                    {
+                        Enemy.transform.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage);
+                    }
                 }
             }
         }
     }
 
-    public void ExecuteSkillOne()
+    public void Animation_SkillOne()
     {
-        StartCoroutine(EnhanceDamage());
+        if (photonView.IsMine)
+        {
+            if (SteelFist != null)
+            {
+                StopCoroutine(SteelFist);
+                SetUpSteelFist(-SteelFist_DamageBonus);
+                SteelFist = null;
+            }
+
+            SteelFist = StartCoroutine(IE_SteelFist());
+        }
     }
 
-    public void ExecuteSkillTwo()
+    public void Animation_SkillTwo()
     {
-        StartCoroutine(EnhanceSpeedNHeal());
+        if (photonView.IsMine)
+        {
+            if (Blessing != null)
+            {
+                // If a color change coroutine is already running, stop it
+                StopCoroutine(Blessing);
+                SetUpBlessing(Blessing_SpeedBonus, 0);
+                Blessing = null;
+            }
+
+            Blessing = StartCoroutine(IE_Blessing());
+        }
+    }
+
+    public void Animation_SkillThree()
+    {
+
+        GameObject skillThree = playerPool.GetSkillThreeFromPool();
+
+        FlipToMouse();
+
+        SkillDirection = (Vector2)targetPosition - (Vector2)AttackPoint.position;
+        SkillDirection.Normalize();
+
+        if (skillThree != null)
+        {
+            skillThree.transform.position = AttackPoint.position;
+            skillThree.transform.rotation = AttackPoint.rotation;
+            if (photonView.IsMine)
+            {
+                skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+            }
+            skillThree.SetActive(true);
+            skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
+        }
 
     }
 
-    IEnumerator EnhanceSpeedNHeal()
+    IEnumerator IE_Blessing()
     {
-        int SpeedeBonus = 60;
-        int HealAmount = 200;
+        SetUpBlessing(Blessing_SpeedBonus, Blessing_HealthBonus);
 
-        AccountEntity.Speed += SpeedeBonus;
-        CurrentHealth += HealAmount;
+        yield return new WaitForSeconds(Blessing_Time);
 
-        yield return new WaitForSeconds(10f);
+        SetUpBlessing(-Blessing_SpeedBonus, 0);
 
-
-        AccountEntity.Speed -= SpeedeBonus;
+        Blessing = null;
     }
 
-    IEnumerator EnhanceDamage()
+    IEnumerator IE_SteelFist()
     {
-        int DamageBonus = 60;
+        SetUpSteelFist(SteelFist_DamageBonus);
 
-        AccountEntity.Strength += DamageBonus;
+        yield return new WaitForSeconds(SteelFist_Time);
 
+        SetUpSteelFist(-SteelFist_DamageBonus);
 
-        yield return new WaitForSeconds(10f);
-        AccountEntity.Strength -= DamageBonus;
+        SteelFist = null;
+
+    }
+
+    public void SetUpSteelFist(int Damage)
+    {
+
+        DamageBonus += Damage;
+        Debug.Log(DamageBonus);
+
+    }
+
+    public void SetUpBlessing(int Speed, int Health)
+    {
+        SpeedBonus += Speed;
+        HealAmountOfHealth(Health);
+        Debug.Log(DamageBonus);
     }
 
     private void OnDrawGizmos()

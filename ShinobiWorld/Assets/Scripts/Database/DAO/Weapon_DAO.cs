@@ -32,7 +32,6 @@ public static class Weapon_DAO
                         ID = dr["ID"].ToString(),
                         Name = dr["Name"].ToString(),
                         Damage = Convert.ToInt32(dr["Damage"]),
-                        Uppercent = Convert.ToInt32(dr["Uppercent"]),
                         UpgradeCost = Convert.ToInt32(dr["UpgradeCost"]),
                         Image = dr["Image"].ToString(),
                         Description = dr["Description"].ToString(),

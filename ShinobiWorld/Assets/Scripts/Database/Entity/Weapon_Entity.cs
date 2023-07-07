@@ -11,7 +11,6 @@ namespace Assets.Scripts.Database.Entity
         public string ID;
         public string Name;
         public int Damage;
-        public int Uppercent;
         public int UpgradeCost;
         public string Image;
         public string Description;
