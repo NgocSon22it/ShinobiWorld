@@ -94,19 +94,19 @@ public class Player_AllUIManagement : MonoBehaviour
         Player = player;
         if (player.SkillOne_Entity != null)
         {
-            image = References.ListSkill.Find(obj => obj.ID == player.SkillOne_Entity.SkillID).Image;
+            image = References.listSkill.Find(obj => obj.ID == player.SkillOne_Entity.SkillID).Image;
             SkillOne_Image.sprite = Resources.Load<Sprite>(image);
             SkillOne_CostChakra.text = player.SkillOne_Entity.Chakra.ToString();
         }
         if (player.SkillTwo_Entity != null)
         {
-            image = References.ListSkill.Find(obj => obj.ID == player.SkillTwo_Entity.SkillID).Image;
+            image = References.listSkill.Find(obj => obj.ID == player.SkillTwo_Entity.SkillID).Image;
             SkillTwo_Image.sprite = Resources.Load<Sprite>(image);
             SkillTwo_CostChakra.text = player.SkillTwo_Entity.Chakra.ToString();
         }
         if (player.SkillThree_Entity != null)
         {
-            image = References.ListSkill.Find(obj => obj.ID == player.SkillThree_Entity.SkillID).Image;
+            image = References.listSkill.Find(obj => obj.ID == player.SkillThree_Entity.SkillID).Image;
             SkillThree_Image.sprite = Resources.Load<Sprite>(image);
             SkillThree_CostChakra.text = player.SkillThree_Entity.Chakra.ToString();
         }

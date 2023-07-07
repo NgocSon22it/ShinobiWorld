@@ -372,7 +372,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     else
                     {
                         Account_DAO.CreateAccount(user.UserId, user.DisplayName);
-                        AccountMailBox_DAO.AddMailbox(user.UserId, References.MailSystem, true);
+                        MailBox_DAO.AddMailbox(user.UserId, References.MailSystem, true);
                         SendEmailForVerification();
                     }
                 }
