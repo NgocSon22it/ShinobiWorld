@@ -129,19 +129,19 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public void ReloadPlayerProperties()
     {
         References.UpdateAccountToDB();
-        References.LoadAccountWeaponNSkill(Role);
+        References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
-        string AccountWeaponJson = JsonUtility.ToJson(References.accountWeapon);
-        string AccountSkillOneJson = JsonUtility.ToJson(References.accountSkillOne);
-        string AccountSkillTwoJson = JsonUtility.ToJson(References.accountSkillTwo);
-        string AccountSkillThreeJson = JsonUtility.ToJson(References.accountSkillThree);
+        string HasWeaponJson = JsonUtility.ToJson(References.hasWeapon);
+        string HasSkillOneJson = JsonUtility.ToJson(References.hasSkillOne);
+        string HasSkillTwoJson = JsonUtility.ToJson(References.hasSkillTwo);
+        string HasSkillThreeJson = JsonUtility.ToJson(References.hasSkillThree);
 
         PlayerProperties["Account"] = AccountJson;
-        PlayerProperties["AccountWeapon"] = AccountWeaponJson;
-        PlayerProperties["AccountSkillOne"] = AccountSkillOneJson;
-        PlayerProperties["AccountSkillTwo"] = AccountSkillTwoJson;
-        PlayerProperties["AccountSkillThree"] = AccountSkillThreeJson;
+        PlayerProperties["HasWeapon"] = HasWeaponJson;
+        PlayerProperties["HasSkillOne"] = HasSkillOneJson;
+        PlayerProperties["HasSkillTwo"] = HasSkillTwoJson;
+        PlayerProperties["HasSkillThree"] = HasSkillThreeJson;
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
     }

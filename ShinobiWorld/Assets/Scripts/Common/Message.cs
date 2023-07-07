@@ -37,7 +37,6 @@ public class Message
 
     public static string MissionFinish = "Trạng thái: Hoàn thành";
     public static string MissionNone = "Bạn không có nhiệm vụ nào. \nVui lòng đến nhà Hokage để nhận nhiệm vụ.";
-    public static string MissionBonusEquipDupli = "Vì bạn đã sở hữu trang bị {0} nên hệ thống đã quy đổi thành vàng";
     public static string MissionProgress = "Trạng thái: {0}/{1}";
 
     public static string LostWifi = "Trạng thái: Mất Wifi rồi!";

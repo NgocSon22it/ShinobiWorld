@@ -334,7 +334,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &938122139
 MonoBehaviour:
@@ -698,7 +698,7 @@ GameObject:
   - component: {fileID: 2547483269650072737}
   - component: {fileID: 4001561546347574089}
   m_Layer: 5
-  m_Name: BtnTrophie_Chunin
+  m_Name: BtnTrophy_Chunin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2355,8 +2355,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 7469895766086250585}
-  Message: {fileID: 937520228}
   house: 0
+  HouseName: "Nh\xE0 Hokage"
 --- !u!114 &6588912408818382948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2373,7 +2373,7 @@ MonoBehaviour:
   MissionPanel: {fileID: 7469895766086250585}
   MissionMessage: {fileID: 8842598145487562072}
   Content: {fileID: 7469895766873206569}
-  BtnTrophies:
+  BtnTrophy:
   - ID: 0
     Btn: {fileID: 1862415765743581029}
   - ID: 1
@@ -2391,10 +2391,6 @@ MonoBehaviour:
   ExpTxt: {fileID: 7500168215019999302}
   EquipmentTxt: {fileID: 5141536584943169142}
   EquipmentImg: {fileID: 6797275250768117763}
-  BonusEquipDupliPanel: {fileID: 0}
-  MessageTxt: {fileID: 0}
-  SellCostTxt: {fileID: 0}
-  EquipmentDupliImg: {fileID: 0}
 --- !u!1 &6875044362974437703
 GameObject:
   m_ObjectHideFlags: 0
@@ -2446,7 +2442,7 @@ GameObject:
   - component: {fileID: 4167571350356692524}
   - component: {fileID: 8139197216988787408}
   m_Layer: 5
-  m_Name: BtnTrophie_Jonin
+  m_Name: BtnTrophy_Jonin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2568,7 +2564,7 @@ GameObject:
   - component: {fileID: 1376435917280912053}
   - component: {fileID: 6655842453286494236}
   m_Layer: 5
-  m_Name: BtnTrophie_Genin
+  m_Name: BtnTrophy_Genin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3788,7 +3784,7 @@ GameObject:
   - component: {fileID: 3903699258033915406}
   - component: {fileID: 1862415765743581029}
   m_Layer: 5
-  m_Name: BtnTrophie_None
+  m_Name: BtnTrophy_None
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4014,7 +4010,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 851022077773443641, guid: 3b7ae8b08b12cc54cbaf9bab1ac5d504, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 851022077773443643, guid: 3b7ae8b08b12cc54cbaf9bab1ac5d504, type: 3}
       propertyPath: m_Sprite
@@ -4042,7 +4038,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 851022079135018313, guid: 3b7ae8b08b12cc54cbaf9bab1ac5d504, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 851022079135018313, guid: 3b7ae8b08b12cc54cbaf9bab1ac5d504, type: 3}
       propertyPath: m_AnchoredPosition.x
