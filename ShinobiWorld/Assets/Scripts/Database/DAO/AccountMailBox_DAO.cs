@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Assets.Scripts.Database.DAO
 {
@@ -126,6 +127,21 @@ namespace Assets.Scripts.Database.DAO
                 cmd.Parameters.AddWithValue("@EquipmentID2", (string.IsNullOrEmpty(EquipmentID2)? DBNull.Value: EquipmentID2));
                 cmd.Parameters.AddWithValue("@ID_AccountMailBox", ID);
                 cmd.Parameters.AddWithValue("@MailBoxID", MailBoxID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public static void AddMailbox(string UserID, string MailBoxID, bool IsClaim = false)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "INSERT INTO [dbo].[AccountMailBox]  ([AccountID] ,[MailBoxID], [IsClaim]) VALUES (@UserID ,@MailBoxID, @IsClaim)";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@MailBoxID", MailBoxID);
+                cmd.Parameters.AddWithValue("@IsClaim", IsClaim);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
