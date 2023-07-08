@@ -231,8 +231,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
         {
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
             References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+
+
+            
         }
 
     }

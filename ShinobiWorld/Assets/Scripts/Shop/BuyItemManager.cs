@@ -61,11 +61,14 @@ namespace Assets.Scripts.Shop
                 itemManager.Name.text = item.Name;
                 Instantiate(ItemTemplate, Content);
             }
-            if (References.accountRefer.ResetLimitDate.Day != DateTime.Now.Day)
-            {
-                HasItem_DAO.ResetLimitBuyItem(References.accountRefer.ID);
-            }
+            
             References.listHasItem = HasItem_DAO.GetAllByUserID(References.accountRefer.ID);
+            
+            if (References.accountRefer.ResetLimitDate.Date < DateTime.Now.Date)
+            {
+                HasItem_DAO.ResetLimitBuyItem(References.accountRefer.ID, References.listHasItem);
+            }
+            
         }
 
         public void ShowDetail(string ID)
