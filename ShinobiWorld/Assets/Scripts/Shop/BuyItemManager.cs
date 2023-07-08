@@ -61,11 +61,11 @@ namespace Assets.Scripts.Shop
                 itemManager.Name.text = item.Name;
                 Instantiate(ItemTemplate, Content);
             }
-            if (References.accountRefer.DateReset.Day != DateTime.Now.Day)
+            if (References.accountRefer.ResetLimitDate.Day != DateTime.Now.Day)
             {
-                AccountItem_DAO.ResetLimitBuyItem(References.accountRefer.ID);
+                HasItem_DAO.ResetLimitBuyItem(References.accountRefer.ID);
             }
-            References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
+            References.listHasItem = HasItem_DAO.GetAllByUserID(References.accountRefer.ID);
         }
 
         public void ShowDetail(string ID)
@@ -87,10 +87,10 @@ namespace Assets.Scripts.Shop
             cost = item.BuyCost; //cost of a item 
 
             //Get limit buy items in a day of the account
-            var accountItem = References.listAccountItem.Find(obj => obj.ItemID == ID);
-            if (accountItem != null)
+            var HasItem = References.listHasItem.Find(obj => obj.ItemID == ID);
+            if (HasItem != null)
             {
-                Limit.text = accountItem.Limit.ToString();
+                Limit.text = HasItem.Limit.ToString();
             }
 
             //Show message overlimit buy item in a day of the account
@@ -163,20 +163,20 @@ namespace Assets.Scripts.Shop
 
         public void Buy()
         {
-            AccountItem_DAO.BuyItem(References.accountRefer.ID, item.ID,
+            HasItem_DAO.BuyItem(References.accountRefer.ID, item.ID,
                                     int.Parse(Amount.text), int.Parse(Cost.text));
 
             References.accountRefer.Coin -= int.Parse(Cost.text);
             Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
 
-            var index = References.listAccountItem.FindIndex(obj => obj.ItemID == item.ID);
+            var index = References.listHasItem.FindIndex(obj => obj.ItemID == item.ID);
             if (index != -1)
             {
-                References.listAccountItem[index].Amount += int.Parse(Amount.text);
-                References.listAccountItem[index].Limit -= int.Parse(Amount.text);
+                References.listHasItem[index].Amount += int.Parse(Amount.text);
+                References.listHasItem[index].Limit -= int.Parse(Amount.text);
             } else
             {
-                var newItem = new AccountItem_Entity
+                var newItem = new HasItem_Entity
                 {
                     AccountID = References.accountRefer.ID,
                     ItemID = item.ID,
@@ -184,7 +184,7 @@ namespace Assets.Scripts.Shop
                     Limit = item.Limit - int.Parse(Amount.text),
                     Delete = false
                 };
-                References.listAccountItem.Add(newItem);
+                References.listHasItem.Add(newItem);
             }
             ReLoad();
         }

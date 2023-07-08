@@ -24,11 +24,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
     public Account_Entity AccountEntity = new Account_Entity();
 
-    public AccountWeapon_Entity Weapon_Entity = new AccountWeapon_Entity();
+    public HasWeapon_Entity Weapon_Entity = new HasWeapon_Entity();
 
-    public AccountSkill_Entity SkillOne_Entity = new AccountSkill_Entity();
-    public AccountSkill_Entity SkillTwo_Entity = new AccountSkill_Entity();
-    public AccountSkill_Entity SkillThree_Entity = new AccountSkill_Entity();
+    public HasSkill_Entity SkillOne_Entity = new HasSkill_Entity();
+    public HasSkill_Entity SkillTwo_Entity = new HasSkill_Entity();
+    public HasSkill_Entity SkillThree_Entity = new HasSkill_Entity();
 
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerCameraPrefabs;
@@ -138,25 +138,25 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                     AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
                     SetUpAccountData();
                 }
-                else if (key.Equals("AccountWeapon"))
+                else if (key.Equals("HasWeapon"))
                 {
-                    string accountWeaponJson = (string)changedProps[key];
-                    Weapon_Entity = JsonUtility.FromJson<AccountWeapon_Entity>(accountWeaponJson);
+                    string HasWeaponJson = (string)changedProps[key];
+                    Weapon_Entity = JsonUtility.FromJson<HasWeapon_Entity>(HasWeaponJson);
                 }
-                else if (key.Equals("AccountSkillOne"))
+                else if (key.Equals("HasSkillOne"))
                 {
-                    string accountSkillOneJson = (string)changedProps[key];
-                    SkillOne_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillOneJson);
+                    string HasSkillOneJson = (string)changedProps[key];
+                    SkillOne_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillOneJson);
                 }
-                else if (key.Equals("AccountSkillTwo"))
+                else if (key.Equals("HasSkillTwo"))
                 {
-                    string accountSkillTwoJson = (string)changedProps[key];
-                    SkillTwo_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillTwoJson);
+                    string HasSkillTwoJson = (string)changedProps[key];
+                    SkillTwo_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillTwoJson);
                 }
-                else if (key.Equals("AccountSkillThree"))
+                else if (key.Equals("HasSkillThree"))
                 {
-                    string accountSkillThreeJson = (string)changedProps[key];
-                    SkillThree_Entity = JsonUtility.FromJson<AccountSkill_Entity>(accountSkillThreeJson);
+                    string HasSkillThreeJson = (string)changedProps[key];
+                    SkillThree_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillThreeJson);
                 }
             }
 
