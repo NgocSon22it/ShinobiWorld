@@ -30,7 +30,7 @@ namespace Assets.Scripts.BXH
 
             Name.text = account.Name;
             Level.text = account.Level.ToString();
-            Trophy.text = References.listTrophy.Find(obj => obj.ID == account.TrophiesID).Name;
+            Trophy.text = References.listTrophy.Find(obj => obj.ID == account.TrophyID).Name;
             Power.text = account.Power.ToString();
 
         }

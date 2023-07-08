@@ -8,13 +8,12 @@ namespace Assets.Scripts.Database.Entity
 {
     public class MailBox_Entity
     {
-        public string ID; 
-        public string CategoryEquipmentID;
-        public int Amount;
-        public string Title;
-        public string Content;
-        public int Rank;
-        public int CoinBonus;
+        public int ID;
+        public string AccountID;
+        public string MailID;
+        public DateTime DateAdd;
+        public bool IsClaim;
+        public bool IsRead;
         public bool Delete;
 
         public MailBox_Entity()

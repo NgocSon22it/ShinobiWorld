@@ -146,7 +146,7 @@ namespace Assets.Scripts.Database.DAO
                             ID = dr["ID"].ToString(),
                             Name = dr["Name"].ToString(),
                             RoleInGameID = dr["RoleInGameID"].ToString(),
-                            TrophiesID = dr["TrophiesID"].ToString(),
+                            TrophyID = dr["TrophyID"].ToString(),
                             Level = Convert.ToInt32(dr["Level"]),
                             Health = Convert.ToInt32(dr["Health"]),
                             CurrentHealth = Convert.ToInt32(dr["CurrentHealth"]),
@@ -164,10 +164,12 @@ namespace Assets.Scripts.Database.DAO
                             SkinID = dr["SkinID"].ToString(),
                             IsDead = Convert.ToBoolean(dr["IsDead"]),
                             IsOnline = Convert.ToBoolean(dr["IsOnline"]),
-                            IsTicket = Convert.ToBoolean(dr["IsTicket"]),
+                            HasTicket = Convert.ToBoolean(dr["HasTicket"]),
                             IsFirst = Convert.ToBoolean(dr["IsFirst"]),
+                            IsHokage = Convert.ToBoolean(dr["IsHokage"]),
+                            WinTimes = Convert.ToInt32(dr["WinTimes"]),
                             IsUpgradeTrophy = Convert.ToBoolean(dr["IsUpgradeTrophy"]),
-                            DateReset = Convert.ToDateTime(dr["DateReset"])
+                            ResetLimitDate = Convert.ToDateTime(dr["ResetLimitDate"])
                         };
                         connection.Close();
                         return obj;
@@ -249,9 +251,9 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set TrophiesID = @Trophie, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Chakra = @Chakra, CurrentChakra = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
+                cmd.CommandText = "Update Account set TrophyID = @Trophy, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Chakra = @Chakra, CurrentChakra = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
-                cmd.Parameters.AddWithValue("@Trophie", account_Entity.TrophiesID);
+                cmd.Parameters.AddWithValue("@Trophy", account_Entity.TrophyID);
                 cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
                 cmd.Parameters.AddWithValue("@Health", account_Entity.Health);
                 cmd.Parameters.AddWithValue("@CurrentHealth", account_Entity.CurrentHealth);
@@ -268,14 +270,14 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
-        public static void UpgradeTrophy(string UserID, string TrophiesID)
+        public static void UpgradeTrophy(string UserID, string TrophyID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set TrophiesID = @TrophiesID, IsUpgradeTrophy = 0 where ID = @UserID";
+                cmd.CommandText = "Update Account set TrophyID = @TrophyID, IsUpgradeTrophy = 0 where ID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@TrophiesID", TrophiesID);
+                cmd.Parameters.AddWithValue("@TrophyID", TrophyID);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
@@ -302,7 +304,7 @@ namespace Assets.Scripts.Database.DAO
                         {
                             ID = dr["ID"].ToString(),
                             Name = dr["Name"].ToString(),
-                            TrophiesID = dr["TrophiesID"].ToString(),
+                            TrophyID = dr["TrophyID"].ToString(),
                             Level = Convert.ToInt32(dr["Level"]),
                             Power = Convert.ToInt32(dr["Power"])
                         };

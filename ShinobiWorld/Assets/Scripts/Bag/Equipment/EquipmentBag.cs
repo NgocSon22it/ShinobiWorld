@@ -10,22 +10,22 @@ using UnityEngine.UI;
 
 public class EquipmentBag : MonoBehaviour
 {
-    public int AccountEquipmentID;
+    public int BagEquipmentID;
     public string ID;
     public Image Image;
     public TMP_Text Name;
 
     public void OnClick()
     {
-        EquipmentDetail.Instance.ShowDetail(AccountEquipmentID, ID);
+        EquipmentDetail.Instance.ShowDetail(BagEquipmentID, ID);
         BagManager.Instance.ResetColor();
         GetComponent<Image>().color = new Color32(190, 140, 10, 255);
     }
 
-    public void Setup(AccountEquipment_Entity accountEquipment)
+    public void Setup(BagEquipment_Entity BagEquipment)
     {
-        var equipment = References.listEquipment.Find(obj => obj.ID == accountEquipment.EquipmentID);
-        AccountEquipmentID = accountEquipment.ID;
+        var equipment = References.listEquipment.Find(obj => obj.ID == BagEquipment.EquipmentID);
+        BagEquipmentID = BagEquipment.ID;
         ID = equipment.ID;
         Image.sprite = Resources.Load<Sprite>(equipment.Image);
         Name.text = equipment.Name;
