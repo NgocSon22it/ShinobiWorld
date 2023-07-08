@@ -123,8 +123,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     double lastPacketTime = 0;
     Vector3 positionAtLastPacket = Vector3.zero;
     Quaternion rotationAtLastPacket = Quaternion.identity;
-
-    private bool isWaitingForKeyPress = false;
+  
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
@@ -338,27 +337,24 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
+            Attack();
+            SkillOne();
+            SkillTwo();
+            SkillThree();
+
             if (Game_Manager.Instance.IsBusy == true) return;
             animator.SetFloat("Horizontal", MoveDirection.x);
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             targetPosition.z = 10;
-            Attack();
-            SkillOne();
-            SkillTwo();
-            SkillThree();
+            
 
             if (Input.GetKeyDown(KeyCode.U))
             {
                 PlayerAllUIInstance.GetComponent<CustomKey_Manager>().OpenCustomKeyPanel();
             }
-
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                Debug.Log(playerInput.actions["Attack"].GetBindingDisplayString());
-
-            }
+          
           
             if (!CanWalking)
             {
