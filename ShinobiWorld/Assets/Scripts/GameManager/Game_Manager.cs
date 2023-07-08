@@ -157,7 +157,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        References.UpdateAccountToDB();
+        //References.UpdateAccountToDB();
         ReloadPlayerProperties();
     }
 
@@ -181,7 +181,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public void GoingToHospital()
     {
-        PlayerManager.GetComponent<BoxCollider2D>().enabled = false;
         Hospital.Instance.SetDuration(References.RespawnTime).Begin();
     }
 
@@ -190,15 +189,15 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         References.accountRefer.CurrentHealth = References.accountRefer.Health;
         References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
-        References.UpdateAccountToDB();
+        //References.UpdateAccountToDB();
         ReloadPlayerProperties();
-        PlayerManager.GetComponent<BoxCollider2D>().enabled = true;
+        PlayerManager.GetComponent<PlayerBase>().SetUpPlayerLive();
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        if (cause != DisconnectCause.DisconnectByClientLogic)
+        /*if (cause != DisconnectCause.DisconnectByClientLogic)
         {
             Debug.Log(Message.LostWifi);
             References.IsDisconnect = true;
@@ -206,16 +205,16 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             {
                 StartCoroutine(RetryConnection());
             }
-        }
+        }*/
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log(Message.HaveWifi);
+        /*Debug.Log(Message.HaveWifi);
         if (PhotonNetwork.IsConnected)
         {
             PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
-        }
+        }*/
     }
 
     private IEnumerator RetryConnection()

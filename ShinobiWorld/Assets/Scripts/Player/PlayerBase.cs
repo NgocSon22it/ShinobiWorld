@@ -81,10 +81,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public SpriteRenderer spriteRenderer;
     public SortingGroup sortingGroup;
     public PlayerInput playerInput;
-
-    //Script Component
+    public Collider2D playerCollider;
     public Player_Pool playerPool;
-
 
     //Player Input
     [SerializeField] Vector2 MoveDirection;
@@ -351,11 +349,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
-            /*if (Input.GetKeyDown(KeyCode.U))
+            if (Input.GetKeyDown(KeyCode.U))
             {
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("BossArena_Kakashi");
-            }*/
+                Debug.Log(References.accountRefer.ID);
+            }
 
             if (Input.GetKeyDown(KeyCode.I))
             {
@@ -449,7 +446,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
             CancelInvoke(nameof(RegenChakra));
             CancelInvoke(nameof(RegenHealth));
-
+            SetUpPlayerDie();
             Game_Manager.Instance.GoingToHospital();
         }
 
@@ -720,10 +717,18 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Destroy(ObjectPool_Runtime);
         }
-        if (References.IsDisconnect)
-        {
-            References.PlayerSpawnPosition = transform.position;
-        }
     }
 
+    public void SetUpPlayerDie()
+    {
+        animator.SetTrigger("Die");
+        playerCollider.enabled = false;
+        this.enabled = false;     
+    }
+    public void SetUpPlayerLive()
+    {
+        animator.SetTrigger("Live");
+        playerCollider.enabled = true;
+        this.enabled = true;
+    }
 }

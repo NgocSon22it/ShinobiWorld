@@ -77,9 +77,9 @@ namespace Assets.Scripts.Database.DAO
                 cmd.Parameters.AddWithValue("@MissionID", MissionID);
                 cmd.Parameters.AddWithValue("@Status", Status);
                 cmd.Parameters.AddWithValue("@EquipmentID1", EquipmentID1);
-                cmd.Parameters.AddWithValue("@EquipmentID2", null);
-                cmd.Parameters.AddWithValue("@ID_AccountMailBox", null);
-                cmd.Parameters.AddWithValue("@MailBoxID", null);
+                cmd.Parameters.AddWithValue("@EquipmentID2", DBNull.Value);
+                cmd.Parameters.AddWithValue("@ID_AccountMailBox", DBNull.Value);
+                cmd.Parameters.AddWithValue("@MailBoxID", DBNull.Value);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();

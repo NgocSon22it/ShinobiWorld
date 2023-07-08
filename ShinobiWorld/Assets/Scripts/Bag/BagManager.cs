@@ -3,6 +3,7 @@ using Assets.Scripts.Bag.Equipment;
 using Assets.Scripts.Bag.Item;
 using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
+using Assets.Scripts.MailBox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,8 @@ namespace Assets.Scripts.Shop
         public Transform Content;
         public Button ItemBtn, EquipmentBtn;
 
-        public List<AccountItem_Entity> listItem;
-        public List<AccountEquipment_Entity> listEquipment;
+        public List<AccountItem_Entity> listAccountItem;
+        public List<AccountEquipment_Entity> listAccountEquipment;
 
         public static BagManager Instance;
 
@@ -55,8 +56,13 @@ namespace Assets.Scripts.Shop
             prefabItemDetail.SetActive(true);
             DestroyContent();
             GetListItem();
-            if (listItem.Count <= 0) { ShowMessage(); }
-            else ItemDetail.Instance.ShowDetail(listItem[0].ItemID);
+            if (listAccountItem.Count <= 0) { ShowMessage(); }
+            else
+            {
+                Content.GetChild(0).gameObject.GetComponent<Image>().color = new Color32(190, 140, 10, 255);
+                ItemDetail.Instance.ShowDetail(listAccountItem[0].ItemID);
+                
+            }
         }
 
         public void OnEquipmentBtnClick()
@@ -69,8 +75,13 @@ namespace Assets.Scripts.Shop
             prefabEquipmentDetail.SetActive(true);
             DestroyContent();
             GetListEquipment();
-            if (listEquipment.Count <= 0) { ShowMessage(); }
-            else EquipmentDetail.Instance.ShowDetail(listEquipment[0].EquipmentID);
+            if (listAccountEquipment.Count <= 0) { ShowMessage(); }
+            else
+            {
+                Content.GetChild(0).gameObject.GetComponent<Image>().color = new Color32(190, 140, 10, 255);
+                EquipmentDetail.Instance.ShowDetail(listAccountEquipment[0].ID, listAccountEquipment[0].EquipmentID);
+                
+            }
         }
 
         public void CloseDetail()
@@ -110,9 +121,9 @@ namespace Assets.Scripts.Shop
         {
             References.listAccountItem = AccountItem_DAO.GetAllByUserID(References.accountRefer.ID);
 
-            listItem = References.listAccountItem.FindAll(obj => obj.Amount > 0);
+            listAccountItem = References.listAccountItem.FindAll(obj => obj.Amount > 0);
 
-            foreach (var accountItem in listItem)
+            foreach (var accountItem in listAccountItem)
             {
                 var item = References.listItem.Find(obj => obj.ID == accountItem.ItemID);
                 var itemManager = prefabItemBag.GetComponent<ItemBag>();
@@ -126,20 +137,15 @@ namespace Assets.Scripts.Shop
 
         public void GetListEquipment()
         {
-            References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            listAccountEquipment =  References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
-            listEquipment = References.listAccountEquipment;
+            if(Intention == Intention.Sell) listAccountEquipment = References.listAccountEquipment.FindAll(obj => obj.IsUse == false);
 
-            if(Intention == Intention.Sell) listEquipment = References.listAccountEquipment.FindAll(obj => obj.IsUse == false);
-
-            foreach (var accountEquipment in listEquipment)
+            foreach (var accountEquipment in listAccountEquipment)
             {
-                var equipment = References.listEquipment.Find(obj => obj.ID == accountEquipment.EquipmentID);
-                var equipmentManager = prefabEquipmentBag.GetComponent<EquipmentBag>();
-                equipmentManager.ID = equipment.ID;
-                equipmentManager.Image.sprite = Resources.Load<Sprite>(equipment.Image);
-                equipmentManager.Name.text = equipment.Name;
-                Instantiate(prefabEquipmentBag, Content);
+                Instantiate(prefabEquipmentBag, Content)
+                   .GetComponent<EquipmentBag>()
+                   .Setup(accountEquipment);
             }
         }
 
@@ -147,27 +153,32 @@ namespace Assets.Scripts.Shop
         {
             DestroyContent();
             GetListItem();
-            if (listItem.Count <= 0) { ShowMessage(); }
+            if (listAccountItem.Count <= 0) { ShowMessage(); }
             else
             {
-                var accountItem = listItem.Find(obj => obj.ItemID == ID);
+                var accountItem = listAccountItem.Find(obj => obj.ItemID == ID);
 
                 if (accountItem != null) ItemDetail.Instance.ShowDetail(ID);
-                else ItemDetail.Instance.ShowDetail(listItem[0].ItemID);
+                else ItemDetail.Instance.ShowDetail(listAccountItem[0].ItemID);
             }
         }
 
-        public void ReloadEquipment(string ID)
+        public void ReloadEquipment(int ID, string EquipmentID, bool isReloadContent = false)
         {
-            DestroyContent();
-            GetListEquipment();
-            if (listEquipment.Count <= 0) { ShowMessage(); }
+            if(isReloadContent)
+            {
+                DestroyContent();
+                GetListEquipment();
+            }else listAccountEquipment = References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+
+            if (listAccountEquipment.Count <= 0) { ShowMessage(); }
             else
             {
-                var accountEquipment = listEquipment.Find(obj => obj.EquipmentID == ID);
+                var accountEquipment = listAccountEquipment.Find(obj => obj.ID == ID &&
+                                                                            obj.EquipmentID == EquipmentID);
 
-                if (accountEquipment != null) EquipmentDetail.Instance.ShowDetail(ID);
-                else EquipmentDetail.Instance.ShowDetail(listEquipment[0].EquipmentID);
+                if (accountEquipment != null) EquipmentDetail.Instance.ShowDetail(ID, EquipmentID);
+                else EquipmentDetail.Instance.ShowDetail(listAccountEquipment[0].ID, listAccountEquipment[0].EquipmentID);
             }
         }
 
