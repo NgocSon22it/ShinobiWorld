@@ -128,6 +128,20 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
+        public static void AddFriend(string MyAccountID, string FriendAccountID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "INSERT INTO [dbo].[Friend] ([MyAccountID],[FriendAccountID]) VALUES (@FriendAccountID ,@UserID)";
+                cmd.Parameters.AddWithValue("@UserID", MyAccountID);
+                cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
 
     }
 }
