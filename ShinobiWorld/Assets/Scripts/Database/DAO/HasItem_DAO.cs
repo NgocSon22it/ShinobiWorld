@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Assets.Scripts.Database.Entity;
 using Unity.VisualScripting;
-using static UnityEditor.Progress;
 
 namespace Assets.Scripts.Database.DAO
 {
