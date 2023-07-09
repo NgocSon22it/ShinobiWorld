@@ -1353,28 +1353,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AccountEntity:
     ID: 
+    Name: 
     RoleInGameID: 
-    TrophiesID: 
+    TrophyID: 
+    IsHokage: 0
+    Coin: 0
+    Exp: 0
     Level: 0
     Health: 0
     CurrentHealth: 0
     Chakra: 0
     CurrentChakra: 0
-    Exp: 0
-    Speed: 0
-    Coin: 0
-    Power: 0
     Strength: 0
     CurrentStrength: 0
+    Speed: 0
+    Power: 0
+    IsFirst: 0
+    IsOnline: 0
+    HasTicket: 0
+    IsUpgradeTrophy: 0
+    IsDead: 0
+    WinTimes: 0
     EyeID: 
     HairID: 
     MouthID: 
     SkinID: 
-    IsDead: 0
-    IsOnline: 0
-    IsTicket: 0
-    IsFirst: 0
-    IsUpgradeTrophy: 0
   Weapon_Entity:
     AccountID: 
     WeaponID: 
@@ -1384,6 +1387,7 @@ MonoBehaviour:
   SkillOne_Entity:
     AccountID: 
     SkillID: 
+    Key: 
     Level: 0
     Cooldown: 0
     Damage: 0
@@ -1392,6 +1396,7 @@ MonoBehaviour:
   SkillTwo_Entity:
     AccountID: 
     SkillID: 
+    Key: 
     Level: 0
     Cooldown: 0
     Damage: 0
@@ -1400,13 +1405,14 @@ MonoBehaviour:
   SkillThree_Entity:
     AccountID: 
     SkillID: 
+    Key: 
     Level: 0
     Cooldown: 0
     Damage: 0
     Chakra: 0
     Delete: 0
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
-  PlayerAllUIPrefabs: {fileID: 7741783450571619106, guid: a2ba03984607abb418145f4e10e68686, type: 3}
+  PlayerAllUIPrefabs: {fileID: 4412084099510779851, guid: 595d37d9f80fa5748beb8589c072dc29, type: 3}
   PlayerNickName: {fileID: 4297340223795960367}
   PlayerHealthChakraUI: {fileID: 5378524188282478473}
   PlayerCameraInstance: {fileID: 0}
