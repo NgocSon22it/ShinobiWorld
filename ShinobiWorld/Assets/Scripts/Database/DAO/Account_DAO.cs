@@ -55,17 +55,65 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
         public static void ChangeStateOnline(string UserID, bool stateOnline)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[Account] SET [IsOnline] = @stateOnline WHERE Account.ID = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@stateOnline", stateOnline);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+
+                    if (stateOnline)
+                    {
+                        var LastLoginDate = new DateTime();
+                        var Strength = 0;
+                        var CurrentStrength = 0;
+
+                        cmd.CommandText = "SELECT [LastLoginDate], Strength, CurrentStrength FROM [dbo].[Account] WHERE Account.ID = @UserID";
+                        cmd.Parameters.AddWithValue("@UserID", UserID);
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        foreach (DataRow dr in dataTable.Rows)
+                        {
+                            LastLoginDate = Convert.ToDateTime(dr["LastLoginDate"]);
+                            Strength = Convert.ToInt32(dr["Strength"]);
+                            CurrentStrength = Convert.ToInt32(dr["CurrentStrength"]);
+                        }
+
+                        var strengthUpdate = (int)(DateTime.Now - LastLoginDate).TotalMinutes / 6 + CurrentStrength;
+                        CurrentStrength = (strengthUpdate >= Strength) ? Strength : strengthUpdate;
+
+                        cmd.CommandText = "UPDATE [dbo].[Account] " +
+                                            "SET [IsOnline] = @stateOnline, " +
+                                            "LastLoginDate = GETDATE(), " +
+                                            "CurrentStrength = @CurrentStrength " +
+                                            "WHERE Account.ID = @UserID";
+
+                        cmd.Parameters.AddWithValue("@stateOnline", stateOnline);
+                        cmd.Parameters.AddWithValue("@CurrentStrength", CurrentStrength);
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        cmd.CommandText = "UPDATE [dbo].[Account] " +
+                                           "SET [IsOnline] = @stateOnline, " +
+                                           "LastLoginDate = GETDATE()" +
+                                           "WHERE Account.ID = @UserID";
+
+                        cmd.Parameters.AddWithValue("@UserID", UserID);
+                        cmd.Parameters.AddWithValue("@stateOnline", stateOnline);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
         public static bool StateOnline(string UserID)

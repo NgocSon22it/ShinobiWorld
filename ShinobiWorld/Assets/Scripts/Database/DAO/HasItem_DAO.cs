@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Assets.Scripts.Database.Entity;
+using Unity.VisualScripting;
+using static UnityEditor.Progress;
 
 namespace Assets.Scripts.Database.DAO
 {
@@ -98,16 +100,39 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
-        public static void ResetLimitBuyItem(string UserID)
+        public static void ResetLimitBuyItem(string UserID, List<HasItem_Entity> listHasItem)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[ResetLimitBuyItem] @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE[dbo].[HasItem] SET Limit = @limit WHERE AccountID = @UserID and ItemID = @ItemID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.Add("@ItemID", SqlDbType.NVarChar);
+                    cmd.Parameters.Add("@limit", SqlDbType.Int);
+
+                    connection.Open();
+
+                    var list = References.listItem
+                        .FindAll(obj => listHasItem.Any(filter => filter.ItemID == obj.ID));
+
+                    foreach (var item in list)
+                    {
+                        cmd.Parameters["@ItemID"].Value = item.ID;
+                        cmd.Parameters["@limit"].Value = item.Limit;
+                        cmd.ExecuteNonQuery();
+
+                    }
+
+                    cmd.CommandText = "UPDATE [dbo].Account SET ResetLimitDate = GETDATE() WHERE ID = @UserID";
+                    cmd.ExecuteNonQuery();
+                }
+                finally
+                {
+
+                    connection.Close();
+                }
             }
         }
     }

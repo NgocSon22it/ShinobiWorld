@@ -38,6 +38,7 @@ public static class Skill_DAO
                         UpgradeCost = Convert.ToInt32(dr["UpgradeCost"]),
                         BuyCost = Convert.ToInt32(dr["BuyCost"]),
                         Image = dr["Image"].ToString(),
+                        Key = dr["Key"].ToString(),
                         Description = dr["Description"].ToString(),
                         Delete = Convert.ToBoolean(dr["Delete"])
                     };
@@ -81,6 +82,7 @@ public static class Skill_DAO
                         UpgradeCost = Convert.ToInt32(dr["UpgradeCost"]),
                         BuyCost = Convert.ToInt32(dr["BuyCost"]),
                         Image = dr["Image"].ToString(),
+                        Key = dr["Key"].ToString(),
                         Description = dr["Description"].ToString(),
                         Delete = Convert.ToBoolean(dr["Delete"])
                     };

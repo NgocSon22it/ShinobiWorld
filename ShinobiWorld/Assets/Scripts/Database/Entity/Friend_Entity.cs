@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.Entity
 {
-    public class Friend
+    public class Friend_Entity
     {
-        public string ID;
+        public int ID;
         public string MyAccountID;
         public string FriendAccountID;
-        public int IsFriend;
+        public bool IsFriend;
         public bool Delete;
 
-        public Friend()
+        public Friend_Entity()
         {
         }
     }
