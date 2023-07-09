@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
+using Assets.Scripts.Friend;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ public static class References
     public static Weapon_Entity weapon = new Weapon_Entity();
     public static List<HasMission_Entity> listHasMission = new List<HasMission_Entity>();
     public static List<MailBox_Entity> listMailBox = new List<MailBox_Entity>();
+    public static List<FriendInfo> listFriend = new List<FriendInfo>();
+    public static List<FriendInfo> listRequest = new List<FriendInfo>();
 
     public static int Maxserver = 20;
 
@@ -67,6 +70,9 @@ public static class References
     public static string UIEquipmentDefault = "Background/UI_GreenFill";
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
+    
+    public static Color32 ColorSelected = new Color32(190, 140, 10, 255);
+
 
     public static string MailSystem = "System";
 
