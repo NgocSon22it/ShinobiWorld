@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 using System;
+using UnityEngine.UIElements;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -19,6 +20,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     public DependencyStatus dependencyStatus;
     public FirebaseAuth auth;
     public FirebaseUser user;
+
 
     private int playerCount;
 
@@ -443,7 +445,9 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         playerCount = PhotonNetwork.CountOfPlayers;
         Debug.Log("Number of players on master server: " + playerCount);
         UIManager.Instance.OpenGamePanel();
+        
     }
+
 
     public void OpenGameScene()
     {
@@ -457,7 +461,9 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             else
             {
                 PhotonNetwork.LoadLevel(Scenes.Konoha);
+                //StartCoroutine(LoadLevelAsync());
             }
+
         }
         else
         {
@@ -474,6 +480,17 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     //    }
     //}
 
+ /*   IEnumerator LoadLevelAsync()
+    {
+        
+
+        while (PhotonNetwork.LevelLoadingProgress < 1)
+        {
+            Debug.Log((int)(PhotonNetwork.LevelLoadingProgress * 100)); 
+            //loadAmount = async.progress;
+            yield return new WaitForEndOfFrame();
+        }
+    }*/
     public override void OnDisconnected(DisconnectCause cause)
     {
         // Handle the disconnect cause
@@ -490,6 +507,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             Debug.LogError("Failed to connect to Photon: " + cause.ToString());
         }
     }
+
 
     public void Logout()
     {
