@@ -247,6 +247,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             LoadPlayerHealthUI();
             LoadPlayerChakraUI();
             LoadPlayerStrengthUI();
+            FriendManager.Instance.CheckNotifyFriendRequest();
+
         }
     }
 
@@ -307,7 +309,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (PlayerAllUIInstance != null)
             {
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-                LoadChakraUI((float)AccountEntity.Chakra, (float)AccountEntity.CurrentChakra);
+                    LoadChakraUI((float)AccountEntity.Chakra, (float)AccountEntity.CurrentChakra);
             }
         }
         else
