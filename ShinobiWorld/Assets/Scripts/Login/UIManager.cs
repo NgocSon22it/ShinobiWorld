@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    public GameObject Canvas;
+
     [Header("Panel")]
 
     //public GameObject emailVerificationPanel;
@@ -42,6 +44,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         CreateInstance();
+        Canvas.SetActive(true);
     }
 
     private void CreateInstance()
