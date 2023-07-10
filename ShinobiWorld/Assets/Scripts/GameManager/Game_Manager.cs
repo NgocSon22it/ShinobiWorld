@@ -48,6 +48,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public Vector3 PlayerReconnectPosition;
 
+    Coroutine SpawnEnemyCoroutine;
+
     RoomOptions roomOptions = new RoomOptions();
 
     private void Awake()
@@ -73,7 +75,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
         SetupPlayer(References.PlayerSpawnPosition);
         ChatManager.Instance.ConnectToChat();
-        StartCoroutine(SpawnEnemy());
+        SpawnEnemyCoroutine = StartCoroutine(SpawnEnemy());
     }
 
     public void SetupPlayer(Vector3 position)
@@ -129,19 +131,19 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public void ReloadPlayerProperties()
     {
         References.UpdateAccountToDB();
-        References.LoadAccountWeaponNSkill(Role);
+        References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
-        string AccountWeaponJson = JsonUtility.ToJson(References.accountWeapon);
-        string AccountSkillOneJson = JsonUtility.ToJson(References.accountSkillOne);
-        string AccountSkillTwoJson = JsonUtility.ToJson(References.accountSkillTwo);
-        string AccountSkillThreeJson = JsonUtility.ToJson(References.accountSkillThree);
+        string HasWeaponJson = JsonUtility.ToJson(References.hasWeapon);
+        string HasSkillOneJson = JsonUtility.ToJson(References.hasSkillOne);
+        string HasSkillTwoJson = JsonUtility.ToJson(References.hasSkillTwo);
+        string HasSkillThreeJson = JsonUtility.ToJson(References.hasSkillThree);
 
         PlayerProperties["Account"] = AccountJson;
-        PlayerProperties["AccountWeapon"] = AccountWeaponJson;
-        PlayerProperties["AccountSkillOne"] = AccountSkillOneJson;
-        PlayerProperties["AccountSkillTwo"] = AccountSkillTwoJson;
-        PlayerProperties["AccountSkillThree"] = AccountSkillThreeJson;
+        PlayerProperties["HasWeapon"] = HasWeaponJson;
+        PlayerProperties["HasSkillOne"] = HasSkillOneJson;
+        PlayerProperties["HasSkillTwo"] = HasSkillTwoJson;
+        PlayerProperties["HasSkillThree"] = HasSkillThreeJson;
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
     }
@@ -157,7 +159,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        References.UpdateAccountToDB();
+        //References.UpdateAccountToDB();
         ReloadPlayerProperties();
     }
 
@@ -176,6 +178,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(Scenes.Login);
+            StopCoroutine(SpawnEnemyCoroutine);
         }
     }
 
@@ -189,7 +192,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         References.accountRefer.CurrentHealth = References.accountRefer.Health;
         References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
-        References.UpdateAccountToDB();
+        //References.UpdateAccountToDB();
         ReloadPlayerProperties();
         PlayerManager.GetComponent<PlayerBase>().SetUpPlayerLive();
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
@@ -228,8 +231,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
         {
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
             References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+
+
+            
         }
 
     }

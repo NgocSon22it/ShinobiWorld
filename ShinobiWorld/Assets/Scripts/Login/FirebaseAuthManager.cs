@@ -85,13 +85,25 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             {
                 References.accountRefer.ID = user.UserId;
                 PhotonNetwork.NickName = user.DisplayName;
-                Account_DAO.ChangeStateOnline(user.UserId, true);
-                References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
 
-                if (!PhotonNetwork.IsConnected)
+                var isOnline = Account_DAO.StateOnline(user.UserId);
+
+                if (isOnline)
                 {
-                    PhotonNetwork.ConnectUsingSettings(); 
+                    UIManager.Instance.OpenPopupPanel(Message.Logined);
                 }
+                else
+                {
+                    Account_DAO.ChangeStateOnline(user.UserId, true);
+                    References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
+
+
+                    if (!PhotonNetwork.IsConnected)
+                    {
+                        PhotonNetwork.ConnectUsingSettings();
+                    }
+                }
+
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
             }
@@ -212,6 +224,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
+
+
                         if (!PhotonNetwork.IsConnected)
                         {
                             PhotonNetwork.ConnectUsingSettings();
@@ -372,6 +386,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     else
                     {
                         Account_DAO.CreateAccount(user.UserId, user.DisplayName);
+                        MailBox_DAO.AddMailbox(user.UserId, References.MailSystem, true);
                         SendEmailForVerification();
                     }
                 }
@@ -450,13 +465,14 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
-        {
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        }
-    }
+    //private void OnApplicationQuit()
+    //{
+    //    if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
+    //    {
+    //        References.UpdateAccountToDB();
+    //        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+    //    }
+    //}
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -479,6 +495,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (auth != null && user != null)
         {
+            References.UpdateAccountToDB();
             Account_DAO.ChangeStateOnline(user.UserId, false);
             auth.SignOut();
             PhotonNetwork.Disconnect();
