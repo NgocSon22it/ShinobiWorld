@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,17 @@ namespace Assets.Scripts.Friend
         public TMP_Text Name, Trophy;
         public GameObject Online;
         public GameObject MySelf;
+        public Button ChatBnt, PKBtn, UnFriendBtn, AcceptBtn;
         FriendInfo selectedfriend;
+
+        private void Awake()
+        {
+            GetComponent<Image>().color = new Color32(0, 0, 0, 0);
+
+            if(!UnFriendBtn.IsUnityNull())UnFriendBtn.onClick.AddListener(() => DeleteFriend());
+            if(!AcceptBtn.IsUnityNull()) AcceptBtn.onClick.AddListener(() => Accept());
+            if(!PKBtn.IsUnityNull()) PKBtn.onClick.AddListener(() => SendPKMessage());
+        }
 
         public void OnClick()
         {
@@ -29,8 +40,6 @@ namespace Assets.Scripts.Friend
             Name.text = friend.Name;
             Trophy.text = References.listTrophy.Find(obj => obj.ID == friend.TrophyID).Name;
             Online.SetActive(friend.IsOnline);
-
-            GetComponent<Image>().color = new Color32(0, 0, 0, 0);
         }
 
         public void Accept()
@@ -54,6 +63,16 @@ namespace Assets.Scripts.Friend
             References.listFriendInfo.Remove(selectedfriend);
 
             FriendManager.Instance.Reload();
+        }
+
+        public void SendPKMessage()
+        {
+            if (Account_DAO.StateOnline(selectedfriend.ID))
+            {
+                ChatManager.Instance.chatClient
+                    .SendPrivateMessage(selectedfriend.Name,
+                    string.Format(Message.PriviteMessage, TypePriviteMessage.PKRequest.ToString(), "0"));
+            }
         }
     }
 }

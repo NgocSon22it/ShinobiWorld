@@ -62,11 +62,13 @@ public class Player_AllUIManagement : MonoBehaviour
     [Header("House Open")]
     [SerializeField] TMP_Text House_Message;
 
-
+    public Button GotoMenuBtn;
     string image;
+
     private void Awake()
     {
         Instance = this;
+        GotoMenuBtn.onClick.AddListener(() => Game_Manager.Instance.GoToMenu());
     }
 
     public void ShowHouseMessage(string HouseName)
@@ -264,10 +266,5 @@ public class Player_AllUIManagement : MonoBehaviour
             SkillThree_Cooldown.fillAmount = 1f;
         }
     }
-
-    //public void CheckNotifyFriendRequest()
-    //{
-    //    FriendManager.Instance.CheckNotifyFriendRequest();
-    //}
 
 }
