@@ -265,4 +265,9 @@ public class Player_AllUIManagement : MonoBehaviour
         }
     }
 
+    //public void CheckNotifyFriendRequest()
+    //{
+    //    FriendManager.Instance.CheckNotifyFriendRequest();
+    //}
+
 }
