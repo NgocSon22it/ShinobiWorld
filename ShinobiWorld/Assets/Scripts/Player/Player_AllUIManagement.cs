@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Player_AllUIManagement : MonoBehaviour
@@ -46,18 +47,21 @@ public class Player_AllUIManagement : MonoBehaviour
     [SerializeField] Image SkillOne_Image;
     [SerializeField] TMP_Text SkillOne_CostChakra;
     [SerializeField] TMP_Text SkillOne_CooldownNumber;
+    [SerializeField] TMP_Text SkillOne_KeyCode;
 
     [Header("Skill Two")]
     [SerializeField] Image SkillTwo_Cooldown;
     [SerializeField] Image SkillTwo_Image;
     [SerializeField] TMP_Text SkillTwo_CostChakra;
     [SerializeField] TMP_Text SkillTwo_CooldownNumber;
+    [SerializeField] TMP_Text SkillTwo_Keycode;
 
     [Header("Skill Three")]
     [SerializeField] Image SkillThree_Cooldown;
     [SerializeField] Image SkillThree_Image;
     [SerializeField] TMP_Text SkillThree_CostChakra;
     [SerializeField] TMP_Text SkillThree_CooldownNumber;
+    [SerializeField] TMP_Text SkillThree_Keycode;
 
     [Header("House Open")]
     [SerializeField] TMP_Text House_Message;
@@ -67,6 +71,10 @@ public class Player_AllUIManagement : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+    public string ShowKey(string Key)
+    {
+        return Key.Replace("/Keyboard/", "").ToUpper();
     }
 
     public void ShowHouseMessage(string HouseName)
@@ -97,18 +105,26 @@ public class Player_AllUIManagement : MonoBehaviour
             image = References.listSkill.Find(obj => obj.ID == player.SkillOne_Entity.SkillID).Image;
             SkillOne_Image.sprite = Resources.Load<Sprite>(image);
             SkillOne_CostChakra.text = player.SkillOne_Entity.Chakra.ToString();
+            SkillOne_KeyCode.text = ShowKey(player.SkillOne_Entity.Key.ToString());
+            player.playerInput.actions["SkillOne"].ApplyBindingOverride(player.SkillOne_Entity.Key);
         }
         if (player.SkillTwo_Entity != null)
         {
             image = References.listSkill.Find(obj => obj.ID == player.SkillTwo_Entity.SkillID).Image;
             SkillTwo_Image.sprite = Resources.Load<Sprite>(image);
             SkillTwo_CostChakra.text = player.SkillTwo_Entity.Chakra.ToString();
+            SkillTwo_Keycode.text = ShowKey(player.SkillTwo_Entity.Key.ToString());
+            player.playerInput.actions["SkillTwo"].ApplyBindingOverride(player.SkillTwo_Entity.Key);
+
         }
         if (player.SkillThree_Entity != null)
         {
             image = References.listSkill.Find(obj => obj.ID == player.SkillThree_Entity.SkillID).Image;
             SkillThree_Image.sprite = Resources.Load<Sprite>(image);
             SkillThree_CostChakra.text = player.SkillThree_Entity.Chakra.ToString();
+            SkillThree_Keycode.text = ShowKey(player.SkillThree_Entity.Key.ToString());
+            player.playerInput.actions["SkillThree"].ApplyBindingOverride(player.SkillThree_Entity.Key);
+
         }
     }
 
