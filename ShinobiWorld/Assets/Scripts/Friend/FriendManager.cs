@@ -30,10 +30,12 @@ public class FriendManager : MonoBehaviour
         FriendBtn.onClick.AddListener(() => OnFriendClick());
 
         RequestBtn.onClick.AddListener(() => OnRequestClick());
+
     }
 
-    public void CheckNotifyFriendRequest()
+    public void Start()
     {
+
         Init();
         Notify.SetActive((listRequest.Count > 0));
     }
@@ -69,8 +71,8 @@ public class FriendManager : MonoBehaviour
                 listRequest.Add(friend.FriendAccountID);
         }
 
-        //References.listFriend = Friend_DAO.GetAllFriendInfo(listFriend);
-        //References.listRequest = Friend_DAO.GetAllFriendInfo(listRequest);
+        //References.listFriendInfo = Friend_DAO.GetAllFriendInfo(listFriend);
+        //References.listRequestInfo = Friend_DAO.GetAllFriendInfo(listRequest);
 
     }
 
@@ -138,7 +140,7 @@ public class FriendManager : MonoBehaviour
         else
         {
             FriendMessage.SetActive((References.listRequestInfo.Count <= 0));
-            CheckNotifyFriendRequest();
+            Notify.SetActive((References.listRequestInfo.Count > 0));
         }
     }
 
