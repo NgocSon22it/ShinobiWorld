@@ -234,7 +234,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             References.UpdateAccountToDB();
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
 
-
+            
             
         }
 

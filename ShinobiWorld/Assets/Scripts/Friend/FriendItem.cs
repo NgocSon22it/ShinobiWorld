@@ -39,8 +39,8 @@ namespace Assets.Scripts.Friend
 
             Destroy(MySelf);
 
-            References.listRequest.Remove(selectedfriend);
-            References.listFriend.Add(selectedfriend);
+            References.listRequestInfo.Remove(selectedfriend);
+            References.listFriendInfo.Add(selectedfriend);
 
             FriendManager.Instance.Reload();
         }
@@ -50,8 +50,8 @@ namespace Assets.Scripts.Friend
             Friend_DAO.DeleteFriend(References.accountRefer.ID, selectedfriend.ID);
 
             Destroy(MySelf);
-            References.listRequest.Remove(selectedfriend);
-            References.listFriend.Remove(selectedfriend);
+            References.listRequestInfo.Remove(selectedfriend);
+            References.listFriendInfo.Remove(selectedfriend);
 
             FriendManager.Instance.Reload();
         }
