@@ -23,8 +23,9 @@ public static class References
     public static Weapon_Entity weapon = new Weapon_Entity();
     public static List<HasMission_Entity> listHasMission = new List<HasMission_Entity>();
     public static List<MailBox_Entity> listMailBox = new List<MailBox_Entity>();
-    public static List<FriendInfo> listFriend = new List<FriendInfo>();
-    public static List<FriendInfo> listRequest = new List<FriendInfo>();
+    public static List<Friend_Entity> listAllFriend = new List<Friend_Entity>();
+    public static List<FriendInfo> listFriendInfo = new List<FriendInfo>();
+    public static List<FriendInfo> listRequestInfo = new List<FriendInfo>();
 
     public static int Maxserver = 20;
 
