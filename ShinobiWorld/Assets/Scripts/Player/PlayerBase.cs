@@ -356,8 +356,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             {
                 PlayerAllUIInstance.GetComponent<CustomKey_Manager>().OpenCustomKeyPanel();
             }
-          
-          
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("BossArena_Asuma");
+            }
+
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
