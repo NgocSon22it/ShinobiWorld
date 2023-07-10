@@ -138,7 +138,7 @@ public class MeleeChacracter : PlayerBase
             {
                 skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
             }
-            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition, playerPool.GetSkillThree_Hit_FromPool());
+            skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition);
             skillThree.SetActive(true);
         }
 

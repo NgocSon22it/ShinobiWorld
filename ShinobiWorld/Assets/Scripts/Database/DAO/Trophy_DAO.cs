@@ -22,7 +22,7 @@ namespace Assets.Scripts.Database.DAO
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT *  FROM [dbo].[Trophies]";
+                    cmd.CommandText = "SELECT *  FROM [dbo].[Trophy]";
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
                     adapter.Fill(dataTable);
@@ -41,7 +41,7 @@ namespace Assets.Scripts.Database.DAO
                             Delete = Convert.ToBoolean(dr["Delete"])
                         };
                         list.Add(obj);
-                        References.BtnTrophies.Add(obj.ID, obj.Name);
+                        References.BtnTrophy.Add(obj.ID, obj.Name);
                     }
                 }
                 finally

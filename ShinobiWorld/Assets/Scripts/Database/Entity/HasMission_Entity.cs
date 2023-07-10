@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.Entity
 {
-    public class AccountMission_Entity
+    public class HasMission_Entity
     {
         public string AccountID;
         public string MissionID;
@@ -14,7 +14,7 @@ namespace Assets.Scripts.Database.Entity
         public int Current;
         public StatusMission Status;
 
-        public AccountMission_Entity()
+        public HasMission_Entity()
         {
         }
     }

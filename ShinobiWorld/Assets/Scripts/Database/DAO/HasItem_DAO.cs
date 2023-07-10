@@ -6,23 +6,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Assets.Scripts.Database.Entity;
+using Unity.VisualScripting;
 
 namespace Assets.Scripts.Database.DAO
 {
-    public class AccountItem_DAO
+    public class HasItem_DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-        public static List<AccountItem_Entity> GetAllByUserID(string UserID)
+        public static List<HasItem_Entity> GetAllByUserID(string UserID)
         {
-            var list = new List<AccountItem_Entity>();
+            var list = new List<HasItem_Entity>();
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 try
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM [dbo].[AccountItem] WHERE AccountID = @UserID";
+                    cmd.CommandText = "SELECT * FROM [dbo].[HasItem] WHERE AccountID = @UserID";
                     cmd.Parameters.AddWithValue("@UserID", UserID);
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
@@ -30,7 +31,7 @@ namespace Assets.Scripts.Database.DAO
 
                     foreach (DataRow dr in dataTable.Rows)
                     {
-                        var obj = new AccountItem_Entity
+                        var obj = new HasItem_Entity
                         {
                             AccountID = dr["AccountID"].ToString(),
                             ItemID = dr["ItemID"].ToString(),
@@ -98,16 +99,39 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
-        public static void ResetLimitBuyItem(string UserID)
+        public static void ResetLimitBuyItem(string UserID, List<HasItem_Entity> listHasItem)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[ResetLimitBuyItem] @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE[dbo].[HasItem] SET Limit = @limit WHERE AccountID = @UserID and ItemID = @ItemID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.Add("@ItemID", SqlDbType.NVarChar);
+                    cmd.Parameters.Add("@limit", SqlDbType.Int);
+
+                    connection.Open();
+
+                    var list = References.listItem
+                        .FindAll(obj => listHasItem.Any(filter => filter.ItemID == obj.ID));
+
+                    foreach (var item in list)
+                    {
+                        cmd.Parameters["@ItemID"].Value = item.ID;
+                        cmd.Parameters["@limit"].Value = item.Limit;
+                        cmd.ExecuteNonQuery();
+
+                    }
+
+                    cmd.CommandText = "UPDATE [dbo].Account SET ResetLimitDate = GETDATE() WHERE ID = @UserID";
+                    cmd.ExecuteNonQuery();
+                }
+                finally
+                {
+
+                    connection.Close();
+                }
             }
         }
     }

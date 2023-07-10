@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.DAO
 {
-    public class AccountEquipment_DAO
+    public class BagEquipment_DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-        public static List<AccountEquipment_Entity> GetAllByUserID(string UserID)
+        public static List<BagEquipment_Entity> GetAllByUserID(string UserID)
         {
-            var list = new List<AccountEquipment_Entity>();
+            var list = new List<BagEquipment_Entity>();
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 try
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM [dbo].[AccountEquipment] WHERE AccountID = @UserID and [Delete] = 0";
+                    cmd.CommandText = "SELECT * FROM [dbo].[BagEquipment] WHERE AccountID = @UserID and [Delete] = 0";
                     cmd.Parameters.AddWithValue("@UserID", UserID);
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
@@ -30,7 +30,7 @@ namespace Assets.Scripts.Database.DAO
 
                     foreach (DataRow dr in dataTable.Rows)
                     {
-                        var obj = new AccountEquipment_Entity
+                        var obj = new BagEquipment_Entity
                         {
                             ID = Convert.ToInt32(dr["ID"]),
                             AccountID = dr["AccountID"].ToString(),
@@ -107,7 +107,7 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update AccountEquipment " +
+                cmd.CommandText = "Update BagEquipment " +
                                     "set [Level] += 1, Damage = @Damage, Health = @Health, Chakra = @Chakra " +
                                     "where AccountID = @UserID " +
                                     "and EquipmentID = @EquipmentID " +
@@ -130,7 +130,7 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update AccountEquipment " +
+                cmd.CommandText = "Update BagEquipment " +
                                     "set [Level] = 1, Damage = @Damage, Health = @Health, Chakra = @Chakra " +
                                     "where AccountID = @UserID " +
                                     "and EquipmentID = @EquipmentID " +

@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.Entity
 {
-    public class AccountMailBox_Entity
+    public class HasItem_Entity
     {
-        public int ID;
         public string AccountID;
-        public string MailBoxID;
-        public DateTime DateAdd;
-        public bool IsClaim;
-        public bool IsRead;
+        public string ItemID;
+        public int Amount;
+        public int Limit;
         public bool Delete;
 
-        public AccountMailBox_Entity()
+        public HasItem_Entity()
         {
         }
     }

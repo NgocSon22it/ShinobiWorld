@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.DAO
 {
-    public class AccountMission_DAO
+    public class HasMission_DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-        public static List<AccountMission_Entity> GetAllByUserID(string UserID)
+        public static List<HasMission_Entity> GetAllByUserID(string UserID)
         {
-            var list = new List<AccountMission_Entity>();
+            var list = new List<HasMission_Entity>();
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 try
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM [dbo].[AccountMission] WHERE AccountID = @UserID";
+                    cmd.CommandText = "SELECT * FROM [dbo].[HasMission] WHERE AccountID = @UserID";
                     cmd.Parameters.AddWithValue("@UserID", UserID);
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
@@ -30,7 +30,7 @@ namespace Assets.Scripts.Database.DAO
 
                     foreach (DataRow dr in dataTable.Rows)
                     {
-                        var obj = new AccountMission_Entity
+                        var obj = new HasMission_Entity
                         {
                             AccountID = dr["AccountID"].ToString(),
                             MissionID = dr["MissionID"].ToString(),
@@ -55,7 +55,7 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[AccountMission] SET [Status] = @status WHERE AccountID = @UserID and MissionID = @MissionID";
+                cmd.CommandText = "UPDATE [dbo].[HasMission] SET [Status] = @status WHERE AccountID = @UserID and MissionID = @MissionID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@MissionID", MissionID);
                 cmd.Parameters.AddWithValue("@status", status);
@@ -91,7 +91,7 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[AccountMission] SET [Current] = @Current WHERE AccountID = @UserID and MissionID = @MissionID";
+                cmd.CommandText = "UPDATE [dbo].[HasMission] SET [Current] = @Current WHERE AccountID = @UserID and MissionID = @MissionID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@MissionID", MissionID);
                 cmd.Parameters.AddWithValue("@Current", Current);

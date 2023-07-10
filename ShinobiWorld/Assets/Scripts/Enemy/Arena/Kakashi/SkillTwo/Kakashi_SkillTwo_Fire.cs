@@ -8,7 +8,6 @@ public class Kakashi_SkillTwo_Fire : Boss_Skill
 {
     [SerializeField] GameObject MainFire;
     [SerializeField] GameObject MainFireExplosion;
-    [SerializeField] Collider2D Collider;
 
     public Vector3 EndPoint;
 

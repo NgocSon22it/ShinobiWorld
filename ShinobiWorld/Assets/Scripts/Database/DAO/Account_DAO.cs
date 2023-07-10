@@ -55,17 +55,65 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
         public static void ChangeStateOnline(string UserID, bool stateOnline)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[Account] SET [IsOnline] = @stateOnline WHERE Account.ID = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@stateOnline", stateOnline);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+
+                    if (stateOnline)
+                    {
+                        var LastLoginDate = new DateTime();
+                        var Strength = 0;
+                        var CurrentStrength = 0;
+
+                        cmd.CommandText = "SELECT [LastLoginDate], Strength, CurrentStrength FROM [dbo].[Account] WHERE Account.ID = @UserID";
+                        cmd.Parameters.AddWithValue("@UserID", UserID);
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        foreach (DataRow dr in dataTable.Rows)
+                        {
+                            LastLoginDate = Convert.ToDateTime(dr["LastLoginDate"]);
+                            Strength = Convert.ToInt32(dr["Strength"]);
+                            CurrentStrength = Convert.ToInt32(dr["CurrentStrength"]);
+                        }
+
+                        var strengthUpdate = (int)(DateTime.Now - LastLoginDate).TotalMinutes / 6 + CurrentStrength;
+                        CurrentStrength = (strengthUpdate >= Strength) ? Strength : strengthUpdate;
+
+                        cmd.CommandText = "UPDATE [dbo].[Account] " +
+                                            "SET [IsOnline] = @stateOnline, " +
+                                            "LastLoginDate = GETDATE(), " +
+                                            "CurrentStrength = @CurrentStrength " +
+                                            "WHERE Account.ID = @UserID";
+
+                        cmd.Parameters.AddWithValue("@stateOnline", stateOnline);
+                        cmd.Parameters.AddWithValue("@CurrentStrength", CurrentStrength);
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        cmd.CommandText = "UPDATE [dbo].[Account] " +
+                                           "SET [IsOnline] = @stateOnline, " +
+                                           "LastLoginDate = GETDATE()" +
+                                           "WHERE Account.ID = @UserID";
+
+                        cmd.Parameters.AddWithValue("@UserID", UserID);
+                        cmd.Parameters.AddWithValue("@stateOnline", stateOnline);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
         public static bool StateOnline(string UserID)
@@ -146,7 +194,7 @@ namespace Assets.Scripts.Database.DAO
                             ID = dr["ID"].ToString(),
                             Name = dr["Name"].ToString(),
                             RoleInGameID = dr["RoleInGameID"].ToString(),
-                            TrophiesID = dr["TrophiesID"].ToString(),
+                            TrophyID = dr["TrophyID"].ToString(),
                             Level = Convert.ToInt32(dr["Level"]),
                             Health = Convert.ToInt32(dr["Health"]),
                             CurrentHealth = Convert.ToInt32(dr["CurrentHealth"]),
@@ -164,10 +212,12 @@ namespace Assets.Scripts.Database.DAO
                             SkinID = dr["SkinID"].ToString(),
                             IsDead = Convert.ToBoolean(dr["IsDead"]),
                             IsOnline = Convert.ToBoolean(dr["IsOnline"]),
-                            IsTicket = Convert.ToBoolean(dr["IsTicket"]),
+                            HasTicket = Convert.ToBoolean(dr["HasTicket"]),
                             IsFirst = Convert.ToBoolean(dr["IsFirst"]),
+                            IsHokage = Convert.ToBoolean(dr["IsHokage"]),
+                            WinTimes = Convert.ToInt32(dr["WinTimes"]),
                             IsUpgradeTrophy = Convert.ToBoolean(dr["IsUpgradeTrophy"]),
-                            DateReset = Convert.ToDateTime(dr["DateReset"])
+                            ResetLimitDate = Convert.ToDateTime(dr["ResetLimitDate"])
                         };
                         connection.Close();
                         return obj;
@@ -249,9 +299,9 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set TrophiesID = @Trophie, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Chakra = @Chakra, CurrentChakra = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
+                cmd.CommandText = "Update Account set TrophyID = @Trophy, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Chakra = @Chakra, CurrentChakra = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
-                cmd.Parameters.AddWithValue("@Trophie", account_Entity.TrophiesID);
+                cmd.Parameters.AddWithValue("@Trophy", account_Entity.TrophyID);
                 cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
                 cmd.Parameters.AddWithValue("@Health", account_Entity.Health);
                 cmd.Parameters.AddWithValue("@CurrentHealth", account_Entity.CurrentHealth);
@@ -268,14 +318,14 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
-        public static void UpgradeTrophy(string UserID, string TrophiesID)
+        public static void UpgradeTrophy(string UserID, string TrophyID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set TrophiesID = @TrophiesID, IsUpgradeTrophy = 0 where ID = @UserID";
+                cmd.CommandText = "Update Account set TrophyID = @TrophyID, IsUpgradeTrophy = 0 where ID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@TrophiesID", TrophiesID);
+                cmd.Parameters.AddWithValue("@TrophyID", TrophyID);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
@@ -302,7 +352,7 @@ namespace Assets.Scripts.Database.DAO
                         {
                             ID = dr["ID"].ToString(),
                             Name = dr["Name"].ToString(),
-                            TrophiesID = dr["TrophiesID"].ToString(),
+                            TrophyID = dr["TrophyID"].ToString(),
                             Level = Convert.ToInt32(dr["Level"]),
                             Power = Convert.ToInt32(dr["Power"])
                         };

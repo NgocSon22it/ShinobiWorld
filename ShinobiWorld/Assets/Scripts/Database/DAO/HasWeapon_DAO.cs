@@ -6,10 +6,10 @@ using System.Data.SqlClient;
 using System.Data;
 using UnityEngine;
 
-public static class AccountWeapon_DAO 
+public static class HasWeapon_DAO 
 {
     static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
-    public static AccountWeapon_Entity GetAccountWeaponByID(string UserID)
+    public static HasWeapon_Entity GetHasWeaponByID(string UserID)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
@@ -17,7 +17,7 @@ public static class AccountWeapon_DAO
             {
                 connection.Open();
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "select * from AccountWeapon where AccountID = @UserID";
+                cmd.CommandText = "select * from HasWeapon where AccountID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dataTable = new DataTable();
@@ -25,7 +25,7 @@ public static class AccountWeapon_DAO
 
                 foreach (DataRow dr in dataTable.Rows)
                 {
-                    var obj = new AccountWeapon_Entity
+                    var obj = new HasWeapon_Entity
                     {
                         AccountID = dr["AccountID"].ToString(),
                         WeaponID = dr["WeaponID"].ToString(),

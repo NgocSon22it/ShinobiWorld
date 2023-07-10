@@ -57,7 +57,7 @@ public class Skill_Manager : MonoBehaviour
     double CooldownBonus;
 
     public Skill_Entity SkillSelected;
-    public AccountSkill_Entity AccountSkill;
+    public HasSkill_Entity HasSkill;
 
 
 
@@ -110,17 +110,17 @@ public class Skill_Manager : MonoBehaviour
 
     public void SetUpInformationUpgradeSkill()
     {
-        AccountSkill = AccountSkill_DAO.GetAccountSkillByID(References.accountRefer.ID, SkillSelected.ID);
-        if (AccountSkill != null)
+        HasSkill = HasSkill_DAO.GetHasSkillByID(References.accountRefer.ID, SkillSelected.ID);
+        if (HasSkill != null)
         {
             ResetErrorMessage();
             UpgradePanel.SetActive(true);
             Upgrade_SkillNameTxt.text = SkillSelected.Name;
 
-            Upgrade_CurrentLevelTxt.text = AccountSkill.Level.ToString();
-            Upgrade_CurrentDamageTxt.text = AccountSkill.Damage.ToString("F2");
-            Upgrade_CurrentCooldownTxt.text = AccountSkill.Cooldown.ToString("F2");
-            Upgrade_CurrentChakraTxt.text = AccountSkill.Chakra.ToString("F2");
+            Upgrade_CurrentLevelTxt.text = HasSkill.Level.ToString();
+            Upgrade_CurrentDamageTxt.text = HasSkill.Damage.ToString("F2");
+            Upgrade_CurrentCooldownTxt.text = HasSkill.Cooldown.ToString("F2");
+            Upgrade_CurrentChakraTxt.text = HasSkill.Chakra.ToString("F2");
 
             Skill_BuyBtn.interactable = true;
 
@@ -135,14 +135,14 @@ public class Skill_Manager : MonoBehaviour
     }
     public void SetUpStatusForUpgrade()
     {
-        if (AccountSkill.Level < References.MaxUpgradeLevel)
+        if (HasSkill.Level < References.MaxUpgradeLevel)
         {
             SetUpUpgradePanel(true);
-            Upgrade_NextLevelTxt.text = (AccountSkill.Level + 1).ToString();
+            Upgrade_NextLevelTxt.text = (HasSkill.Level + 1).ToString();
 
-            DamageBonus = Convert.ToInt32(AccountSkill.Damage * (1 + References.Uppercent_Skill_Damage / 100f));
-            CooldownBonus = (AccountSkill.Cooldown * (1 - References.Uppercent_Skill_CoolDown / 100f));
-            ChakraBonus = Convert.ToInt32((AccountSkill.Chakra * (1 - References.Uppercent_Skill_Chakra / 100f)));
+            DamageBonus = Convert.ToInt32(HasSkill.Damage * (1 + References.Uppercent_Skill_Damage / 100f));
+            CooldownBonus = (HasSkill.Cooldown * (1 - References.Uppercent_Skill_CoolDown / 100f));
+            ChakraBonus = Convert.ToInt32((HasSkill.Chakra * (1 - References.Uppercent_Skill_Chakra / 100f)));
             
             Upgrade_NextDamageTxt.text = DamageBonus.ToString("F2");
             Upgrade_NextCooldownTxt.text = CooldownBonus.ToString("F2");
@@ -179,7 +179,7 @@ public class Skill_Manager : MonoBehaviour
             Destroy(trans.gameObject);
         }
 
-        foreach (Skill_Entity Item in References.ListSkill)
+        foreach (Skill_Entity Item in References.listSkill)
         {
             Instantiate(Skill_Item, Skill_Content).GetComponent<Skill_Item>().SetUp(Item);
         }
@@ -187,9 +187,9 @@ public class Skill_Manager : MonoBehaviour
 
     public bool CheckSkillOwned()
     {
-        List<AccountSkill_Entity> list = AccountSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
+        List<HasSkill_Entity> list = HasSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
 
-        foreach (AccountSkill_Entity skill_Entity in list)
+        foreach (HasSkill_Entity skill_Entity in list)
         {
             if (skill_Entity.SkillID.Equals(SkillSelected.ID))
             {
@@ -244,10 +244,10 @@ public class Skill_Manager : MonoBehaviour
 
     public void OpenSkillPanel()
     {
-        if (References.ListSkill != null)
+        if (References.listSkill != null)
         {
             LoadSkillList();
-            SetUpSelectedSkill(References.ListSkill[0]);
+            SetUpSelectedSkill(References.listSkill[0]);
             Skill_Content.GetChild(0).gameObject.GetComponent<Skill_Item>().
                 Background.color = new Color32(190, 140, 10, 255);
 

@@ -7,15 +7,18 @@ using System.Threading.Tasks;
 namespace Assets.Scripts.Database.Entity
 {
     [System.Serializable]
-    public class AccountWeapon_Entity
+    public class HasSkill_Entity
     {
         public string AccountID;
-        public string WeaponID;
+        public string SkillID;
+        public string Key;
         public int Level;
+        public double Cooldown;
         public int Damage;
+        public int Chakra;
         public bool Delete;
 
-        public AccountWeapon_Entity()
+        public HasSkill_Entity()
         {
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
+using Assets.Scripts.Friend;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,16 +13,18 @@ public static class References
 {
     public static Account_Entity accountRefer = new Account_Entity();
 
-    public static List<AccountItem_Entity> listAccountItem = new List<AccountItem_Entity>();
-    public static List<AccountEquipment_Entity> listAccountEquipment = new List<AccountEquipment_Entity>();
+    public static List<HasItem_Entity> listHasItem = new List<HasItem_Entity>();
+    public static List<BagEquipment_Entity> listBagEquipment = new List<BagEquipment_Entity>();
 
-    public static List<AccountSkill_Entity> listAccountSkill = new List<AccountSkill_Entity>();
+    public static List<HasSkill_Entity> listHasSkill = new List<HasSkill_Entity>();
 
-    public static AccountWeapon_Entity accountWeapon = new AccountWeapon_Entity();
+    public static HasWeapon_Entity hasWeapon = new HasWeapon_Entity();
 
     public static Weapon_Entity weapon = new Weapon_Entity();
-    public static List<AccountMission_Entity> listAccountMission = new List<AccountMission_Entity>();
-    public static List<AccountMailBox_Entity> listAccountMailBox = new List<AccountMailBox_Entity>();
+    public static List<HasMission_Entity> listHasMission = new List<HasMission_Entity>();
+    public static List<MailBox_Entity> listMailBox = new List<MailBox_Entity>();
+    public static List<FriendInfo> listFriend = new List<FriendInfo>();
+    public static List<FriendInfo> listRequest = new List<FriendInfo>();
 
     public static int Maxserver = 20;
 
@@ -34,18 +37,18 @@ public static class References
     public static List<Item_Entity> listItem = Item_DAO.GetAll();
     public static List<Equipment_Entity> listEquipment = Equipment_DAO.GetAll();
     public static List<TypeEquipment_Entity> listTypeEquipment = TypeEquipment_DAO.GetAll();
-    public static List<MailBox_Entity> listMailBox = MailBox_DAO.GetAll();
+    public static List<Mail_Entity> listMail = Mail_DAO.GetAll();
 
-    public static IDictionary<string, string> BtnTrophies = new Dictionary<string, string>();
+    public static IDictionary<string, string> BtnTrophy = new Dictionary<string, string>();
     public static List<Trophy_Entity> listTrophy = Trophy_DAO.GetAll();
 
     public static List<Mission_Entity> listMission = Mission_DAO.GetAll();
 
-    public static List<Skill_Entity> ListSkill = Skill_DAO.GetAllSkill();
+    public static List<Skill_Entity> listSkill = Skill_DAO.GetAllSkill();
 
-    public static AccountSkill_Entity accountSkillOne = new AccountSkill_Entity();
-    public static AccountSkill_Entity accountSkillTwo = new AccountSkill_Entity();
-    public static AccountSkill_Entity accountSkillThree = new AccountSkill_Entity();
+    public static HasSkill_Entity hasSkillOne = new HasSkill_Entity();
+    public static HasSkill_Entity hasSkillTwo = new HasSkill_Entity();
+    public static HasSkill_Entity hasSkillThree = new HasSkill_Entity();
 
     public static float Uppercent_Skill_Damage = 3f, Uppercent_Skill_Chakra = 1f, Uppercent_Skill_CoolDown = 1f;
     public static float Uppercent_Account = 5f;
@@ -61,12 +64,15 @@ public static class References
 
     public static bool IsDisconnect = false;
 
-    public static string TrophyID_RemakeMission = TrophiesID.Trophie_Jonin.ToString();
+    public static string TrophyID_RemakeMission = TrophyID.Trophy_Jonin.ToString();
 
     public static string UISkillDefault = "Background/UI_OrangeFill";
     public static string UIEquipmentDefault = "Background/UI_GreenFill";
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
+    
+    public static Color32 ColorSelected = new Color32(190, 140, 10, 255);
+
 
     public static string MailSystem = "System";
 
@@ -142,14 +148,14 @@ public static class References
         ExpercienceToNextLevel = accountRefer.Level * 100;
     }
 
-    public static void LoadAccountWeaponNSkill(string Role)
+    public static void LoadHasWeaponNSkill(string Role)
     {
         if (accountRefer != null)
         {
-            accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(accountRefer.ID);
-            accountSkillOne = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "One");
-            accountSkillTwo = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "Two");
-            accountSkillThree = AccountSkill_DAO.GetAccountSkillByID(accountRefer.ID, "Skill_" + Role + "Three");
+            hasWeapon = HasWeapon_DAO.GetHasWeaponByID(accountRefer.ID);
+            hasSkillOne = HasSkill_DAO.GetHasSkillByID(accountRefer.ID, "Skill_" + Role + "One");
+            hasSkillTwo = HasSkill_DAO.GetHasSkillByID(accountRefer.ID, "Skill_" + Role + "Two");
+            hasSkillThree = HasSkill_DAO.GetHasSkillByID(accountRefer.ID, "Skill_" + Role + "Three");
         }
 
     }
@@ -216,7 +222,7 @@ public enum StatusMission
     None, Doing, Claim, Done
 }
 
-public enum TrophiesID
+public enum TrophyID
 {
-    Trophie_None, Trophie_Genin, Trophie_Chunin, Trophie_Jonin
+    Trophy_None, Trophy_Genin, Trophy_Chunin, Trophy_Jonin
 }
