@@ -123,41 +123,27 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     double lastPacketTime = 0;
     Vector3 positionAtLastPacket = Vector3.zero;
     Quaternion rotationAtLastPacket = Quaternion.identity;
-  
+
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
         {
+            var accountJson = (string)changedProps["Account"];
+            AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
 
-            foreach (var key in changedProps.Keys)
-            {
-                if (key.Equals("Account"))
-                {
-                    string accountJson = (string)changedProps[key];
-                    AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
-                    SetUpAccountData();
-                }
-                else if (key.Equals("HasWeapon"))
-                {
-                    string HasWeaponJson = (string)changedProps[key];
-                    Weapon_Entity = JsonUtility.FromJson<HasWeapon_Entity>(HasWeaponJson);
-                }
-                else if (key.Equals("HasSkillOne"))
-                {
-                    string HasSkillOneJson = (string)changedProps[key];
-                    SkillOne_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillOneJson);
-                }
-                else if (key.Equals("HasSkillTwo"))
-                {
-                    string HasSkillTwoJson = (string)changedProps[key];
-                    SkillTwo_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillTwoJson);
-                }
-                else if (key.Equals("HasSkillThree"))
-                {
-                    string HasSkillThreeJson = (string)changedProps[key];
-                    SkillThree_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillThreeJson);
-                }
-            }
+            var HasWeaponJson = (string)changedProps["HasWeapon"];
+            Weapon_Entity = JsonUtility.FromJson<HasWeapon_Entity>(HasWeaponJson);
+
+            var HasSkillOneJson = (string)changedProps["HasSkillOne"];
+            SkillOne_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillOneJson);
+
+            var HasSkillTwoJson = (string)changedProps["HasSkillThree"];
+            SkillTwo_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillTwoJson);
+
+            var HasSkillThreeJson = (string)changedProps["HasSkillThree"];
+            SkillThree_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillThreeJson);
+
+            SetUpAccountData();
 
         }
     }
@@ -247,7 +233,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             LoadPlayerHealthUI();
             LoadPlayerChakraUI();
             LoadPlayerStrengthUI();
-            FriendManager.Instance.CheckNotifyFriendRequest();
 
         }
     }
@@ -350,18 +335,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             targetPosition.z = 10;
-            
 
             if (Input.GetKeyDown(KeyCode.U))
             {
                 PlayerAllUIInstance.GetComponent<CustomKey_Manager>().OpenCustomKeyPanel();
             }
+
             if (Input.GetKeyDown(KeyCode.I))
             {
                 PhotonNetwork.LeaveRoom();
                 PhotonNetwork.LoadLevel("BossArena_Asuma");
             }
-
 
             if (!CanWalking)
             {
@@ -688,7 +672,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Die");
         playerCollider.enabled = false;
-        this.enabled = false;     
+        this.enabled = false;
     }
     public void SetUpPlayerLive()
     {
