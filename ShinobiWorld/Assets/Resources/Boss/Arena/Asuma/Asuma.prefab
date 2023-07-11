@@ -46,7 +46,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -12.233194, y: 2.859385}
+  m_Offset: {x: -12.1195545, y: 3.6548557}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -57,7 +57,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 20.394089, y: 11.890527}
+  m_Size: {x: 16.189457, y: 8.935921}
   m_EdgeRadius: 0
 --- !u!1 &5927162052613290408
 GameObject:
@@ -293,13 +293,21 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 178467679
       objectReference: {fileID: 0}
+    - target: {fileID: 6780889836706985139, guid: 5cbf0ababa4a9454db7eaaefceb87020, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7576076091456886191, guid: 5cbf0ababa4a9454db7eaaefceb87020, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: 0.1642673
+      value: 0.16426933
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576076091456886191, guid: 5cbf0ababa4a9454db7eaaefceb87020, type: 3}
+      propertyPath: m_Bounds.m_Extent.x
+      value: 1.3121011
       objectReference: {fileID: 0}
     - target: {fileID: 7576076091456886191, guid: 5cbf0ababa4a9454db7eaaefceb87020, type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 1.4773486
+      value: 1.4773483
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cbf0ababa4a9454db7eaaefceb87020, type: 3}
@@ -367,9 +375,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc415a0b836b32b4982950b120c9076d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  List_SkillOne: []
-  List_SkillTwo: []
-  List_SkillThree: []
+  List_SkillOne:
+  - {fileID: 0}
+  - {fileID: 0}
+  List_SkillTwo:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  List_SkillThree:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &3549607962994903769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,13 +425,13 @@ MonoBehaviour:
   MovePosition: {x: 0, y: 0, z: 0}
   isMoving: 1
   Break_CurrentTime: 0
-  Break_TotalTime: 2
+  Break_TotalTime: 0
   TargetPosition: {x: 0, y: 0, z: 0}
   playerInRange: 0
   clampedPosition: {x: 0, y: 0, z: 0}
-  detectionRadius: 5
+  detectionRadius: 0
   FindTarget_CurrentTime: 0
-  FindTarget_TotalTime: 1
+  FindTarget_TotalTime: 0
   LocalScaleX: 0
   MainPoint: {fileID: 6100501442478737139}
   CurrentHealth_UI: {fileID: 7382327460259062071}
@@ -425,7 +443,9 @@ MonoBehaviour:
   animator: {fileID: 6286577423900037334}
   boss_Pool: {fileID: 90821766972870333}
   FacingRight: 0
-  dashDuration: 0.5
+  List_SmokeSummon:
+  - {fileID: 0}
+  - {fileID: 0}
   SkillRandomPosition: {x: 0, y: 0}
 --- !u!114 &4686722183277316362
 MonoBehaviour:

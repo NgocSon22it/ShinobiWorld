@@ -16,6 +16,7 @@ public class CustomKey_Manager : MonoBehaviour
     [SerializeField] TMP_Text Message;
 
     int IndexKey;
+    string KeyboardExtension = "/Keyboard/";
 
     private bool isWaitingForKeyPress = false;
 
@@ -28,32 +29,37 @@ public class CustomKey_Manager : MonoBehaviour
 
             if (ScriptReference.SkillOne_Entity != null)
             {
-                ListSkillTxt[0].text = ScriptReference.SkillOne_Entity.Key.Replace("/Keyboard/", "").ToUpper();
+                ListSkillTxt[0].text = ShowKey(ScriptReference.SkillOne_Entity.Key);
             }
             else
             {
-                ListSkillTxt[0].text = References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "One").Key.Replace("/Keyboard/", "").ToUpper();
+                ListSkillTxt[0].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "One").Key);
             }
 
             if (ScriptReference.SkillTwo_Entity != null)
             {
-                ListSkillTxt[1].text = ScriptReference.SkillTwo_Entity.Key.Replace("/Keyboard/", "").ToUpper();
+                ListSkillTxt[1].text = ShowKey(ScriptReference.SkillTwo_Entity.Key);
             }
             else
             {
-                ListSkillTxt[1].text = References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Two").Key.Replace("/Keyboard/", "").ToUpper();
+                ListSkillTxt[1].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Two").Key);
             }
 
             if (ScriptReference.SkillThree_Entity != null)
             {
-                ListSkillTxt[2].text = ScriptReference.SkillThree_Entity.Key.Replace("/Keyboard/", "").ToUpper();
+                ListSkillTxt[2].text = ShowKey(ScriptReference.SkillThree_Entity.Key);
             }
             else
             {
-                ListSkillTxt[2].text = References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Three").Key.Replace("/Keyboard/", "").ToUpper();
+                ListSkillTxt[2].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Three").Key);
             }
         }
 
+    }
+
+    public string ShowKey(string Key)
+    {
+        return Key.Replace(KeyboardExtension, "").ToUpper();
     }
 
     public void OpenCustomKeyPanel()
@@ -74,10 +80,20 @@ public class CustomKey_Manager : MonoBehaviour
     {
         switch (Key)
         {
-            case 1:
+            case 0:
                 if (ScriptReference.SkillOne_Entity != null)
                 {
-                    SetUpKey(Key - 1);
+                    SetUpKey(Key);
+                }
+                else
+                {
+                    Message.text = "Bạn chưa mở chiêu đó đổi ko được.";
+                }
+                break;
+            case 1:
+                if (ScriptReference.SkillTwo_Entity != null)
+                {
+                    SetUpKey(Key);
                 }
                 else
                 {
@@ -85,19 +101,9 @@ public class CustomKey_Manager : MonoBehaviour
                 }
                 break;
             case 2:
-                if (ScriptReference.SkillTwo_Entity != null)
-                {
-                    SetUpKey(Key - 1);
-                }
-                else
-                {
-                    Message.text = "Bạn chưa mở chiêu đó đổi ko được.";
-                }
-                break;
-            case 3:
                 if (ScriptReference.SkillThree_Entity != null)
                 {
-                    SetUpKey(Key - 1);
+                    SetUpKey(Key);
                 }
                 else
                 {
@@ -120,37 +126,61 @@ public class CustomKey_Manager : MonoBehaviour
 
     public void ChangeKey(int Key, string NewKey)
     {
-        switch (Key)
+        if (IsThatKeyInUse(NewKey))
         {
-            case 0:
-                ScriptReference.playerInput.actions["SkillOne"].ApplyBindingOverride(NewKey);
-                HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "One", NewKey);
-                break;
-            case 1:
-                ScriptReference.playerInput.actions["SkillTwo"].ApplyBindingOverride(NewKey);
-                HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Two", NewKey);
-                break;
-            case 2:
-                ScriptReference.playerInput.actions["SkillThree"].ApplyBindingOverride(NewKey);
-                HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Three", NewKey);
-                break;
+            Message.text = "Phím đó sử dụng rồi!";
+            isWaitingForKeyPress = true;
         }
+        else
+        {
+            Message.text = "";
+            switch (Key)
+            {
+                case 0:
+                    ScriptReference.playerInput.actions["SkillOne"].ApplyBindingOverride(NewKey);
+                    HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "One", NewKey);
+                    break;
+                case 1:
+                    ScriptReference.playerInput.actions["SkillTwo"].ApplyBindingOverride(NewKey);
+                    HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Two", NewKey);
+                    break;
+                case 2:
+                    ScriptReference.playerInput.actions["SkillThree"].ApplyBindingOverride(NewKey);
+                    HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Three", NewKey);
+                    break;
+            }
 
-        ListSkillTxt[IndexKey].text = NewKey.Replace("/Keyboard/", "").ToUpper();
-        Game_Manager.Instance.ReloadPlayerProperties();
+            ListSkillTxt[IndexKey].text = NewKey.Replace(KeyboardExtension, "").ToUpper();
+            Game_Manager.Instance.ReloadPlayerProperties();
+        }
+    }
+
+    public bool IsThatKeyInUse(string NewKey)
+    {
+        for (int i = 0; i < ListSkillTxt.Count; i++)
+        {
+            if (ShowKey(NewKey).Equals(ListSkillTxt[i].text))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void SetDefaultKey()
     {
-        ListSkillTxt[0].text = References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "One").Key.Replace("/Keyboard/", "").ToUpper();
-        ListSkillTxt[1].text = References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Two").Key.Replace("/Keyboard/", "").ToUpper();
-        ListSkillTxt[2].text = References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Three").Key.Replace("/Keyboard/", "").ToUpper();
-        ScriptReference.playerInput.actions["SkillOne"].ApplyBindingOverride("/Keyboard/q");
-        ScriptReference.playerInput.actions["SkillTwo"].ApplyBindingOverride("/Keyboard/e");
-        ScriptReference.playerInput.actions["SkillThree"].ApplyBindingOverride("/Keyboard/space");
-        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "One", "/Keyboard/q");
-        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Two", "/Keyboard/e");
-        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Three", "/Keyboard/space");
+        ListSkillTxt[0].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "One").Key);
+        ListSkillTxt[1].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Two").Key);
+        ListSkillTxt[2].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Three").Key);
+
+        ScriptReference.playerInput.actions["SkillOne"].ApplyBindingOverride(KeyboardExtension + "q");
+        ScriptReference.playerInput.actions["SkillTwo"].ApplyBindingOverride(KeyboardExtension + "e");
+        ScriptReference.playerInput.actions["SkillThree"].ApplyBindingOverride(KeyboardExtension + "space");
+
+        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "One", KeyboardExtension + "q");
+        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Two", KeyboardExtension + "e");
+        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Three", KeyboardExtension + "space");
+
         Game_Manager.Instance.ReloadPlayerProperties();
         isWaitingForKeyPress = false;
     }
@@ -168,8 +198,6 @@ public class CustomKey_Manager : MonoBehaviour
                     {
                         isWaitingForKeyPress = false;
                         ChangeKey(IndexKey, keyControl.path);
-
-                        Debug.Log($"Key binding set to: {keyControl.path}");
                         return;
                     }
                 }
