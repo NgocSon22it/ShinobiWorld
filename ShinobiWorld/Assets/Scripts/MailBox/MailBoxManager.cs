@@ -51,19 +51,19 @@ public class MailBoxManager : MonoBehaviour
 
     public void GetList(int ID)
     {
-        References.listAccountMailBox = AccountMailBox_DAO.GetAllByUserID(References.accountRefer.ID);
-        var list = References.listAccountMailBox;
+        var list = References.listMailBox = MailBox_DAO.GetAllByUserID(References.accountRefer.ID);
 
         for (var i = 0; i < list.Count; ++i)
         {
-            if (list[i].MailBoxID.Contains(References.MailSystem))
+            if (list[i].MailID.Contains(References.MailSystem))
                 Instantiate(SystemPrefab, Content)
                     .GetComponent<MailBoxItem>()
                     .Setup(list[i], (list[i].ID == ID) ? true : (i == 0));
-            else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>().Setup(list[i], (list[i].ID == ID) ? true : (i == 0), false);
+            else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>()
+                    .Setup(list[i], (list[i].ID == ID) ? true : (i == 0), false);
         }
 
-        if (References.listAccountMailBox.Count <= 0)
+        if (list.Count <= 0)
         {
             MessageTxt.SetActive(true);
             ScrollView.SetActive(false);
@@ -84,7 +84,7 @@ public class MailBoxManager : MonoBehaviour
         {
             child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
 
-            if (child.gameObject.GetComponent<MailBoxItem>().accountMail.IsRead)
+            if (child.gameObject.GetComponent<MailBoxItem>().selectedMailbox.IsRead)
                 child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 150);
         }
     }
@@ -92,7 +92,7 @@ public class MailBoxManager : MonoBehaviour
     {
         ConfirmDeletePanel.SetActive(true);
 
-        var isClaim = References.listAccountMailBox.Any(obj => !obj.IsClaim);
+        var isClaim = References.listMailBox.Any(obj => !obj.IsClaim);
 
         if (isClaim) ConfirmDeleteMessage.text = Message.MailboxDeleteNotReceivedBonus;
         else ConfirmDeleteMessage.text = Message.MailboxDelete;
@@ -105,14 +105,14 @@ public class MailBoxManager : MonoBehaviour
 
     public void DeleteReadAndReceivedBonus()
     {
-        AccountMailBox_DAO.DeleteReadAndReceivedBonus(References.accountRefer.ID);
+        MailBox_DAO.DeleteReadAndReceivedBonus(References.accountRefer.ID);
         CloseConfirmDelete();
         Reload(0);
     }
 
     public void DeleteReadAll()
     {
-        AccountMailBox_DAO.DeleteReadAll(References.accountRefer.ID);
+        MailBox_DAO.DeleteReadAll(References.accountRefer.ID);
         CloseConfirmDelete();
         Reload(0);
     }

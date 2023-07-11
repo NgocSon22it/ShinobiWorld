@@ -14,30 +14,30 @@ namespace Assets.Scripts.MailBox
     public class MailBoxItem : MonoBehaviour
     {
         public TMP_Text Title;
-        public MailBox_Entity mail;
-        public AccountMailBox_Entity accountMail;
+        public Mail_Entity selectedMail;
+        public MailBox_Entity selectedMailbox;
         public bool isSystem = true;
 
         public void OnClick()
         {
             MailBoxManager.Instance.ResetColor();
             GetComponent<Image>().color = new Color32(190, 140, 10, 255);
-            MailboxDetail.Instance.ShowDetail(accountMail, mail, isSystem);
+            MailboxDetail.Instance.ShowDetail(selectedMailbox, selectedMail, isSystem);
 
-            AccountMailBox_DAO.Read(accountMail.ID,
-                                    accountMail.AccountID, accountMail.MailBoxID);
+            MailBox_DAO.Read(selectedMailbox.ID,
+                                    selectedMailbox.AccountID, selectedMailbox.MailID);
         }
 
-        public void Setup(AccountMailBox_Entity accountMail, bool isShow, bool isSystem = true)
+        public void Setup(MailBox_Entity mailbox, bool isShow, bool isSystem = true)
         {
             this.isSystem = isSystem;
-            this.accountMail = accountMail;
-            mail = References.listMailBox.Find(obj => obj.ID == accountMail.MailBoxID);
+            this.selectedMailbox = mailbox;
+            selectedMail = References.listMail.Find(obj => obj.ID == mailbox.MailID);
 
-            Title.text = string.Format(mail.Title,
-                            accountMail.DateAdd.Month.ToString(), accountMail.DateAdd.Year.ToString());
+            Title.text = string.Format(selectedMail.Title,
+                            mailbox.DateAdd.Month.ToString(), mailbox.DateAdd.Year.ToString());
             
-            if (accountMail.IsRead) GetComponent<Image>().color = new Color32(110, 80, 60, 150);
+            if (mailbox.IsRead) GetComponent<Image>().color = new Color32(110, 80, 60, 150);
             if (isShow) OnClick();
         }
     }
