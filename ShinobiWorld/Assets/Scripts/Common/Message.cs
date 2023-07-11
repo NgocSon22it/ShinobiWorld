@@ -48,4 +48,12 @@ public class Message
     public static string OpenHouse = "Bấm phím O để mở";
 
     public static string TrophyUpgradeError = "Bạn không đủ điều kiện để nâng cấp danh hiệu";
+
+    public static string PKMessage = "{0} muốn thách đấu với bạn?";
+    public static string PriviteMessage = "{0}:{1}";
+}
+
+public enum TypePriviteMessage
+{
+    FriendRequest, PKRequest, Text
 }

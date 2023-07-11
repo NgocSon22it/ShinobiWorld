@@ -1,4 +1,7 @@
 ﻿using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Friend;
+using Photon.Chat;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,15 +54,15 @@ namespace Assets.Scripts.BXH
         {
             Friend_DAO.AddFriend(References.accountRefer.ID, selectedAccount.ID);
 
+            var newFriend =  new FriendInfo();
+            newFriend.ID =  selectedAccount.ID;
+            References.listRequestInfo.Add(newFriend);
+
             if (Account_DAO.StateOnline(selectedAccount.ID))
             {
-                var list = FindObjectsOfType<PlayerBase>().ToList();
-                var obj = list.Find(obj => obj.AccountEntity.ID == selectedAccount.ID);
-                Debug.Log(obj.AccountEntity.ID);
-
-                obj.PlayerAllUIInstance.GetComponentInChildren<FriendManager>().CheckNotifyFriendRequest();
-
-                
+                ChatManager.Instance.chatClient
+                    .SendPrivateMessage(selectedAccount.Name, 
+                        string.Format(Message.PriviteMessage, TypePriviteMessage.FriendRequest.ToString(), ""));
             }
         }
     }
