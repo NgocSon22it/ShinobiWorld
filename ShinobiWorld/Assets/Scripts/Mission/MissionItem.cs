@@ -35,9 +35,9 @@ namespace Assets.Scripts.Mission
             Content.text = mission.Content;
             requiedStrength.text = mission.RequiredStrength.ToString();
             Target.text = mission.Target.ToString();
-            Trophi.text = References.listTrophy.Find(obj => obj.ID == mission.TrophiesID).Name;
+            Trophi.text = References.listTrophy.Find(obj => obj.ID == mission.TrophyID).Name;
 
-            status = References.listAccountMission.Find(obj => obj.MissionID == mission.ID).Status;
+            status = References.listHasMission.Find(obj => obj.MissionID == mission.ID).Status;
 
             MissionBtn.GetComponentInChildren<TMP_Text>().text = References.BtnMission[status.ToString()];
             MissionBtn.interactable = false;
@@ -58,19 +58,19 @@ namespace Assets.Scripts.Mission
             {
                 case StatusMission.None:
                     //Take mission
-                    AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.Doing);
+                    HasMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.Doing);
                     MissionManager.Instance.TakeMission(selected);
 
                     break;
                 case StatusMission.Doing:
                     //Cancel mission
-                    AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.None);
+                    HasMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.None);
                     MissionManager.Instance.CancelMission();
                     
                     break;
                 case StatusMission.Claim:
                     // Take bonus mission when finished mission
-                    AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.Done);
+                    HasMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.Done);
                     MissionManager.Instance.TakeBonusMission(selected);
                     break;
             }
