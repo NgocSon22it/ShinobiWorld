@@ -16,6 +16,7 @@ namespace Assets.Scripts.Hospital
         public Image uiFillImage;
         public TMP_Text uiText;
         public GameObject DiePanel;
+        public Button ReSpawnBtn;
 
         public int Duration;
 
@@ -26,6 +27,7 @@ namespace Assets.Scripts.Hospital
         private void Awake()
         {
             Instance = this;
+            ReSpawnBtn.onClick.AddListener(OnRespawnClick);
         }
 
         private void ResetTimer()
@@ -45,6 +47,7 @@ namespace Assets.Scripts.Hospital
         {
             ResetTimer();
             DiePanel.SetActive(true);
+            ReSpawnBtn.GetComponentInChildren<TMP_Text>().text = $"Hồi sinh {References.RespawnCost}";
             StopAllCoroutines();
             StartCoroutine(UpdateTimer());
         }
