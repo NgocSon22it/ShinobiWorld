@@ -34,7 +34,6 @@ public class UIManager : MonoBehaviour
     // Registration Variables
     [Space]
     [Header("Registration")]
-    public TMP_InputField nameRegisterField;
     public TMP_InputField emailRegisterField;
     public TMP_InputField passwordRegisterField;
     public TMP_InputField confirmPasswordRegisterField;
@@ -98,6 +97,5 @@ public class UIManager : MonoBehaviour
         confirmPasswordRegisterField.text = "";
         passwordRegisterField.text = "";
         emailRegisterField.text = "";
-        nameRegisterField.text = "";
     }
 }

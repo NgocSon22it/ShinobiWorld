@@ -22,11 +22,22 @@ public class Range_SkillOne : PlayerSkill
     {
         if (AttackAble_Tag.Contains(collision.gameObject.tag))
         {
-            if (collision.gameObject.tag == "Enemy")
+            if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Clone")
             {
                 collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
 
                 HitEffect = player_Pool.GetSkillOne_Hit_FromPool();
+                if (HitEffect != null)
+                {
+                    HitEffect.transform.position = transform.position;
+                    HitEffect.SetActive(true);
+                }
+            }
+            if (collision.CompareTag("Other"))
+            {
+                collision.GetComponent<PlayerBase>().TakeDamage(Damage);
+
+                HitEffect = player_Pool.GetNormalAttack_Hit_FromPool();
                 if (HitEffect != null)
                 {
                     HitEffect.transform.position = transform.position;

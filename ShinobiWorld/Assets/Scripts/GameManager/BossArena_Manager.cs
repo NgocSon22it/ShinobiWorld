@@ -1,3 +1,4 @@
+﻿using Assets.Scripts.Database.DAO;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
@@ -9,27 +10,45 @@ using UnityEngine;
 
 public class BossArena_Manager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] TMP_Text countdownText;
-
     [SerializeField] GameObject Boss;
+    [SerializeField] GameObject BossPool;
 
     [SerializeField] Transform SpawnPoint;
 
-    [Header("Time")]
+    [SerializeField] PolygonCollider2D CameraBox;
+
+    [Header("Battle Time")]
     float TotalTime = 180f;
+    float currentTime;
+    [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
 
-    public GameObject PlayerInstance;
+    [Header("Battle Start")]
+    float ReadyTime = 3f;
 
-    private void Start()
+    [SerializeField] TMP_Text Battle_Start_CountdownTxt;
+
+    [Header("Battle End")]
+    [SerializeField] GameObject Battle_End_Panel;
+    [SerializeField] TMP_Text Battle_End_Text;
+
+    bool BattleEnd;
+
+    public static BossArena_Manager Instance;
+
+    private void Awake()
     {
-        //StartCoroutine(StartCountdown());
+        Instance = this;
+    }
+    public void Battle_Start()
+    {
+
     }
 
     public override void OnJoinedRoom()
     {
         Game_Manager.Instance.IsBusy = true;
-        Game_Manager.Instance.SetupPlayer(SpawnPoint.position);
-        StartCoroutine(Test());
+        Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.Arena);
+        StartCoroutine(Battle_StartCoroutine());
 
     }
 
@@ -38,36 +57,99 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnectedAndReady)
         {
             RoomOptions roomOptions = new RoomOptions();
-            roomOptions.MaxPlayers = 1; // Maximum number of players allowed in the room
+            roomOptions.MaxPlayers = 1;
             PhotonNetwork.CreateRoom(References.accountRefer.ID, roomOptions, TypedLobby.Default);
         }
     }
 
-    private IEnumerator Test()
+    private IEnumerator Battle_StartCoroutine()
     {
-        yield return new WaitForSeconds(3f);
-        Game_Manager.Instance.IsBusy = false;
-        Boss.SetActive(true);
-
-    }
-
-    private IEnumerator StartCountdown()
-    {
-        float currentTime = TotalTime;
-        int minutes, seconds;
+        float currentTime = ReadyTime;
         while (currentTime > 0)
         {
-            minutes = Mathf.FloorToInt(currentTime / 60);
-            seconds = Mathf.FloorToInt(currentTime % 60);
-
-            countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            Battle_Start_CountdownTxt.text = string.Format("{0}", currentTime);
 
             yield return new WaitForSeconds(1f);
 
             currentTime--;
         }
 
-        countdownText.text = "00:00";
+        Battle_Start_CountdownTxt.gameObject.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
+        Boss.SetActive(true);
+        StartCoroutine(Battle_FightCoroutine());
+
     }
 
+    public void Battle_End(bool Win)
+    {
+
+        BossPool.SetActive(false);
+        Battle_End_Panel.SetActive(true);
+        Game_Manager.Instance.IsBusy = true;
+
+        if (Boss.gameObject.activeInHierarchy)
+        {
+            Boss.GetComponent<Enemy>().Disappear();
+        }
+
+        BattleEnd = true;
+
+        if (Win)
+        {
+            Battle_End_Text.text = "Bạn Đã Thắng!";
+        }
+        else
+        {
+            Battle_End_Text.text = "Bạn Đã Thua!";
+        }
+
+    }
+
+    private IEnumerator Battle_FightCoroutine()
+    {
+        currentTime = TotalTime;
+        int minutes, seconds;
+        while (currentTime > 0 && !BattleEnd)
+        {
+            minutes = Mathf.FloorToInt(currentTime / 60);
+            seconds = Mathf.FloorToInt(currentTime % 60);
+
+            Battle_Fight_CountdownTxt.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            yield return new WaitForSeconds(1f);
+
+            currentTime--;
+        }
+
+    }
+
+    public override void OnLeftRoom()
+    {
+        if (Game_Manager.Instance.PlayerManager != null && PhotonNetwork.IsConnectedAndReady)
+        {
+            PhotonNetwork.Destroy(Game_Manager.Instance.PlayerManager);
+            Game_Manager.Instance.PlayerManager = null;
+        }
+    }
+
+    public void ReturnToKonoha()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            Game_Manager.Instance.IsBusy = false;
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel(Scenes.Konoha);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
+        {
+            References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
+
+    }
 }
