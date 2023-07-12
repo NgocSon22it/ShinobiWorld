@@ -14,14 +14,13 @@ namespace Assets.Scripts.Database.DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-        public static void CreateAccount(string UserID, string Name)
+        public static void CreateAccount(string UserID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID], [Name]) VALUES (@UserID, @Name)";
+                cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID]) VALUES (@UserID)";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@Name", Name);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
@@ -147,7 +146,8 @@ namespace Assets.Scripts.Database.DAO
             return isOnline;
         }
 
-        public static void SaveLayout(string UserID, string RoleInGameID, string EyeID, string HairID, string MouthID, string SkinID)
+        public static void SaveLayout(string UserID, string Name, string RoleInGameID, string EyeID, string HairID, 
+            string MouthID, string SkinID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
@@ -158,9 +158,11 @@ namespace Assets.Scripts.Database.DAO
                                     "[HairID]  = @HairID," +
                                     "[MouthID] = @MouthID," +
                                     "[SkinID]  = @SkinID, " +
+                                    "[Name]  = @Name, " +
                                     "[IsFirst] = 0 " +
                                     "WHERE ID  = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@Name", Name);
                 cmd.Parameters.AddWithValue("@RoleInGameID", RoleInGameID);
                 cmd.Parameters.AddWithValue("@EyeID", EyeID);
                 cmd.Parameters.AddWithValue("@HairID", HairID);
@@ -369,6 +371,31 @@ namespace Assets.Scripts.Database.DAO
             }
 
             return list;
+        }
+
+        public static bool IsDisplayNameExist(string displayname)
+        {
+            var isExist = false;
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Select [Name] from Account where [Name]= @Name";
+                    cmd.Parameters.AddWithValue("@Name", displayname);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    isExist = (dataTable.Rows.Count > 0);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return isExist;
         }
     }
 }

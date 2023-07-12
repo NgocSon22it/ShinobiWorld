@@ -110,7 +110,7 @@ public static class Skill_DAO
             cmd.Parameters.AddWithValue("@Cooldown", skill_Entity.Cooldown);
             cmd.Parameters.AddWithValue("@Damage", skill_Entity.Damage);
             cmd.Parameters.AddWithValue("@Chakra", skill_Entity.Chakra);
-            cmd.Parameters.AddWithValue("@)\";", skill_Entity.Key);
+            cmd.Parameters.AddWithValue("@Key", skill_Entity.Key);
             connection.Open();
             cmd.ExecuteNonQuery();
             connection.Close();
