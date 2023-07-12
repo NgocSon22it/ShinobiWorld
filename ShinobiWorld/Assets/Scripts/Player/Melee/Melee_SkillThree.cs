@@ -6,15 +6,12 @@ using UnityEngine;
 
 public class Melee_SkillThree : PlayerSkill
 {
-    public Vector3  EndPoint;
-
-    public GameObject Explosion;
+    public Vector3 EndPoint;
 
     bool Reach;
-    public void SetUpPoint(Vector3 EndPoint, GameObject Explosion)
+    public void SetUpPoint(Vector3 EndPoint)
     {
         this.EndPoint = EndPoint;
-        this.Explosion = Explosion;
     }
 
     private void Update()
@@ -24,12 +21,16 @@ public class Melee_SkillThree : PlayerSkill
             transform.position = Vector3.MoveTowards(transform.position, EndPoint, 8 * Time.deltaTime);
         }
 
-        if(transform.position == EndPoint && !Reach)
+        if (transform.position == EndPoint && !Reach)
         {
             Reach = true;
-            Explosion.transform.position = EndPoint;
             TurnOff();
-            Explosion.SetActive(true);
+            HitEffect = player_Pool.GetSkillThree_Hit_FromPool();
+            if (HitEffect != null)
+            {
+                HitEffect.transform.position = EndPoint;
+                HitEffect.SetActive(true);
+            }
         }
     }
 
@@ -43,5 +44,5 @@ public class Melee_SkillThree : PlayerSkill
     new void OnDisable()
     {
         base.OnDisable();
-    }    
+    }
 }

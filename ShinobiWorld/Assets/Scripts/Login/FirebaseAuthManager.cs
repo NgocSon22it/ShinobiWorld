@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 using System;
+using UnityEngine.UIElements;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -19,6 +20,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     public DependencyStatus dependencyStatus;
     public FirebaseAuth auth;
     public FirebaseUser user;
+
 
     private int playerCount;
 
@@ -85,13 +87,25 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             {
                 References.accountRefer.ID = user.UserId;
                 PhotonNetwork.NickName = user.DisplayName;
-                Account_DAO.ChangeStateOnline(user.UserId, true);
-                References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
 
-                if (!PhotonNetwork.IsConnected)
+                var isOnline = Account_DAO.StateOnline(user.UserId);
+
+                if (isOnline)
                 {
-                    PhotonNetwork.ConnectUsingSettings(); 
+                    UIManager.Instance.OpenPopupPanel(Message.Logined);
                 }
+                else
+                {
+                    Account_DAO.ChangeStateOnline(user.UserId, true);
+                    References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
+
+
+                    if (!PhotonNetwork.IsConnected)
+                    {
+                        PhotonNetwork.ConnectUsingSettings();
+                    }
+                }
+
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
             }
@@ -212,6 +226,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
+
+
                         if (!PhotonNetwork.IsConnected)
                         {
                             PhotonNetwork.ConnectUsingSettings();
@@ -229,27 +245,16 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public void Register()
     {
-        var name = UIManager.Instance.nameRegisterField.text;
         var email = UIManager.Instance.emailRegisterField.text;
         var password = UIManager.Instance.passwordRegisterField.text;
         var confirmPassword = UIManager.Instance.confirmPasswordRegisterField.text;
 
-        StartCoroutine(RegisterAsync(name, email, password, confirmPassword));
+        StartCoroutine(RegisterAsync(email, password, confirmPassword));
     }
 
-    private IEnumerator RegisterAsync(string name, string email, string password, string confirmPassword)
+    private IEnumerator RegisterAsync(string email, string password, string confirmPassword)
     {
-        if (name == "")
-        {
-            Debug.LogError("ShinobiWorld " + Message.NameEmpty);
-            UIManager.Instance.OpenPopupPanel(Message.NameEmpty);
-        }
-        else if (name.Length < 4 || name.Length > 16)
-        {
-            Debug.LogError("ShinobiWorld " + Message.NameInvalid);
-            UIManager.Instance.OpenPopupPanel(Message.NameInvalid);
-        }
-        else if (email == "")
+       if (email == "")
         {
             Debug.LogError("ShinobiWorld " + Message.EmailEmpty);
             UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
@@ -319,62 +324,16 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                // Get The User After Registration Success
-                user = registerTask.Result;
-
-                UserProfile userProfile = new UserProfile { DisplayName = name };
-
-                var updateProfileTask = user.UpdateUserProfileAsync(userProfile);
-
-                yield return new WaitUntil(() => updateProfileTask.IsCompleted);
-
-                if (updateProfileTask.Exception != null)
+                Debug.Log("Registration Sucessful Welcome " + user.DisplayName);
+                if (user.IsEmailVerified)
                 {
-                    // Delete the user if user update failed
-                    user.DeleteAsync();
-
-                    Debug.LogError("ShinobiWorld " + updateProfileTask.Exception);
-
-                    FirebaseException firebaseException = updateProfileTask.Exception.GetBaseException() as FirebaseException;
-                    AuthError authError = (AuthError)firebaseException.ErrorCode;
-
-
-                    string failedMessage = "Profile update Failed! Becuase ";
-                    switch (authError)
-                    {
-                        case AuthError.InvalidEmail:
-                            failedMessage += "Email is invalid";
-                            break;
-                        case AuthError.WrongPassword:
-                            failedMessage += "Wrong Password";
-                            break;
-                        case AuthError.MissingEmail:
-                            failedMessage += "Email is missing";
-                            break;
-                        case AuthError.MissingPassword:
-                            failedMessage += "Password is missing";
-                            break;
-                        default:
-                            failedMessage = "Profile update Failed";
-                            break;
-                    }
-
-                    Debug.Log(failedMessage);
-                    UIManager.Instance.OpenPopupPanel(Message.ErrorSystem);
+                    UIManager.Instance.OpenLoginPanel();
                 }
                 else
                 {
-                    Debug.Log("Registration Sucessful Welcome " + user.DisplayName);
-                    if (user.IsEmailVerified)
-                    {
-                        UIManager.Instance.OpenLoginPanel();
-                    }
-                    else
-                    {
-                        Account_DAO.CreateAccount(user.UserId, user.DisplayName);
-                        AccountMailBox_DAO.AddMailbox(user.UserId, References.MailSystem, true);
-                        SendEmailForVerification();
-                    }
+                    Account_DAO.CreateAccount(user.UserId);
+                    MailBox_DAO.AddMailbox(user.UserId, References.MailSystem, true);
+                    SendEmailForVerification();
                 }
             }
         }
@@ -429,7 +388,9 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         playerCount = PhotonNetwork.CountOfPlayers;
         Debug.Log("Number of players on master server: " + playerCount);
         UIManager.Instance.OpenGamePanel();
+
     }
+
 
     public void OpenGameScene()
     {
@@ -443,7 +404,9 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             else
             {
                 PhotonNetwork.LoadLevel(Scenes.Konoha);
+                //StartCoroutine(LoadLevelAsync());
             }
+
         }
         else
         {
@@ -451,14 +414,26 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
-        {
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        }
-    }
+    //private void OnApplicationQuit()
+    //{
+    //    if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
+    //    {
+    //        References.UpdateAccountToDB();
+    //        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+    //    }
+    //}
 
+    /*   IEnumerator LoadLevelAsync()
+       {
+
+
+           while (PhotonNetwork.LevelLoadingProgress < 1)
+           {
+               Debug.Log((int)(PhotonNetwork.LevelLoadingProgress * 100)); 
+               //loadAmount = async.progress;
+               yield return new WaitForEndOfFrame();
+           }
+       }*/
     public override void OnDisconnected(DisconnectCause cause)
     {
         // Handle the disconnect cause
@@ -476,10 +451,12 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         }
     }
 
+
     public void Logout()
     {
         if (auth != null && user != null)
         {
+            References.UpdateAccountToDB();
             Account_DAO.ChangeStateOnline(user.UserId, false);
             auth.SignOut();
             PhotonNetwork.Disconnect();

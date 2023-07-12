@@ -37,11 +37,11 @@ namespace Assets.Scripts.Bag.Item
         {
 
             item = References.listItem.Find(obj => obj.ID == ID);
-            var accountItem = References.listAccountItem.Find(obj => obj.ItemID == ID);
+            var HasItem = References.listHasItem.Find(obj => obj.ItemID == ID);
 
             Image.sprite = Resources.Load<Sprite>(item.Image);
             Name.text = item.Name;
-            Own.text = accountItem.Amount.ToString();
+            Own.text = HasItem.Amount.ToString();
             if (!Price.IsUnityNull())
             {
                 price = Convert.ToInt32(item.BuyCost * 0.8);
@@ -103,7 +103,7 @@ namespace Assets.Scripts.Bag.Item
 
         public void Sell()
         {
-            AccountItem_DAO.SellItem(References.accountRefer.ID, item.ID,
+            HasItem_DAO.SellItem(References.accountRefer.ID, item.ID,
                                     int.Parse(Amount.text), int.Parse(Price.text));
 
             References.AddCoin(int.Parse(Price.text));
@@ -115,7 +115,7 @@ namespace Assets.Scripts.Bag.Item
         {
             References.UpdateAccountToDB();
 
-            AccountItem_DAO.UseItem(References.accountRefer.ID, item.ID);
+            HasItem_DAO.UseItem(References.accountRefer.ID, item.ID);
 
             Game_Manager.Instance.ReloadPlayerProperties();
 

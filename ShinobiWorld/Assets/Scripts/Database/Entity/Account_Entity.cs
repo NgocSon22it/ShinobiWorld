@@ -9,28 +9,30 @@ public class Account_Entity
     public string ID;
     public string Name;
     public string RoleInGameID;
-    public string TrophiesID;
+    public string TrophyID;
+    public bool IsHokage;
+    public int Coin;
+    public int Exp;
     public int Level;
     public int Health;
     public int CurrentHealth;
     public int Chakra;
     public int CurrentChakra;
-    public int Exp;
-    public int Speed;
-    public int Coin;
-    public int Power;
     public int Strength;
     public int CurrentStrength;
+    public int Speed;
+    public int Power;
+    public bool IsFirst;
+    public bool IsOnline;
+    public DateTime ResetLimitDate;
+    public bool HasTicket;
+    public bool IsUpgradeTrophy;
+    public bool IsDead;
+    public int WinTimes;
     public string EyeID;
     public string HairID;
     public string MouthID;
     public string SkinID;
-    public bool IsDead;
-    public bool IsOnline;
-    public bool IsTicket;
-    public bool IsFirst;
-    public bool IsUpgradeTrophy;
-    public DateTime DateReset;
 
     public Account_Entity() { }
 
