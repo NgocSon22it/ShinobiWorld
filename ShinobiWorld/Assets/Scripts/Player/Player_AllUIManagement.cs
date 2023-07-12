@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class Player_AllUIManagement : MonoBehaviour
@@ -67,6 +68,7 @@ public class Player_AllUIManagement : MonoBehaviour
     [SerializeField] TMP_Text House_Message;
 
     public Button GotoMenuBtn;
+    public GameObject BackgroundPanel;
     string image;
 
     private void Awake()

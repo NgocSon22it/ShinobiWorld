@@ -23,13 +23,13 @@ public class FriendManager : MonoBehaviour
     {
         Instance = this;
 
-        Openbtn.onClick.AddListener(() => Open());
+        Openbtn.onClick.AddListener(Open);
 
-        Closebtn.onClick.AddListener(() => Close());
+        Closebtn.onClick.AddListener(Close);
 
-        FriendBtn.onClick.AddListener(() => OnFriendClick());
+        FriendBtn.onClick.AddListener(OnFriendClick);
 
-        RequestBtn.onClick.AddListener(() => OnRequestClick());
+        RequestBtn.onClick.AddListener(OnRequestClick);
 
     }
 
