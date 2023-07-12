@@ -13,6 +13,7 @@ public class BXHManager : MonoBehaviour
     public GameObject BXHPanel, BXHItemPrefab, BXHMessage;
     public Transform Content;
 
+    public Button OpenBtn, CLoseBtn;
     public static BXHManager Instance;
 
     private void Awake()
