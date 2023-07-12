@@ -72,8 +72,13 @@ public class Player_AllUIManagement : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
         GotoMenuBtn.onClick.AddListener(() => Game_Manager.Instance.GoToMenu());
     }
+
     public string ShowKey(string Key)
     {
         return Key.Replace("/Keyboard/", "").ToUpper();
