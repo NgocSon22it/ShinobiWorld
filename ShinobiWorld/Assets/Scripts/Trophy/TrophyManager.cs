@@ -13,7 +13,7 @@ public class TrophyManager : MonoBehaviourPunCallbacks
 {
     public GameObject TrophyPanel;
     public TMP_Text Name, Level, TrophyName, Cost, MessageTxt;
-    public Button RegisterUpgradeBtn, GetNewTrophyBtn;
+    public Button RegisterUpgradeBtn, GetNewTrophyBtn, CloseBtn;
 
     Trophy_Entity NextTrophy;
 
@@ -24,6 +24,10 @@ public class TrophyManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
+
+        RegisterUpgradeBtn.onClick.AddListener(RegisterUpgradeTrophy);
+        GetNewTrophyBtn.onClick.AddListener(GetNewTrophy);
+        CloseBtn.onClick.AddListener(Close);
     }
 
     public void Open()

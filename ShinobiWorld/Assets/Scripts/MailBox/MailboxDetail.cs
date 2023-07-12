@@ -18,18 +18,24 @@ namespace Assets.Scripts.MailBox
         public TMP_Text Title;
         public TMP_Text Content;
         public GameObject ClaimBtn;
-        public GameObject ConfirmDeletePanel;
-        public TMP_Text ConfirmDeleteMessage;
+        public Button DeleteBtn;
 
         [Header("Bonus")]
         public GameObject BonusPanel;
         public TMP_Text Coin, EquipmentTxt;
         public Image EquipmentImg;
+        public Button CloseBonusBtn;
 
         [Header("BonusDouble")]
         public GameObject BonusDoublePanel;
         public TMP_Text CoinDouble, EquipmentTxt1, EquipmentTxt2;
         public Image EquipmentImg1, EquipmentImg2;
+        public Button CloseBonusDoubleBtn;
+
+        [Header("ConfirmDelete")]
+        public GameObject ConfirmDeletePanel;
+        public TMP_Text ConfirmDeleteMessage;
+        public Button CloseConfirmBtn, CancelBtn, DeleteConfirmBtn;
 
         public static MailboxDetail Instance;
 
@@ -39,6 +45,14 @@ namespace Assets.Scripts.MailBox
         private void Awake()
         {
             Instance = this;
+            CloseBonusBtn.onClick.AddListener(Close);
+            CloseBonusDoubleBtn.onClick.AddListener(Close);
+            ClaimBtn.GetComponent<Button>().onClick.AddListener(ShowBonus);
+            DeleteBtn.onClick.AddListener(ConfirmDelete);
+
+            CloseConfirmBtn.onClick.AddListener(CloseConfirmDelete);
+            CancelBtn.onClick.AddListener(CloseConfirmDelete);
+            DeleteConfirmBtn.onClick.AddListener(Delete);
         }
 
         public void ShowDetail(MailBox_Entity mailbox, Mail_Entity mail, bool isSystem)

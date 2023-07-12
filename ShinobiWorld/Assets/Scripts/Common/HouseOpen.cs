@@ -32,6 +32,9 @@ namespace Assets.Scripts.Mission
                     case House.School:
                         SchoolManager.Instance.Open();
                         break;
+                    case House.Arena:
+                        ArenaManager.Instance.Open();
+                        break;
                 }
             }
         }
