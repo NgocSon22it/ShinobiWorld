@@ -79,6 +79,8 @@ public static class References
 
     public static string MailSystem = "System";
 
+    public static string ServerName = "Shinobi";
+
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
@@ -204,6 +206,10 @@ public static class References
     }
 }
 
+public enum AccountStatus
+{
+    Normal, Arena, PK
+}
 
 public enum TypeSell
 {
@@ -214,7 +220,6 @@ public enum Intention
 {
     Sell, Bag
 }
-
 public enum House
 {
     Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino
@@ -228,4 +233,9 @@ public enum StatusMission
 public enum TrophyID
 {
     Trophy_None, Trophy_Genin, Trophy_Chunin, Trophy_Jonin
+}
+
+public enum BossType
+{
+    BossType_Normal, BossType_Arena
 }

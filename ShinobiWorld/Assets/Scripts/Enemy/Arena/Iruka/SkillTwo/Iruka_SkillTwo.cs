@@ -7,19 +7,22 @@ public class Iruka_SkillTwo : Boss_Skill
     [SerializeField] GameObject MainFire;
     [SerializeField] CircleCollider2D CircleCol;
 
-    Coroutine Electric;
+    Coroutine Fire;
 
     new void OnEnable()
     {
         LifeTime = 1.8f;
-        Electric = StartCoroutine(StartDamage());
+        Fire = StartCoroutine(StartDamage());
         base.OnEnable();
     }
 
     new void OnDisable()
     {
         base.OnDisable();
-        StopCoroutine(Electric);
+        if (Fire != null)
+        {
+            StopCoroutine(Fire);
+        }
         SetUpDamage(false);
     }
 

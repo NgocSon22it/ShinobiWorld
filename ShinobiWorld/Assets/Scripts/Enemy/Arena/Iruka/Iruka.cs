@@ -198,7 +198,6 @@ public class Iruka : Enemy
             right.SetActive(true);
             right.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(Angle, Vector3.forward) * center.GetComponent<Rigidbody2D>().velocity;
         }
-
         SetUpSkilling(3f);
 
     }

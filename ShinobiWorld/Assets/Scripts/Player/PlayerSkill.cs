@@ -6,7 +6,7 @@ public class PlayerSkill : MonoBehaviour
 {
     protected List<string> AttackAble_Tag = new List<string>()
     {
-        "Enemy", "Ground"
+        "Enemy", "Ground", "Other", "Clone"
     };
 
     protected string UserID;  

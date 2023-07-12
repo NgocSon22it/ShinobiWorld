@@ -404,7 +404,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             else
             {
                 PhotonNetwork.LoadLevel(Scenes.Konoha);
-                //StartCoroutine(LoadLevelAsync());
             }
 
         }
@@ -423,17 +422,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     //    }
     //}
 
-    /*   IEnumerator LoadLevelAsync()
-       {
-
-
-           while (PhotonNetwork.LevelLoadingProgress < 1)
-           {
-               Debug.Log((int)(PhotonNetwork.LevelLoadingProgress * 100)); 
-               //loadAmount = async.progress;
-               yield return new WaitForEndOfFrame();
-           }
-       }*/
     public override void OnDisconnected(DisconnectCause cause)
     {
         // Handle the disconnect cause
