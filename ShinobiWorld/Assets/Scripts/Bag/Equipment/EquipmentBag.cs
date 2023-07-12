@@ -19,7 +19,7 @@ public class EquipmentBag : MonoBehaviour
     {
         EquipmentDetail.Instance.ShowDetail(BagEquipmentID, ID);
         BagManager.Instance.ResetColor();
-        GetComponent<Image>().color = References.ColorSelected;
+        GetComponent<Image>().color = References.ItemColorSelected;
     }
 
     public void Setup(BagEquipment_Entity BagEquipment)
