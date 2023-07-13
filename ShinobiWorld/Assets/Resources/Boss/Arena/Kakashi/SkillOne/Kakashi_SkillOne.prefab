@@ -44,9 +44,9 @@ GameObject:
   - component: {fileID: 1228747253452264536}
   - component: {fileID: 3773834526556569382}
   - component: {fileID: -7817843391421897445}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Kakashi_SkillOne
-  m_TagString: Bullet
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -117,8 +117,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64cca51490396b48a681369f1c14aad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Explosion: {fileID: 0}
+  AttackAble_Tag:
+  - Player
   MainPoint: {fileID: 4919715559580178661}
+  Explosion: {fileID: 0}
 --- !u!210 &-7817843391421897445
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -127,8 +129,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8201750983509237588}
   m_Enabled: 1
-  m_SortingLayerID: 178467679
-  m_SortingLayer: 3
+  m_SortingLayerID: 1888797337
+  m_SortingLayer: 5
   m_SortingOrder: 0
 --- !u!1001 &5256515876832949332
 PrefabInstance:

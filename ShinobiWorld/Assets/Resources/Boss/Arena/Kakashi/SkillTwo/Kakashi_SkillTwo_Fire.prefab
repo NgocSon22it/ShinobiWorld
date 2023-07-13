@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8138910302737611999}
   - component: {fileID: 3538312033623938338}
   - component: {fileID: -3651874400355499062}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Kakashi_SkillTwo_Fire
-  m_TagString: Bullet
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4839,8 +4839,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c80afca53d37e743bca6cf780dda0c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AttackAble_Tag: []
   MainFire: {fileID: 5511732877660643673}
   MainFireExplosion: {fileID: 0}
+  Collider: {fileID: 0}
   EndPoint: {x: 0, y: 0, z: 0}
 --- !u!210 &-3651874400355499062
 SortingGroup:
@@ -4850,8 +4852,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8138910302737611996}
   m_Enabled: 1
-  m_SortingLayerID: 178467679
-  m_SortingLayer: 3
+  m_SortingLayerID: 1888797337
+  m_SortingLayer: 5
   m_SortingOrder: 0
 --- !u!1001 &8138910302105648696
 PrefabInstance:
