@@ -40,11 +40,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject PlayerCameraInstance;
     public GameObject PlayerAllUIInstance;
 
+    public PolygonCollider2D CameraBox;
+
     [SerializeField] public LayerMask AttackableLayer;
     //Attack
     [SerializeField] public Transform AttackPoint;
 
     [SerializeField] GameObject ObjectPool_Runtime;
+
+    public AccountStatus AccountStatus;
 
     //Skill
     public float SkillOneCooldown_Total;
@@ -137,7 +141,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             var HasSkillOneJson = (string)changedProps["HasSkillOne"];
             SkillOne_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillOneJson);
 
-            var HasSkillTwoJson = (string)changedProps["HasSkillThree"];
+            var HasSkillTwoJson = (string)changedProps["HasSkillTwo"];
             SkillTwo_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillTwoJson);
 
             var HasSkillThreeJson = (string)changedProps["HasSkillThree"];
@@ -220,6 +224,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
         {
             PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
+            PlayerCameraInstance.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = CameraBox;
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(photonView.Owner.NickName);
@@ -233,9 +238,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             LoadPlayerHealthUI();
             LoadPlayerChakraUI();
             LoadPlayerStrengthUI();
-
         }
+
     }
+
 
     public void RegenHealth()
     {
@@ -329,6 +335,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
             animator.SetFloat("Horizontal", MoveDirection.x);
             animator.SetFloat("Vertical", MoveDirection.y);
@@ -345,6 +352,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             {
                 PhotonNetwork.LeaveRoom();
                 PhotonNetwork.LoadLevel("BossArena_Asuma");
+            }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("PK");
             }
 
             if (!CanWalking)
@@ -363,6 +375,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
             Walk();
         }
@@ -382,11 +395,38 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
+            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(1, 1, 1);
             AccountEntity.CurrentHealth -= Damage;
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
-            References.UpdateAccountToDB();
-            Game_Manager.Instance.ReloadPlayerProperties();
+
+            switch (AccountStatus)
+            {
+                case AccountStatus.Normal:
+                    References.UpdateAccountToDB();
+                    Game_Manager.Instance.ReloadPlayerProperties();
+                    if (AccountEntity.CurrentHealth <= 0)
+                    {
+                        Game_Manager.Instance.GoingToHospital();
+                    }
+
+                    break;
+
+                case AccountStatus.Arena:
+
+                    if (AccountEntity.CurrentHealth <= 0)
+                    {
+                        BossArena_Manager.Instance.Battle_End(false);
+                    }
+
+                    break;
+
+                case AccountStatus.PK:
+                    break;
+            }
+
+
+
+
         }
 
         if (AccountEntity.CurrentHealth <= 0)
@@ -396,7 +436,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             CancelInvoke(nameof(RegenChakra));
             CancelInvoke(nameof(RegenHealth));
             SetUpPlayerDie();
-            Game_Manager.Instance.GoingToHospital();
         }
 
         LoadPlayerHealthUI();
@@ -437,17 +476,16 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void FlipToMouse()
     {
-        if (photonView.IsMine)
+
+        if (targetPosition.x > MainPoint.position.x && !FacingRight)
         {
-            if (targetPosition.x > MainPoint.position.x && !FacingRight)
-            {
-                Flip();
-            }
-            else if (targetPosition.x < MainPoint.position.x && FacingRight)
-            {
-                Flip();
-            }
+            Flip();
         }
+        else if (targetPosition.x < MainPoint.position.x && FacingRight)
+        {
+            Flip();
+        }
+
     }
 
 

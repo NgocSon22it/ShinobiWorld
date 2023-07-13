@@ -43,7 +43,8 @@ namespace Assets.Scripts.BXH
             Trophy.text = References.listTrophy.Find(obj => obj.ID == account.TrophyID).Name;
             Power.text = account.Power.ToString();
 
-            AddFriendBtn.GetComponent<Button>().onClick.AddListener(() => AddFriend());
+            AddFriendBtn.GetComponent<Button>().onClick.AddListener(AddFriend);
+
             AddFriendBtn.SetActive(
                 !References.listAllFriend
                     .Any(obj => (obj.MyAccountID == References.accountRefer.ID && obj.FriendAccountID == selectedAccount.ID)

@@ -19,9 +19,14 @@ public class Melee_SkillThreeExplosion : PlayerSkill
     {
         if (AttackAble_Tag.Contains(collision.gameObject.tag))
         {
-            if (collision.gameObject.tag == "Enemy")
+            if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Clone")
             {
                 collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+            }
+
+            if (collision.CompareTag("Other"))
+            {
+                collision.GetComponent<PlayerBase>().TakeDamage(Damage);
             }
         }
     }

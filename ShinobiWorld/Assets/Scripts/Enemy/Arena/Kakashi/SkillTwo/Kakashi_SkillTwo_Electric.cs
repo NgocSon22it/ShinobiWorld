@@ -19,7 +19,10 @@ public class Kakashi_SkillTwo_Electric : Boss_Skill
     new void OnDisable()
     {
         base.OnDisable();
-        StopCoroutine(Electric);
+        if (Electric != null)
+        {
+            StopCoroutine(Electric);
+        }
         SetUpDamage(false);
     }
 

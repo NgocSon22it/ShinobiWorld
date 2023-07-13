@@ -4,13 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PKManager : MonoBehaviour
+public class PKRequestManager : MonoBehaviour
 {
     public GameObject PKPanel, AcceptPanel;
     public TMP_Text PKContent, AcceptContent;
     public Button AcceptBtn, CancelBtn, CloseAcceptPanel;
 
-    public static PKManager Instance;
+    public static PKRequestManager Instance;
 
     string senderName;
 
