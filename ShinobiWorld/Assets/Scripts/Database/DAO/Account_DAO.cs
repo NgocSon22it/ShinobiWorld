@@ -32,7 +32,7 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set IsTicket = @status where ID = @UserID";
+                cmd.CommandText = "Update Account set HasTicket = @status where ID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", UserID);
                 cmd.Parameters.AddWithValue("@status", status);
                 connection.Open();

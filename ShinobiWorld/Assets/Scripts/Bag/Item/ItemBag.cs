@@ -16,6 +16,6 @@ public class ItemBag : MonoBehaviour
     {
         ItemDetail.Instance.ShowDetail(ID);
         BagManager.Instance.ResetColor();
-        GetComponent<Image>().color = References.ColorSelected;
+        GetComponent<Image>().color = References.ItemColorSelected;
     }
 }

@@ -26,7 +26,7 @@ public class Skill_Item : MonoBehaviour
         Skill_Manager.Instance.SetUpSelectedSkill(skill_Entity);
 
         Skill_Manager.Instance.ResetColor();
-        Background.color = References.ColorSelected;
+        Background.color = References.ItemColorSelected;
     }
 
     public void SetUp(Skill_Entity skill_Entity)
