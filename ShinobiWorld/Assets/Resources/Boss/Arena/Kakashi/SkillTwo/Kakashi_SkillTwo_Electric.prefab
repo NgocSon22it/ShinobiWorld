@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 3423370330441117908}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.47748142, y: 2.8054357, z: -0.009321372}
-  m_LocalScale: {x: 1.25, y: 0.75, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 479536125802562618}
@@ -360,8 +360,8 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     startSize:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 2
+      minMaxState: 0
+      scalar: 1.5
       minScalar: 2
       maxCurve:
         serializedVersion: 2
@@ -413,7 +413,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -466,7 +466,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -626,7 +626,7 @@ ParticleSystem:
     startRotation:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 6.283185
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -679,7 +679,7 @@ ParticleSystem:
     randomizeRotationDirection: 0
     maxNumParticles: 2
     customEmitterVelocity: {x: 0, y: 0, z: 0}
-    size3D: 0
+    size3D: 1
     rotation3D: 0
     gravityModifier:
       serializedVersion: 2
@@ -4888,6 +4888,22 @@ PrefabInstance:
       propertyPath: looping
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2965029631027745038, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.size3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2965029631027745038, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.rotation3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2965029631027745038, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2965029631027745038, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.startRotation.scalar
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2965029631027745039, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -4937,12 +4953,36 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5948738387749719944, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.size3D
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5948738387749719944, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5948738387749719944, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.startSizeY.scalar
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5948738387749719944, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
       propertyPath: InitialModule.startSize.minScalar
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5948738387749719944, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.startRotation.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5948738387749719944, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.startSize.minMaxState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5948738387749719944, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.startSizeY.minMaxState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5948738387749719944, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
+      propertyPath: InitialModule.startSizeZ.minMaxState
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5948738388215472386, guid: 80d5fcea01ad54e4fb03e442e8bbe380, type: 3}
       propertyPath: looping
