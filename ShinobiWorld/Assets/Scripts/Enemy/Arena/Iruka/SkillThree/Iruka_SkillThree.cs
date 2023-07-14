@@ -33,6 +33,7 @@ public class Iruka_SkillThree : Boss_Skill
         {
             if (collision.gameObject.tag == "Player")
             {
+                collision.GetComponent<PlayerBase>().TakeDamage(Damage);
                 Explosion.transform.position = MainPoint.position;
                 Explosion.SetActive(true);
             }
