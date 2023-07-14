@@ -44,7 +44,7 @@ public class Iruka_SkillTwo : Boss_Skill
         {
             if (collision.gameObject.tag == "Player")
             {
-                //collision.GetComponent<PlayerBase>().TakeDamage(Damage);
+                collision.GetComponent<PlayerBase>().TakeDamage(Damage);
             }
         }
     }

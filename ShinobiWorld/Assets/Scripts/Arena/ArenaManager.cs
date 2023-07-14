@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class ArenaManager : MonoBehaviour
 {
     public GameObject ConfirmPanel;
-    public Button ArenaBtn, PKBtn;
+    public Button ArenaBtn, PKBtn, CloseBtn;
 
     public static ArenaManager Instance;
 
@@ -16,6 +16,8 @@ public class ArenaManager : MonoBehaviour
         Instance = this;
         ArenaBtn.onClick.AddListener(OpenArenaRoom);
         PKBtn.onClick.AddListener(OpenPKRoom);
+
+        CloseBtn.onClick.AddListener(Close);
     }
 
     public void Open()
