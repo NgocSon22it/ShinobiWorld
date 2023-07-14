@@ -1,6 +1,7 @@
 using Assets.Scripts.Database.DAO;
 using Assets.Scripts.MailBox;
 using Assets.Scripts.Mission;
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ public class MailBoxManager : MonoBehaviour
     {
         Instance = this;
         OpenBtn.onClick.AddListener(Open);
-
+        
         DeleteReadBtn.GetComponent<Button>().onClick.AddListener(ConfirmDelete);
         CloseBtn.onClick.AddListener(Close);
 
