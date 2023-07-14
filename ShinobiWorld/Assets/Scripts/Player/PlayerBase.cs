@@ -351,7 +351,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (Input.GetKeyDown(KeyCode.I))
             {
                 PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("BossArena_Asuma");
+                PhotonNetwork.LoadLevel("BossArena_Kakashi");
             }
             if (Input.GetKeyDown(KeyCode.O))
             {
