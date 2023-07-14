@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Kakashi_SkillTwo_FireExplosion : Boss_Skill
+public class Kakashi_SkillThree : Boss_Skill
 {
     new void OnEnable()
     {
-        LifeTime = 1f;
+        LifeTime = 3f;
         base.OnEnable();
     }
 
@@ -14,7 +14,6 @@ public class Kakashi_SkillTwo_FireExplosion : Boss_Skill
     {
         base.OnDisable();
     }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
