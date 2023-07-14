@@ -28,6 +28,7 @@ public class Kakashi_SkillTwo_Fire : Boss_Skill
         {
             TurnOff();
             MainFireExplosion.transform.position = EndPoint;
+            MainFireExplosion.GetComponent<Kakashi_SkillTwo_FireExplosion>().SetUp(Damage);
             MainFireExplosion.SetActive(true);
         }
     }
@@ -40,17 +41,5 @@ public class Kakashi_SkillTwo_Fire : Boss_Skill
     new void OnDisable()
     {
         base.OnDisable();
-    }
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (AttackAble_Tag.Contains(collision.gameObject.tag))
-        {
-            if (collision.gameObject.tag == "Player")
-            {
-                //collision.GetComponent<PlayerBase>().TakeDamage(Damage);
-            }
-        }
     }
 }

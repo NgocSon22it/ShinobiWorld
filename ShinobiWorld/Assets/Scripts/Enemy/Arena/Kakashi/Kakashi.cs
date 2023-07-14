@@ -80,7 +80,7 @@ public class Kakashi : Enemy
                 SkillOne.GetComponent<Kakashi_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Kakashi_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 5);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 8);
                 SetUpSkilling(3f);
             }
         }
@@ -133,6 +133,7 @@ public class Kakashi : Enemy
     IEnumerator Chidori()
     {
         isDashing = true;
+        ChidoriPrefabs.GetComponent<Kakashi_SkillThree>().SetUp(100);
         ChidoriPrefabs.SetActive(true);
         dashTimer = 0f;
 
@@ -163,7 +164,7 @@ public class Kakashi : Enemy
             if (SkillOne != null)
             {
                 SkillRandomPosition = GetRandomSkillPosition();
-
+                SkillOne.GetComponent<Kakashi_SkillTwo_Electric>().SetUp(100);
                 SkillOne.transform.position = SkillRandomPosition;
                 SkillOne.SetActive(true);
             }
@@ -182,6 +183,7 @@ public class Kakashi : Enemy
 
                 SkillOne.transform.position = SkillRandomPosition;
                 SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUpPoint(SkillRandomPosition);
+                SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUp(100);
                 SkillOne.SetActive(true);
             }
         }

@@ -343,16 +343,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             targetPosition.z = 10;
 
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                PlayerAllUIInstance.GetComponent<CustomKey_Manager>().OpenCustomKeyPanel();
-            }
-
             if (Input.GetKeyDown(KeyCode.I))
             {
                 PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("BossArena_Asuma");
+                PhotonNetwork.LoadLevel("BossArena_Kakashi");
             }
+
             if (Input.GetKeyDown(KeyCode.O))
             {
                 PhotonNetwork.LeaveRoom();
