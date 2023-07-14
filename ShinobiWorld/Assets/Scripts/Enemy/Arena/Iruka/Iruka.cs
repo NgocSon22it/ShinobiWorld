@@ -138,6 +138,7 @@ public class Iruka : Enemy
                 SkillRandomPosition = GetRandomSkillPosition();
 
                 SkillOne.transform.position = SkillRandomPosition;
+                SkillOne.GetComponent<Iruka_SkillTwo>().SetUp(100);
                 SkillOne.SetActive(true);
                 yield return new WaitForSeconds(0.3f);
             }
@@ -198,7 +199,6 @@ public class Iruka : Enemy
             right.SetActive(true);
             right.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(Angle, Vector3.forward) * center.GetComponent<Rigidbody2D>().velocity;
         }
-
         SetUpSkilling(3f);
 
     }

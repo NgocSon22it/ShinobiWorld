@@ -77,7 +77,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.29867697, y: 1.11308}
+  m_Offset: {x: 0.06346798, y: 0.067705154}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -88,7 +88,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 19.977993, y: 11.156588}
+  m_Size: {x: 14.4897785, y: 9.065838}
   m_EdgeRadius: 0
 --- !u!1001 &1224461279
 PrefabInstance:
@@ -231,7 +231,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1306605793903958, guid: 9ce4142b18056ab4b813713b878856ca, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4870030517758886, guid: 9ce4142b18056ab4b813713b878856ca, type: 3}
       propertyPath: m_RootOrder
@@ -396,6 +396,22 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!58 &1466564454315129359
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3746117953091587699}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.033268213, y: -0.039064407}
+  serializedVersion: 2
+  m_Radius: 0.5825949
 --- !u!1001 &8999312876728114213
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -409,11 +425,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 506688548360370753, guid: a5de80228093712469c59cb0bb316633, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: -0.057207584
+      value: -0.057207108
       objectReference: {fileID: 0}
     - target: {fileID: 506688548360370753, guid: a5de80228093712469c59cb0bb316633, type: 3}
       propertyPath: m_Bounds.m_Extent.x
-      value: 1.4375517
+      value: 1.4375508
       objectReference: {fileID: 0}
     - target: {fileID: 506688548360370753, guid: a5de80228093712469c59cb0bb316633, type: 3}
       propertyPath: m_Bounds.m_Extent.y
@@ -610,15 +626,19 @@ MonoBehaviour:
   FindTarget_CurrentTime: 0
   FindTarget_TotalTime: 1
   LocalScaleX: 0
+  BossType: 1
+  CurrentHealth: 0
   MainPoint: {fileID: 8999312877901612408}
   CurrentHealth_UI: {fileID: 7753893901456546651}
   HealthNumber: {fileID: 661767156799469975}
+  DeathEffect: {fileID: 0}
   direction: {x: 0, y: 0}
   HealthChakraUI: {fileID: 4703620442721606061}
   spriteRenderer: {fileID: 3422765280346164128}
   rigidbody2d: {fileID: 8999312876728114236}
   animator: {fileID: 7532063991196388025}
   boss_Pool: {fileID: 8999312876728114238}
+  collider2d: {fileID: 8999312876728114237}
   FacingRight: 0
   SkillRandomPosition: {x: 0, y: 0}
   List_Electric:
@@ -646,77 +666,6 @@ MonoBehaviour:
   ChidoriPrefabs: {fileID: 3746117953091587699}
   dashSpeed: 15
   dashDuration: 1
---- !u!114 &8999312876728114233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508323654897074993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill1
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill2
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill3
-  - Type: 4
-    SynchronizeType: 1
-    Name: Walk
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
---- !u!114 &8999312876728114234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508323654897074993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
-  m_UseLocal: 1
---- !u!114 &8999312876728114235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508323654897074993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 8999312876728114232}
-  - {fileID: 8999312876728114233}
-  - {fileID: 8999312876728114234}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &8999312876728114238
 MonoBehaviour:
   m_ObjectHideFlags: 0

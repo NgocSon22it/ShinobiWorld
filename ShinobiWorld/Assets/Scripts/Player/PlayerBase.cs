@@ -40,11 +40,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public GameObject PlayerCameraInstance;
     public GameObject PlayerAllUIInstance;
 
+    public PolygonCollider2D CameraBox;
+
     [SerializeField] public LayerMask AttackableLayer;
     //Attack
     [SerializeField] public Transform AttackPoint;
 
     [SerializeField] GameObject ObjectPool_Runtime;
+
+    public AccountStatus AccountStatus;
 
     //Skill
     public float SkillOneCooldown_Total;
@@ -123,41 +127,27 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     double lastPacketTime = 0;
     Vector3 positionAtLastPacket = Vector3.zero;
     Quaternion rotationAtLastPacket = Quaternion.identity;
-  
+
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
         {
+            var accountJson = (string)changedProps["Account"];
+            AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
 
-            foreach (var key in changedProps.Keys)
-            {
-                if (key.Equals("Account"))
-                {
-                    string accountJson = (string)changedProps[key];
-                    AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
-                    SetUpAccountData();
-                }
-                else if (key.Equals("HasWeapon"))
-                {
-                    string HasWeaponJson = (string)changedProps[key];
-                    Weapon_Entity = JsonUtility.FromJson<HasWeapon_Entity>(HasWeaponJson);
-                }
-                else if (key.Equals("HasSkillOne"))
-                {
-                    string HasSkillOneJson = (string)changedProps[key];
-                    SkillOne_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillOneJson);
-                }
-                else if (key.Equals("HasSkillTwo"))
-                {
-                    string HasSkillTwoJson = (string)changedProps[key];
-                    SkillTwo_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillTwoJson);
-                }
-                else if (key.Equals("HasSkillThree"))
-                {
-                    string HasSkillThreeJson = (string)changedProps[key];
-                    SkillThree_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillThreeJson);
-                }
-            }
+            var HasWeaponJson = (string)changedProps["HasWeapon"];
+            Weapon_Entity = JsonUtility.FromJson<HasWeapon_Entity>(HasWeaponJson);
+
+            var HasSkillOneJson = (string)changedProps["HasSkillOne"];
+            SkillOne_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillOneJson);
+
+            var HasSkillTwoJson = (string)changedProps["HasSkillTwo"];
+            SkillTwo_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillTwoJson);
+
+            var HasSkillThreeJson = (string)changedProps["HasSkillThree"];
+            SkillThree_Entity = JsonUtility.FromJson<HasSkill_Entity>(HasSkillThreeJson);
+
+            SetUpAccountData();
 
         }
     }
@@ -234,6 +224,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         if (photonView.IsMine)
         {
             PlayerCameraInstance.GetComponent<CinemachineVirtualCamera>().m_Follow = gameObject.transform;
+            PlayerCameraInstance.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = CameraBox;
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(photonView.Owner.NickName);
@@ -248,7 +239,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             LoadPlayerChakraUI();
             LoadPlayerStrengthUI();
         }
+
     }
+
 
     public void RegenHealth()
     {
@@ -307,7 +300,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (PlayerAllUIInstance != null)
             {
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().
-                LoadChakraUI((float)AccountEntity.Chakra, (float)AccountEntity.CurrentChakra);
+                    LoadChakraUI((float)AccountEntity.Chakra, (float)AccountEntity.CurrentChakra);
             }
         }
         else
@@ -342,20 +335,26 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillTwo();
             SkillThree();
 
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
             animator.SetFloat("Horizontal", MoveDirection.x);
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             targetPosition.z = 10;
-            
 
-            if (Input.GetKeyDown(KeyCode.U))
+            if (Input.GetKeyDown(KeyCode.I))
             {
-                PlayerAllUIInstance.GetComponent<CustomKey_Manager>().OpenCustomKeyPanel();
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("BossArena_Kakashi");
             }
-          
-          
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("PK");
+            }
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -372,6 +371,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
             Walk();
         }
@@ -391,11 +391,38 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(2, 1, 1);
+            PlayerCameraInstance.GetComponent<Player_Camera>().StartShakeScreen(1, 1, 1);
             AccountEntity.CurrentHealth -= Damage;
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
-            References.UpdateAccountToDB();
-            Game_Manager.Instance.ReloadPlayerProperties();
+
+            switch (AccountStatus)
+            {
+                case AccountStatus.Normal:
+                    References.UpdateAccountToDB();
+                    Game_Manager.Instance.ReloadPlayerProperties();
+                    if (AccountEntity.CurrentHealth <= 0)
+                    {
+                        Game_Manager.Instance.GoingToHospital();
+                    }
+
+                    break;
+
+                case AccountStatus.Arena:
+
+                    if (AccountEntity.CurrentHealth <= 0)
+                    {
+                        BossArena_Manager.Instance.Battle_End(false);
+                    }
+
+                    break;
+
+                case AccountStatus.PK:
+                    break;
+            }
+
+
+
+
         }
 
         if (AccountEntity.CurrentHealth <= 0)
@@ -405,7 +432,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             CancelInvoke(nameof(RegenChakra));
             CancelInvoke(nameof(RegenHealth));
             SetUpPlayerDie();
-            Game_Manager.Instance.GoingToHospital();
         }
 
         LoadPlayerHealthUI();
@@ -446,17 +472,16 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void FlipToMouse()
     {
-        if (photonView.IsMine)
+
+        if (targetPosition.x > MainPoint.position.x && !FacingRight)
         {
-            if (targetPosition.x > MainPoint.position.x && !FacingRight)
-            {
-                Flip();
-            }
-            else if (targetPosition.x < MainPoint.position.x && FacingRight)
-            {
-                Flip();
-            }
+            Flip();
         }
+        else if (targetPosition.x < MainPoint.position.x && FacingRight)
+        {
+            Flip();
+        }
+
     }
 
 
@@ -681,7 +706,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Die");
         playerCollider.enabled = false;
-        this.enabled = false;     
+        this.enabled = false;
     }
     public void SetUpPlayerLive()
     {

@@ -23,8 +23,9 @@ public static class References
     public static Weapon_Entity weapon = new Weapon_Entity();
     public static List<HasMission_Entity> listHasMission = new List<HasMission_Entity>();
     public static List<MailBox_Entity> listMailBox = new List<MailBox_Entity>();
-    public static List<FriendInfo> listFriend = new List<FriendInfo>();
-    public static List<FriendInfo> listRequest = new List<FriendInfo>();
+    public static List<Friend_Entity> listAllFriend = new List<Friend_Entity>();
+    public static List<FriendInfo> listFriendInfo = new List<FriendInfo>();
+    public static List<FriendInfo> listRequestInfo = new List<FriendInfo>();
 
     public static int Maxserver = 20;
 
@@ -71,10 +72,16 @@ public static class References
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
     
-    public static Color32 ColorSelected = new Color32(190, 140, 10, 255);
-
+    public static Color32 ItemColorSelected = new Color32(200, 145, 20, 255);
+    public static Color32 ItemColorDefaul = new Color32(0, 0, 0, 100);
+    public static Color32 ButtonColorSelected = new Color32(255, 230, 230, 255);
+    public static Color32 ButtonColorDefaul = new Color32(150, 140, 140, 100);
 
     public static string MailSystem = "System";
+
+    public static string ServerName = "Shinobi";
+
+    public static bool IsDead;
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
@@ -201,6 +208,10 @@ public static class References
     }
 }
 
+public enum AccountStatus
+{
+    Normal, Arena, PK
+}
 
 public enum TypeSell
 {
@@ -211,7 +222,6 @@ public enum Intention
 {
     Sell, Bag
 }
-
 public enum House
 {
     Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino
@@ -225,4 +235,9 @@ public enum StatusMission
 public enum TrophyID
 {
     Trophy_None, Trophy_Genin, Trophy_Chunin, Trophy_Jonin
+}
+
+public enum BossType
+{
+    BossType_Normal, BossType_Arena
 }

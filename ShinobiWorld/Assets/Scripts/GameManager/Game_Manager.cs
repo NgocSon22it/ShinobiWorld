@@ -29,6 +29,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
+    [SerializeField] PolygonCollider2D CameraBox;
 
     public static Game_Manager Instance;
 
@@ -55,6 +56,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
+
     }
 
     // Start is called before the first frame update
@@ -65,7 +67,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
         }
     }
 
@@ -73,12 +75,12 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
 
-        SetupPlayer(References.PlayerSpawnPosition);
+        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);
         ChatManager.Instance.ConnectToChat();
         SpawnEnemyCoroutine = StartCoroutine(SpawnEnemy());
     }
 
-    public void SetupPlayer(Vector3 position)
+    public void SetupPlayer(Vector3 position, PolygonCollider2D CameraBox, AccountStatus accountStatus)
     {
         if (PlayerManager == null && PhotonNetwork.IsConnectedAndReady)
         {
@@ -97,6 +99,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                     PlayerManager = PhotonNetwork.Instantiate("Player/Support/" + Path.Combine(PlayerSupport.name), position, Quaternion.identity);
                     break;
             }
+            PlayerManager.GetComponent<PlayerBase>().CameraBox = CameraBox;
+            PlayerManager.GetComponent<PlayerBase>().AccountStatus = accountStatus;
             ReloadPlayerProperties();
             Debug.Log("Successfully joined room S1!");
         }
@@ -117,7 +121,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                         && enemyScript.areaBoss_Entity.isDead == false
                         && enemyScript.areaBoss_Entity.CurrentHealth > 0)
                     {
-                        enemyScript.LoadHealthUI();
+                        enemyScript.LoadHealthUI(enemyScript.areaBoss_Entity.CurrentHealth, enemyScript.boss_Entity.Health);
                         enemy.SetActive(true);
                     }
                 }
@@ -159,7 +163,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        //References.UpdateAccountToDB();
         ReloadPlayerProperties();
     }
 
@@ -178,7 +181,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(Scenes.Login);
-            StopCoroutine(SpawnEnemyCoroutine);
+            if (SpawnEnemyCoroutine != null)
+            {
+                StopCoroutine(SpawnEnemyCoroutine);
+            }
         }
     }
 
@@ -192,7 +198,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         References.accountRefer.CurrentHealth = References.accountRefer.Health;
         References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
-        //References.UpdateAccountToDB();
         ReloadPlayerProperties();
         PlayerManager.GetComponent<PlayerBase>().SetUpPlayerLive();
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
@@ -213,19 +218,15 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        /*Debug.Log(Message.HaveWifi);
-        if (PhotonNetwork.IsConnected)
+        if (PhotonNetwork.IsConnectedAndReady)
         {
-            PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
-        }*/
+            roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
+            roomOptions.IsOpen = true;
+            roomOptions.BroadcastPropsChangeToAll = true;
+            PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
+        }
     }
 
-    private IEnumerator RetryConnection()
-    {
-        yield return new WaitForSeconds(5f);  // Wait for 5 seconds before retrying
-
-        PhotonNetwork.ConnectUsingSettings();
-    }
 
     private void OnApplicationQuit()
     {
@@ -233,9 +234,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         {
             References.UpdateAccountToDB();
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-
-
-            
         }
 
     }

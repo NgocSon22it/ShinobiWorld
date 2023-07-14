@@ -1,6 +1,7 @@
 using Assets.Scripts.Database.DAO;
 using Assets.Scripts.MailBox;
 using Assets.Scripts.Mission;
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ public class MailBoxManager : MonoBehaviour
 {
     public static MailBoxManager Instance;
 
+    [Header("Mailbox")]
     public GameObject MailBoxPanel;
     public GameObject SystemPrefab;
     public GameObject BXHPrefab;
@@ -21,13 +23,29 @@ public class MailBoxManager : MonoBehaviour
     public GameObject ScrollView;
     public GameObject Detail;
     public GameObject DeleteReadBtn;
+    public Button CloseBtn, OpenBtn;
     public Transform Content;
+
+
+    [Header("ConfirmDelete")]
     public GameObject ConfirmDeletePanel;
     public TMP_Text ConfirmDeleteMessage;
+    public Button CancelBtn, CloseConfirmBtn, DeleteReceivedBtn, DeleteReadAllBtn;
+
 
     private void Awake()
     {
         Instance = this;
+        OpenBtn.onClick.AddListener(Open);
+        
+        DeleteReadBtn.GetComponent<Button>().onClick.AddListener(ConfirmDelete);
+        CloseBtn.onClick.AddListener(Close);
+
+        CancelBtn.GetComponent<Button>().onClick.AddListener(CloseConfirmDelete);
+        CloseConfirmBtn.GetComponent<Button>().onClick.AddListener(CloseConfirmDelete);
+        DeleteReceivedBtn.GetComponent<Button>().onClick.AddListener(DeleteReadAndReceivedBonus );
+        DeleteReadAllBtn.GetComponent<Button>().onClick.AddListener(DeleteReadAll);
+
     }
 
     public void Open()

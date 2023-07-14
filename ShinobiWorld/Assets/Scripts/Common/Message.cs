@@ -5,8 +5,9 @@ using UnityEngine.Rendering;
 
 public class Message 
 {
-    public static string NameEmpty = "Tên trống";
-    public static string NameInvalid = "Tên phải có 4-16 ký tự";
+    public static string NameEmpty = "Tên nhân vật không được để trống";
+    public static string NameInvalid = "Tên nhân vật phải có 4-16 ký tự (A-Za-z0-9), không được có khoảng trắng";
+    public static string NameExist = "Tên nhân vật đã tồn tại";
 
     public static string EmailEmpty = "Email trống";
     public static string EmailInvalid = "Email không hợp lệ";
@@ -45,7 +46,15 @@ public class Message
     public static string MailboxDeleteNotReceivedBonus = "Bạn có phần thưởng chưa nhận, bạn có muốn tiếp tục xóa không?";
     public static string MailboxDelete = "Bạn có muốn tiếp tục xóa không?";
 
-    public static string OpenHouse = "Bấm phím O để mở";
+    public static string OpenHouse = "Bấm phím O để mở ";
 
     public static string TrophyUpgradeError = "Bạn không đủ điều kiện để nâng cấp danh hiệu";
+
+    public static string PKMessage = "{0} muốn thách đấu với bạn?";
+    public static string PriviteMessage = "{0}:{1}";
+}
+
+public enum TypePriviteMessage
+{
+    FriendRequest, PKRequest, Text
 }

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8138910302737611999}
   - component: {fileID: 3538312033623938338}
   - component: {fileID: -3651874400355499062}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Kakashi_SkillTwo_Fire
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8138910302737611996}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.25, y: 0.75, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5511732877660643668}
@@ -359,7 +359,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     startSize:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 2
       minScalar: 2
       maxCurve:
@@ -412,7 +412,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -465,7 +465,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -625,7 +625,7 @@ ParticleSystem:
     startRotation:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 6.283185
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -678,7 +678,7 @@ ParticleSystem:
     randomizeRotationDirection: 0
     maxNumParticles: 2
     customEmitterVelocity: {x: 0, y: 0, z: 0}
-    size3D: 0
+    size3D: 1
     rotation3D: 0
     gravityModifier:
       serializedVersion: 2
@@ -4839,10 +4839,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c80afca53d37e743bca6cf780dda0c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackAble_Tag: []
   MainFire: {fileID: 5511732877660643673}
   MainFireExplosion: {fileID: 0}
-  Collider: {fileID: 0}
   EndPoint: {x: 0, y: 0, z: 0}
 --- !u!210 &-3651874400355499062
 SortingGroup:
@@ -4852,8 +4850,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8138910302737611996}
   m_Enabled: 1
-  m_SortingLayerID: 1888797337
-  m_SortingLayer: 5
+  m_SortingLayerID: 178467679
+  m_SortingLayer: 3
   m_SortingOrder: 0
 --- !u!1001 &8138910302105648696
 PrefabInstance:
@@ -4913,6 +4911,18 @@ PrefabInstance:
     - target: {fileID: 4363614298552655727, guid: d04eb56dea667d448b5ca71730c408b9, type: 3}
       propertyPath: InitialModule.startSizeY.scalar
       value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4363614298552655727, guid: d04eb56dea667d448b5ca71730c408b9, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4363614298552655727, guid: d04eb56dea667d448b5ca71730c408b9, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.24086685
+      objectReference: {fileID: 0}
+    - target: {fileID: 4363614298552655727, guid: d04eb56dea667d448b5ca71730c408b9, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.9528302
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d04eb56dea667d448b5ca71730c408b9, type: 3}

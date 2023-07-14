@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 6884067110584358972}
   - component: {fileID: 1932701488544799859}
   - component: {fileID: 5815934337730357970}
-  m_Layer: 0
+  - component: {fileID: -9062520035872738899}
+  m_Layer: 7
   m_Name: Asuma_SkillThree
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3670040686035669335}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.7273054, y: 3.070284, z: -0.019777115}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -123,7 +124,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 0
+  looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -625,7 +626,7 @@ ParticleSystem:
     startRotation:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 6.283185
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -678,7 +679,7 @@ ParticleSystem:
     randomizeRotationDirection: 0
     maxNumParticles: 2
     customEmitterVelocity: {x: 0, y: 0, z: 0}
-    size3D: 0
+    size3D: 1
     rotation3D: 0
     gravityModifier:
       serializedVersion: 2
@@ -4855,10 +4856,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 919b495619a6d324b86e26ce2e306406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackAble_Tag:
-  - Player
   MainFire: {fileID: 1261137548935913466}
   Col: {fileID: 1932701488544799859}
+--- !u!210 &-9062520035872738899
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3670040686035669335}
+  m_Enabled: 1
+  m_SortingLayerID: 178467679
+  m_SortingLayer: 3
+  m_SortingOrder: 0
 --- !u!1001 &3633817262368409051
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4874,13 +4884,53 @@ PrefabInstance:
       propertyPath: lengthInSec
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 2389375941152884679, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.b
+      value: 0.28253826
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389375941152884679, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.g
+      value: 0.2937198
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389375941152884679, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.r
+      value: 0.3679245
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389375941152884679, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key1.b
+      value: 0.346173
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389375941152884679, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key1.g
+      value: 0.346173
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389375941152884679, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key1.r
+      value: 0.41509432
+      objectReference: {fileID: 0}
     - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: looping
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: lengthInSec
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: InitialModule.size3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: InitialModule.startSize.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: InitialModule.startSizeY.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: InitialModule.startSizeZ.minMaxState
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2390210746300608531, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: looping
@@ -4889,6 +4939,10 @@ PrefabInstance:
     - target: {fileID: 2390210746300608531, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: lengthInSec
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2390609655243713319, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 2586915162768449107, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: m_RootOrder
@@ -4934,9 +4988,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2587090660359502107, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 2587090660359502107, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2588468974607022543, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2588897328599243297, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: m_Name
       value: FireLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 2588897328599243297, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}

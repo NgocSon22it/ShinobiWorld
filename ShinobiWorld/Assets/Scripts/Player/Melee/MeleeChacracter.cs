@@ -86,7 +86,7 @@ public class MeleeChacracter : PlayerBase
             {
                 foreach (Collider2D Enemy in HitEnemy)
                 {
-                    if (Enemy.gameObject.CompareTag("Enemy"))
+                    if (Enemy.gameObject.CompareTag("Enemy") || Enemy.gameObject.CompareTag("Clone"))
                     {
                         Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
                     }
