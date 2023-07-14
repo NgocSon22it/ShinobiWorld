@@ -161,7 +161,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         IsTypingChat = value;
         TypingChatObject.SetActive(value);
-        Game_Manager.Instance.IsBusy = value;
+        //Game_Manager.Instance.IsBusy = value;
     }
 
     public void FocusTyping()

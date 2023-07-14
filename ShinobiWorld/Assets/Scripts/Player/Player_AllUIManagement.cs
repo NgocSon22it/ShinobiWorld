@@ -65,7 +65,8 @@ public class Player_AllUIManagement : MonoBehaviour
     [SerializeField] TMP_Text SkillThree_Keycode;
 
     [Header("House Open")]
-    [SerializeField] TMP_Text House_Message;
+    public GameObject House_Message;
+    [SerializeField] TMP_Text HouseTxt;
 
     public Button GotoMenuBtn;
     public GameObject BackgroundPanel;
@@ -88,12 +89,14 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void ShowHouseMessage(string HouseName)
     {
-        House_Message.text = Message.OpenHouse + HouseName;
+        House_Message.SetActive(true);
+        HouseTxt.text = Message.OpenHouse + HouseName;
     }
 
     public void CloseHouseMessage()
     {
-        House_Message.text = "";
+        House_Message.SetActive(false);
+        HouseTxt.text = string.Empty;
     }
 
     private void Update()
