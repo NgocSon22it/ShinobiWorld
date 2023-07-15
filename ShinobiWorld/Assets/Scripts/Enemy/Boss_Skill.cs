@@ -6,7 +6,7 @@ public class Boss_Skill : MonoBehaviour
 {
     protected List<string> AttackAble_Tag = new List<string>()
     {
-        "Player"
+        "Player", "Ground"
     };
 
     protected int Damage;

@@ -20,7 +20,10 @@ public class Kakashi_SkillTwo_FireExplosion : Boss_Skill
     {
         if (AttackAble_Tag.Contains(collision.gameObject.tag))
         {
-           
+            if (collision.gameObject.tag == "Player")
+            {
+                collision.GetComponent<PlayerBase>().TakeDamage(Damage);
+            }
         }
     }
 }

@@ -84,7 +84,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void Open()
     {
-        Game_Manager.Instance.IsBusy = true;
+        //Game_Manager.Instance.IsBusy = true;
         //References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
 
         References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
@@ -106,7 +106,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public void Close()
     {
         InfoPanel.SetActive(false);
-        Game_Manager.Instance.IsBusy = false;
+        //Game_Manager.Instance.IsBusy = false;
     }
 
     public void SetupPreview()

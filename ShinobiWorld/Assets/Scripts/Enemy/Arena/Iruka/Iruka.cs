@@ -138,6 +138,7 @@ public class Iruka : Enemy
                 SkillRandomPosition = GetRandomSkillPosition();
 
                 SkillOne.transform.position = SkillRandomPosition;
+                SkillOne.GetComponent<Iruka_SkillTwo>().SetUp(100);
                 SkillOne.SetActive(true);
                 yield return new WaitForSeconds(0.3f);
             }

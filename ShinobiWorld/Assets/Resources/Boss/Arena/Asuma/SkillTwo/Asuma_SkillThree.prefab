@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3670040686035669335}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.7273054, y: 3.070284, z: -0.019777115}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -124,7 +124,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 0
+  looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -626,7 +626,7 @@ ParticleSystem:
     startRotation:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 6.283185
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -679,7 +679,7 @@ ParticleSystem:
     randomizeRotationDirection: 0
     maxNumParticles: 2
     customEmitterVelocity: {x: 0, y: 0, z: 0}
-    size3D: 0
+    size3D: 1
     rotation3D: 0
     gravityModifier:
       serializedVersion: 2
@@ -4856,8 +4856,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 919b495619a6d324b86e26ce2e306406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackAble_Tag:
-  - Player
   MainFire: {fileID: 1261137548935913466}
   Col: {fileID: 1932701488544799859}
 --- !u!210 &-9062520035872738899
@@ -4912,11 +4910,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: looping
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: lengthInSec
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: InitialModule.size3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: InitialModule.startSize.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: InitialModule.startSizeY.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389587103426014641, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: InitialModule.startSizeZ.minMaxState
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2390210746300608531, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: looping
@@ -4989,6 +5003,10 @@ PrefabInstance:
     - target: {fileID: 2588897328599243297, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
       propertyPath: m_Name
       value: FireLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 2588897328599243297, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53c063f6ed885344cb1484da6993bb22, type: 3}

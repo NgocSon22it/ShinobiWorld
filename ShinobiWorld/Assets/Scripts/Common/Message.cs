@@ -46,7 +46,7 @@ public class Message
     public static string MailboxDeleteNotReceivedBonus = "Bạn có phần thưởng chưa nhận, bạn có muốn tiếp tục xóa không?";
     public static string MailboxDelete = "Bạn có muốn tiếp tục xóa không?";
 
-    public static string OpenHouse = "Bấm phím O để mở";
+    public static string OpenHouse = "Bấm phím O để mở ";
 
     public static string TrophyUpgradeError = "Bạn không đủ điều kiện để nâng cấp danh hiệu";
 
