@@ -217,7 +217,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -10.326494, y: 0.027463913}
+  m_Offset: {x: -0.63777494, y: 0.35679984}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -228,7 +228,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 20.334713, y: 12.370129}
+  m_Size: {x: 13.606809, y: 8.940962}
   m_EdgeRadius: 0
 --- !u!1001 &5099352225706135750
 PrefabInstance:
@@ -266,6 +266,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5565545681552305691, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5565545681552305691, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
@@ -279,11 +283,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6310835980504034744, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.65
+      value: 4.95
       objectReference: {fileID: 0}
     - target: {fileID: 6310835980504034744, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.61
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 6310835980504034744, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}
       propertyPath: m_LocalPosition.z
@@ -384,36 +388,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.6579373, y: 0.5849948}
   m_EdgeRadius: 0
---- !u!114 &2315604064240321437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 862513664860471005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill1
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill2
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill3
-  - Type: 4
-    SynchronizeType: 1
-    Name: Walk
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
 --- !u!114 &2741952494792273203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,38 +433,24 @@ MonoBehaviour:
   FindTarget_CurrentTime: 0
   FindTarget_TotalTime: 1
   LocalScaleX: 0
+  BossType: 1
+  CurrentHealth: 0
   MainPoint: {fileID: 5434508851653519912}
   CurrentHealth_UI: {fileID: 493841447222595867}
   HealthNumber: {fileID: 7236782111259014103}
+  DeathEffect: {fileID: 0}
   direction: {x: 0, y: 0}
   HealthChakraUI: {fileID: 3172709636547285997}
   spriteRenderer: {fileID: 4085664431427260502}
   rigidbody2d: {fileID: 6455609070960767951}
   animator: {fileID: 790516720726591556}
   boss_Pool: {fileID: 7257081647078314960}
+  collider2d: {fileID: 6870863028967940188}
   FacingRight: 0
   SkillRandomPosition: {x: 0, y: 0}
-  Skill_MinPosition: {x: 0, y: 0}
-  Skill_MaxPosition: {x: 0, y: 0}
   dashSpeed: 10
   dashDuration: 0.5
   Angle: 25
---- !u!114 &5424154735512229353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 862513664860471005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
-  m_UseLocal: 1
 --- !u!114 &7257081647078314960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,9 +464,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   List_SkillOne:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   List_SkillTwo:
@@ -527,31 +484,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
---- !u!114 &7548949031280044852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 862513664860471005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 2315604064240321437}
-  - {fileID: 2741952494792273203}
-  - {fileID: 5424154735512229353}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!4 &1247530321448910206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6310835980504034744, guid: 93ede1fa6294f9e4fbfdb24260f6d895, type: 3}

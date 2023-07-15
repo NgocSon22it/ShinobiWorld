@@ -2633,7 +2633,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Q
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2678,7 +2678,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -18039,9 +18039,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1216427983523946056}
         m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
-        m_MethodName: SelectKey
+        m_MethodName: SetUpKey
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -25925,8 +25925,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 39, y: -182}
-  m_SizeDelta: {x: 693.3115, y: 106.5021}
+  m_AnchoredPosition: {x: 0, y: -163}
+  m_SizeDelta: {x: 605.668, y: 76.1282}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2388572247644570704
 CanvasRenderer:
@@ -25956,7 +25956,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 58942563, guid: dd5691470cc752d49b4e4a83a7404475, type: 3}
+  m_Sprite: {fileID: 1067683650, guid: 94d67947fd92d7d40bcffe229495af38, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -26985,7 +26985,7 @@ GameObject:
   - component: {fileID: 5439942529289482454}
   - component: {fileID: 7283860565080529694}
   m_Layer: 5
-  m_Name: Button
+  m_Name: DefultBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27094,7 +27094,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1216427983523946056}
         m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
         m_MethodName: SetDefaultKey
         m_Mode: 1
@@ -29002,11 +29002,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ListSkillTxt:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  CustomKeyPanel: {fileID: 0}
-  Message: {fileID: 0}
+  - {fileID: 6079535540004028629}
+  - {fileID: 3448863628770384253}
+  - {fileID: 6826324214672179363}
+  CustomKeyPanel: {fileID: 1970449549648651262}
+  Message: {fileID: 2785874025775522230}
 --- !u!1 &4412084099969225808
 GameObject:
   m_ObjectHideFlags: 0
@@ -34095,7 +34095,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1216427983523946056}
         m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
         m_MethodName: SelectKey
         m_Mode: 3
@@ -36709,7 +36709,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SPACE
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -36754,7 +36754,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -37075,7 +37075,7 @@ RectTransform:
   m_GameObject: {fileID: 6355765618140225832}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.925, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4784355673023488987}
@@ -37083,8 +37083,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1, y: 1}
-  m_SizeDelta: {x: 600, y: 50}
+  m_AnchoredPosition: {x: 0, y: 0.00000047683716}
+  m_SizeDelta: {x: 436.073, y: 40.274}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8822056928931081107
 CanvasRenderer:
@@ -37123,7 +37123,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4290983221
   m_fontColor: {r: 0.20787783, g: 0.20665711, b: 0.764151, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -37141,8 +37141,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -37159,7 +37159,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -41992,7 +41992,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1216427983523946056}
         m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
         m_MethodName: SelectKey
         m_Mode: 3
@@ -42979,7 +42979,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1216427983523946056}
         m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
         m_MethodName: CloseCustomKeyPanel
         m_Mode: 1
@@ -45749,7 +45749,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 731518219202017802}
-  - component: {fileID: 7907111973119599342}
   m_Layer: 10
   m_Name: Arena
   m_TagString: Untagged
@@ -45778,22 +45777,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.000061035156}
   m_SizeDelta: {x: 804.5123, y: 518.62}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7907111973119599342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8621907470563715145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 083911aa56b9fc2459c124a4310141c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConfirmPanel: {fileID: 2050190097911717935}
-  ArenaBtn: {fileID: 7385430241709583377}
-  PKBtn: {fileID: 3964441417001852303}
-  CloseBtn: {fileID: 8127547336373690518}
 --- !u!1 &8625755534640671607
 GameObject:
   m_ObjectHideFlags: 0
@@ -46696,7 +46679,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: E
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -46741,7 +46724,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1

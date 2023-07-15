@@ -81,6 +81,8 @@ public static class References
 
     public static string ServerName = "Shinobi";
 
+    public static bool IsDead;
+
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
