@@ -41,11 +41,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public Vector3 TargetPosition;
 
     public bool playerInRange = false;
-    public Vector3 clampedPosition;
     public float detectionRadius = 5f;
-
-    public float FindTarget_CurrentTime;
-    public float FindTarget_TotalTime = 1f;
+    public LayerMask AttackableLayer;
 
     public float LocalScaleX;
 
@@ -191,7 +188,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
             AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
             gameObject.SetActive(false);
-            Debug.Log(UserID);
             Disappear();
         }
 
@@ -262,6 +258,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     public void FlipToTarget()
     {
+        TargetPosition = FindClostestTarget(detectionRadius + 1, "Player");
+
         if (MainPoint.position.x < TargetPosition.x && !FacingRight)
         {
             Flip();
@@ -272,13 +270,17 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         }
     }
 
+    public bool CheckPlayerInRange()
+    {
+        return Physics2D.OverlapCircle(MainPoint.position, detectionRadius, AttackableLayer);
+    }
+
     public Vector3 FindClostestTarget(float Range, string TargetTag)
     {
         float distanceToClosestTarget = Mathf.Infinity;
         Vector3 closestTargetPosition = Vector3.zero;
 
         GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
-
 
         foreach (GameObject currentTarget in allTarget)
         {
@@ -332,5 +334,12 @@ public class Enemy : MonoBehaviourPun, IPunObservable
                 HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
             }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(MainPoint.position, detectionRadius);
+
     }
 }
