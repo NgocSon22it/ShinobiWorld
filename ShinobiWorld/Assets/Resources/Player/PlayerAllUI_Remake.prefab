@@ -32924,7 +32924,6 @@ MonoBehaviour:
   HasSkill:
     AccountID: 
     SkillID: 
-    Key: 
     Level: 0
     Cooldown: 0
     Damage: 0
@@ -45749,6 +45748,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 731518219202017802}
+  - component: {fileID: 1076449130}
   m_Layer: 10
   m_Name: Arena
   m_TagString: Untagged
@@ -45777,6 +45777,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.000061035156}
   m_SizeDelta: {x: 804.5123, y: 518.62}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1076449130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8621907470563715145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 083911aa56b9fc2459c124a4310141c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConfirmPanel: {fileID: 2050190097911717935}
+  ArenaBtn: {fileID: 7385430241709583377}
+  PKBtn: {fileID: 3964441417001852303}
+  CloseBtn: {fileID: 8127547336373690518}
 --- !u!1 &8625755534640671607
 GameObject:
   m_ObjectHideFlags: 0
@@ -45856,7 +45872,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 16.95227, y: 13}
+  m_AnchoredPosition: {x: 16.952393, y: 13}
   m_SizeDelta: {x: -812.4017, y: -319.9467}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9119995401538265756

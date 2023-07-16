@@ -6,7 +6,7 @@ public class Squid : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Squid";
+        EnemyID = "Squid";
         SetUp(EnemyID, AreaName);
     }
 
