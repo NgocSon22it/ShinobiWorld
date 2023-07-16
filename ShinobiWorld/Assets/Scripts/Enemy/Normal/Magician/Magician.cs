@@ -8,7 +8,7 @@ public class Magician : Enemy
     [SerializeField] List<GameObject> ListAttack_Hit = new List<GameObject>();
     new void Awake()
     {
-        EnemyID = "Boss_Magician";
+        EnemyID = "Magician";
         SetUp(EnemyID, AreaName);
     }
     // Start is called before the first frame update

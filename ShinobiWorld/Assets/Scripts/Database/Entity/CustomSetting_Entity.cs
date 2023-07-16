@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.Entity
 {
-    public class TypeBoss_Entity
+    public class CustomSetting_Entity
     {
-        public string ID;
-        public string Name;
+        public string AccountID;
+        public string SettingID;
+        public string Value;
         public bool Delete;
 
-        public TypeBoss_Entity()
+        public CustomSetting_Entity()
         {
         }
     }

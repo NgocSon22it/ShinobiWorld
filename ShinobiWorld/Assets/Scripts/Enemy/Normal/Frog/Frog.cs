@@ -8,7 +8,7 @@ public class Frog : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Frog";
+        EnemyID = "Frog";
         SetUp(EnemyID, AreaName);
     }
     // Start is called before the first frame update

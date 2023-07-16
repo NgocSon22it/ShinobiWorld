@@ -9,46 +9,48 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Database.DAO
 {
-    public class Trophy_DAO
+    public static class Enemy_DAO
     {
         static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-        public static List<Trophy_Entity> GetAll()
+        public static Enemy_Entity GetEnemyByID(string EnemyID)
         {
-            var list = new List<Trophy_Entity>();
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 try
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT *  FROM [dbo].[Trophy]";
+                    cmd.CommandText = "select * from Enemy where ID = @EnemyID";
+                    cmd.Parameters.AddWithValue("@EnemyID", EnemyID);
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
                     adapter.Fill(dataTable);
 
                     foreach (DataRow dr in dataTable.Rows)
                     {
-                        var obj = new Trophy_Entity
+                        var obj = new Enemy_Entity
                         {
                             ID = dr["ID"].ToString(),
                             Name = dr["Name"].ToString(),
-                            Cost = Convert.ToInt32(dr["Cost"]),
-                            ContraitLevelAccount = Convert.ToInt32(dr["ContraitLevelAccount"]),
-                            Description = dr["Description"].ToString(),
+                            Health = Convert.ToInt32(dr["Health"]),
+                            Speed = Convert.ToInt32(dr["Speed"]),
+                            CoinBonus = Convert.ToInt32(dr["CoinBonus"]),
+                            ExpBonus = Convert.ToInt32(dr["ExpBonus"]),
                             Delete = Convert.ToBoolean(dr["Delete"])
                         };
-                        list.Add(obj);
-                        References.BtnTrophy.Add(obj.ID, obj.Name);
+                        connection.Close();
+                        return obj;
                     }
                 }
                 finally
                 {
                     connection.Close();
                 }
+
             }
 
-            return list;
+            return null;
         }
     }
 }
