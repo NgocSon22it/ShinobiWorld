@@ -117,16 +117,16 @@ public class Player_AllUIManagement : MonoBehaviour
             image = References.listSkill.Find(obj => obj.ID == player.SkillOne_Entity.SkillID).Image;
             SkillOne_Image.sprite = Resources.Load<Sprite>(image);
             SkillOne_CostChakra.text = player.SkillOne_Entity.Chakra.ToString();
-            SkillOne_KeyCode.text = ShowKey(player.SkillOne_Entity.Key.ToString());
-            player.playerInput.actions["SkillOne"].ApplyBindingOverride(player.SkillOne_Entity.Key);
+            //SkillOne_KeyCode.text = ShowKey(player.SkillOne_Entity.Key.ToString());
+            //player.playerInput.actions["SkillOne"].ApplyBindingOverride(player.SkillOne_Entity.Key);
         }
         if (player.SkillTwo_Entity != null)
         {
             image = References.listSkill.Find(obj => obj.ID == player.SkillTwo_Entity.SkillID).Image;
             SkillTwo_Image.sprite = Resources.Load<Sprite>(image);
             SkillTwo_CostChakra.text = player.SkillTwo_Entity.Chakra.ToString();
-            SkillTwo_Keycode.text = ShowKey(player.SkillTwo_Entity.Key.ToString());
-            player.playerInput.actions["SkillTwo"].ApplyBindingOverride(player.SkillTwo_Entity.Key);
+            //SkillTwo_Keycode.text = ShowKey(player.SkillTwo_Entity.Key.ToString());
+            //player.playerInput.actions["SkillTwo"].ApplyBindingOverride(player.SkillTwo_Entity.Key);
 
         }
         if (player.SkillThree_Entity != null)
@@ -134,8 +134,8 @@ public class Player_AllUIManagement : MonoBehaviour
             image = References.listSkill.Find(obj => obj.ID == player.SkillThree_Entity.SkillID).Image;
             SkillThree_Image.sprite = Resources.Load<Sprite>(image);
             SkillThree_CostChakra.text = player.SkillThree_Entity.Chakra.ToString();
-            SkillThree_Keycode.text = ShowKey(player.SkillThree_Entity.Key.ToString());
-            player.playerInput.actions["SkillThree"].ApplyBindingOverride(player.SkillThree_Entity.Key);
+            //SkillThree_Keycode.text = ShowKey(player.SkillThree_Entity.Key.ToString());
+            //player.playerInput.actions["SkillThree"].ApplyBindingOverride(player.SkillThree_Entity.Key);
 
         }
     }

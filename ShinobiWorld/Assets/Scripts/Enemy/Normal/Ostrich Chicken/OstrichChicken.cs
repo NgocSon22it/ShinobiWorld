@@ -6,7 +6,7 @@ public class OstrichChicken : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_OstrichChicken";
+        EnemyID = "OstrichChicken";
         SetUp(EnemyID, AreaName);
     }
     // Start is called before the first frame update

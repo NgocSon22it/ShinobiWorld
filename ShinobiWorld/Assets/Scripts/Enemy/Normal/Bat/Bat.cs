@@ -8,7 +8,7 @@ public class Bat : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Bat";
+        EnemyID = "Bat";
         SetUp(EnemyID, AreaName);
     }
     // Start is called before the first frame update

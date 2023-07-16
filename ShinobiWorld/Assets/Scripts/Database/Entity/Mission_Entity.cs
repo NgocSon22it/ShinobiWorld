@@ -10,7 +10,7 @@ namespace Assets.Scripts.Database.Entity
     {
         public string ID;
         public string TrophyID;
-        public string BossID;
+        public string EnemyID;
         public string CategoryEquipmentID;
         public int RequiredStrength;
         public string Content;

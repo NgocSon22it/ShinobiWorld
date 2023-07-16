@@ -7,11 +7,11 @@ using System.Data;
 using UnityEngine;
 using System.Data.SqlTypes;
 
-public static class AreaBoss_DAO
+public static class AreaEnemy_DAO
 {
     static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
 
-    public static AreaBoss_Entity GetAreaBossByID(string ID, string BossID)
+    public static AreaEnemy_Entity GetAreaEnemyByID(string ID, string EnemyID)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
@@ -19,26 +19,24 @@ public static class AreaBoss_DAO
             {
                 connection.Open();
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "select * from AreaBoss where ID = @ID and BossID = @BossID";
+                cmd.CommandText = "select * from AreaEnemy where ID = @ID and EnemyID = @EnemyID";
                 cmd.Parameters.AddWithValue("@ID", ID);
-                cmd.Parameters.AddWithValue("@BossID", BossID);
+                cmd.Parameters.AddWithValue("@EnemyID", EnemyID);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
                 foreach (DataRow dr in dataTable.Rows)
                 {
-                    var obj = new AreaBoss_Entity
+                    var obj = new AreaEnemy_Entity
                     {
                         ID = dr["ID"].ToString(),
                         AreaID = dr["AreaID"].ToString(),
-                        BossID = dr["BossID"].ToString(),
-                        isDead = Convert.ToBoolean(dr["isDead"]),
+                        EnemyID = dr["EnemyID"].ToString(),
+                        IsDead = Convert.ToBoolean(dr["isDead"]),
                         TimeSpawn = Convert.ToDateTime(dr["TimeSpawn"]),
                         CurrentHealth = Convert.ToInt32(dr["CurrentHealth"]),
                         Delete = Convert.ToBoolean(dr["Delete"])
-
-
                     };
                     connection.Close();
                     return obj;
@@ -54,30 +52,30 @@ public static class AreaBoss_DAO
         return null;
     }
 
-    public static void UpdateHealthAreaBoss(AreaBoss_Entity areaBoss_Entity)
+    public static void UpdateHealthAreaEnemy(AreaEnemy_Entity AreaEnemy_Entity)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Update AreaBoss set isDead = @isDead, CurrentHealth = @CurrentHealth where ID = @ID and BossID = @BossID";
-            cmd.Parameters.AddWithValue("@ID", areaBoss_Entity.ID);
-            cmd.Parameters.AddWithValue("@isDead", areaBoss_Entity.isDead);
-            cmd.Parameters.AddWithValue("@BossID", areaBoss_Entity.BossID);
-            cmd.Parameters.AddWithValue("@CurrentHealth", areaBoss_Entity.CurrentHealth);
+            cmd.CommandText = "Update AreaEnemy set IsDead = @IsDead, CurrentHealth = @CurrentHealth where ID = @ID and EnemyID = @EnemyID";
+            cmd.Parameters.AddWithValue("@ID", AreaEnemy_Entity.ID);
+            cmd.Parameters.AddWithValue("@IsDead", AreaEnemy_Entity.IsDead);
+            cmd.Parameters.AddWithValue("@EnemyID", AreaEnemy_Entity.EnemyID);
+            cmd.Parameters.AddWithValue("@CurrentHealth", AreaEnemy_Entity.CurrentHealth);
             connection.Open();
             cmd.ExecuteNonQuery();
             connection.Close();
         }
     }
 
-    public static void SetAreaBossDie(string AreaID, string BossID)
+    public static void SetAreaEnemyDie(string AreaID, string EnemyID)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Update AreaBoss set isDead = 1, TimeSpawn = DATEADD(second, 10, GETDATE()) where ID = @ID and BossID = @BossID";
+            cmd.CommandText = "Update AreaEnemy set IsDead = 1, TimeSpawn = DATEADD(second, 10, GETDATE()) where ID = @ID and EnemyID = @EnemyID";
             cmd.Parameters.AddWithValue("@ID", AreaID);
-            cmd.Parameters.AddWithValue("@BossID", BossID);
+            cmd.Parameters.AddWithValue("@EnemyID", EnemyID);
             connection.Open();
             cmd.ExecuteNonQuery();
             connection.Close();

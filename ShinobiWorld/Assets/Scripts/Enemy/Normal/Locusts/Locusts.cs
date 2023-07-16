@@ -8,7 +8,7 @@ public class Locusts : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Locusts";
+        EnemyID = "Locusts";
         SetUp(EnemyID, AreaName);
     }
 
