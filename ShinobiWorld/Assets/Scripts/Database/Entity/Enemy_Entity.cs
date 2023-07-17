@@ -7,21 +7,23 @@ using System.Threading.Tasks;
 namespace Assets.Scripts.Database.Entity
 {
     [System.Serializable]
-    public class Boss_Entity
+    public class Enemy_Entity
     {
         public string ID;
-        public string TrophyID;
         public string Name;
         public int Health;
         public int Speed;
+        public int CoinBonus;
+        public int ExpBonus;
         public bool Delete;
 
-        public Boss_Entity()
+        public Enemy_Entity()
         {
         }
+
         public static object Deserialize(byte[] data)
         {
-            var result = new Boss_Entity();
+            var result = new Enemy_Entity();
             result.ID = data[0].ToString();
 
             return result;
@@ -29,8 +31,8 @@ namespace Assets.Scripts.Database.Entity
 
         public static byte[] Serialize(object customType)
         {
-            var c = (Boss_Entity)customType;
-            return new byte[] { Convert.ToByte(c.ID)};
+            var c = (Enemy_Entity)customType;
+            return new byte[] { Convert.ToByte(c.ID) };
         }
     }
 }

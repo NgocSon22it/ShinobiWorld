@@ -8,7 +8,7 @@ public class Fish : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Fish";
+        EnemyID = "Fish";
         SetUp(EnemyID, AreaName);
     }
 

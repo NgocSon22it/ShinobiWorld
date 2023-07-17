@@ -10,7 +10,6 @@ namespace Assets.Scripts.Database.Entity
     {
         public string ID;
         public string RoleInGameID;
-        public string Key;
         public string Name;
         public double Cooldown;
         public int Damage;
