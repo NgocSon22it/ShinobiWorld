@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class MeleeChacracter : PlayerBase
 {
     [SerializeField] float AttackRange;
-    
+
     //Skill One
     [SerializeField] SpriteRenderer Sword;
     float TimeCount = 5f;
@@ -20,7 +20,7 @@ public class MeleeChacracter : PlayerBase
     new void Start()
     {
         base.Start();
-        
+
     }
 
     // Update is called once per frame
@@ -78,18 +78,24 @@ public class MeleeChacracter : PlayerBase
 
     public void DamageNormalAttack()
     {
-        if (photonView.IsMine)
-        {
-            Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, AttackableLayer);
+        Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, AttackableLayer);
 
-            if (HitEnemy != null)
+        if (HitEnemy != null)
+        {
+            foreach (Collider2D Enemy in HitEnemy)
             {
-                foreach (Collider2D Enemy in HitEnemy)
+                if (Enemy.gameObject.CompareTag("Enemy") || Enemy.gameObject.CompareTag("Clone"))
                 {
-                    if (Enemy.gameObject.CompareTag("Enemy") || Enemy.gameObject.CompareTag("Clone"))
-                    {
-                        Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
-                    }
+                    Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
+                }
+                if (Enemy.gameObject.CompareTag("Player")
+                    && Enemy.gameObject.GetComponent<PhotonView>() != photonView
+                    && Enemy.gameObject.GetComponent<PlayerBase>().accountStatus == AccountStatus.PK
+                    )
+                {
+                    Enemy.GetComponent<PlayerBase>().TakeDamage(Weapon_Entity.Damage + DamageBonus);
+
+
                 }
             }
         }
@@ -117,10 +123,7 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
-            if (photonView.IsMine)
-            {
-                skillTwo.GetComponent<Melee_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
-            }
+            skillTwo.GetComponent<Melee_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
             skillTwo.SetActive(true);
         }
 
@@ -134,10 +137,7 @@ public class MeleeChacracter : PlayerBase
         if (skillThree != null)
         {
             skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
-            if (photonView.IsMine)
-            {
-                skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
-            }
+            skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
             skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition);
             skillThree.SetActive(true);
         }
@@ -164,7 +164,7 @@ public class MeleeChacracter : PlayerBase
         Debug.Log(DamageBonus);
 
     }
-   
+
 
     private void OnDrawGizmosSelected()
     {

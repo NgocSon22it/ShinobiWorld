@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,10 @@ public class PlayerSkill : MonoBehaviour
 {
     protected List<string> AttackAble_Tag = new List<string>()
     {
-        "Enemy", "Ground", "Other", "Clone"
+        "Enemy", "Ground", "Clone"
     };
+
+    [SerializeField] protected PhotonView PV;
 
     protected string UserID;  
     protected int Damage;
