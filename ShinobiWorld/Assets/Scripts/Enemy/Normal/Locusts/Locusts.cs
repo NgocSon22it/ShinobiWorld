@@ -8,7 +8,7 @@ public class Locusts : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Locusts";
+        EnemyID = "Locusts";
         SetUp(EnemyID, AreaName);
     }
 
@@ -55,19 +55,7 @@ public class Locusts : Enemy
                 }
             }
         }
-        FindTarget_CurrentTime += Time.deltaTime;
-
-        // Check if the interval has passed
-        if (FindTarget_CurrentTime >= FindTarget_TotalTime)
-        {
-            TargetPosition = FindClostestTarget(detectionRadius, "Player");
-            FindTarget_CurrentTime = 0f;
-        }
-
-        playerInRange = TargetPosition != Vector3.zero;
-        // Restrict movement to the move area
-        clampedPosition = movementBounds.ClosestPoint(transform.position);
-        transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
+        
 
         animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);

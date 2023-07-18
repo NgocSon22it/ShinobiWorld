@@ -8,7 +8,7 @@ public class Frog : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Frog";
+        EnemyID = "Frog";
         SetUp(EnemyID, AreaName);
     }
     // Start is called before the first frame update
@@ -24,19 +24,7 @@ public class Frog : Enemy
 
     public void Attack()
     {
-        FindTarget_CurrentTime += Time.deltaTime;
-
-        // Check if the interval has passed
-        if (FindTarget_CurrentTime >= FindTarget_TotalTime)
-        {
-            TargetPosition = FindClostestTarget(detectionRadius, "Player");
-            FindTarget_CurrentTime = 0f;
-        }
-
-        playerInRange = TargetPosition != Vector3.zero;
-        // Restrict movement to the move area
-        clampedPosition = movementBounds.ClosestPoint(transform.position);
-        transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
+        
 
         animator.SetBool("PlayerInRange", playerInRange);
     }

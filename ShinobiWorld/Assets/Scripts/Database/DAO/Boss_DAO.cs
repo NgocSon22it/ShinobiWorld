@@ -30,17 +30,11 @@ public static class Boss_DAO
                     var obj = new Boss_Entity
                     {
                         ID = dr["ID"].ToString(),
-                        TypeBossID = dr["TypeBossID"].ToString(),
+                        TrophyID = dr["TrophyID"].ToString(),
                         Name = dr["Name"].ToString(),
                         Health = Convert.ToInt32(dr["Health"]),
                         Speed = Convert.ToInt32(dr["Speed"]),
-                        CoinBonus = Convert.ToInt32(dr["CoinBonus"]),
-                        ExpBonus = Convert.ToInt32(dr["ExpBonus"]),
-                        Image = dr["Image"].ToString(),
-                        Description = dr["Description"].ToString(),
                         Delete = Convert.ToBoolean(dr["Delete"])
-
-
                     };
                     connection.Close();
                     return obj;

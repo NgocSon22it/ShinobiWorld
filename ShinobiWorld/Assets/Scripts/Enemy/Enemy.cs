@@ -17,8 +17,9 @@ using System.Data.SqlTypes;
 public class Enemy : MonoBehaviourPun, IPunObservable
 {
     // Entity
+    public Enemy_Entity enemy_Entity = new Enemy_Entity();
     public Boss_Entity boss_Entity = new Boss_Entity();
-    public AreaBoss_Entity areaBoss_Entity = new AreaBoss_Entity();
+    public AreaEnemy_Entity AreaEnemy_Entity = new AreaEnemy_Entity();
 
     //Separate
     public string AreaName = "";
@@ -41,11 +42,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public Vector3 TargetPosition;
 
     public bool playerInRange = false;
-    public Vector3 clampedPosition;
     public float detectionRadius = 5f;
-
-    public float FindTarget_CurrentTime;
-    public float FindTarget_TotalTime = 1f;
+    public LayerMask AttackableLayer;
 
     public float LocalScaleX;
 
@@ -82,17 +80,17 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     {
         if (!string.IsNullOrEmpty(AreaName))
         {
-            boss_Entity = Boss_DAO.GetBossByID(EnemyID);
-            areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+            enemy_Entity = Enemy_DAO.GetEnemyByID(EnemyID);
+            AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaName, EnemyID);
 
-            if (boss_Entity != null && areaBoss_Entity != null)
+            if (enemy_Entity != null && AreaEnemy_Entity != null)
             {
                 SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
 
-                if (dateTime >= areaBoss_Entity.TimeSpawn && areaBoss_Entity.isDead == false && areaBoss_Entity.CurrentHealth > 0)
+                if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false && AreaEnemy_Entity.CurrentHealth > 0)
                 {
                     gameObject.SetActive(true);
-                    LoadHealthUI(areaBoss_Entity.CurrentHealth, boss_Entity.Health);
+                    LoadHealthUI(AreaEnemy_Entity.CurrentHealth, enemy_Entity.Health);
                 }
                 else
                 {
@@ -155,7 +153,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public void TakeDamage_Arena(int Damage)
     {
         CurrentHealth -= Damage;
-        LoadHealthUI(CurrentHealth, boss_Entity.Health);
+        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
         switch (gameObject.tag)
         {
             case "Enemy":
@@ -179,23 +177,22 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     [PunRPC]
     public void TakeDamageSync(string UserID, int Damage)
     {
-        areaBoss_Entity.CurrentHealth -= Damage;
-        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
+        AreaEnemy_Entity.CurrentHealth -= Damage;
+        AreaEnemy_DAO.UpdateHealthAreaEnemy(AreaEnemy_Entity);
 
-        if (areaBoss_Entity.CurrentHealth <= 0)
+        if (AreaEnemy_Entity.CurrentHealth <= 0)
         {
-            References.AddExperience(boss_Entity.ExpBonus);
-            References.AddCoin(boss_Entity.CoinBonus);
+            References.AddExperience(enemy_Entity.ExpBonus);
+            References.AddCoin(enemy_Entity.CoinBonus);
 
-            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
+            MissionManager.Instance.DoingMission(AreaEnemy_Entity.EnemyID);
 
-            AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
+            AreaEnemy_DAO.SetAreaEnemyDie(AreaEnemy_Entity.ID, AreaEnemy_Entity.EnemyID);
             gameObject.SetActive(false);
-            Debug.Log(UserID);
             Disappear();
         }
 
-        LoadHealthUI(areaBoss_Entity.CurrentHealth, boss_Entity.Health);
+        LoadHealthUI(AreaEnemy_Entity.CurrentHealth, enemy_Entity.Health);
     }
 
     public void Disappear()
@@ -203,10 +200,10 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         switch (BossType)
         {
             case BossType.BossType_Normal:
-                areaBoss_Entity.CurrentHealth = boss_Entity.Health;
-                areaBoss_Entity.isDead = false;
-                AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
-                areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+                AreaEnemy_Entity.CurrentHealth = enemy_Entity.Health;
+                AreaEnemy_Entity.IsDead = false;
+                AreaEnemy_DAO.UpdateHealthAreaEnemy(AreaEnemy_Entity);
+                AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaName, EnemyID);
                 break;
 
             case BossType.BossType_Arena:
@@ -262,6 +259,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     public void FlipToTarget()
     {
+        TargetPosition = FindClostestTarget(detectionRadius + 1, "Player");
+
         if (MainPoint.position.x < TargetPosition.x && !FacingRight)
         {
             Flip();
@@ -272,13 +271,17 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         }
     }
 
+    public bool CheckPlayerInRange()
+    {
+        return Physics2D.OverlapCircle(MainPoint.position, detectionRadius, AttackableLayer);
+    }
+
     public Vector3 FindClostestTarget(float Range, string TargetTag)
     {
         float distanceToClosestTarget = Mathf.Infinity;
         Vector3 closestTargetPosition = Vector3.zero;
 
         GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
-
 
         foreach (GameObject currentTarget in allTarget)
         {
@@ -302,7 +305,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
             if (BossType == BossType.BossType_Normal)
             {
-                stream.SendNext(areaBoss_Entity.CurrentHealth);
+                stream.SendNext(AreaEnemy_Entity.CurrentHealth);
                 stream.SendNext(transform.position);
 
                 stream.SendNext(playerInRange);
@@ -320,8 +323,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
             if (BossType == BossType.BossType_Normal)
             {
-                areaBoss_Entity.CurrentHealth = (int)stream.ReceiveNext();
-                LoadHealthUI(areaBoss_Entity.CurrentHealth, boss_Entity.Health);
+                AreaEnemy_Entity.CurrentHealth = (int)stream.ReceiveNext();
+                LoadHealthUI(AreaEnemy_Entity.CurrentHealth, enemy_Entity.Health);
                 MovePosition = (Vector3)stream.ReceiveNext();
 
                 playerInRange = (bool)stream.ReceiveNext();
@@ -332,5 +335,12 @@ public class Enemy : MonoBehaviourPun, IPunObservable
                 HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
             }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(MainPoint.position, detectionRadius);
+
     }
 }

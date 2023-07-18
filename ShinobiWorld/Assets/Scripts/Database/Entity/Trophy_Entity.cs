@@ -9,11 +9,9 @@ namespace Assets.Scripts.Database.Entity
     public class Trophy_Entity
     {
         public string ID;
-        public string BossID;
         public string Name;
-        public int ContraitLevelAccount;
         public int Cost;
-        public string Image;
+        public int ContraitLevelAccount;
         public string Description;
         public bool Delete;
 

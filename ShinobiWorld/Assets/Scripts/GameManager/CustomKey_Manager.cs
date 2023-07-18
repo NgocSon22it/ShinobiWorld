@@ -23,37 +23,37 @@ public class CustomKey_Manager : MonoBehaviour
     PlayerBase ScriptReference;
     public void LoadPlayerKey()
     {
-        if (Game_Manager.Instance.PlayerManager != null)
-        {
-            ScriptReference = Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>();
+        //if (Game_Manager.Instance.PlayerManager != null)
+        //{
+        //    ScriptReference = Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>();
 
-            if (ScriptReference.SkillOne_Entity != null)
-            {
-                ListSkillTxt[0].text = ShowKey(ScriptReference.SkillOne_Entity.Key);
-            }
-            else
-            {
-                ListSkillTxt[0].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "One").Key);
-            }
+        //    if (ScriptReference.SkillOne_Entity != null)
+        //    {
+        //        ListSkillTxt[0].text = ShowKey(ScriptReference.SkillOne_Entity.Key);
+        //    }
+        //    else
+        //    {
+        //        ListSkillTxt[0].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "One").Key);
+        //    }
 
-            if (ScriptReference.SkillTwo_Entity != null)
-            {
-                ListSkillTxt[1].text = ShowKey(ScriptReference.SkillTwo_Entity.Key);
-            }
-            else
-            {
-                ListSkillTxt[1].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Two").Key);
-            }
+        //    if (ScriptReference.SkillTwo_Entity != null)
+        //    {
+        //        ListSkillTxt[1].text = ShowKey(ScriptReference.SkillTwo_Entity.Key);
+        //    }
+        //    else
+        //    {
+        //        ListSkillTxt[1].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Two").Key);
+        //    }
 
-            if (ScriptReference.SkillThree_Entity != null)
-            {
-                ListSkillTxt[2].text = ShowKey(ScriptReference.SkillThree_Entity.Key);
-            }
-            else
-            {
-                ListSkillTxt[2].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Three").Key);
-            }
-        }
+        //    if (ScriptReference.SkillThree_Entity != null)
+        //    {
+        //        ListSkillTxt[2].text = ShowKey(ScriptReference.SkillThree_Entity.Key);
+        //    }
+        //    else
+        //    {
+        //        ListSkillTxt[2].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Three").Key);
+        //    }
+        //}
 
     }
 
@@ -66,7 +66,7 @@ public class CustomKey_Manager : MonoBehaviour
     {
         CustomKeyPanel.SetActive(true);
         Game_Manager.Instance.IsBusy = true;
-        LoadPlayerKey();
+        //LoadPlayerKey();
     }
 
     public void CloseCustomKeyPanel()
@@ -116,7 +116,7 @@ public class CustomKey_Manager : MonoBehaviour
 
     public void SetUpKey(int Key)
     {
-        LoadPlayerKey();
+        //LoadPlayerKey();
         ListSkillTxt[Key].text = "Nhấn vào phím muốn thay đổi";
         IndexKey = Key;
         isWaitingForKeyPress = true;
@@ -138,15 +138,15 @@ public class CustomKey_Manager : MonoBehaviour
             {
                 case 0:
                     ScriptReference.playerInput.actions["SkillOne"].ApplyBindingOverride(NewKey);
-                    HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "One", NewKey);
+                    //HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "One", NewKey);
                     break;
                 case 1:
                     ScriptReference.playerInput.actions["SkillTwo"].ApplyBindingOverride(NewKey);
-                    HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Two", NewKey);
+                    //HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Two", NewKey);
                     break;
                 case 2:
                     ScriptReference.playerInput.actions["SkillThree"].ApplyBindingOverride(NewKey);
-                    HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Three", NewKey);
+                    //HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Three", NewKey);
                     break;
             }
 
@@ -169,17 +169,17 @@ public class CustomKey_Manager : MonoBehaviour
 
     public void SetDefaultKey()
     {
-        ListSkillTxt[0].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "One").Key);
-        ListSkillTxt[1].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Two").Key);
-        ListSkillTxt[2].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Three").Key);
+        //ListSkillTxt[0].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "One").Key);
+        //ListSkillTxt[1].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Two").Key);
+        //ListSkillTxt[2].text = ShowKey(References.listSkill.Find(obj => obj.ID == "Skill_" + Game_Manager.Instance.Role + "Three").Key);
 
         ScriptReference.playerInput.actions["SkillOne"].ApplyBindingOverride(KeyboardExtension + "q");
         ScriptReference.playerInput.actions["SkillTwo"].ApplyBindingOverride(KeyboardExtension + "e");
         ScriptReference.playerInput.actions["SkillThree"].ApplyBindingOverride(KeyboardExtension + "space");
 
-        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "One", KeyboardExtension + "q");
-        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Two", KeyboardExtension + "e");
-        HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Three", KeyboardExtension + "space");
+        //HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "One", KeyboardExtension + "q");
+        //HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Two", KeyboardExtension + "e");
+        //HasSkill_DAO.ChangeKey(References.accountRefer.ID, "Skill_" + Game_Manager.Instance.Role + "Three", KeyboardExtension + "space");
 
         Game_Manager.Instance.ReloadPlayerProperties();
         isWaitingForKeyPress = false;
@@ -197,7 +197,7 @@ public class CustomKey_Manager : MonoBehaviour
                     if (control is KeyControl keyControl && keyControl.wasPressedThisFrame)
                     {
                         isWaitingForKeyPress = false;
-                        ChangeKey(IndexKey, keyControl.path);
+                        //ChangeKey(IndexKey, keyControl.path);
                         return;
                     }
                 }

@@ -12,8 +12,6 @@ namespace Assets.Scripts.Database.Entity
         public string BossID;
         public string Name;
         public int Damage;
-        public string Image;
-        public string Description;
         public bool Delete;
 
         public SkillBoss_Entity()
