@@ -9,4 +9,5 @@ public class Scenes
     public static string MainMenu   = "MainMenu";
     public static string Creator    = "Creator";
     public static string Konoha = "Lang La";
+    public static string PK = "PK";
 }
