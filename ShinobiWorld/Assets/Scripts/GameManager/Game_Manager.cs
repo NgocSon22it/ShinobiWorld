@@ -117,11 +117,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                 Enemy enemyScript = enemy.GetComponent<Enemy>();
                 if (enemyScript != null)
                 {
-                    if (dateTime >= enemyScript.areaBoss_Entity.TimeSpawn
-                        && enemyScript.areaBoss_Entity.isDead == false
-                        && enemyScript.areaBoss_Entity.CurrentHealth > 0)
+                    if (dateTime >= enemyScript.AreaEnemy_Entity.TimeSpawn
+                        && enemyScript.AreaEnemy_Entity.IsDead == false
+                        && enemyScript.AreaEnemy_Entity.CurrentHealth > 0)
                     {
-                        enemyScript.LoadHealthUI(enemyScript.areaBoss_Entity.CurrentHealth, enemyScript.boss_Entity.Health);
+                        enemyScript.LoadHealthUI(enemyScript.AreaEnemy_Entity.CurrentHealth, enemyScript.boss_Entity.Health);
                         enemy.SetActive(true);
                     }
                 }

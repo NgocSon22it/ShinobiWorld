@@ -33,7 +33,7 @@ namespace Assets.Scripts.Database.DAO
                         {
                             ID = dr["ID"].ToString(),
                             TrophyID = dr["TrophyID"].ToString(),
-                            BossID = dr["BossID"].ToString(),
+                            EnemyID = dr["EnemyID"].ToString(),
                             CategoryEquipmentID = dr["CategoryEquipmentID"].ToString(),
                             RequiredStrength = Convert.ToInt32(dr["RequiredStrength"]),
                             Content = dr["Content"].ToString(),

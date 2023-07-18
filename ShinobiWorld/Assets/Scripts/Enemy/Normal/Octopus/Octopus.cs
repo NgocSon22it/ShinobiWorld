@@ -6,7 +6,7 @@ public class Octopus : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Boss_Octopus";
+        EnemyID = "Octopus";
         SetUp(EnemyID, AreaName);
     }
     // Start is called before the first frame update

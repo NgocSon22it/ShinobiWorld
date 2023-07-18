@@ -219,9 +219,9 @@ public class MissionManager : MonoBehaviour
         Reload();
     }
 
-    public void DoingMission(string BossID)
+    public void DoingMission(string EnemyID)
     {
-        if(HavingMission != null && BossID == HavingMission.BossID)
+        if(HavingMission != null && EnemyID == HavingMission.EnemyID)
         {
             ++CurrentMission.Current;
             HasMission_DAO.DoingMission(References.accountRefer.ID, HavingMission.ID, CurrentMission.Current);
@@ -257,7 +257,7 @@ public class MissionManager : MonoBehaviour
 
     public void Check()
     {
-        DoingMission(HavingMission.BossID);
+        DoingMission(HavingMission.EnemyID);
     }
 
 }
