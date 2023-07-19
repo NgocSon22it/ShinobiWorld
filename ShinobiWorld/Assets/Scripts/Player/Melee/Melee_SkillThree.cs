@@ -29,7 +29,7 @@ public class Melee_SkillThree : PlayerSkill
             if (HitEffect != null)
             {
                 HitEffect.transform.position = EndPoint;
-                HitEffect.GetComponent<Melee_SkillThreeExplosion>().SetUp(UserID, Damage);
+                HitEffect.GetComponent<Melee_SkillThreeExplosion>().SetUp(Damage);
                 HitEffect.SetActive(true);
             }
         }

@@ -188,14 +188,12 @@ public static class References
     public static void AddCoin(int Amount)
     {
         accountRefer.Coin += Amount;
-        //UpdateAccountToDB();
         Game_Manager.Instance.ReloadPlayerProperties();
     }
 
     public static void LevelUpReward()
     {
         BonusLevelUp();
-        UpdateAccountToDB();
         Account_DAO.GetAccountPowerByID(accountRefer.ID);
         Game_Manager.Instance.ReloadPlayerProperties();
     }
@@ -221,6 +219,10 @@ public static class References
 
         return sb.ToString();
     }
+}
+public enum CustomEventCode
+{
+    EnemyDeactivate = 1
 }
 
 public enum AccountStatus

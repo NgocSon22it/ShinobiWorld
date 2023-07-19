@@ -89,7 +89,7 @@ public class SupportCharacter : PlayerBase
                 {
                     if (Enemy.transform.CompareTag("Enemy"))
                     {
-                        Enemy.transform.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage);
+                        Enemy.transform.GetComponent<Enemy>().TakeDamage(photonView.ViewID, Weapon_Entity.Damage);
                     }
                 }
             }
@@ -143,7 +143,7 @@ public class SupportCharacter : PlayerBase
             skillThree.transform.rotation = AttackPoint.rotation;
             if (photonView.IsMine)
             {
-                skillThree.GetComponent<FierceFist>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+                skillThree.GetComponent<FierceFist>().SetUp(SkillOne_Entity.Damage + DamageBonus);
             }
             skillThree.SetActive(true);
             skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);

@@ -220,6 +220,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public void LastHitRewards()
+    {
+
+    }
+
 
     public void LoadAllAccountUI()
     {
@@ -328,6 +333,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             CurrentHealth_NumberUI.text = AccountEntity.CurrentHealth + " / " + AccountEntity.Health;
         }
     }
+
     public void Update()
     {
         if (photonView.IsMine)

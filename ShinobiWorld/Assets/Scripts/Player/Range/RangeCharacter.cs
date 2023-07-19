@@ -94,7 +94,7 @@ public class RangeCharacter : PlayerBase
         if (normalAttack != null)
         {
             normalAttack.transform.position = AttackPoint.position;
-            normalAttack.GetComponent<Range_NormalAttack>().SetUp(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
+            normalAttack.GetComponent<Range_NormalAttack>().SetUp(Weapon_Entity.Damage + DamageBonus);
             normalAttack.SetActive(true);
             normalAttack.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
@@ -114,7 +114,7 @@ public class RangeCharacter : PlayerBase
         {
             skillOne.transform.position = AttackPoint.position;
             skillOne.transform.rotation = AttackPoint.rotation;
-            skillOne.GetComponent<Range_SkillOne>().SetUp(AccountEntity.ID, SkillOne_Entity.Damage + DamageBonus);
+            skillOne.GetComponent<Range_SkillOne>().SetUp(SkillOne_Entity.Damage + DamageBonus);
             skillOne.SetActive(true);
             skillOne.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
@@ -134,7 +134,7 @@ public class RangeCharacter : PlayerBase
         if (centerDarts != null)
         {
             centerDarts.transform.position = AttackPoint.position;
-            centerDarts.GetComponent<Range_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            centerDarts.GetComponent<Range_SkillTwo>().SetUp(SkillTwo_Entity.Damage + DamageBonus);
             centerDarts.SetActive(true);
             centerDarts.GetComponent<Rigidbody2D>().velocity = SkillDirection * 10;
         }
@@ -143,7 +143,7 @@ public class RangeCharacter : PlayerBase
         if (leftDarts != null)
         {
             leftDarts.transform.position = AttackPoint.position;
-            leftDarts.GetComponent<Range_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            leftDarts.GetComponent<Range_SkillTwo>().SetUp(SkillTwo_Entity.Damage + DamageBonus);
             leftDarts.SetActive(true);
             leftDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }
@@ -152,7 +152,7 @@ public class RangeCharacter : PlayerBase
         if (rightDarts != null)
         {
             rightDarts.transform.position = AttackPoint.position;
-            rightDarts.GetComponent<Range_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            rightDarts.GetComponent<Range_SkillTwo>().SetUp(SkillTwo_Entity.Damage + DamageBonus);
             rightDarts.SetActive(true);
             rightDarts.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(EndAngle, Vector3.forward) * centerDarts.GetComponent<Rigidbody2D>().velocity;
         }

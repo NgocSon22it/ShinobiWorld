@@ -24,7 +24,7 @@ public class Range_SkillTwo : PlayerSkill
         {
             if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Clone")
             {
-                collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+                collision.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage);
 
                 HitEffect = player_Pool.GetSkillTwo_Hit_FromPool();
                 if (HitEffect != null)

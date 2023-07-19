@@ -48,7 +48,7 @@ public class Melee_SkillTwo : PlayerSkill
                 {
                     if (collider.CompareTag("Enemy") || collider.gameObject.tag == "Clone")
                     {
-                        collider.GetComponent<Enemy>().TakeDamage(UserID, Damage * 10);
+                        collider.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage * 10);
                     }                 
                 }
                 if (collider.CompareTag("Player")
