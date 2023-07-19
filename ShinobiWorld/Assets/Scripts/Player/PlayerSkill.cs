@@ -12,7 +12,6 @@ public class PlayerSkill : MonoBehaviour
 
     [SerializeField] protected PhotonView PV;
 
-    protected string UserID;  
     protected int Damage;
 
     protected float LifeTime;
@@ -20,9 +19,8 @@ public class PlayerSkill : MonoBehaviour
     [SerializeField] protected Player_Pool player_Pool;
     protected GameObject HitEffect;
 
-    public void SetUp(string UserID, int Damage)
+    public void SetUp(int Damage)
     {
-        this.UserID = UserID;
         this.Damage = Damage;
     }
 

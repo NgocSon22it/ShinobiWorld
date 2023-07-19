@@ -24,7 +24,7 @@ public class Range_NormalAttack : PlayerSkill
         {
             if (collision.CompareTag("Enemy") || collision.gameObject.tag == "Clone")
             {
-                collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+                collision.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage);
 
                 HitEffect = player_Pool.GetNormalAttack_Hit_FromPool();
                 if (HitEffect != null)
