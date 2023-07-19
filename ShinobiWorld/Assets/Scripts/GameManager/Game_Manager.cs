@@ -17,7 +17,7 @@ using System.Data;
 using Unity.VisualScripting;
 using System.Data.SqlTypes;
 using System;
-
+using Assets.Scripts.GameManager;
 
 public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
@@ -55,6 +55,12 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     RoomOptions roomOptions = new RoomOptions();
 
+    [Header("Player Instance")]
+    [SerializeField] GameObject LoadingPrefabs;
+    //[SerializeField] GameObject PlayerAllUIPrefabs;
+    public GameObject LoadingInstance;
+    //public GameObject PlayerAllUIInstance;
+
     private void Awake()
     {
         Instance = this;
@@ -63,6 +69,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     // Start is called before the first frame update
     void Start()
     {
+        LoadingInstance = Instantiate(LoadingPrefabs);
+        LoadingInstance.GetComponent<Loading>().Begin();
+
         if (PhotonNetwork.IsConnectedAndReady)
         {
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
@@ -75,9 +84,20 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedRoom()
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
+
+
+
+        Debug.Log("abbbbb");
+
         SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);
+        Debug.Log("cccccc");
+
+
         ChatManager.Instance.ConnectToChat();
         //SpawnEnemyCoroutine = StartCoroutine(SpawnEnemy());
+
+        LoadingInstance.GetComponent<Loading>().End();
+
     }
 
     public void SetupPlayer(Vector3 position, PolygonCollider2D CameraBox, AccountStatus accountStatus)
@@ -138,7 +158,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
 
-        int accountStatus = (int) AccountStatus;
+        int accountStatus = (int)AccountStatus;
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
         string HasWeaponJson = JsonUtility.ToJson(References.hasWeapon);
         string HasSkillOneJson = JsonUtility.ToJson(References.hasSkillOne);
