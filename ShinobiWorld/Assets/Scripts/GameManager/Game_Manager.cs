@@ -19,7 +19,7 @@ using System.Data.SqlTypes;
 using System;
 
 
-public class Game_Manager : MonoBehaviourPunCallbacks
+public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public GameObject PlayerManager;
 
@@ -39,7 +39,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     [SerializeField] List<GameObject> List_LangLa2 = new List<GameObject>();
 
-    [SerializeField] List<GameObject> List_LangLa3 = new List<GameObject>();
+    [SerializeField] List<GameObject> List_LangMay1 = new List<GameObject>();
 
     [SerializeField] List<GameObject> List_LangLa4 = new List<GameObject>();
 
@@ -47,10 +47,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     SqlDateTime dateTime;
 
-    public Vector3 PlayerReconnectPosition;
     public AccountStatus AccountStatus;
 
     Coroutine SpawnEnemyCoroutine;
+    private const byte DeActiveEventCode = 1;
+
 
     RoomOptions roomOptions = new RoomOptions();
 
@@ -59,7 +60,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         Instance = this;
 
     }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -75,10 +75,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
-
         SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);
         ChatManager.Instance.ConnectToChat();
-        SpawnEnemyCoroutine = StartCoroutine(SpawnEnemy());
+        //SpawnEnemyCoroutine = StartCoroutine(SpawnEnemy());
     }
 
     public void SetupPlayer(Vector3 position, PolygonCollider2D CameraBox, AccountStatus accountStatus)
@@ -240,5 +239,22 @@ public class Game_Manager : MonoBehaviourPunCallbacks
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
         }
 
+    }
+
+    public void ShowEndgamePanel()
+    {
+        PhotonNetwork.RaiseEvent(DeActiveEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == (byte)CustomEventCode.EnemyDeactivate)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int viewID = (int)data[0];
+
+            GameObject enemyObject = PhotonView.Find(viewID).gameObject;
+            enemyObject.SetActive(false);
+        }
     }
 }

@@ -21,7 +21,7 @@ public class FierceFist : PlayerSkill
         {
             if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Clone")
             {
-                collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+                collision.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage);
             }
             if (collision.gameObject.tag == "Other")
             {

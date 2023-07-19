@@ -86,7 +86,7 @@ public class MeleeChacracter : PlayerBase
             {
                 if (Enemy.gameObject.CompareTag("Enemy") || Enemy.gameObject.CompareTag("Clone"))
                 {
-                    Enemy.GetComponent<Enemy>().TakeDamage(AccountEntity.ID, Weapon_Entity.Damage + DamageBonus);
+                    Enemy.GetComponent<Enemy>().TakeDamage(photonView.ViewID, Weapon_Entity.Damage + DamageBonus);
                 }
                 if (Enemy.gameObject.CompareTag("Player")
                     && Enemy.gameObject.GetComponent<PhotonView>() != photonView
@@ -103,7 +103,6 @@ public class MeleeChacracter : PlayerBase
 
     public void Animation_SkillOne()
     {
-
         if (Righteous != null)
         {
             // If a color change coroutine is already running, stop it
@@ -123,7 +122,7 @@ public class MeleeChacracter : PlayerBase
         {
             skillTwo.transform.position = AttackPoint.position;
             skillTwo.transform.rotation = AttackPoint.rotation;
-            skillTwo.GetComponent<Melee_SkillTwo>().SetUp(AccountEntity.ID, SkillTwo_Entity.Damage + DamageBonus);
+            skillTwo.GetComponent<Melee_SkillTwo>().SetUp(SkillTwo_Entity.Damage + DamageBonus);
             skillTwo.SetActive(true);
         }
 
@@ -137,7 +136,7 @@ public class MeleeChacracter : PlayerBase
         if (skillThree != null)
         {
             skillThree.transform.position = targetPosition + new Vector3(0, 8, 0);
-            skillThree.GetComponent<Melee_SkillThree>().SetUp(AccountEntity.ID, SkillThree_Entity.Damage + DamageBonus);
+            skillThree.GetComponent<Melee_SkillThree>().SetUp(SkillThree_Entity.Damage + DamageBonus);
             skillThree.GetComponent<Melee_SkillThree>().SetUpPoint(targetPosition);
             skillThree.SetActive(true);
         }
