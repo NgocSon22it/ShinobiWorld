@@ -48,6 +48,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     SqlDateTime dateTime;
 
     public Vector3 PlayerReconnectPosition;
+    public AccountStatus AccountStatus;
 
     Coroutine SpawnEnemyCoroutine;
 
@@ -100,7 +101,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                     break;
             }
             PlayerManager.GetComponent<PlayerBase>().CameraBox = CameraBox;
-            PlayerManager.GetComponent<PlayerBase>().AccountStatus = accountStatus;
+            AccountStatus = accountStatus;
             ReloadPlayerProperties();
             Debug.Log("Successfully joined room S1!");
         }
@@ -137,12 +138,15 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         References.UpdateAccountToDB();
         References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
+
+        int accountStatus = (int) AccountStatus;
         string AccountJson = JsonUtility.ToJson(References.accountRefer);
         string HasWeaponJson = JsonUtility.ToJson(References.hasWeapon);
         string HasSkillOneJson = JsonUtility.ToJson(References.hasSkillOne);
         string HasSkillTwoJson = JsonUtility.ToJson(References.hasSkillTwo);
         string HasSkillThreeJson = JsonUtility.ToJson(References.hasSkillThree);
 
+        PlayerProperties["AccountStatus"] = accountStatus;
         PlayerProperties["Account"] = AccountJson;
         PlayerProperties["HasWeapon"] = HasWeaponJson;
         PlayerProperties["HasSkillOne"] = HasSkillOneJson;
@@ -199,7 +203,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
         ReloadPlayerProperties();
-        PlayerManager.GetComponent<PlayerBase>().SetUpPlayerLive();
+        PlayerManager.GetComponent<PlayerBase>().CallRpcPlayerLive();
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
 
