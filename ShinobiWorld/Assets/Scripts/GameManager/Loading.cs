@@ -32,33 +32,36 @@ namespace Assets.Scripts.GameManager
             speed = 0.5f;
         }
 
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                Begin();
-            }
-
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                End();
-            }
-        }
-
         public void Begin()
         {
             Debug.Log("Startttttttttttttttttttt");
+            Debug.Log("11111");
             Background.gameObject.SetActive(true);
-            rotateCoroutine = StartCoroutine(RotateCoroutine());
-            loadTxtCoroutine = StartCoroutine(LoadTxtCoroutine());
+
+            if (rotateCoroutine == null)
+            {
+                rotateCoroutine = StartCoroutine(RotateCoroutine());
+            }
+            if (loadTxtCoroutine == null)
+            {
+                loadTxtCoroutine = StartCoroutine(LoadTxtCoroutine());
+            }
+            //rotateCoroutine = StartCoroutine(RotateCoroutine());
+            //loadTxtCoroutine = StartCoroutine(LoadTxtCoroutine());
         }
 
         public void End()
         {
             Debug.Log("Endddddddd");
 
-            StopCoroutine(rotateCoroutine);
-            StopCoroutine(loadTxtCoroutine);
+            if (rotateCoroutine != null)
+            {
+                StopCoroutine(rotateCoroutine);
+            }
+            if (loadTxtCoroutine != null)
+            {
+                StopCoroutine(loadTxtCoroutine);
+            }
             rotateCoroutine = null;
             loadTxtCoroutine = null;
             Background.gameObject.SetActive(false);

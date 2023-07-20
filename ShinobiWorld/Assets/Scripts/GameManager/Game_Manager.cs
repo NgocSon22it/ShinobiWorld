@@ -57,9 +57,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Player Instance")]
     [SerializeField] GameObject LoadingPrefabs;
-    //[SerializeField] GameObject PlayerAllUIPrefabs;
+    
     public GameObject LoadingInstance;
-    //public GameObject PlayerAllUIInstance;
+    
 
     private void Awake()
     {
