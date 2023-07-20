@@ -19,13 +19,13 @@ using WebSocketSharp;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.InputSystem.Controls;
+using UnityEditor;
 
 public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 {
+    [Header("Player Entity")]
     public Account_Entity AccountEntity = new Account_Entity();
-
     public HasWeapon_Entity Weapon_Entity = new HasWeapon_Entity();
-
     public HasSkill_Entity SkillOne_Entity = new HasSkill_Entity();
     public HasSkill_Entity SkillTwo_Entity = new HasSkill_Entity();
     public HasSkill_Entity SkillThree_Entity = new HasSkill_Entity();
@@ -33,24 +33,28 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [Header("Player Instance")]
     [SerializeField] GameObject PlayerCameraPrefabs;
     [SerializeField] GameObject PlayerAllUIPrefabs;
-
-    [SerializeField] TMP_Text PlayerNickName;
-    [SerializeField] GameObject PlayerHealthChakraUI;
-
     public GameObject PlayerCameraInstance;
     public GameObject PlayerAllUIInstance;
 
+    [Header("Player UI")]
+    [SerializeField] TMP_Text PlayerNickName;
+    [SerializeField] GameObject PlayerHealthChakraUI;
+
+    [SerializeField] Image CurrentHealth_UI;
+    [SerializeField] Image CurrentChakra_UI;
+
+    [SerializeField] TMP_Text CurrentHealth_NumberUI;
+    [SerializeField] TMP_Text CurrentChakra_NumberUI;
+
+    [Header("Camera Bound")]
     public PolygonCollider2D CameraBox;
 
+    [Header("Attack Interaction")]
     [SerializeField] public LayerMask AttackableLayer;
-    //Attack
     [SerializeField] public Transform AttackPoint;
-
     [SerializeField] GameObject ObjectPool_Runtime;
 
-    public AccountStatus AccountStatus;
-
-    //Skill
+    [Header("Skill")]
     public float SkillOneCooldown_Total;
     public float SkillOneCooldown_Current;
 
@@ -60,26 +64,26 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public float SkillThreeCooldown_Total;
     public float SkillThreeCooldown_Current;
 
-    //Attack
+    [Header("Normal Attack")]
     public float AttackCooldown_Total;
     public float AttackCooldown_Current;
 
-    //Enemy
-    protected GameObject Enemy;
+    [Header("Status (Nornal, Arena, PK)")]
+    public AccountStatus accountStatus;
 
-    //Mouse
+    [Header("Mouse Position")]
     protected Vector3 targetPosition;
 
-    //Direction
+    [Header("Skill Direction")]
     protected Vector2 SkillDirection;
 
-    //MainPoint
+    [Header("Main Point")]
     [SerializeField] Transform MainPoint;
 
-    //Bonus
+    [Header("The Bonus")]
     public int DamageBonus, SpeedBonus;
 
-    //Component
+    [Header("Component")]
     public Animator animator;
     public Rigidbody2D rigidbody2d;
     public SpriteRenderer spriteRenderer;
@@ -88,38 +92,34 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public Collider2D playerCollider;
     public Player_Pool playerPool;
 
-    //Player Input
+    [Header("Player Input")]
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
     bool FacingRight = true;
 
-    //Health UI
-    [SerializeField] Image CurrentHealth_UI;
-    [SerializeField] Image CurrentChakra_UI;
 
-    [SerializeField] TMP_Text CurrentHealth_NumberUI;
-    [SerializeField] TMP_Text CurrentChakra_NumberUI;
-
-    //Sprite layout
-    //Skin
+    [Header("Player Layout")]
+    [Header("Skin")]
     public SpriteRenderer Shirt;
     public SpriteRenderer RightFoot;
     public SpriteRenderer LeftFoot;
     public SpriteRenderer RightHand;
     public SpriteRenderer LeftHand;
-    //Eye
+
+    [Header("Eyes")]
     public SpriteRenderer Eye;
-    //Hair
+
+    [Header("Hair")]
     public SpriteRenderer Hair;
-    //Mouth
+
+    [Header("Mouth")]
     public SpriteRenderer Mouth;
 
-    //Walk Interaction
+    [Header("Walk Interaction")]
     public bool CanWalking;
-
     public float LocalScaleX, LocalScaleY;
 
-    // Lag
+    // Lag Reduce
     Vector3 realPosition;
     Quaternion realRotation;
     float currentTime = 0;
@@ -132,6 +132,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (targetPlayer != null && targetPlayer.Equals(photonView.Owner))
         {
+            var accountStatusJson = (int)changedProps["AccountStatus"];
+            accountStatus = (AccountStatus)accountStatusJson;
+
             var accountJson = (string)changedProps["Account"];
             AccountEntity = JsonUtility.FromJson<Account_Entity>(accountJson);
 
@@ -217,6 +220,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public void LastHitRewards()
+    {
+
+    }
 
 
     public void LoadAllAccountUI()
@@ -326,6 +333,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             CurrentHealth_NumberUI.text = AccountEntity.CurrentHealth + " / " + AccountEntity.Health;
         }
     }
+
     public void Update()
     {
         if (photonView.IsMine)
@@ -334,14 +342,14 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             SkillOne();
             SkillTwo();
             SkillThree();
-
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
-            if (Game_Manager.Instance.IsBusy == true) return;
             animator.SetFloat("Horizontal", MoveDirection.x);
             animator.SetFloat("Vertical", MoveDirection.y);
             animator.SetFloat("Speed", MoveDirection.sqrMagnitude);
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             targetPosition.z = 10;
+
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
+            if (Game_Manager.Instance.IsBusy == true) return;
 
             if (Input.GetKeyDown(KeyCode.I))
             {
@@ -395,7 +403,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             AccountEntity.CurrentHealth -= Damage;
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
 
-            switch (AccountStatus)
+            switch (accountStatus)
             {
                 case AccountStatus.Normal:
                     References.UpdateAccountToDB();
@@ -417,24 +425,28 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                     break;
 
                 case AccountStatus.PK:
+                    if (AccountEntity.CurrentHealth <= 0)
+                    {
+                        PK_Manager.Instance.Battle_End(AccountEntity.ID);
+                    }
                     break;
             }
 
+            if (AccountEntity.CurrentHealth <= 0)
+            {
+                AccountEntity.CurrentHealth = 0;
+                References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
+                CancelInvoke(nameof(RegenChakra));
+                CancelInvoke(nameof(RegenHealth));
+                photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
+            }
 
+            LoadPlayerHealthUI();
 
 
         }
 
-        if (AccountEntity.CurrentHealth <= 0)
-        {
-            AccountEntity.CurrentHealth = 0;
-            References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
-            CancelInvoke(nameof(RegenChakra));
-            CancelInvoke(nameof(RegenHealth));
-            SetUpPlayerDie();
-        }
 
-        LoadPlayerHealthUI();
     }
 
 
@@ -620,6 +632,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
+
             stream.SendNext(transform.position);
             stream.SendNext(transform.localScale);
             stream.SendNext(MoveDirection);
@@ -638,6 +651,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
         else
         {
+
             realPosition = (Vector3)stream.ReceiveNext();
             transform.localScale = (Vector3)stream.ReceiveNext();
             MoveDirection = (Vector2)stream.ReceiveNext();
@@ -702,16 +716,24 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    [PunRPC]
     public void SetUpPlayerDie()
     {
         animator.SetTrigger("Die");
         playerCollider.enabled = false;
         this.enabled = false;
     }
+
+    [PunRPC]
     public void SetUpPlayerLive()
     {
         animator.SetTrigger("Live");
         playerCollider.enabled = true;
         this.enabled = true;
+    }
+
+    public void CallRpcPlayerLive()
+    {
+        photonView.RPC(nameof(SetUpPlayerLive), RpcTarget.AllBuffered);
     }
 }

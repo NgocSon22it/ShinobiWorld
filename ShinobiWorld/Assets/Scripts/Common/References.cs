@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -186,14 +188,12 @@ public static class References
     public static void AddCoin(int Amount)
     {
         accountRefer.Coin += Amount;
-        //UpdateAccountToDB();
         Game_Manager.Instance.ReloadPlayerProperties();
     }
 
     public static void LevelUpReward()
     {
         BonusLevelUp();
-        UpdateAccountToDB();
         Account_DAO.GetAccountPowerByID(accountRefer.ID);
         Game_Manager.Instance.ReloadPlayerProperties();
     }
@@ -206,6 +206,23 @@ public static class References
 
         return listEquipCate[index];
     }
+
+    public static string GenerateRandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++)
+        {
+            sb.Append(chars[new System.Random().Next(chars.Length)]);
+        }
+
+        return sb.ToString();
+    }
+}
+public enum CustomEventCode
+{
+    EnemyDeactivate = 1
 }
 
 public enum AccountStatus
