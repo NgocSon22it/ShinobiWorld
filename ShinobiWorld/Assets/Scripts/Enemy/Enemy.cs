@@ -13,6 +13,7 @@ using UnityEngine.LowLevel;
 using UnityEngine.Rendering;
 using Photon.Realtime;
 using System.Data.SqlTypes;
+using ExitGames.Client.Photon;
 
 public class Enemy : MonoBehaviourPun, IPunObservable
 {
@@ -108,7 +109,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         }
     }
 
-
     public void Awake()
     {
 
@@ -135,12 +135,12 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         CurrentHealth_UI.fillAmount = CurrentHealth / TotalHealth;
     }
 
-    public void TakeDamage(string UserID, int Damage)
+    public void TakeDamage(int UserID, int Damage)
     {
         switch (BossType)
         {
             case BossType.BossType_Normal:
-                photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, UserID, Damage);
+                TakeDamageSync(UserID, Damage);
                 break;
 
             case BossType.BossType_Arena:
@@ -174,25 +174,42 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     }
 
-    [PunRPC]
-    public void TakeDamageSync(string UserID, int Damage)
+    public void TakeDamageSync(int UserID, int Damage)
     {
         AreaEnemy_Entity.CurrentHealth -= Damage;
         AreaEnemy_DAO.UpdateHealthAreaEnemy(AreaEnemy_Entity);
 
         if (AreaEnemy_Entity.CurrentHealth <= 0)
         {
-            References.AddExperience(enemy_Entity.ExpBonus);
-            References.AddCoin(enemy_Entity.CoinBonus);
+            GameObject LastHitPlayer = PhotonView.Find(UserID).gameObject;
 
-            MissionManager.Instance.DoingMission(AreaEnemy_Entity.EnemyID);
+            if (LastHitPlayer != null)
+            {
+                PlayerBase playerBase = LastHitPlayer.GetComponent<PlayerBase>();
+
+                if (References.accountRefer.ID == playerBase.AccountEntity.ID)
+                {
+                    References.AddExperience(enemy_Entity.ExpBonus);
+                    References.AddCoin(enemy_Entity.CoinBonus);
+
+                    MissionManager.Instance.DoingMission(AreaEnemy_Entity.EnemyID);
+
+                }
+            }
 
             AreaEnemy_DAO.SetAreaEnemyDie(AreaEnemy_Entity.ID, AreaEnemy_Entity.EnemyID);
             gameObject.SetActive(false);
+            if (PhotonNetwork.IsConnected)
+            {
+                // Notify all players that the enemy has been deactivated
+                object[] data = new object[] { photonView.ViewID };
+                PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+            }
             Disappear();
         }
 
         LoadHealthUI(AreaEnemy_Entity.CurrentHealth, enemy_Entity.Health);
+
     }
 
     public void Disappear()
@@ -207,7 +224,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
                 break;
 
             case BossType.BossType_Arena:
-                gameObject.SetActive(false);              
+                gameObject.SetActive(false);
                 break;
         }
         DeathEffect.transform.position = transform.position;

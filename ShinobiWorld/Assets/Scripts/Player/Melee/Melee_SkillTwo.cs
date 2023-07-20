@@ -1,4 +1,5 @@
 using Assets.Scripts.Database.Entity;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -47,12 +48,14 @@ public class Melee_SkillTwo : PlayerSkill
                 {
                     if (collider.CompareTag("Enemy") || collider.gameObject.tag == "Clone")
                     {
-                        collider.GetComponent<Enemy>().TakeDamage(UserID, Damage* 10);
-                    }
-                    if (collider.CompareTag("Other"))
-                    {
-                        collider.GetComponent<PlayerBase>().TakeDamage(Damage);
-                    }
+                        collider.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage * 10);
+                    }                 
+                }
+                if (collider.CompareTag("Player")
+                        && collider.gameObject.GetComponent<PlayerBase>().accountStatus == AccountStatus.PK
+                        && collider.gameObject.GetComponent<PhotonView>() != PV)
+                {
+                    collider.GetComponent<PlayerBase>().TakeDamage(Damage);
                 }
             }
         }
