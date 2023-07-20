@@ -37,7 +37,7 @@ namespace Assets.Scripts.Database.DAO
                             ID = Convert.ToInt32(dr["ID"]),
                             AccountID = dr["AccountID"].ToString(),
                             MailID = dr["MailID"].ToString(),
-                            DateAdd = Convert.ToDateTime(dr["DateAdd"]),
+                            AddDate = Convert.ToDateTime(dr["AddDate"]),
                             IsClaim = Convert.ToBoolean(dr["IsClaim"]),
                             IsRead = Convert.ToBoolean(dr["IsRead"]),
                             Delete = Convert.ToBoolean(dr["Delete"])
