@@ -1,4 +1,5 @@
 using Assets.Scripts.Database.DAO;
+using Assets.Scripts.GameManager;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
@@ -31,6 +32,11 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] TMP_Text PlayerLose_Nametxt;
     string PlayerWin_Name, PlayerLose_Name;
 
+    [Header("Player Instance")]
+    [SerializeField] GameObject LoadingPrefabs;
+
+    public GameObject LoadingInstance;
+
     [SerializeField] List<PK_ReadyBase> ListReady;
 
     private const byte ShowEndgamePanelEventCode = 1;
@@ -46,6 +52,11 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private void Awake()
     {
         Instance = this;
+    }
+    private void Start()
+    {
+        LoadingInstance = Instantiate(LoadingPrefabs);
+        LoadingInstance.GetComponent<Loading>().Begin();
     }
 
     public void IsAllPlayerReady()
@@ -135,6 +146,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedRoom()
     {
         Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.Normal);
+        LoadingInstance.GetComponent<Loading>().End();
     }
     private IEnumerator Battle_ProgressBar()
     {
@@ -184,12 +196,14 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnConnectedToMaster()
     {
+       
         if (PhotonNetwork.IsConnectedAndReady)
         {
             RoomOptions roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = 2;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
+            //PhotonNetwork.JoinOrCreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom("0", roomOptions, TypedLobby.Default);
             Debug.Log(References.GenerateRandomString(10));
         }
     }

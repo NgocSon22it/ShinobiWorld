@@ -302,8 +302,8 @@ GameObject:
   - component: {fileID: 953051348179350519}
   - component: {fileID: 953051348179350518}
   - component: {fileID: 953051348179350517}
-  - component: {fileID: 953051348179349513}
   - component: {fileID: 953051348179349515}
+  - component: {fileID: 2618479214381018614}
   m_Layer: 5
   m_Name: LoadingCanvas
   m_TagString: Untagged
@@ -393,23 +393,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &953051348179349513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 953051348179350516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e853a7afda972564da330ff4c0a2a611, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Background: {fileID: 953051347616322913}
-  clock: {fileID: 953051347037351488}
-  Txt: {fileID: 953051347114142689}
-  rotationSpeed: -300
-  speed: 0.5
 --- !u!222 &953051348179349515
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -418,6 +401,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 953051348179350516}
   m_CullTransparentMesh: 1
+--- !u!114 &2618479214381018614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953051348179350516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36e19ddb1a77a5b468b2a74777d70ed9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Background: {fileID: 953051347616322913}
+  clock: {fileID: 953051347037351488}
+  Txt: {fileID: 953051347114142689}
+  rotationSpeed: -300
+  speed: 0.5
 --- !u!1 &953051348305028488
 GameObject:
   m_ObjectHideFlags: 0
