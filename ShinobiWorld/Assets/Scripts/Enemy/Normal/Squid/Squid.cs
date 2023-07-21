@@ -6,8 +6,7 @@ public class Squid : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Squid";
-        SetUp(EnemyID, AreaName);
+        SetUp(EnemyID, AreaID);
     }
 
     // Start is called before the first frame update

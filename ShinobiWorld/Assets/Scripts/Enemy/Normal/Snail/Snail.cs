@@ -6,8 +6,7 @@ public class Snail : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Snail";
-        SetUp(EnemyID, AreaName);
+        SetUp(EnemyID, AreaID);
     }
     // Start is called before the first frame update
     new void Start()
