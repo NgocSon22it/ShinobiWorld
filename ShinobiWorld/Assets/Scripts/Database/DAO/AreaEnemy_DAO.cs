@@ -35,7 +35,6 @@ public static class AreaEnemy_DAO
                         EnemyID = dr["EnemyID"].ToString(),
                         IsDead = Convert.ToBoolean(dr["isDead"]),
                         TimeSpawn = Convert.ToDateTime(dr["TimeSpawn"]),
-                        CurrentHealth = Convert.ToInt32(dr["CurrentHealth"]),
                         Delete = Convert.ToBoolean(dr["Delete"])
                     };
                     connection.Close();
@@ -61,7 +60,6 @@ public static class AreaEnemy_DAO
             cmd.Parameters.AddWithValue("@ID", AreaEnemy_Entity.ID);
             cmd.Parameters.AddWithValue("@IsDead", AreaEnemy_Entity.IsDead);
             cmd.Parameters.AddWithValue("@EnemyID", AreaEnemy_Entity.EnemyID);
-            cmd.Parameters.AddWithValue("@CurrentHealth", AreaEnemy_Entity.CurrentHealth);
             connection.Open();
             cmd.ExecuteNonQuery();
             connection.Close();
@@ -74,6 +72,20 @@ public static class AreaEnemy_DAO
         {
             SqlCommand cmd = connection.CreateCommand();
             cmd.CommandText = "Update AreaEnemy set IsDead = 1, TimeSpawn = DATEADD(second, 10, GETDATE()) where ID = @ID and EnemyID = @EnemyID";
+            cmd.Parameters.AddWithValue("@ID", AreaID);
+            cmd.Parameters.AddWithValue("@EnemyID", EnemyID);
+            connection.Open();
+            cmd.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
+
+    public static void SetAreaEnemyAlive(string AreaID, string EnemyID)
+    {
+        using (SqlConnection connection = new SqlConnection(ConnectionStr))
+        {
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "Update AreaEnemy set IsDead = 0 where ID = @ID and EnemyID = @EnemyID";
             cmd.Parameters.AddWithValue("@ID", AreaID);
             cmd.Parameters.AddWithValue("@EnemyID", EnemyID);
             connection.Open();

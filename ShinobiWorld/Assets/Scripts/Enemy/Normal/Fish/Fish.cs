@@ -7,9 +7,8 @@ using UnityEngine;
 public class Fish : Enemy
 {
     new void Awake()
-    {
-        EnemyID = "Fish";
-        SetUp(EnemyID, AreaName);
+    {     
+        SetUp(EnemyID, AreaID);
     }
 
     // Start is called before the first frame update

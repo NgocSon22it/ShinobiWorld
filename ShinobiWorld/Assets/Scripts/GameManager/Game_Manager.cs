@@ -49,7 +49,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public AccountStatus AccountStatus;
 
-    Coroutine SpawnEnemyCoroutine;
     private const byte DeActiveEventCode = 1;
 
 
@@ -57,9 +56,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Player Instance")]
     [SerializeField] GameObject LoadingPrefabs;
-    
+
     public GameObject LoadingInstance;
-    
+
 
     private void Awake()
     {
@@ -85,17 +84,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
 
-
-
-        Debug.Log("abbbbb");
-
         SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);
-        Debug.Log("cccccc");
-
-
         ChatManager.Instance.ConnectToChat();
-        //SpawnEnemyCoroutine = StartCoroutine(SpawnEnemy());
-
         LoadingInstance.GetComponent<Loading>().End();
 
     }
@@ -123,31 +113,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             AccountStatus = accountStatus;
             ReloadPlayerProperties();
             Debug.Log("Successfully joined room S1!");
-        }
-    }
-
-    public IEnumerator SpawnEnemy()
-    {
-        while (true)
-        {
-            // Get the current time
-            dateTime = new SqlDateTime(System.DateTime.Now);
-            foreach (GameObject enemy in List_LangLa1)
-            {
-                Enemy enemyScript = enemy.GetComponent<Enemy>();
-                if (enemyScript != null)
-                {
-                    if (dateTime >= enemyScript.AreaEnemy_Entity.TimeSpawn
-                        && enemyScript.AreaEnemy_Entity.IsDead == false
-                        && enemyScript.AreaEnemy_Entity.CurrentHealth > 0)
-                    {
-                        enemyScript.LoadHealthUI(enemyScript.AreaEnemy_Entity.CurrentHealth, enemyScript.boss_Entity.Health);
-                        enemy.SetActive(true);
-                    }
-                }
-            }
-            // Wait for the next frame
-            yield return new WaitForSecondsRealtime(0.1f);
         }
     }
 
@@ -204,10 +169,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(Scenes.Login);
-            if (SpawnEnemyCoroutine != null)
-            {
-                StopCoroutine(SpawnEnemyCoroutine);
-            }
         }
     }
 
@@ -261,6 +222,33 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     }
 
+    public void SpawnEnemyAfterDie(string AreaID, string EnemyID, int ViewID, Coroutine SpawnEnemyCoroutine)
+    {
+        if (SpawnEnemyCoroutine == null)
+        {
+            SpawnEnemyCoroutine = StartCoroutine(SpawnEnemy(AreaID, EnemyID, ViewID, SpawnEnemyCoroutine));
+        }
+    }
+
+
+    IEnumerator SpawnEnemy(string AreaID, string EnemyID, int ViewID, Coroutine SpawnEnemyCoroutine)
+    {
+        yield return new WaitForSeconds(10f);
+        gameObject.SetActive(true);
+        if (PhotonNetwork.IsConnected)
+        {
+            // Notify all players that the enemy has been deactivated
+            object[] data = new object[] { ViewID };
+            PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyActive, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+        }
+        AreaEnemy_DAO.SetAreaEnemyAlive(AreaID, EnemyID);
+
+        if(SpawnEnemyCoroutine != null)
+        {
+            StopCoroutine(SpawnEnemyCoroutine);
+        }
+    }
+
     public void ShowEndgamePanel()
     {
         PhotonNetwork.RaiseEvent(DeActiveEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
@@ -275,6 +263,14 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             GameObject enemyObject = PhotonView.Find(viewID).gameObject;
             enemyObject.SetActive(false);
+        }
+        else if (photonEvent.Code == (byte)CustomEventCode.EnemyActive)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int viewID = (int)data[0];
+
+            GameObject enemyObject = PhotonView.Find(viewID).gameObject;
+            enemyObject.SetActive(true);
         }
     }
 }

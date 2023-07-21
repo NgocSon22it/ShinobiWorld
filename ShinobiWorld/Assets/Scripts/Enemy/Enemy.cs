@@ -23,8 +23,9 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public AreaEnemy_Entity AreaEnemy_Entity = new AreaEnemy_Entity();
 
     //Separate
-    public string AreaName = "";
+    public string AreaID = "";
     public string EnemyID;
+    public Coroutine SpawnEnemyCoroutine;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -77,21 +78,22 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     // Facing
     public bool FacingRight = false;
 
-    public void SetUp(string EnemyID, string AreaName)
+    public void SetUp(string EnemyID, string AreaID)
     {
-        if (!string.IsNullOrEmpty(AreaName))
+        if (!string.IsNullOrEmpty(EnemyID) && !string.IsNullOrEmpty(AreaID))
         {
             enemy_Entity = Enemy_DAO.GetEnemyByID(EnemyID);
-            AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaName, EnemyID);
+            AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaID, EnemyID); 
 
             if (enemy_Entity != null && AreaEnemy_Entity != null)
             {
                 SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
 
-                if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false && AreaEnemy_Entity.CurrentHealth > 0)
+                if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false)
                 {
+                    CurrentHealth = enemy_Entity.Health;
                     gameObject.SetActive(true);
-                    LoadHealthUI(AreaEnemy_Entity.CurrentHealth, enemy_Entity.Health);
+                    LoadHealthUI(CurrentHealth, enemy_Entity.Health);
                 }
                 else
                 {
@@ -176,10 +178,9 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     public void TakeDamageSync(int UserID, int Damage)
     {
-        AreaEnemy_Entity.CurrentHealth -= Damage;
-        AreaEnemy_DAO.UpdateHealthAreaEnemy(AreaEnemy_Entity);
+        CurrentHealth -= Damage;
 
-        if (AreaEnemy_Entity.CurrentHealth <= 0)
+        if (CurrentHealth <= 0)
         {
             GameObject LastHitPlayer = PhotonView.Find(UserID).gameObject;
 
@@ -197,18 +198,19 @@ public class Enemy : MonoBehaviourPun, IPunObservable
                 }
             }
 
-            AreaEnemy_DAO.SetAreaEnemyDie(AreaEnemy_Entity.ID, AreaEnemy_Entity.EnemyID);
             gameObject.SetActive(false);
+
             if (PhotonNetwork.IsConnected)
             {
                 // Notify all players that the enemy has been deactivated
                 object[] data = new object[] { photonView.ViewID };
                 PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
             }
+
             Disappear();
         }
 
-        LoadHealthUI(AreaEnemy_Entity.CurrentHealth, enemy_Entity.Health);
+        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
 
     }
 
@@ -217,10 +219,9 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         switch (BossType)
         {
             case BossType.BossType_Normal:
-                AreaEnemy_Entity.CurrentHealth = enemy_Entity.Health;
-                AreaEnemy_Entity.IsDead = false;
-                AreaEnemy_DAO.UpdateHealthAreaEnemy(AreaEnemy_Entity);
-                AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaName, EnemyID);
+                CurrentHealth = enemy_Entity.Health;
+                AreaEnemy_DAO.SetAreaEnemyDie(AreaID, EnemyID);              
+                Game_Manager.Instance.SpawnEnemyAfterDie(AreaID, EnemyID, photonView.ViewID, SpawnEnemyCoroutine);
                 break;
 
             case BossType.BossType_Arena:
@@ -230,6 +231,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         DeathEffect.transform.position = transform.position;
         DeathEffect.SetActive(true);
     }
+
+    
 
     public Vector2 GetRandomPosition()
     {
@@ -322,7 +325,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
             if (BossType == BossType.BossType_Normal)
             {
-                stream.SendNext(AreaEnemy_Entity.CurrentHealth);
+                stream.SendNext(CurrentHealth);
                 stream.SendNext(transform.position);
 
                 stream.SendNext(playerInRange);
@@ -340,8 +343,10 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
             if (BossType == BossType.BossType_Normal)
             {
-                AreaEnemy_Entity.CurrentHealth = (int)stream.ReceiveNext();
-                LoadHealthUI(AreaEnemy_Entity.CurrentHealth, enemy_Entity.Health);
+                CurrentHealth = (int)stream.ReceiveNext();
+
+                LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+
                 MovePosition = (Vector3)stream.ReceiveNext();
 
                 playerInRange = (bool)stream.ReceiveNext();
