@@ -394,7 +394,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public void OpenGameScene()
     {
-        if (playerCount > 0 && playerCount < References.Maxserver)
+        if (playerCount >= 0 && playerCount < References.Maxserver)
         {
             References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
             if (Account_DAO.IsFirstLogin(user.UserId))
