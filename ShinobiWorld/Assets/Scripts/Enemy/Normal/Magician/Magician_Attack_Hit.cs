@@ -32,7 +32,6 @@ public class Magician_Attack_Hit : Boss_Skill
             if (collision.gameObject.tag == "Player")
             {
                 collision.GetComponent<PlayerBase>().TakeDamage(Damage);
-                Debug.Log(collision.gameObject.name);
             }
         }
     }

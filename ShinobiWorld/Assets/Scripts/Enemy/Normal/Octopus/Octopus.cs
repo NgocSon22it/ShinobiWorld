@@ -70,7 +70,6 @@ public class Octopus : Enemy
             {
                 SkillOne.transform.position = transform.position;
                 SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }
