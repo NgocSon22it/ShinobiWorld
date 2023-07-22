@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 {
     // Entity
     public Enemy_Entity enemy_Entity = new Enemy_Entity();
-    public Boss_Entity boss_Entity = new Boss_Entity();
+    public int boss_Health;
     public AreaEnemy_Entity AreaEnemy_Entity = new AreaEnemy_Entity();
 
     //Separate
