@@ -12,7 +12,6 @@ public class AreaEnemy_Entity
     public string EnemyID;
     public bool IsDead;
     public SqlDateTime TimeSpawn;
-    public int CurrentHealth;
     public bool Delete;
 
     public AreaEnemy_Entity()

@@ -8,8 +8,7 @@ public class Locusts : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Locusts";
-        SetUp(EnemyID, AreaName);
+        SetUp(EnemyID, AreaID);
     }
 
     // Start is called before the first frame update
