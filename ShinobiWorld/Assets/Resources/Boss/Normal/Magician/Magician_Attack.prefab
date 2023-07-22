@@ -14305,8 +14305,8 @@ GameObject:
   - component: {fileID: 9118749910244888957}
   - component: {fileID: -3940506777294633617}
   - component: {fileID: 7834579492646629683}
-  - component: {fileID: 202709100457171516}
   - component: {fileID: 8115942045334563270}
+  - component: {fileID: 8616907676180971121}
   m_Layer: 0
   m_Name: Magician_Attack
   m_TagString: Untagged
@@ -19121,21 +19121,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &202709100457171516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7444289046625158060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaecf362e56bc724ea04e43b87c98fec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainFire: {fileID: 3886399039232442194}
-  magician: {fileID: 0}
-  EndPoint: {x: 0, y: 0, z: 0}
 --- !u!210 &8115942045334563270
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -19147,3 +19132,18 @@ SortingGroup:
   m_SortingLayerID: 178467679
   m_SortingLayer: 3
   m_SortingOrder: 0
+--- !u!114 &8616907676180971121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7444289046625158060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23e9802d392d7f542853fcac9fe4a5ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainFire: {fileID: 3886399039232442194}
+  magician: {fileID: 0}
+  EndPoint: {x: 0, y: 0, z: 0}

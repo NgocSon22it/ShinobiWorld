@@ -222,7 +222,7 @@ public static class References
 }
 public enum CustomEventCode
 {
-    EnemyDeactivate = 1
+    EnemyDeactivate = 1, EnemyActive = 2
 }
 
 public enum AccountStatus
