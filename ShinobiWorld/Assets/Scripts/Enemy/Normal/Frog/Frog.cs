@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Frog : Enemy
 {
+    [SerializeField] List<GameObject> ListAttack_Hit = new List<GameObject>();
     new void Awake()
     {
         SetUp(EnemyID, AreaID);
@@ -18,34 +19,41 @@ public class Frog : Enemy
     new void Update()
     {
         base.Update();
-        Attack();
+        AttackAndMove();
     }
 
-    public void Attack()
+    public void AttackAndMove()
     {
-        
+        playerInRange = CheckPlayerInRange();
 
         animator.SetBool("PlayerInRange", playerInRange);
     }
 
-
     public void Animation_SkillOne()
     {
-        if (TargetPosition != Vector3.negativeInfinity)
+        if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
-
 
             if (SkillOne != null)
             {
-                SkillOne.transform.position = transform.position;
-                SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Frog_SkillOne>().SetUp(100);
+                SkillOne.transform.position = TargetPosition;
+                SkillOne.GetComponent<Frog_Attack>().SetUp(100);
+                SkillOne.GetComponent<Frog_Attack>().SetUpPoint(transform.position, TargetPosition);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }
         }
+    }
+
+    public GameObject GetAttack_Hit()
+    {
+        for (int i = 0; i < ListAttack_Hit.Count; i++)
+        {
+            if (!ListAttack_Hit[i].activeInHierarchy)
+            {
+                return ListAttack_Hit[i];
+            }
+        }
+        return null;
     }
 }

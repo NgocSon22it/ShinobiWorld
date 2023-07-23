@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2502772341088845959}
   - component: {fileID: 872603788812241437}
   - component: {fileID: -5737344097665025960}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bat Bullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14615,8 +14615,6 @@ GameObject:
   - component: {fileID: 2502772342603123523}
   - component: {fileID: 2502772342603123522}
   - component: {fileID: 2502772342603123521}
-  - component: {fileID: 2502772342603123520}
-  - component: {fileID: 5602189060121231788}
   m_Layer: 7
   m_Name: Main
   m_TagString: Bullet
@@ -19478,40 +19476,3 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!50 &2502772342603123520
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2502772342603123550}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!58 &5602189060121231788
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2502772342603123550}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.00837779, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.33309698
