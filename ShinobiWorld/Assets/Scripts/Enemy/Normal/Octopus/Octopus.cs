@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Octopus : Enemy
 {
+    [SerializeField] List<GameObject> ListAttack_Hit = new List<GameObject>();
+
     new void Awake()
     {
         SetUp(EnemyID, AreaID);
@@ -50,7 +52,8 @@ public class Octopus : Enemy
                 }
             }
         }
-       
+
+        playerInRange = CheckPlayerInRange();
 
         animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
@@ -59,20 +62,29 @@ public class Octopus : Enemy
 
     public void Animation_SkillOne()
     {
-        if (TargetPosition != Vector3.negativeInfinity)
+        if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
-
 
             if (SkillOne != null)
             {
-                SkillOne.transform.position = transform.position;
-                SkillOne.transform.rotation = transform.rotation;
+                SkillOne.transform.position = TargetPosition;
+                SkillOne.GetComponent<Octopus_Attack>().SetUp(100);
+                SkillOne.GetComponent<Octopus_Attack>().SetUpPoint(transform.position, TargetPosition);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }
         }
+    }
+
+    public GameObject GetAttack_Hit()
+    {
+        for (int i = 0; i < ListAttack_Hit.Count; i++)
+        {
+            if (!ListAttack_Hit[i].activeInHierarchy)
+            {
+                return ListAttack_Hit[i];
+            }
+        }
+        return null;
     }
 }

@@ -67,8 +67,6 @@ public class Bat : Enemy
         if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
 
             if (SkillOne != null)
             {

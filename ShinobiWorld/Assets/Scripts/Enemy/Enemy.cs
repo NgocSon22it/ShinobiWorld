@@ -88,6 +88,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
             if (enemy_Entity != null && AreaEnemy_Entity != null)
             {
                 SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
+                if(AreaEnemy_Entity.TimeSpawn <= dateTime) { AreaEnemy_Entity.IsDead = false; AreaEnemy_DAO.SetAreaEnemyAlive(AreaID, EnemyID); }
 
                 if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false)
                 {
