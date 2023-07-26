@@ -2,19 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fish_SkillOne : Boss_Skill
+public class Fish_Attack_Hit : Boss_Skill
 {
+    [SerializeField] Collider2D collider2d;
     new void OnEnable()
     {
-        LifeTime = 3f;
+        LifeTime = 1f;
         base.OnEnable();
+        collider2d.enabled = true;
+        StartCoroutine(TurnOffColliderCoroutine());
     }
 
     new void OnDisable()
     {
         base.OnDisable();
+        StopAllCoroutines();
     }
 
+    IEnumerator TurnOffColliderCoroutine()
+    {
+        yield return new WaitForSeconds(0.2f);
+        collider2d.enabled = false;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -24,7 +33,6 @@ public class Fish_SkillOne : Boss_Skill
             {
                 collision.GetComponent<PlayerBase>().TakeDamage(Damage);
             }
-            TurnOff();
         }
     }
 }
