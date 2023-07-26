@@ -85,20 +85,5 @@ public static class HasSkill_DAO
         }
 
         return list;
-    }
-
-    //public static void ChangeKey(string UserID, string SkillID, string NewKey)
-    //{
-    //    using (SqlConnection connection = new SqlConnection(ConnectionStr))
-    //    {
-    //        SqlCommand cmd = connection.CreateCommand();
-    //        cmd.CommandText = "Update HasSkill set [Key] = @Newkey where SkillID = @SkillID and AccountID = @UserID";
-    //        cmd.Parameters.AddWithValue("@UserID", UserID);
-    //        cmd.Parameters.AddWithValue("@SkillID", SkillID);
-    //        cmd.Parameters.AddWithValue("@Newkey", NewKey);
-    //        connection.Open();
-    //        cmd.ExecuteNonQuery();
-    //        connection.Close();
-    //    }
-    //}
+    }   
 }
