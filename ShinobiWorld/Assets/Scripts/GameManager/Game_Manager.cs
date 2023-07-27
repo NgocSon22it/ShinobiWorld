@@ -35,19 +35,11 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
 
-    [SerializeField] List<GameObject> List_LangLa1 = new List<GameObject>();
-
-    [SerializeField] List<GameObject> List_LangLa2 = new List<GameObject>();
-
-    [SerializeField] List<GameObject> List_LangMay1 = new List<GameObject>();
-
-    [SerializeField] List<GameObject> List_LangLa4 = new List<GameObject>();
-
     public bool IsBusy;
 
     public AccountStatus AccountStatus;
 
-    private const byte DeActiveEventCode = 1;
+    public string CurrentAreaName;
 
     RoomOptions roomOptions = new RoomOptions();
 
@@ -55,7 +47,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject LoadingPrefabs;
 
     public GameObject LoadingInstance;
-
 
     private void Awake()
     {
@@ -73,7 +64,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(CurrentAreaName, roomOptions, TypedLobby.Default);
         }
     }
 
@@ -204,7 +195,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             roomOptions.MaxPlayers = 0;
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(CurrentAreaName, roomOptions, TypedLobby.Default);
         }
     }
 
@@ -247,7 +238,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void ShowEndgamePanel()
     {
-        PhotonNetwork.RaiseEvent(DeActiveEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
     }
 
     public void OnEvent(EventData photonEvent)
