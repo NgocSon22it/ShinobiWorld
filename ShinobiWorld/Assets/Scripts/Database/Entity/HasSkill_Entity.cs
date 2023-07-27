@@ -11,7 +11,6 @@ namespace Assets.Scripts.Database.Entity
     {
         public string AccountID;
         public string SkillID;
-        public string Key;
         public int Level;
         public double Cooldown;
         public int Damage;

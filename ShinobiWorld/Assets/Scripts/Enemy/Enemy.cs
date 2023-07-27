@@ -13,17 +13,19 @@ using UnityEngine.LowLevel;
 using UnityEngine.Rendering;
 using Photon.Realtime;
 using System.Data.SqlTypes;
+using ExitGames.Client.Photon;
 
 public class Enemy : MonoBehaviourPun, IPunObservable
 {
     // Entity
-    public Boss_Entity boss_Entity = new Boss_Entity();
-
-    public AreaBoss_Entity areaBoss_Entity = new AreaBoss_Entity();
+    public Enemy_Entity enemy_Entity = new Enemy_Entity();
+    public int boss_Health;
+    public AreaEnemy_Entity AreaEnemy_Entity = new AreaEnemy_Entity();
 
     //Separate
-    public string AreaName = "";
+    public string AreaID = "";
     public string EnemyID;
+    public Coroutine SpawnEnemyCoroutine;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -42,13 +44,14 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public Vector3 TargetPosition;
 
     public bool playerInRange = false;
-    public Vector3 clampedPosition;
     public float detectionRadius = 5f;
-
-    public float FindTarget_CurrentTime;
-    public float FindTarget_TotalTime = 1f;
+    public LayerMask AttackableLayer;
 
     public float LocalScaleX;
+
+    //BossType
+    [SerializeField] protected BossType BossType;
+    public int CurrentHealth;
 
     // MainPoint
     [SerializeField] Transform MainPoint;
@@ -56,6 +59,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     //Health UI
     [SerializeField] Image CurrentHealth_UI;
     [SerializeField] TMP_Text HealthNumber;
+
+    [SerializeField] GameObject DeathEffect;
 
     // Skill Direction
     public Vector2 direction;
@@ -68,26 +73,28 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public Rigidbody2D rigidbody2d;
     public Animator animator;
     public Boss_Pool boss_Pool;
+    public Collider2D collider2d;
 
     // Facing
     public bool FacingRight = false;
 
-
-    public void SetUp(string EnemyID, string AreaName)
+    public void SetUp(string EnemyID, string AreaID)
     {
-        if (!string.IsNullOrEmpty(AreaName))
+        if (!string.IsNullOrEmpty(EnemyID) && !string.IsNullOrEmpty(AreaID))
         {
-            boss_Entity = Boss_DAO.GetBossByID(EnemyID);
-            areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+            enemy_Entity = Enemy_DAO.GetEnemyByID(EnemyID);
+            AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaID, EnemyID); 
 
-            if (boss_Entity != null && areaBoss_Entity != null)
+            if (enemy_Entity != null && AreaEnemy_Entity != null)
             {
                 SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
+                if(AreaEnemy_Entity.TimeSpawn <= dateTime) { AreaEnemy_Entity.IsDead = false; AreaEnemy_DAO.SetAreaEnemyAlive(AreaID, EnemyID); }
 
-                if (dateTime >= areaBoss_Entity.TimeSpawn && areaBoss_Entity.isDead == false && areaBoss_Entity.CurrentHealth > 0)
+                if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false)
                 {
+                    CurrentHealth = enemy_Entity.Health;
                     gameObject.SetActive(true);
-                    LoadHealthUI();
+                    LoadHealthUI(CurrentHealth, enemy_Entity.Health);
                 }
                 else
                 {
@@ -104,7 +111,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
             gameObject.SetActive(false);
         }
     }
-
 
     public void Awake()
     {
@@ -126,47 +132,108 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     }
 
-    public void LoadHealthUI()
+    public void LoadHealthUI(float CurrentHealth, float TotalHealth)
     {
-        HealthNumber.text = areaBoss_Entity.CurrentHealth + " / " + boss_Entity.Health;
-        CurrentHealth_UI.fillAmount = (float)areaBoss_Entity.CurrentHealth / (float)boss_Entity.Health;
+        HealthNumber.text = CurrentHealth + " / " + TotalHealth;
+        CurrentHealth_UI.fillAmount = CurrentHealth / TotalHealth;
     }
 
-    public void TakeDamage(string UserID, int Damage)
+    public void TakeDamage(int UserID, int Damage)
     {
-        photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, UserID, Damage);
-    }
+        switch (BossType)
+        {
+            case BossType.BossType_Normal:
+                TakeDamageSync(UserID, Damage);
+                break;
 
-    [PunRPC]
-    public void TakeDamageSync(string UserID, int Damage)
-    {
-        areaBoss_Entity.CurrentHealth -= Damage;
-        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
-
-        if (areaBoss_Entity.CurrentHealth <= 0)
-        {          
-            References.AddExperience(boss_Entity.ExpBonus);
-            References.AddCoin(boss_Entity.CoinBonus);
-
-            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
-
-            AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
-            gameObject.SetActive(false);
-            Debug.Log(UserID);
-            Die();
+            case BossType.BossType_Arena:
+                TakeDamage_Arena(Damage);
+                break;
         }
 
-        LoadHealthUI();
     }
 
-    public void Die()
+    public void TakeDamage_Arena(int Damage)
     {
-        
-        areaBoss_Entity.CurrentHealth = boss_Entity.Health;
-        areaBoss_Entity.isDead = false;
-        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
-        areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+        CurrentHealth -= Damage;
+        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+        switch (gameObject.tag)
+        {
+            case "Enemy":
+                if (CurrentHealth <= 0)
+                {
+                    Disappear();
+                    BossArena_Manager.Instance.Battle_End(true);
+                }
+                break;
+
+            case "Clone":
+                if (CurrentHealth <= 0)
+                {
+                    Disappear();
+                }
+                break;
+        }
+
     }
+
+    public void TakeDamageSync(int UserID, int Damage)
+    {
+        CurrentHealth -= Damage;
+
+        if (CurrentHealth <= 0)
+        {
+            GameObject LastHitPlayer = PhotonView.Find(UserID).gameObject;
+
+            if (LastHitPlayer != null)
+            {
+                PlayerBase playerBase = LastHitPlayer.GetComponent<PlayerBase>();
+
+                if (References.accountRefer.ID == playerBase.AccountEntity.ID)
+                {
+                    References.AddExperience(enemy_Entity.ExpBonus);
+                    References.AddCoin(enemy_Entity.CoinBonus);
+
+                    MissionManager.Instance.DoingMission(AreaEnemy_Entity.EnemyID);
+
+                }
+            }
+
+            gameObject.SetActive(false);
+
+            if (PhotonNetwork.IsConnected)
+            {
+                // Notify all players that the enemy has been deactivated
+                object[] data = new object[] { photonView.ViewID };
+                PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+            }
+
+            Disappear();
+        }
+
+        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+
+    }
+
+    public void Disappear()
+    {
+        switch (BossType)
+        {
+            case BossType.BossType_Normal:
+                CurrentHealth = enemy_Entity.Health;
+                AreaEnemy_DAO.SetAreaEnemyDie(AreaID, EnemyID);              
+                Game_Manager.Instance.SpawnEnemyAfterDie(AreaID, EnemyID, photonView.ViewID, SpawnEnemyCoroutine);
+                break;
+
+            case BossType.BossType_Arena:
+                gameObject.SetActive(false);
+                break;
+        }
+        DeathEffect.transform.position = transform.position;
+        DeathEffect.SetActive(true);
+    }
+
+    
 
     public Vector2 GetRandomPosition()
     {
@@ -213,17 +280,21 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     public void FlipToTarget()
     {
-        if (photonView.IsMine)
+        TargetPosition = FindClostestTarget(detectionRadius + 1, "Player");
+
+        if (MainPoint.position.x < TargetPosition.x && !FacingRight)
         {
-            if (MainPoint.position.x < TargetPosition.x && !FacingRight)
-            {
-                Flip();
-            }
-            else if (MainPoint.position.x > TargetPosition.x && FacingRight)
-            {
-                Flip();
-            }
+            Flip();
         }
+        else if (MainPoint.position.x > TargetPosition.x && FacingRight)
+        {
+            Flip();
+        }
+    }
+
+    public bool CheckPlayerInRange()
+    {
+        return Physics2D.OverlapCircle(MainPoint.position, detectionRadius, AttackableLayer);
     }
 
     public Vector3 FindClostestTarget(float Range, string TargetTag)
@@ -232,7 +303,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         Vector3 closestTargetPosition = Vector3.zero;
 
         GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
-
 
         foreach (GameObject currentTarget in allTarget)
         {
@@ -254,31 +324,46 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(areaBoss_Entity.CurrentHealth);
-            stream.SendNext(transform.position);
+            if (BossType == BossType.BossType_Normal)
+            {
+                stream.SendNext(CurrentHealth);
+                stream.SendNext(transform.position);
 
-            stream.SendNext(playerInRange);
-            stream.SendNext(isMoving);
+                stream.SendNext(playerInRange);
+                stream.SendNext(isMoving);
 
-            stream.SendNext(TargetPosition);
+                stream.SendNext(TargetPosition);
 
-            stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
+                stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
+            }
+
 
 
         }
         else
         {
-            areaBoss_Entity.CurrentHealth = (int)stream.ReceiveNext();
-            MovePosition = (Vector3)stream.ReceiveNext();
+            if (BossType == BossType.BossType_Normal)
+            {
+                CurrentHealth = (int)stream.ReceiveNext();
 
-            playerInRange = (bool)stream.ReceiveNext();
-            isMoving = (bool)stream.ReceiveNext();
+                LoadHealthUI(CurrentHealth, enemy_Entity.Health);
 
-            TargetPosition = (Vector3)stream.ReceiveNext();
+                MovePosition = (Vector3)stream.ReceiveNext();
 
-            HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
+                playerInRange = (bool)stream.ReceiveNext();
+                isMoving = (bool)stream.ReceiveNext();
 
-            LoadHealthUI();
+                TargetPosition = (Vector3)stream.ReceiveNext();
+
+                HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
+            }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(MainPoint.position, detectionRadius);
+
     }
 }

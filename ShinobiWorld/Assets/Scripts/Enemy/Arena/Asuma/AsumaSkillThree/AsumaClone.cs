@@ -1,3 +1,4 @@
+using Assets.Scripts.Database.Entity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,7 @@ public class AsumaClone : Enemy
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
     //Skill Three
-
-
+    
     //Get Skill Position
     public Vector2 SkillRandomPosition;
     Vector2 Skill_MinPosition, Skill_MaxPosition;
@@ -19,6 +19,10 @@ public class AsumaClone : Enemy
     new void Start()
     {
         base.Start();
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health;
+        boss_Health /= 2;
+        CurrentHealth = boss_Health;
+        LoadHealthUI(CurrentHealth, boss_Health);
     }
 
     new void Update()
@@ -109,6 +113,7 @@ public class AsumaClone : Enemy
             {
                 SkillRandomPosition = GetRandomSkillPosition();
 
+                SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(30);
                 SkillTwo.transform.position = SkillRandomPosition;
                 SkillTwo.SetActive(true);
             }

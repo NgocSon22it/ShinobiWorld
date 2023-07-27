@@ -94,11 +94,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
                         if (mess[1] == "0")
                         {
-                            PKManager.Instance.Open(senderName);
+                            PKRequestManager.Instance.Open(senderName);
                         }
                         else if (mess[1] == "1")
                         {
-                            PKManager.Instance.ShowAccept(senderName);
+                            PKRequestManager.Instance.ShowAccept(senderName);
                         }
 
                         break;
@@ -161,7 +161,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         IsTypingChat = value;
         TypingChatObject.SetActive(value);
-        Game_Manager.Instance.IsBusy = value;
+        //Game_Manager.Instance.IsBusy = value;
     }
 
     public void FocusTyping()

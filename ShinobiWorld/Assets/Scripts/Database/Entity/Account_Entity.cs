@@ -1,3 +1,4 @@
+using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,8 +35,9 @@ public class Account_Entity
     public string MouthID;
     public string SkinID;
 
-    public Account_Entity() { }
+    public List<CustomSetting_Entity> CustomSettings;
 
+    public Account_Entity() { }
     public static object Deserialize(byte[] data)
     {
         var result = new Account_Entity();
@@ -44,7 +46,6 @@ public class Account_Entity
 
         return result;
     }
-
     public static byte[] Serialize(object customType)
     {
         var c = (Account_Entity)customType;

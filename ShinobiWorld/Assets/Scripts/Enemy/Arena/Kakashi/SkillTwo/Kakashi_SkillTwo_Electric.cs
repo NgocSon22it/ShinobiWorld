@@ -19,7 +19,10 @@ public class Kakashi_SkillTwo_Electric : Boss_Skill
     new void OnDisable()
     {
         base.OnDisable();
-        StopCoroutine(Electric);
+        if (Electric != null)
+        {
+            StopCoroutine(Electric);
+        }
         SetUpDamage(false);
     }
 
@@ -41,7 +44,7 @@ public class Kakashi_SkillTwo_Electric : Boss_Skill
         {
             if (collision.gameObject.tag == "Player")
             {
-                //collision.GetComponent<PlayerBase>().TakeDamage(Damage);
+                collision.GetComponent<PlayerBase>().TakeDamage(Damage);
             }
         }
     }

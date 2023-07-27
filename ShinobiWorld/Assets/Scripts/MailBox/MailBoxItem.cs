@@ -35,7 +35,7 @@ namespace Assets.Scripts.MailBox
             selectedMail = References.listMail.Find(obj => obj.ID == mailbox.MailID);
 
             Title.text = string.Format(selectedMail.Title,
-                            mailbox.DateAdd.Month.ToString(), mailbox.DateAdd.Year.ToString());
+                            mailbox.AddDate.Month.ToString(), mailbox.AddDate.Year.ToString());
             
             if (mailbox.IsRead) GetComponent<Image>().color = new Color32(110, 80, 60, 150);
             if (isShow) OnClick();
