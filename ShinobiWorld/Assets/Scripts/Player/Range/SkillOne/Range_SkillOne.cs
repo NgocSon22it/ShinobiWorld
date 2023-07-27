@@ -1,4 +1,5 @@
 using Assets.Scripts.Database.Entity;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class Range_SkillOne : PlayerSkill
         {
             if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Clone")
             {
-                collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+                collision.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage);
 
                 HitEffect = player_Pool.GetSkillOne_Hit_FromPool();
                 if (HitEffect != null)
@@ -32,17 +33,22 @@ public class Range_SkillOne : PlayerSkill
                     HitEffect.transform.position = transform.position;
                     HitEffect.SetActive(true);
                 }
-            }
-            if (collision.CompareTag("Other"))
-            {
-                collision.GetComponent<PlayerBase>().TakeDamage(Damage);
+            }           
+            TurnOff();
+        }
 
-                HitEffect = player_Pool.GetNormalAttack_Hit_FromPool();
-                if (HitEffect != null)
-                {
-                    HitEffect.transform.position = transform.position;
-                    HitEffect.SetActive(true);
-                }
+        if     (collision.CompareTag("Player")
+                && collision.gameObject.GetComponent<PlayerBase>().accountStatus == AccountStatus.PK
+                && collision.gameObject.GetComponent<PhotonView>() != PV
+               )
+        {
+            collision.GetComponent<PlayerBase>().TakeDamage(Damage);
+
+            HitEffect = player_Pool.GetNormalAttack_Hit_FromPool();
+            if (HitEffect != null)
+            {
+                HitEffect.transform.position = transform.position;
+                HitEffect.SetActive(true);
             }
             TurnOff();
         }

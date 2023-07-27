@@ -23,9 +23,9 @@ public class Asuma : Enemy
     new void Start()
     {
         base.Start();
-        boss_Entity = Boss_DAO.GetBossByID("Boss_Asuma");
-        CurrentHealth = boss_Entity.Health;
-        LoadHealthUI(CurrentHealth, boss_Entity.Health);
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health;
+        CurrentHealth = boss_Health;
+        LoadHealthUI(CurrentHealth, boss_Health);
     }
 
     new void Update()
@@ -117,7 +117,7 @@ public class Asuma : Enemy
             RandomState = Random.Range(1, 4);
         }
 
-        TargetPosition = FindClostestTarget(100f, "Player");
+        //TargetPosition = FindClostestTarget(100f, "Player");
         animator.SetTrigger("Skill" + RandomState);
         IsSkilling = true;
 

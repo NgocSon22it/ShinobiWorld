@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,13 +22,16 @@ public class Melee_SkillThreeExplosion : PlayerSkill
         {
             if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Clone")
             {
-                collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+                collision.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage);
             }
 
-            if (collision.CompareTag("Other"))
-            {
-                collision.GetComponent<PlayerBase>().TakeDamage(Damage);
-            }
+        }
+        if (collision.CompareTag("Player")
+                && collision.gameObject.GetComponent<PlayerBase>().accountStatus == AccountStatus.PK
+                && collision.gameObject.GetComponent<PhotonView>() != PV
+               )
+        {
+            collision.GetComponent<PlayerBase>().TakeDamage(Damage);
         }
     }
 }

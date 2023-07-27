@@ -34,10 +34,10 @@ namespace Assets.Scripts.Database.DAO
                             ID = dr["ID"].ToString(),
                             BossID = dr["BossID"].ToString(),
                             Name = dr["Name"].ToString(),
-                            ContraitLevelAccount = Convert.ToInt32(dr["ContraitLevelAccount"]),
                             Cost = Convert.ToInt32(dr["Cost"]),
-                            Image = dr["Image"].ToString(),
-                            Description = dr["Description"].ToString(),
+                            ContraitLevelAccount = Convert.ToInt32(dr["ContraitLevelAccount"]),
+                            Health = Convert.ToInt32(dr["Health"]),
+                            Speed = Convert.ToInt32(dr["Speed"]),
                             Delete = Convert.ToBoolean(dr["Delete"])
                         };
                         list.Add(obj);

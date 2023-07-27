@@ -61,10 +61,10 @@ namespace Assets.Scripts.MailBox
             selectedMailbox = mailbox;
 
             Title.text = string.Format(mail.Title,
-                            mailbox.DateAdd.Month.ToString(), mailbox.DateAdd.Year.ToString());
+                            mailbox.AddDate.Month.ToString(), mailbox.AddDate.Year.ToString());
 
             Content.text = string.Format(mail.Content,
-                            mailbox.DateAdd.Month.ToString(), mailbox.DateAdd.Year.ToString());
+                            mailbox.AddDate.Month.ToString(), mailbox.AddDate.Year.ToString());
             Debug.Log(mailbox.IsClaim.ToString());
             ClaimBtn.SetActive(true);
 

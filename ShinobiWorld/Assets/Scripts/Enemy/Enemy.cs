@@ -13,16 +13,19 @@ using UnityEngine.LowLevel;
 using UnityEngine.Rendering;
 using Photon.Realtime;
 using System.Data.SqlTypes;
+using ExitGames.Client.Photon;
 
 public class Enemy : MonoBehaviourPun, IPunObservable
 {
     // Entity
-    public Boss_Entity boss_Entity = new Boss_Entity();
-    public AreaBoss_Entity areaBoss_Entity = new AreaBoss_Entity();
+    public Enemy_Entity enemy_Entity = new Enemy_Entity();
+    public int boss_Health;
+    public AreaEnemy_Entity AreaEnemy_Entity = new AreaEnemy_Entity();
 
     //Separate
-    public string AreaName = "";
+    public string AreaID = "";
     public string EnemyID;
+    public Coroutine SpawnEnemyCoroutine;
 
     // Move Area
     [SerializeField] public Collider2D movementBounds;
@@ -41,11 +44,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public Vector3 TargetPosition;
 
     public bool playerInRange = false;
-    public Vector3 clampedPosition;
     public float detectionRadius = 5f;
-
-    public float FindTarget_CurrentTime;
-    public float FindTarget_TotalTime = 1f;
+    public LayerMask AttackableLayer;
 
     public float LocalScaleX;
 
@@ -78,21 +78,23 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     // Facing
     public bool FacingRight = false;
 
-    public void SetUp(string EnemyID, string AreaName)
+    public void SetUp(string EnemyID, string AreaID)
     {
-        if (!string.IsNullOrEmpty(AreaName))
+        if (!string.IsNullOrEmpty(EnemyID) && !string.IsNullOrEmpty(AreaID))
         {
-            boss_Entity = Boss_DAO.GetBossByID(EnemyID);
-            areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+            enemy_Entity = Enemy_DAO.GetEnemyByID(EnemyID);
+            AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaID, EnemyID); 
 
-            if (boss_Entity != null && areaBoss_Entity != null)
+            if (enemy_Entity != null && AreaEnemy_Entity != null)
             {
                 SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
+                if(AreaEnemy_Entity.TimeSpawn <= dateTime) { AreaEnemy_Entity.IsDead = false; AreaEnemy_DAO.SetAreaEnemyAlive(AreaID, EnemyID); }
 
-                if (dateTime >= areaBoss_Entity.TimeSpawn && areaBoss_Entity.isDead == false && areaBoss_Entity.CurrentHealth > 0)
+                if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false)
                 {
+                    CurrentHealth = enemy_Entity.Health;
                     gameObject.SetActive(true);
-                    LoadHealthUI(areaBoss_Entity.CurrentHealth, boss_Entity.Health);
+                    LoadHealthUI(CurrentHealth, enemy_Entity.Health);
                 }
                 else
                 {
@@ -109,7 +111,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
             gameObject.SetActive(false);
         }
     }
-
 
     public void Awake()
     {
@@ -137,12 +138,12 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         CurrentHealth_UI.fillAmount = CurrentHealth / TotalHealth;
     }
 
-    public void TakeDamage(string UserID, int Damage)
+    public void TakeDamage(int UserID, int Damage)
     {
         switch (BossType)
         {
             case BossType.BossType_Normal:
-                photonView.RPC(nameof(TakeDamageSync), RpcTarget.AllBuffered, UserID, Damage);
+                TakeDamageSync(UserID, Damage);
                 break;
 
             case BossType.BossType_Arena:
@@ -155,7 +156,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public void TakeDamage_Arena(int Damage)
     {
         CurrentHealth -= Damage;
-        LoadHealthUI(CurrentHealth, boss_Entity.Health);
+        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
         switch (gameObject.tag)
         {
             case "Enemy":
@@ -176,26 +177,42 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     }
 
-    [PunRPC]
-    public void TakeDamageSync(string UserID, int Damage)
+    public void TakeDamageSync(int UserID, int Damage)
     {
-        areaBoss_Entity.CurrentHealth -= Damage;
-        AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
+        CurrentHealth -= Damage;
 
-        if (areaBoss_Entity.CurrentHealth <= 0)
+        if (CurrentHealth <= 0)
         {
-            References.AddExperience(boss_Entity.ExpBonus);
-            References.AddCoin(boss_Entity.CoinBonus);
+            GameObject LastHitPlayer = PhotonView.Find(UserID).gameObject;
 
-            MissionManager.Instance.DoingMission(areaBoss_Entity.BossID);
+            if (LastHitPlayer != null)
+            {
+                PlayerBase playerBase = LastHitPlayer.GetComponent<PlayerBase>();
 
-            AreaBoss_DAO.SetAreaBossDie(areaBoss_Entity.ID, areaBoss_Entity.BossID);
+                if (References.accountRefer.ID == playerBase.AccountEntity.ID)
+                {
+                    References.AddExperience(enemy_Entity.ExpBonus);
+                    References.AddCoin(enemy_Entity.CoinBonus);
+
+                    MissionManager.Instance.DoingMission(AreaEnemy_Entity.EnemyID);
+
+                }
+            }
+
             gameObject.SetActive(false);
-            Debug.Log(UserID);
+
+            if (PhotonNetwork.IsConnected)
+            {
+                // Notify all players that the enemy has been deactivated
+                object[] data = new object[] { photonView.ViewID };
+                PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+            }
+
             Disappear();
         }
 
-        LoadHealthUI(areaBoss_Entity.CurrentHealth, boss_Entity.Health);
+        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+
     }
 
     public void Disappear()
@@ -203,19 +220,20 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         switch (BossType)
         {
             case BossType.BossType_Normal:
-                areaBoss_Entity.CurrentHealth = boss_Entity.Health;
-                areaBoss_Entity.isDead = false;
-                AreaBoss_DAO.UpdateHealthAreaBoss(areaBoss_Entity);
-                areaBoss_Entity = AreaBoss_DAO.GetAreaBossByID(AreaName, EnemyID);
+                CurrentHealth = enemy_Entity.Health;
+                AreaEnemy_DAO.SetAreaEnemyDie(AreaID, EnemyID);              
+                Game_Manager.Instance.SpawnEnemyAfterDie(AreaID, EnemyID, photonView.ViewID, SpawnEnemyCoroutine);
                 break;
 
             case BossType.BossType_Arena:
-                gameObject.SetActive(false);              
+                gameObject.SetActive(false);
                 break;
         }
         DeathEffect.transform.position = transform.position;
         DeathEffect.SetActive(true);
     }
+
+    
 
     public Vector2 GetRandomPosition()
     {
@@ -262,6 +280,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     public void FlipToTarget()
     {
+        TargetPosition = FindClostestTarget(detectionRadius + 1, "Player");
+
         if (MainPoint.position.x < TargetPosition.x && !FacingRight)
         {
             Flip();
@@ -272,13 +292,17 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         }
     }
 
+    public bool CheckPlayerInRange()
+    {
+        return Physics2D.OverlapCircle(MainPoint.position, detectionRadius, AttackableLayer);
+    }
+
     public Vector3 FindClostestTarget(float Range, string TargetTag)
     {
         float distanceToClosestTarget = Mathf.Infinity;
         Vector3 closestTargetPosition = Vector3.zero;
 
         GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
-
 
         foreach (GameObject currentTarget in allTarget)
         {
@@ -302,7 +326,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
             if (BossType == BossType.BossType_Normal)
             {
-                stream.SendNext(areaBoss_Entity.CurrentHealth);
+                stream.SendNext(CurrentHealth);
                 stream.SendNext(transform.position);
 
                 stream.SendNext(playerInRange);
@@ -320,8 +344,10 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
             if (BossType == BossType.BossType_Normal)
             {
-                areaBoss_Entity.CurrentHealth = (int)stream.ReceiveNext();
-                LoadHealthUI(areaBoss_Entity.CurrentHealth, boss_Entity.Health);
+                CurrentHealth = (int)stream.ReceiveNext();
+
+                LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+
                 MovePosition = (Vector3)stream.ReceiveNext();
 
                 playerInRange = (bool)stream.ReceiveNext();
@@ -332,5 +358,12 @@ public class Enemy : MonoBehaviourPun, IPunObservable
                 HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
             }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(MainPoint.position, detectionRadius);
+
     }
 }

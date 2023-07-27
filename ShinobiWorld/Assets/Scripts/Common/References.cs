@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -46,6 +48,8 @@ public static class References
     public static List<Mission_Entity> listMission = Mission_DAO.GetAll();
 
     public static List<Skill_Entity> listSkill = Skill_DAO.GetAllSkill();
+
+    public static List<Setting_Entity> listSetting = Setting_DAO.GetAllSetting();
 
     public static HasSkill_Entity hasSkillOne = new HasSkill_Entity();
     public static HasSkill_Entity hasSkillTwo = new HasSkill_Entity();
@@ -112,6 +116,8 @@ public static class References
                                                             {"Background/Top3", new Color32(205, 110, 50, 255)},
                                                             {"Background/TopNone", new Color32(190, 160, 120, 255)},
                                                          };
+
+    public static List<string> AllScenes = new List<string>() { "Iwa", "Kiri", "Konoha", "Kumo", "Suna" };
 
     public static void UpdateAccountToDB()
     {
@@ -186,14 +192,12 @@ public static class References
     public static void AddCoin(int Amount)
     {
         accountRefer.Coin += Amount;
-        //UpdateAccountToDB();
         Game_Manager.Instance.ReloadPlayerProperties();
     }
 
     public static void LevelUpReward()
     {
         BonusLevelUp();
-        UpdateAccountToDB();
         Account_DAO.GetAccountPowerByID(accountRefer.ID);
         Game_Manager.Instance.ReloadPlayerProperties();
     }
@@ -206,6 +210,23 @@ public static class References
 
         return listEquipCate[index];
     }
+
+    public static string GenerateRandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++)
+        {
+            sb.Append(chars[new System.Random().Next(chars.Length)]);
+        }
+
+        return sb.ToString();
+    }
+}
+public enum CustomEventCode
+{
+    EnemyDeactivate = 1, EnemyActive = 2
 }
 
 public enum AccountStatus
@@ -224,7 +245,7 @@ public enum Intention
 }
 public enum House
 {
-    Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino
+    Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino, Portal
 }
 
 public enum StatusMission
