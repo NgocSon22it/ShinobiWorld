@@ -117,6 +117,8 @@ public static class References
                                                             {"Background/TopNone", new Color32(190, 160, 120, 255)},
                                                          };
 
+    public static List<string> AllScenes = new List<string>() { "Iwa", "Kiri", "Konoha", "Kumo", "Suna" };
+
     public static void UpdateAccountToDB()
     {
         if (accountRefer != null)
@@ -243,7 +245,7 @@ public enum Intention
 }
 public enum House
 {
-    Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino
+    Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino, Portal
 }
 
 public enum StatusMission

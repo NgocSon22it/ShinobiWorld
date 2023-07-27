@@ -267,7 +267,6 @@ public class Player_AllUIManagement : MonoBehaviour
 
     }
 
-
     public void SetUpCoinUI(int Coin)
     {
         CoinTxt.text = Coin.ToString();
