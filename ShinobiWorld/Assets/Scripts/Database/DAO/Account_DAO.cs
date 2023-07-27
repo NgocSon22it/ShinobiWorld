@@ -219,7 +219,8 @@ namespace Assets.Scripts.Database.DAO
                             IsHokage = Convert.ToBoolean(dr["IsHokage"]),
                             WinTimes = Convert.ToInt32(dr["WinTimes"]),
                             IsUpgradeTrophy = Convert.ToBoolean(dr["IsUpgradeTrophy"]),
-                            ResetLimitDate = Convert.ToDateTime(dr["ResetLimitDate"])
+                            ResetLimitDate = Convert.ToDateTime(dr["ResetLimitDate"]),                           
+                            CustomSettings = CustomSetting_DAO.GetAllAccountCustomSetting(dr["ID"].ToString())
                         };
                         connection.Close();
                         return obj;
@@ -396,6 +397,21 @@ namespace Assets.Scripts.Database.DAO
                 }
             }
             return isExist;
+        }
+
+        public static void ChangeKey(string UserID, string SettingID, string NewKey)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update CustomSetting set [Value] = @Newkey where AccountID = @UserID and SettingID = @SettingID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@SettingID", SettingID);
+                cmd.Parameters.AddWithValue("@Newkey", NewKey);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
         }
     }
 }

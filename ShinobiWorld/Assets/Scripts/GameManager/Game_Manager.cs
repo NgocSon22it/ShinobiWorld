@@ -45,12 +45,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public bool IsBusy;
 
-    SqlDateTime dateTime;
-
     public AccountStatus AccountStatus;
 
     private const byte DeActiveEventCode = 1;
-
 
     RoomOptions roomOptions = new RoomOptions();
 
@@ -204,7 +201,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
+            roomOptions.MaxPlayers = 0;
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
             PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
@@ -214,7 +211,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
+        if (References.accountRefer != null)
         {
             References.UpdateAccountToDB();
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
@@ -237,7 +234,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         gameObject.SetActive(true);
         if (PhotonNetwork.IsConnected)
         {
-            // Notify all players that the enemy has been deactivated
             object[] data = new object[] { ViewID };
             PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyActive, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
         }
