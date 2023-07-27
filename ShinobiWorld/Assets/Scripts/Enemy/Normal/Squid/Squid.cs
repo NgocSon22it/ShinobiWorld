@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class Squid : Enemy
 {
+    [SerializeField] List<GameObject> ListAttack_Hit = new List<GameObject>();
     new void Awake()
     {
-        EnemyID = "Boss_Squid";
-        SetUp(EnemyID, AreaName);
+        SetUp(EnemyID, AreaID);
     }
-
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
     }
-
     new void Update()
     {
         base.Update();
@@ -53,42 +51,39 @@ public class Squid : Enemy
                 }
             }
         }
-        FindTarget_CurrentTime += Time.deltaTime;
 
-        // Check if the interval has passed
-        if (FindTarget_CurrentTime >= FindTarget_TotalTime)
-        {
-            TargetPosition = FindClostestTarget(detectionRadius, "Player");
-            FindTarget_CurrentTime = 0f;
-        }
-
-        playerInRange = TargetPosition != Vector3.zero;
-        // Restrict movement to the move area
-        clampedPosition = movementBounds.ClosestPoint(transform.position);
-        transform.position = new Vector3(clampedPosition.x, clampedPosition.y, transform.position.z);
+        playerInRange = CheckPlayerInRange();
 
         animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
+
     }
 
     public void Animation_SkillOne()
     {
-        if (TargetPosition != Vector3.negativeInfinity)
+        if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
-
 
             if (SkillOne != null)
             {
-                SkillOne.transform.position = transform.position;
-                SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Fish_SkillOne>().SetUp(100);
+                SkillOne.transform.position = TargetPosition;
+                SkillOne.GetComponent<Squid_Attack>().SetUp(100);
+                SkillOne.GetComponent<Squid_Attack>().SetUpPoint(transform.position, TargetPosition);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }
         }
     }
 
+    public GameObject GetAttack_Hit()
+    {
+        for (int i = 0; i < ListAttack_Hit.Count; i++)
+        {
+            if (!ListAttack_Hit[i].activeInHierarchy)
+            {
+                return ListAttack_Hit[i];
+            }
+        }
+        return null;
+    }
 }

@@ -12,7 +12,6 @@ namespace Assets.Scripts.Mission
 {
     public class HouseOpen : MonoBehaviour
     {
-        public GameObject Panel;
         public House house;
         private bool isOpen = false;
 
@@ -25,7 +24,6 @@ namespace Assets.Scripts.Mission
                 switch (house)
                 {
                     case House.Hokage:
-                        //Panel.GetComponent<MissionManager>().Open();
                         MissionManager.Instance.Open();
                         break;
                     case House.Shop:
@@ -33,6 +31,9 @@ namespace Assets.Scripts.Mission
                         break;
                     case House.School:
                         SchoolManager.Instance.Open();
+                        break;
+                    case House.Arena:
+                        ArenaManager.Instance.Open();
                         break;
                 }
             }

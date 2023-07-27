@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -47,6 +49,8 @@ public static class References
 
     public static List<Skill_Entity> listSkill = Skill_DAO.GetAllSkill();
 
+    public static List<Setting_Entity> listSetting = Setting_DAO.GetAllSetting();
+
     public static HasSkill_Entity hasSkillOne = new HasSkill_Entity();
     public static HasSkill_Entity hasSkillTwo = new HasSkill_Entity();
     public static HasSkill_Entity hasSkillThree = new HasSkill_Entity();
@@ -78,6 +82,10 @@ public static class References
     public static Color32 ButtonColorDefaul = new Color32(150, 140, 140, 100);
 
     public static string MailSystem = "System";
+
+    public static string ServerName = "Shinobi";
+
+    public static bool IsDead;
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
@@ -182,14 +190,12 @@ public static class References
     public static void AddCoin(int Amount)
     {
         accountRefer.Coin += Amount;
-        //UpdateAccountToDB();
         Game_Manager.Instance.ReloadPlayerProperties();
     }
 
     public static void LevelUpReward()
     {
         BonusLevelUp();
-        UpdateAccountToDB();
         Account_DAO.GetAccountPowerByID(accountRefer.ID);
         Game_Manager.Instance.ReloadPlayerProperties();
     }
@@ -202,8 +208,29 @@ public static class References
 
         return listEquipCate[index];
     }
+
+    public static string GenerateRandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++)
+        {
+            sb.Append(chars[new System.Random().Next(chars.Length)]);
+        }
+
+        return sb.ToString();
+    }
+}
+public enum CustomEventCode
+{
+    EnemyDeactivate = 1, EnemyActive = 2
 }
 
+public enum AccountStatus
+{
+    Normal, Arena, PK
+}
 
 public enum TypeSell
 {
@@ -214,7 +241,6 @@ public enum Intention
 {
     Sell, Bag
 }
-
 public enum House
 {
     Hokage, Hospital, Shop, Arena, School, Ramen, Uchiha, Casino
@@ -228,4 +254,9 @@ public enum StatusMission
 public enum TrophyID
 {
     Trophy_None, Trophy_Genin, Trophy_Chunin, Trophy_Jonin
+}
+
+public enum BossType
+{
+    BossType_Normal, BossType_Arena
 }

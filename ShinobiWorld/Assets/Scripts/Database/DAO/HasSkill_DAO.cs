@@ -34,7 +34,6 @@ public static class HasSkill_DAO
                         Cooldown = Convert.ToDouble(dr["Cooldown"]),
                         Damage = Convert.ToInt32(dr["Damage"]),
                         Chakra = Convert.ToInt32(dr["Chakra"]),
-                        Key = dr["Key"].ToString(),
                         Delete = Convert.ToBoolean(dr["Delete"])
                     };
                     connection.Close();
@@ -73,7 +72,6 @@ public static class HasSkill_DAO
                         Cooldown = Convert.ToDouble(dr["Cooldown"]),
                         Damage = Convert.ToInt32(dr["Damage"]),
                         Chakra = Convert.ToInt32(dr["Chakra"]),
-                        Key = dr["Key"].ToString(),
                         Delete = Convert.ToBoolean(dr["Delete"])
                     };
                     list.Add(obj);
@@ -87,20 +85,5 @@ public static class HasSkill_DAO
         }
 
         return list;
-    }
-
-    public static void ChangeKey(string UserID, string SkillID, string NewKey)
-    {
-        using (SqlConnection connection = new SqlConnection(ConnectionStr))
-        {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Update HasSkill set [Key] = @Newkey where SkillID = @SkillID and AccountID = @UserID";
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@SkillID", SkillID);
-            cmd.Parameters.AddWithValue("@Newkey", NewKey);
-            connection.Open();
-            cmd.ExecuteNonQuery();
-            connection.Close();
-        }
-    }
+    }   
 }

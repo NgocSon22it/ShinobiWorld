@@ -31,7 +31,7 @@ namespace Assets.Scripts.Friend
         public void OnClick()
         {
             FriendManager.Instance.ResetColor();
-            GetComponent<Image>().color = References.ColorSelected;
+            GetComponent<Image>().color = References.ItemColorSelected;
         }
 
         public void Setup(FriendInfo friend)

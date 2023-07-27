@@ -38,7 +38,6 @@ public static class Skill_DAO
                         UpgradeCost = Convert.ToInt32(dr["UpgradeCost"]),
                         BuyCost = Convert.ToInt32(dr["BuyCost"]),
                         Image = dr["Image"].ToString(),
-                        Key = dr["Key"].ToString(),
                         Description = dr["Description"].ToString(),
                         Delete = Convert.ToBoolean(dr["Delete"])
                     };
@@ -82,7 +81,6 @@ public static class Skill_DAO
                         UpgradeCost = Convert.ToInt32(dr["UpgradeCost"]),
                         BuyCost = Convert.ToInt32(dr["BuyCost"]),
                         Image = dr["Image"].ToString(),
-                        Key = dr["Key"].ToString(),
                         Description = dr["Description"].ToString(),
                         Delete = Convert.ToBoolean(dr["Delete"])
                     };
@@ -103,14 +101,13 @@ public static class Skill_DAO
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Insert Into HasSkill  ([AccountID] ,[SkillID] ,[Level] ,[Cooldown] ,[Damage] ,[Chakra] ,[Key]) values(@UserID, @SkillID, @Level, @Cooldown, @Damage, @Chakra, @Key)";
+            cmd.CommandText = "Insert Into HasSkill  ([AccountID] ,[SkillID] ,[Level] ,[Cooldown] ,[Damage] ,[Chakra]) values(@UserID, @SkillID, @Level, @Cooldown, @Damage, @Chakra)";
             cmd.Parameters.AddWithValue("@UserID", UserID);
             cmd.Parameters.AddWithValue("@SkillID", skill_Entity.ID);
             cmd.Parameters.AddWithValue("@Level", 1);
             cmd.Parameters.AddWithValue("@Cooldown", skill_Entity.Cooldown);
             cmd.Parameters.AddWithValue("@Damage", skill_Entity.Damage);
             cmd.Parameters.AddWithValue("@Chakra", skill_Entity.Chakra);
-            cmd.Parameters.AddWithValue("@Key", skill_Entity.Key);
             connection.Open();
             cmd.ExecuteNonQuery();
             connection.Close();

@@ -394,7 +394,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public void OpenGameScene()
     {
-        if (playerCount > 0 && playerCount < References.Maxserver)
+        if (playerCount >= 0 && playerCount < References.Maxserver)
         {
             References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
             if (Account_DAO.IsFirstLogin(user.UserId))
@@ -404,7 +404,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             else
             {
                 PhotonNetwork.LoadLevel(Scenes.Konoha);
-                //StartCoroutine(LoadLevelAsync());
             }
 
         }
@@ -423,31 +422,20 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     //    }
     //}
 
-    /*   IEnumerator LoadLevelAsync()
-       {
-
-
-           while (PhotonNetwork.LevelLoadingProgress < 1)
-           {
-               Debug.Log((int)(PhotonNetwork.LevelLoadingProgress * 100)); 
-               //loadAmount = async.progress;
-               yield return new WaitForEndOfFrame();
-           }
-       }*/
     public override void OnDisconnected(DisconnectCause cause)
     {
         // Handle the disconnect cause
         if (cause == DisconnectCause.MaxCcuReached)
         {
-            Debug.LogError("Failed to connect to Photon: Full");
+            Debug.Log("Failed to connect to Photon: Full");
         }
         else if (cause == DisconnectCause.ExceptionOnConnect)
         {
-            Debug.LogError("Failed to connect to Photon: Exception on connect");
+            Debug.Log("Failed to connect to Photon: Exception on connect");
         }
         else
         {
-            Debug.LogError("Failed to connect to Photon: " + cause.ToString());
+            Debug.Log("Failed to connect to Photon: " + cause.ToString());
         }
     }
 

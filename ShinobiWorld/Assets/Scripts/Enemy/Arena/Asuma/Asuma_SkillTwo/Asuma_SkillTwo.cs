@@ -7,19 +7,27 @@ public class Asuma_SkillTwo : Boss_Skill
     [SerializeField] GameObject MainFire;
     [SerializeField] CircleCollider2D Col;
 
-    Coroutine Electric;
+    Coroutine Fire;
+    Coroutine FireDamage;
 
     new void OnEnable()
     {
         LifeTime = 6.5f;
-        Electric = StartCoroutine(StartDamage());
+        Fire = StartCoroutine(StartDamage());
         base.OnEnable();
     }
 
     new void OnDisable()
     {
         base.OnDisable();
-        StopCoroutine(Electric);
+        if (Fire != null)
+        {
+            StopCoroutine(Fire);
+        }
+        if (FireDamage != null)
+        {
+            StopCoroutine(FireDamage);
+        }
         SetUpDamage(false);
     }
 
@@ -27,6 +35,7 @@ public class Asuma_SkillTwo : Boss_Skill
     {
         yield return new WaitForSeconds(1f);
         SetUpDamage(true);
+        FireDamage = StartCoroutine(LogTriggeredObjects());
     }
 
     public void SetUpDamage(bool status)
@@ -35,13 +44,23 @@ public class Asuma_SkillTwo : Boss_Skill
         Col.enabled = status;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private IEnumerator LogTriggeredObjects()
     {
-        if (AttackAble_Tag.Contains(collision.gameObject.tag))
+        while (true)
         {
-            if (collision.gameObject.tag == "Player")
+            yield return new WaitForSeconds(1f);
+            List<Collider2D> colliders = new List<Collider2D>();
+            Physics2D.OverlapCollider(Col, new ContactFilter2D(), colliders);
+
+            foreach (Collider2D collider in colliders)
             {
-                //collision.GetComponent<PlayerBase>().TakeDamage(Damage);
+                if (AttackAble_Tag.Contains(collider.gameObject.tag))
+                {
+                    if (collider.CompareTag("Player"))
+                    {
+                        collider.GetComponent<PlayerBase>().TakeDamage(Damage);
+                    }
+                }
             }
         }
     }

@@ -140,17 +140,14 @@ GameObject:
   - component: {fileID: 5000005575559795607}
   - component: {fileID: 5000005575559795608}
   - component: {fileID: 5000005575559795613}
-  - component: {fileID: 5000005575559795612}
-  - component: {fileID: 5000005575559795611}
-  - component: {fileID: 5000005575559795610}
   - component: {fileID: 5000005575559795609}
-  m_Layer: 3
+  m_Layer: 12
   m_Name: Asuma_Clone
-  m_TagString: Enemy
+  m_TagString: Clone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8552316247856855346
 Transform:
   m_ObjectHideFlags: 0
@@ -159,7 +156,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1669840413174294031}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.57, y: 0.9, z: 0.0071302447}
+  m_LocalPosition: {x: 1.57, y: 0.9, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -247,8 +244,8 @@ MonoBehaviour:
   - {fileID: 5035428346224575041}
   - {fileID: 5608284171746840083}
   m_Bounds:
-    m_Center: {x: 0.1642673, y: 0.116588235, z: 0}
-    m_Extent: {x: 1.3121006, y: 1.4773486, z: 0}
+    m_Center: {x: 0.16426766, y: 0.116588235, z: 0}
+    m_Extent: {x: 1.3121006, y: 1.4773484, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -365,88 +362,21 @@ MonoBehaviour:
   FindTarget_CurrentTime: 0
   FindTarget_TotalTime: 0
   LocalScaleX: 0
+  BossType: 0
+  CurrentHealth: 0
   MainPoint: {fileID: 5000005575570413919}
   CurrentHealth_UI: {fileID: 3384679419461482203}
   HealthNumber: {fileID: 5497917873478980631}
+  DeathEffect: {fileID: 0}
   direction: {x: 0, y: 0}
   HealthChakraUI: {fileID: 298657367097013293}
   spriteRenderer: {fileID: 1979642053180673625}
   rigidbody2d: {fileID: 5000005575559795607}
   animator: {fileID: 8148825982533658657}
   boss_Pool: {fileID: 5000005575559795609}
+  collider2d: {fileID: 0}
   FacingRight: 0
   SkillRandomPosition: {x: 0, y: 0}
---- !u!114 &5000005575559795612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669840413174294031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 5000005575559795613}
-  - {fileID: 5000005575559795611}
-  - {fileID: 5000005575559795610}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &5000005575559795611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669840413174294031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 1
-  m_UseLocal: 1
---- !u!114 &5000005575559795610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669840413174294031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill1
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill2
-  - Type: 9
-    SynchronizeType: 0
-    Name: Skill3
-  - Type: 4
-    SynchronizeType: 1
-    Name: Walk
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
 --- !u!114 &5000005575559795609
 MonoBehaviour:
   m_ObjectHideFlags: 0

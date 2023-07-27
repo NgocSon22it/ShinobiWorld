@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Asuma : Enemy
 {
-
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
+    
 
     //SkillThree
     bool IsSummonClone;
@@ -23,12 +23,14 @@ public class Asuma : Enemy
     new void Start()
     {
         base.Start();
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health;
+        CurrentHealth = boss_Health;
+        LoadHealthUI(CurrentHealth, boss_Health);
     }
 
     new void Update()
     {
         AttackAndMove();
-
     }
 
     public void AttackAndMove()
@@ -154,13 +156,14 @@ public class Asuma : Enemy
     {
         for (int i = 0; i < 3; i++)
         {
-            GameObject Skillwo = boss_Pool.GetSkillTwoFromPool();
-            if (Skillwo != null)
+            GameObject SkillTwo = boss_Pool.GetSkillTwoFromPool();
+            if (SkillTwo != null)
             {
                 SkillRandomPosition = GetRandomSkillPosition();
 
-                Skillwo.transform.position = SkillRandomPosition;
-                Skillwo.SetActive(true);
+                SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(30);
+                SkillTwo.transform.position = SkillRandomPosition;
+                SkillTwo.SetActive(true);
             }
         }
         SetUpSkilling(3f);
