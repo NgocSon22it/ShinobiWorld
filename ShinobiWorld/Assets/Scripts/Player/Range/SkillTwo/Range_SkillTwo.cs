@@ -1,4 +1,5 @@
 using Assets.Scripts.Database.Entity;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,9 +22,9 @@ public class Range_SkillTwo : PlayerSkill
     {
         if (AttackAble_Tag.Contains(collision.gameObject.tag))
         {
-            if (collision.gameObject.tag == "Enemy")
+            if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Clone")
             {
-                collision.GetComponent<Enemy>().TakeDamage(UserID, Damage);
+                collision.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage);
 
                 HitEffect = player_Pool.GetSkillTwo_Hit_FromPool();
                 if (HitEffect != null)
@@ -31,6 +32,21 @@ public class Range_SkillTwo : PlayerSkill
                     HitEffect.transform.position = transform.position;
                     HitEffect.SetActive(true);
                 }
+            }
+            TurnOff();
+        }
+        if (collision.CompareTag("Player")
+                && collision.gameObject.GetComponent<PlayerBase>().accountStatus == AccountStatus.PK
+                && collision.gameObject.GetComponent<PhotonView>() != PV
+               )
+        {
+            collision.GetComponent<PlayerBase>().TakeDamage(Damage);
+
+            HitEffect = player_Pool.GetNormalAttack_Hit_FromPool();
+            if (HitEffect != null)
+            {
+                HitEffect.transform.position = transform.position;
+                HitEffect.SetActive(true);
             }
             TurnOff();
         }

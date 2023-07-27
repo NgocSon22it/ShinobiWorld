@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Database.Entity;
+﻿using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Database.Entity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,15 +20,13 @@ public class Skill_Manager : MonoBehaviour
     [SerializeField] GameObject Skill_Item;
     [SerializeField] Transform Skill_Content;
 
-    [Header("Coin")]
-    [SerializeField] TMP_Text PlayerCoinTxt;
-
-    [Header("Selected Skill")]
+    [Header("Detail")]
     [SerializeField] Image SkillImage;
     [SerializeField] TMP_Text SkillNameTxt;
     [SerializeField] TMP_Text SkillCoinTxt;
+    [SerializeField] Button Skill_BuyBtn;
     [SerializeField] TMP_Text SkillDescriptionTxt;
-    [SerializeField] TMP_Text ButtonCoinTxt;
+    [SerializeField] TMP_Text ErrorTxt;
 
     [Header("Status")]
     [SerializeField] GameObject BuyButtonPanel;
@@ -35,10 +34,11 @@ public class Skill_Manager : MonoBehaviour
 
     [Header("Upgrade Skill")]
     [SerializeField] GameObject UpgradePanel;
-    [SerializeField] Image Upgrade_SkillImage;
     [SerializeField] TMP_Text Upgrade_SkillNameTxt;
-    [SerializeField] TMP_Text Upgrade_SkillDescriptionTxt;
-    [SerializeField] TMP_Text Upgrade_ButtonCoinTxt;
+    [SerializeField] GameObject Upgrade_Cost;
+    [SerializeField] Button Upgrade_Btn;
+    [SerializeField] TMP_Text Upgrade_CostTxt;
+
     [SerializeField] TMP_Text Upgrade_CurrentLevelTxt;
     [SerializeField] TMP_Text Upgrade_CurrentDamageTxt;
     [SerializeField] TMP_Text Upgrade_CurrentCooldownTxt;
@@ -48,17 +48,16 @@ public class Skill_Manager : MonoBehaviour
     [SerializeField] TMP_Text Upgrade_NextDamageTxt;
     [SerializeField] TMP_Text Upgrade_NextCooldownTxt;
     [SerializeField] TMP_Text Upgrade_NextChakraTxt;
+
+    [SerializeField] TMP_Text UpgradeSkillErrorTxt;
+
+    [SerializeField] GameObject CanUpgradePanel;
+
     int DamageBonus, ChakraBonus;
     double CooldownBonus;
 
-    [SerializeField] GameObject CanUpgradePanel;
-    [SerializeField] GameObject CanNotUpgradePanel;
-
-    [SerializeField] TMP_Text ErrorTxt;
-    [SerializeField] TMP_Text UpgradeSkillErrorTxt;
-
     public Skill_Entity SkillSelected;
-    public AccountSkill_Entity AccountSkill;
+    public HasSkill_Entity HasSkill;
 
 
 
@@ -75,19 +74,18 @@ public class Skill_Manager : MonoBehaviour
         SkillNameTxt.text = skill_Entity.Name;
         SkillCoinTxt.text = skill_Entity.BuyCost.ToString();
         SkillDescriptionTxt.text = skill_Entity.Description;
-        ButtonCoinTxt.text = skill_Entity.BuyCost.ToString();
-
 
         if (!SkillSelected.RoleInGameID.Equals(References.accountRefer.RoleInGameID))
         {
             SetUpBuyPanel(false, false);
-            ErrorTxt.text = "Kỹ năng này không trong vai trò của bạn!";
+            ErrorTxt.text = Message.Skill_NotForRole;
         }
         else
         {
             if (References.accountRefer.Level < SkillSelected.LevelUnlock)
             {
-                ErrorTxt.text = "Bạn cần đạt cấp độ " + SkillSelected.LevelUnlock + " để mở khóa!";
+                ErrorTxt.text = string.Format(Message.Skill_Unlock, SkillSelected.LevelUnlock);
+                    //"Bạn cần đạt cấp độ " + SkillSelected.LevelUnlock + " để mở khóa!";
                 SetUpBuyPanel(false, false);
             }
             else
@@ -106,49 +104,65 @@ public class Skill_Manager : MonoBehaviour
             }
         }
 
-        LoadSkillList();
+        //LoadSkillList();
     }
 
 
     public void SetUpInformationUpgradeSkill()
     {
-        AccountSkill = AccountSkill_DAO.GetAccountSkillByID(References.accountRefer.ID, SkillSelected.ID);
-        if (AccountSkill != null)
+        HasSkill = HasSkill_DAO.GetHasSkillByID(References.accountRefer.ID, SkillSelected.ID);
+        if (HasSkill != null)
         {
             ResetErrorMessage();
             UpgradePanel.SetActive(true);
-            Upgrade_SkillImage.sprite = Resources.Load<Sprite>(SkillSelected.Image);
             Upgrade_SkillNameTxt.text = SkillSelected.Name;
-            Upgrade_SkillDescriptionTxt.text = SkillSelected.Description;
-            Upgrade_ButtonCoinTxt.text = SkillSelected.BuyCost.ToString();
-            Upgrade_CurrentLevelTxt.text = AccountSkill.Level.ToString();
-            Upgrade_CurrentDamageTxt.text = AccountSkill.Damage.ToString("F2");
-            Upgrade_CurrentCooldownTxt.text = AccountSkill.Cooldown.ToString("F2");
-            Upgrade_CurrentChakraTxt.text = AccountSkill.Chakra.ToString("F2");
+
+            Upgrade_CurrentLevelTxt.text = HasSkill.Level.ToString();
+            Upgrade_CurrentDamageTxt.text = HasSkill.Damage.ToString("F2");
+            Upgrade_CurrentCooldownTxt.text = HasSkill.Cooldown.ToString("F2");
+            Upgrade_CurrentChakraTxt.text = HasSkill.Chakra.ToString("F2");
+
+            Skill_BuyBtn.interactable = true;
+
+            if (References.accountRefer.Coin < SkillSelected.BuyCost)
+            {
+                ErrorTxt.text = Message.NotEnoughMoney;
+                Skill_BuyBtn.interactable = false;
+            }
+
             SetUpStatusForUpgrade();
         }
     }
     public void SetUpStatusForUpgrade()
     {
-        if (AccountSkill.Level < References.MaxUpgradeLevel)
+        if (HasSkill.Level < References.MaxUpgradeLevel)
         {
-            SetUpUpgradePanel(true, false);
-            Upgrade_NextLevelTxt.text = (AccountSkill.Level + 1).ToString();
+            SetUpUpgradePanel(true);
+            Upgrade_NextLevelTxt.text = (HasSkill.Level + 1).ToString();
 
-            DamageBonus = Convert.ToInt32(AccountSkill.Damage * (1 + References.Uppercent_Skill_Damage / 100f));
-            CooldownBonus = (AccountSkill.Cooldown * (1 - References.Uppercent_Skill_CoolDown / 100f));
-            ChakraBonus = Convert.ToInt32((AccountSkill.Chakra * (1 - References.Uppercent_Skill_Chakra / 100f)));
-            
-            
+            DamageBonus = Convert.ToInt32(HasSkill.Damage * (1 + References.Uppercent_Skill_Damage / 100f));
+            CooldownBonus = (HasSkill.Cooldown * (1 - References.Uppercent_Skill_CoolDown / 100f));
+            ChakraBonus = Convert.ToInt32((HasSkill.Chakra * (1 - References.Uppercent_Skill_Chakra / 100f)));
             
             Upgrade_NextDamageTxt.text = DamageBonus.ToString("F2");
             Upgrade_NextCooldownTxt.text = CooldownBonus.ToString("F2");
             Upgrade_NextChakraTxt.text = ChakraBonus.ToString("F2");
-            
+
+            Upgrade_Btn.interactable = true;
+
+            UpgradeSkillErrorTxt.text = string.Empty;
+            Upgrade_CostTxt.text = SkillSelected.UpgradeCost.ToString();
+
+            if (References.accountRefer.Coin < SkillSelected.UpgradeCost)
+            {
+                Upgrade_Btn.interactable = false;
+                UpgradeSkillErrorTxt.text = Message.NotEnoughMoney;
+            }
         }
         else
         {
-            SetUpUpgradePanel(false, true);
+            UpgradeSkillErrorTxt.text = Message.Skill_MaxLevel;
+            SetUpUpgradePanel(false);
         }
     }
 
@@ -160,13 +174,12 @@ public class Skill_Manager : MonoBehaviour
 
     public void LoadSkillList()
     {
-        PlayerCoinTxt.text = References.accountRefer.Coin.ToString();
         foreach (Transform trans in Skill_Content)
         {
             Destroy(trans.gameObject);
         }
 
-        foreach (Skill_Entity Item in References.ListSkill)
+        foreach (Skill_Entity Item in References.listSkill)
         {
             Instantiate(Skill_Item, Skill_Content).GetComponent<Skill_Item>().SetUp(Item);
         }
@@ -174,9 +187,9 @@ public class Skill_Manager : MonoBehaviour
 
     public bool CheckSkillOwned()
     {
-        List<AccountSkill_Entity> list = AccountSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
+        List<HasSkill_Entity> list = HasSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
 
-        foreach (AccountSkill_Entity skill_Entity in list)
+        foreach (HasSkill_Entity skill_Entity in list)
         {
             if (skill_Entity.SkillID.Equals(SkillSelected.ID))
             {
@@ -194,6 +207,7 @@ public class Skill_Manager : MonoBehaviour
             References.accountRefer.Coin -= SkillSelected.BuyCost;
 
             References.UpdateAccountToDB();
+            Account_DAO.GetAccountPowerByID(References.accountRefer.ID);
             Game_Manager.Instance.ReloadPlayerProperties();
 
             LoadSkillList();
@@ -202,7 +216,7 @@ public class Skill_Manager : MonoBehaviour
         }
         else
         {
-            ErrorTxt.text = "Bạn không đủ xu để mua!";
+            ErrorTxt.text = Message.NotEnoughMoney;
         }
     }
 
@@ -212,27 +226,31 @@ public class Skill_Manager : MonoBehaviour
         {
             Skill_DAO.UpgradeSkill(References.accountRefer.ID, SkillSelected.ID, DamageBonus, CooldownBonus, ChakraBonus);
             References.accountRefer.Coin -= SkillSelected.UpgradeCost;
+            
             References.UpdateAccountToDB();
-
-            PlayerCoinTxt.text = References.accountRefer.Coin.ToString();
+            Account_DAO.GetAccountPowerByID(References.accountRefer.ID);
             Game_Manager.Instance.ReloadPlayerProperties();
 
             Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(References.accountRefer.Coin);
-            SetUpInformationUpgradeSkill();
             UpgradeSkillErrorTxt.text = "";
+            SetUpInformationUpgradeSkill();
+            
         }
         else
         {
-            UpgradeSkillErrorTxt.text = "Bạn không đủ xu để mua!";
+            UpgradeSkillErrorTxt.text = Message.NotEnoughMoney;
         }
     }
 
     public void OpenSkillPanel()
     {
-        if (References.ListSkill != null)
+        if (References.listSkill != null)
         {
-            SetUpSelectedSkill(References.ListSkill[0]);
             LoadSkillList();
+            SetUpSelectedSkill(References.listSkill[0]);
+            Skill_Content.GetChild(0).gameObject.GetComponent<Skill_Item>().
+                Background.color = new Color32(190, 140, 10, 255);
+
             SkillPanel.SetActive(true);
             Game_Manager.Instance.IsBusy = true;
         }
@@ -257,10 +275,18 @@ public class Skill_Manager : MonoBehaviour
         UpgradeButtonPanel.SetActive(UpgradeValue);
     }
 
-    public void SetUpUpgradePanel(bool CanUpgradeValue, bool CanNotUpgradeValue)
+    public void SetUpUpgradePanel(bool CanUpgradeValue)
     {
         CanUpgradePanel.SetActive(CanUpgradeValue);
-        CanNotUpgradePanel.SetActive(CanNotUpgradeValue);
+    }
+
+    public void ResetColor()
+    {
+        foreach (Transform trans in Skill_Content)
+        {
+            trans.gameObject.GetComponent<Skill_Item>().
+                Background.color = new Color32(110, 80, 60, 255);
+        }
     }
 
 }

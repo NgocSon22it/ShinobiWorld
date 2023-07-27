@@ -9,8 +9,8 @@ namespace Assets.Scripts.Database.Entity
     public class Mission_Entity
     {
         public string ID;
-        public string TrophiesID;
-        public string BossID;
+        public string TrophyID;
+        public string EnemyID;
         public string CategoryEquipmentID;
         public int RequiredStrength;
         public string Content;

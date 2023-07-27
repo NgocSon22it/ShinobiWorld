@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
-    ChatClient chatClient;
+    public ChatClient chatClient;
 
     [SerializeField] GameObject ChatRoom;
     [SerializeField] TMP_Text ChatDisPlay;
@@ -69,12 +69,44 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
             Debug.Log(mess);
         }
-        
+
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
+        if (!string.IsNullOrEmpty(message.ToString()))
+        {
+            // Channel Name format [Sender : Recipient]
+            string senderName = channelName.Split(new char[] { ':' })[0];
 
+            if (!sender.Equals(senderName, StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log($"{sender}: {message}");
+                var mess = message.ToString().Split(new char[] { ':' });
+
+                var type = (TypePriviteMessage)Enum.Parse(typeof(TypePriviteMessage), mess[0]);
+                switch (type)
+                {
+                    case TypePriviteMessage.FriendRequest:
+                        FriendManager.Instance.Notify.SetActive(true);
+                        break;
+                    case TypePriviteMessage.PKRequest:
+
+                        if (mess[1] == "0")
+                        {
+                            PKRequestManager.Instance.Open(senderName);
+                        }
+                        else if (mess[1] == "1")
+                        {
+                            PKRequestManager.Instance.ShowAccept(senderName);
+                        }
+
+                        break;
+                    case TypePriviteMessage.Text:
+                        break;
+                }
+            }
+        }
     }
 
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
@@ -129,7 +161,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         IsTypingChat = value;
         TypingChatObject.SetActive(value);
-        Game_Manager.Instance.IsBusy = value;
+        //Game_Manager.Instance.IsBusy = value;
     }
 
     public void FocusTyping()
@@ -137,7 +169,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         // Select the input field
         ChatField.Select();
         // Set the focus to the input field
-        ChatField.ActivateInputField();      
+        ChatField.ActivateInputField();
     }
 
 
@@ -157,12 +189,12 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if (isConnected)
         {
             chatClient.Service();
-            
+
         }
 
         if (!string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
         {
-            SummitPublicChat();          
+            SummitPublicChat();
             FocusTyping();
             VerticalScroll.value = 0f;
         }

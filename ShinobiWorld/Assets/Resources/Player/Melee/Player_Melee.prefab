@@ -2156,27 +2156,30 @@ MonoBehaviour:
     ID: 
     Name: 
     RoleInGameID: 
-    TrophiesID: 
+    TrophyID: 
+    IsHokage: 0
+    Coin: 0
+    Exp: 0
     Level: 0
     Health: 0
     CurrentHealth: 0
     Chakra: 0
     CurrentChakra: 0
-    Exp: 0
-    Speed: 0
-    Coin: 0
-    Power: 0
     Strength: 0
     CurrentStrength: 0
+    Speed: 0
+    Power: 0
+    IsFirst: 0
+    IsOnline: 0
+    HasTicket: 0
+    IsUpgradeTrophy: 0
+    IsDead: 0
+    WinTimes: 0
     EyeID: 
     HairID: 
     MouthID: 
     SkinID: 
-    IsDead: 0
-    IsOnline: 0
-    IsTicket: 0
-    IsFirst: 0
-    IsUpgradeTrophy: 0
+    CustomSettings: []
   Weapon_Entity:
     AccountID: 
     WeaponID: 
@@ -2208,14 +2211,19 @@ MonoBehaviour:
     Chakra: 0
     Delete: 0
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
-  PlayerAllUIPrefabs: {fileID: 7741783450571619106, guid: a2ba03984607abb418145f4e10e68686, type: 3}
-  PlayerNickName: {fileID: 4373356765494000404}
-  PlayerHealthChakraUI: {fileID: 8764373094491988010}
+  PlayerAllUIPrefabs: {fileID: 4412084099510779851, guid: 595d37d9f80fa5748beb8589c072dc29, type: 3}
   PlayerCameraInstance: {fileID: 0}
   PlayerAllUIInstance: {fileID: 0}
+  PlayerNickName: {fileID: 4373356765494000404}
+  PlayerHealthChakraUI: {fileID: 8764373094491988010}
+  CurrentHealth_UI: {fileID: 612702411517109825}
+  CurrentChakra_UI: {fileID: 4314057655080928693}
+  CurrentHealth_NumberUI: {fileID: 162841842442591389}
+  CurrentChakra_NumberUI: {fileID: 4465414469684102523}
+  CameraBox: {fileID: 0}
   AttackableLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 4168
   AttackPoint: {fileID: 8593830438398984553}
   ObjectPool_Runtime: {fileID: 3494981283893899813}
   SkillOneCooldown_Total: 0
@@ -2226,6 +2234,7 @@ MonoBehaviour:
   SkillThreeCooldown_Current: 0
   AttackCooldown_Total: 0
   AttackCooldown_Current: 0
+  accountStatus: 0
   MainPoint: {fileID: 2046557355040735177}
   DamageBonus: 0
   SpeedBonus: 0
@@ -2237,10 +2246,6 @@ MonoBehaviour:
   playerCollider: {fileID: 6238191496383072184}
   playerPool: {fileID: 2049423208891953270}
   MoveDirection: {x: 0, y: 0}
-  CurrentHealth_UI: {fileID: 612702411517109825}
-  CurrentChakra_UI: {fileID: 4314057655080928693}
-  CurrentHealth_NumberUI: {fileID: 162841842442591389}
-  CurrentChakra_NumberUI: {fileID: 4465414469684102523}
   Shirt: {fileID: 8538844861891004793}
   RightFoot: {fileID: 8538844860861749927}
   LeftFoot: {fileID: 8538844861089221568}
@@ -2909,6 +2914,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5626290749314016702, guid: d3566b7a7934f2c4ebbba44f85d454b7, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: -7134244647910735846}
+    - target: {fileID: 5626290749314016702, guid: d3566b7a7934f2c4ebbba44f85d454b7, type: 3}
       propertyPath: player_Pool
       value: 
       objectReference: {fileID: 2049423208891953270}
@@ -2991,6 +3000,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6206256777387600783, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: -7134244647910735846}
+    - target: {fileID: 6206256777387600783, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2049423208891953270}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
 --- !u!1 &6456977700991645916 stripped
@@ -3066,6 +3083,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6206256777387600783, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: -7134244647910735846}
+    - target: {fileID: 6206256777387600783, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2049423208891953270}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
 --- !u!1 &6744917955286520733 stripped
@@ -3141,6 +3166,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6206256777387600783, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: -7134244647910735846}
+    - target: {fileID: 6206256777387600783, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2049423208891953270}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 198cc4e4899b5584da49a13c52ccdc94, type: 3}
 --- !u!1 &5607421382283330276 stripped
@@ -3160,6 +3193,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3960076916764036618}
     m_Modifications:
+    - target: {fileID: 1723507132886136769, guid: efe716b61df899d4e91375c9bb1d2940, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: -7134244647910735846}
     - target: {fileID: 1723507132886136769, guid: efe716b61df899d4e91375c9bb1d2940, type: 3}
       propertyPath: collider2
       value: 
@@ -3317,6 +3354,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5626290749314016702, guid: d3566b7a7934f2c4ebbba44f85d454b7, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: -7134244647910735846}
+    - target: {fileID: 5626290749314016702, guid: d3566b7a7934f2c4ebbba44f85d454b7, type: 3}
       propertyPath: player_Pool
       value: 
       objectReference: {fileID: 2049423208891953270}
@@ -3395,6 +3436,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5626290749314016702, guid: d3566b7a7934f2c4ebbba44f85d454b7, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: -7134244647910735846}
     - target: {fileID: 5626290749314016702, guid: d3566b7a7934f2c4ebbba44f85d454b7, type: 3}
       propertyPath: player_Pool
       value: 

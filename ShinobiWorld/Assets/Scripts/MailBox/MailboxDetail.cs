@@ -18,43 +18,57 @@ namespace Assets.Scripts.MailBox
         public TMP_Text Title;
         public TMP_Text Content;
         public GameObject ClaimBtn;
-        public GameObject ConfirmDeletePanel;
-        public TMP_Text ConfirmDeleteMessage;
+        public Button DeleteBtn;
 
         [Header("Bonus")]
         public GameObject BonusPanel;
         public TMP_Text Coin, EquipmentTxt;
         public Image EquipmentImg;
+        public Button CloseBonusBtn;
 
         [Header("BonusDouble")]
         public GameObject BonusDoublePanel;
         public TMP_Text CoinDouble, EquipmentTxt1, EquipmentTxt2;
         public Image EquipmentImg1, EquipmentImg2;
+        public Button CloseBonusDoubleBtn;
+
+        [Header("ConfirmDelete")]
+        public GameObject ConfirmDeletePanel;
+        public TMP_Text ConfirmDeleteMessage;
+        public Button CloseConfirmBtn, CancelBtn, DeleteConfirmBtn;
 
         public static MailboxDetail Instance;
 
-        public MailBox_Entity selectedMail;
-        public AccountMailBox_Entity selectedAccountMail;
+        public Mail_Entity selectedMail;
+        public MailBox_Entity selectedMailbox;
 
         private void Awake()
         {
             Instance = this;
+            CloseBonusBtn.onClick.AddListener(Close);
+            CloseBonusDoubleBtn.onClick.AddListener(Close);
+            ClaimBtn.GetComponent<Button>().onClick.AddListener(ShowBonus);
+            DeleteBtn.onClick.AddListener(ConfirmDelete);
+
+            CloseConfirmBtn.onClick.AddListener(CloseConfirmDelete);
+            CancelBtn.onClick.AddListener(CloseConfirmDelete);
+            DeleteConfirmBtn.onClick.AddListener(Delete);
         }
 
-        public void ShowDetail(AccountMailBox_Entity accountMail, MailBox_Entity mail, bool isSystem)
+        public void ShowDetail(MailBox_Entity mailbox, Mail_Entity mail, bool isSystem)
         {
             selectedMail = mail;
-            selectedAccountMail = accountMail;
+            selectedMailbox = mailbox;
 
             Title.text = string.Format(mail.Title,
-                            accountMail.DateAdd.Month.ToString(), accountMail.DateAdd.Year.ToString());
+                            mailbox.AddDate.Month.ToString(), mailbox.AddDate.Year.ToString());
 
             Content.text = string.Format(mail.Content,
-                            accountMail.DateAdd.Month.ToString(), accountMail.DateAdd.Year.ToString());
-            Debug.Log(accountMail.IsClaim.ToString());
+                            mailbox.AddDate.Month.ToString(), mailbox.AddDate.Year.ToString());
+            Debug.Log(mailbox.IsClaim.ToString());
             ClaimBtn.SetActive(true);
 
-            if (isSystem || accountMail.IsClaim) ClaimBtn.SetActive(false);
+            if (isSystem || mailbox.IsClaim) ClaimBtn.SetActive(false);
         }
 
         public void SetupBonus(Equipment_Entity equip, bool isDouble = false)
@@ -89,8 +103,8 @@ namespace Assets.Scripts.MailBox
             {
                 var equip = References.RandomEquipmentBonus(selectedMail.CategoryEquipmentID);
                 SetupBonus(equip);
-                AccountMailBox_DAO.TakeBonus(selectedAccountMail.ID,
-                                        selectedAccountMail.AccountID, selectedAccountMail.MailBoxID,
+                MailBox_DAO.TakeBonus(selectedMailbox.ID,
+                                        selectedMailbox.AccountID, selectedMailbox.MailID,
                                         equip.ID, null);
             }
             else
@@ -101,19 +115,19 @@ namespace Assets.Scripts.MailBox
                 if (equip1 != equip2) SetupBonusDouble(equip1, equip2);
                 else SetupBonus(equip1, true);
                 
-                AccountMailBox_DAO.TakeBonus(selectedAccountMail.ID,
-                                        selectedAccountMail.AccountID, selectedAccountMail.MailBoxID,
+                MailBox_DAO.TakeBonus(selectedMailbox.ID,
+                                        selectedMailbox.AccountID, selectedMailbox.MailID,
                                         equip1.ID, equip2.ID);
             }
 
             References.AddCoin(selectedMail.CoinBonus);
-            MailBoxManager.Instance.Reload(selectedAccountMail.ID);
+            MailBoxManager.Instance.Reload(selectedMailbox.ID);
         }
 
         public void ConfirmDelete()
         {
             ConfirmDeletePanel.SetActive(true);
-            if (!selectedAccountMail.IsClaim) ConfirmDeleteMessage.text = Message.MailboxDeleteNotReceivedBonus;
+            if (!selectedMailbox.IsClaim) ConfirmDeleteMessage.text = Message.MailboxDeleteNotReceivedBonus;
             else ConfirmDeleteMessage.text = Message.MailboxDelete;
         }
 
@@ -124,9 +138,9 @@ namespace Assets.Scripts.MailBox
 
         public void Delete()
         {
-            AccountMailBox_DAO.Delete(selectedAccountMail.ID,
-                                        selectedAccountMail.AccountID, selectedAccountMail.MailBoxID);
-            MailBoxManager.Instance.Reload(selectedAccountMail.ID);
+            MailBox_DAO.Delete(selectedMailbox.ID,
+                                        selectedMailbox.AccountID, selectedMailbox.MailID);
+            MailBoxManager.Instance.Reload(selectedMailbox.ID);
             CloseConfirmDelete();
 
         }

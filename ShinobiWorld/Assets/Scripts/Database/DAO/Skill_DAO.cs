@@ -101,7 +101,7 @@ public static class Skill_DAO
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Insert Into AccountSkill values(@UserID, @SkillID, @Level, @Cooldown, @Damage, @Chakra, 0)";
+            cmd.CommandText = "Insert Into HasSkill  ([AccountID] ,[SkillID] ,[Level] ,[Cooldown] ,[Damage] ,[Chakra]) values(@UserID, @SkillID, @Level, @Cooldown, @Damage, @Chakra)";
             cmd.Parameters.AddWithValue("@UserID", UserID);
             cmd.Parameters.AddWithValue("@SkillID", skill_Entity.ID);
             cmd.Parameters.AddWithValue("@Level", 1);
@@ -119,7 +119,7 @@ public static class Skill_DAO
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Update AccountSkill set [Level] += 1, Damage = @Damage, Cooldown = @Cooldown, Chakra = @Chakra where AccountID = @UserID and SkillID = @SkillID";
+            cmd.CommandText = "Update HasSkill set [Level] += 1, Damage = @Damage, Cooldown = @Cooldown, Chakra = @Chakra where AccountID = @UserID and SkillID = @SkillID";
             cmd.Parameters.AddWithValue("@UserID", UserID);
             cmd.Parameters.AddWithValue("@Damage", Damage);
             cmd.Parameters.AddWithValue("@Cooldown", Cooldown);

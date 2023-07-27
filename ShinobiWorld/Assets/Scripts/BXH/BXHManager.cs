@@ -13,11 +13,15 @@ public class BXHManager : MonoBehaviour
     public GameObject BXHPanel, BXHItemPrefab, BXHMessage;
     public Transform Content;
 
+    public Button OpenBtn, CloseBtn;
     public static BXHManager Instance;
 
     private void Awake()
     {
         Instance = this;
+
+        OpenBtn.onClick.AddListener(Open);
+        CloseBtn.onClick.AddListener(Close);
     }
 
     public void Open()

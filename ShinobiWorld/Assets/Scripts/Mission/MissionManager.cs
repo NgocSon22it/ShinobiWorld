@@ -2,6 +2,7 @@
 using Assets.Scripts.Database.Entity;
 using Assets.Scripts.Mission;
 using Assets.Scripts.Shop;
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,13 +23,21 @@ public class MissionManager : MonoBehaviour
     public GameObject MissionPanel;
     public GameObject MissionMessage;
     public Transform Content;
-    public List<ButtonTrophies> BtnTrophies;
+    public List<ButtonTrophy> BtnTrophy;
 
     [Header("Progress")]
     public GameObject ProgressPanel;
     public TMP_Text ContentTxt;
     public TMP_Text CurrentTxt;
     public Button ProgressBtn;
+
+    [Header("Teleport")]
+    public GameObject TeleportPanel;
+    public TMP_Text Teleport_ContentTxt;
+    public TMP_Text Teleport_CurrentTxt;
+    public TMP_Dropdown Teleport_DropDown;
+    public List<Area_Entity> listArea = new List<Area_Entity>();
+    public Area_Entity SelectedArea;
 
     [Header("Bonus")]
     public GameObject BonusPanel;
@@ -37,18 +46,12 @@ public class MissionManager : MonoBehaviour
     public TMP_Text EquipmentTxt;
     public Image EquipmentImg;
 
-    [Header("BonusEquipDupli")]
-    public GameObject BonusEquipDupliPanel;
-    public TMP_Text MessageTxt;
-    public TMP_Text SellCostTxt;
-    public Image EquipmentDupliImg;
-
     public Mission_Entity HavingMission = null;
-    public AccountMission_Entity CurrentMission = null;
+    public HasMission_Entity CurrentMission = null;
 
     public List<Mission_Entity> listMission;
 
-    TrophiesID TrophiesID;
+    TrophyID TrophyID;
 
     private void Awake()
     {
@@ -59,7 +62,7 @@ public class MissionManager : MonoBehaviour
     {
         Player_AllUIManagement.Instance.CloseMission();
 
-        var filterlist = References.listAccountMission = AccountMission_DAO.GetAllByUserID(References.accountRefer.ID);
+        var filterlist = References.listHasMission = HasMission_DAO.GetAllByUserID(References.accountRefer.ID);
         listMission = References.listMission.FindAll(obj => filterlist.Any(filter => filter.MissionID == obj.ID));
 
         if (filterlist.Any(obj => obj.Status == StatusMission.Doing))
@@ -70,19 +73,19 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    public void ResetColorBtnTrophies()
+    public void ResetColorBtnTrophy()
     {
-        foreach (ButtonTrophies button in BtnTrophies)
+        foreach (ButtonTrophy button in BtnTrophy)
         {
             button.Btn.GetComponent<Image>().color = new Color32(185, 183, 183, 255);
         }
     }
 
-    public void SelectedColorBtnTrophies(ButtonTrophies button)
+    public void SelectedColorBtnTrophy(ButtonTrophy button)
     {
-        ResetColorBtnTrophies();
+        ResetColorBtnTrophy();
         button.Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
-        TrophiesID = button.ID;
+        TrophyID = button.ID;
         GetList(button.ID);
     }
 
@@ -91,22 +94,22 @@ public class MissionManager : MonoBehaviour
         MissionMessage.SetActive(false);
         Game_Manager.Instance.IsBusy = true;
 
-        foreach (ButtonTrophies button in BtnTrophies)
+        foreach (ButtonTrophy button in BtnTrophy)
         {
-            button.Btn.GetComponentInChildren<TMP_Text>().text = References.BtnTrophies[button.ID.ToString()];
+            button.Btn.GetComponentInChildren<TMP_Text>().text = References.BtnTrophy[button.ID.ToString()];
 
             button.Btn.onClick.AddListener(() =>
             {
-                SelectedColorBtnTrophies(button);
+                SelectedColorBtnTrophy(button);
             });
         }
 
-        //GetCurrentMission();
-        ResetColorBtnTrophies();
+        GetCurrentMission();
+        ResetColorBtnTrophy();
 
-        TrophiesID = (TrophiesID) Enum.Parse(typeof(TrophiesID), References.accountRefer.TrophiesID);
-        BtnTrophies[(int)TrophiesID].Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);  
-        GetList(TrophiesID);
+        TrophyID = (TrophyID)Enum.Parse(typeof(TrophyID), References.accountRefer.TrophyID);
+        BtnTrophy[(int)TrophyID].Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        GetList(TrophyID);
 
         MissionPanel.SetActive(true);
     }
@@ -119,13 +122,13 @@ public class MissionManager : MonoBehaviour
         }
     }
 
-    public void GetList(TrophiesID TrophiesID)
+    public void GetList(TrophyID TrophyID)
     {
         Destroy();
-        var list = listMission.FindAll(obj => obj.TrophiesID == TrophiesID.ToString());
-        
-        if(list.Count <= 0) MissionMessage.SetActive(true);
-        else 
+        var list = listMission.FindAll(obj => obj.TrophyID == TrophyID.ToString());
+
+        if (list.Count <= 0) MissionMessage.SetActive(true);
+        else
         {
             MissionMessage.SetActive(false);
             foreach (var mission in list)
@@ -133,12 +136,13 @@ public class MissionManager : MonoBehaviour
                 Instantiate(MissionItemPrefab, Content).GetComponent<MissionItem>().Setup(mission);
             }
         }
-        
+
     }
 
-    public void Reload() {
+    public void Reload()
+    {
         GetCurrentMission();
-        GetList(TrophiesID);
+        GetList(TrophyID);
     }
 
     public void ResetColor()
@@ -172,16 +176,83 @@ public class MissionManager : MonoBehaviour
                 Player_AllUIManagement.Instance.CloseMission();
             }
             else CurrentTxt.text = string.Format(Message.MissionProgress, CurrentMission.Current, CurrentMission.Target);
-        }else
+        }
+        else
         {
             CurrentTxt.text = "";
             ContentTxt.text = Message.MissionNone;
         }
     }
 
+    public void InitDropdown()
+    {
+        listArea = Area_DAO.GetAllAreaByMissionID(CurrentMission.MissionID);
+        List<string> options = new List<string>();
+        options.Clear();
+
+        foreach (Area_Entity area in listArea)
+        {
+            options.Add(area.Name);
+        }
+
+        Teleport_DropDown.ClearOptions();
+        Teleport_DropDown.AddOptions(options);
+
+        if (Teleport_DropDown.options.Count > 0)
+        {
+            OnDropdownValueChanged(0);
+            Teleport_DropDown.value = 0;
+        }
+    }
+
+    public void OnDropdownValueChanged(int index)
+    {
+        if (index >= 0 && index < listArea.Count)
+        {
+            SelectedArea = listArea[index];
+        }
+    }
+    public void TeleportToSelectArea()
+    {
+        Game_Manager.Instance.IsBusy = false;
+        References.PlayerSpawnPosition = new Vector3(SelectedArea.XPosition, SelectedArea.YPosition, 0);
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel(SelectedArea.MapID);
+    }
+
+    public void LoadTeleportMission()
+    {
+        Game_Manager.Instance.IsBusy = true;
+        TeleportPanel.SetActive(true);
+        if (HavingMission == null) GetCurrentMission();
+
+        if (HavingMission != null)
+        {
+            InitDropdown();
+            Teleport_ContentTxt.text = HavingMission.Content;
+
+            if (CurrentMission.Current == CurrentMission.Target)
+            {
+                Teleport_CurrentTxt.text = Message.MissionFinish;
+                Player_AllUIManagement.Instance.CloseMission();
+            }
+            else Teleport_CurrentTxt.text = string.Format(Message.MissionProgress, CurrentMission.Current, CurrentMission.Target);
+        }
+        else
+        {
+            Teleport_CurrentTxt.text = "";
+            Teleport_ContentTxt.text = Message.MissionNone;
+        }
+    }
+
     public void CloseProgress()
     {
         ProgressPanel.SetActive(false);
+        Game_Manager.Instance.IsBusy = false;
+    }
+    public void CloseTeleportMission()
+    {
+        TeleportPanel.SetActive(false);
         Game_Manager.Instance.IsBusy = false;
     }
 
@@ -199,19 +270,6 @@ public class MissionManager : MonoBehaviour
         BonusPanel.SetActive(false);
     }
 
-    public void ShowMessageEquipmetDuplicate(int Coin, string Name, string Image)
-    {
-        BonusEquipDupliPanel.SetActive(true);
-        MessageTxt.text = string.Format(Message.MissionBonusEquipDupli, Name);
-        SellCostTxt.text = Coin.ToString();
-        EquipmentDupliImg.sprite = Resources.Load<Sprite>(Image);
-    }
-
-    public void CloseMessageEquipmetDuplicate()
-    {
-        BonusEquipDupliPanel.SetActive(false);
-    }
-
     public void TakeMission(Mission_Entity selected)
     {
         HavingMission = selected;
@@ -220,17 +278,17 @@ public class MissionManager : MonoBehaviour
         Player_AllUIManagement.Instance
             .LoadStrengthUI(References.accountRefer.Strength, References.accountRefer.CurrentStrength);
 
-        var index = References.listAccountMission.FindIndex(obj => obj.MissionID == selected.ID);
-        References.listAccountMission[index].Status = StatusMission.Doing;
-        CurrentMission = References.listAccountMission[index];
+        var index = References.listHasMission.FindIndex(obj => obj.MissionID == selected.ID);
+        References.listHasMission[index].Status = StatusMission.Doing;
+        CurrentMission = References.listHasMission[index];
 
         Reload();
     }
 
     public void CancelMission()
     {
-        var index = References.listAccountMission.FindIndex(obj => obj.MissionID == HavingMission.ID);
-        References.listAccountMission[index].Status = StatusMission.None;
+        var index = References.listHasMission.FindIndex(obj => obj.MissionID == HavingMission.ID);
+        References.listHasMission[index].Status = StatusMission.None;
 
         HavingMission = null;
         CurrentMission = null;
@@ -238,15 +296,15 @@ public class MissionManager : MonoBehaviour
         Reload();
     }
 
-    public void DoingMission(string BossID)
+    public void DoingMission(string EnemyID)
     {
-        if(HavingMission != null && BossID == HavingMission.BossID)
+        if (HavingMission != null && EnemyID == HavingMission.EnemyID)
         {
             ++CurrentMission.Current;
-            AccountMission_DAO.DoingMission(References.accountRefer.ID, HavingMission.ID, CurrentMission.Current);
+            HasMission_DAO.DoingMission(References.accountRefer.ID, HavingMission.ID, CurrentMission.Current);
             if (CurrentMission.Current >= CurrentMission.Target)
             {
-                AccountMission_DAO.ChangeStatusMission(References.accountRefer.ID, HavingMission.ID, 
+                HasMission_DAO.ChangeStatusMission(References.accountRefer.ID, HavingMission.ID,
                                                             StatusMission.Claim);
                 LoadProgress();
                 HavingMission = null;
@@ -258,12 +316,12 @@ public class MissionManager : MonoBehaviour
     public void TakeBonusMission(Mission_Entity selected)
     {
         var equip = References.RandomEquipmentBonus(selected.CategoryEquipmentID);
-       
-        if(References.accountRefer.TrophiesID == References.TrophyID_RemakeMission)
+
+        if (References.accountRefer.TrophyID == References.TrophyID_RemakeMission)
         {
-            AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ID, (int)StatusMission.None, equip.ID);
+            HasMission_DAO.TakeBonus(References.accountRefer.ID, selected.ID, (int)StatusMission.None, equip.ID);
         }
-        else AccountMission_DAO.TakeBonus(References.accountRefer.ID, selected.ID, (int) StatusMission.Done, equip.ID);
+        else HasMission_DAO.TakeBonus(References.accountRefer.ID, selected.ID, (int)StatusMission.Done, equip.ID);
 
         References.accountRefer.Coin += selected.CoinBonus;
         Player_AllUIManagement.Instance.SetUpCoinUI(References.accountRefer.Coin);
@@ -276,13 +334,13 @@ public class MissionManager : MonoBehaviour
 
     public void Check()
     {
-        DoingMission(HavingMission.BossID);
+        DoingMission(HavingMission.EnemyID);
     }
 
 }
 [System.Serializable]
-public struct ButtonTrophies
+public struct ButtonTrophy
 {
-    public TrophiesID ID;
+    public TrophyID ID;
     public Button Btn;
 }

@@ -1353,28 +1353,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AccountEntity:
     ID: 
+    Name: 
     RoleInGameID: 
-    TrophiesID: 
+    TrophyID: 
+    IsHokage: 0
+    Coin: 0
+    Exp: 0
     Level: 0
     Health: 0
     CurrentHealth: 0
     Chakra: 0
     CurrentChakra: 0
-    Exp: 0
-    Speed: 0
-    Coin: 0
-    Power: 0
     Strength: 0
     CurrentStrength: 0
+    Speed: 0
+    Power: 0
+    IsFirst: 0
+    IsOnline: 0
+    HasTicket: 0
+    IsUpgradeTrophy: 0
+    IsDead: 0
+    WinTimes: 0
     EyeID: 
     HairID: 
     MouthID: 
     SkinID: 
-    IsDead: 0
-    IsOnline: 0
-    IsTicket: 0
-    IsFirst: 0
-    IsUpgradeTrophy: 0
   Weapon_Entity:
     AccountID: 
     WeaponID: 
@@ -1406,14 +1409,19 @@ MonoBehaviour:
     Chakra: 0
     Delete: 0
   PlayerCameraPrefabs: {fileID: 5797747158338758117, guid: c93c5f598c2594449bd9a65d461d0de8, type: 3}
-  PlayerAllUIPrefabs: {fileID: 7741783450571619106, guid: a2ba03984607abb418145f4e10e68686, type: 3}
-  PlayerNickName: {fileID: 4297340223795960367}
-  PlayerHealthChakraUI: {fileID: 5378524188282478473}
+  PlayerAllUIPrefabs: {fileID: 4412084099510779851, guid: 595d37d9f80fa5748beb8589c072dc29, type: 3}
   PlayerCameraInstance: {fileID: 0}
   PlayerAllUIInstance: {fileID: 0}
+  PlayerNickName: {fileID: 4297340223795960367}
+  PlayerHealthChakraUI: {fileID: 5378524188282478473}
+  CurrentHealth_UI: {fileID: 2228142697893722469}
+  CurrentChakra_UI: {fileID: 7065326554227410012}
+  CurrentHealth_NumberUI: {fileID: 8439279303799840519}
+  CurrentChakra_NumberUI: {fileID: 145203216192350019}
+  CameraBox: {fileID: 0}
   AttackableLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 4104
   AttackPoint: {fileID: 8699623757859872075}
   ObjectPool_Runtime: {fileID: 7322648281566184726}
   SkillOneCooldown_Total: 0
@@ -1424,6 +1432,7 @@ MonoBehaviour:
   SkillThreeCooldown_Current: 0
   AttackCooldown_Total: 0
   AttackCooldown_Current: 0
+  accountStatus: 0
   MainPoint: {fileID: 3957536264760239255}
   DamageBonus: 0
   SpeedBonus: 0
@@ -1435,10 +1444,6 @@ MonoBehaviour:
   playerCollider: {fileID: 7713341436081449469}
   playerPool: {fileID: 2672408535657083329}
   MoveDirection: {x: 0, y: 0}
-  CurrentHealth_UI: {fileID: 2228142697893722469}
-  CurrentChakra_UI: {fileID: 7065326554227410012}
-  CurrentHealth_NumberUI: {fileID: 8439279303799840519}
-  CurrentChakra_NumberUI: {fileID: 145203216192350019}
   Shirt: {fileID: 1231443373997991441}
   RightFoot: {fileID: 1231443372969031119}
   LeftFoot: {fileID: 1231443373196502184}
@@ -2852,6 +2857,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1349682740439079468}
     m_Modifications:
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: 8892629432335527794}
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2672408535657083329}
     - target: {fileID: 3392874977935699561, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
       propertyPath: m_Name
       value: Support_SkillThree (3)
@@ -2927,6 +2940,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1349682740439079468}
     m_Modifications:
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: 8892629432335527794}
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2672408535657083329}
     - target: {fileID: 3392874977935699561, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
       propertyPath: m_Name
       value: Support_SkillThree (5)
@@ -3002,6 +3023,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1349682740439079468}
     m_Modifications:
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: 8892629432335527794}
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2672408535657083329}
     - target: {fileID: 3392874977935699561, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
       propertyPath: m_Name
       value: Support_SkillThree (2)
@@ -3077,6 +3106,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1349682740439079468}
     m_Modifications:
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: 8892629432335527794}
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2672408535657083329}
     - target: {fileID: 3392874977935699561, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
       propertyPath: m_Name
       value: Support_SkillThree
@@ -3152,6 +3189,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1349682740439079468}
     m_Modifications:
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: 8892629432335527794}
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2672408535657083329}
     - target: {fileID: 3392874977935699561, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
       propertyPath: m_Name
       value: Support_SkillThree (4)
@@ -3227,6 +3272,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1349682740439079468}
     m_Modifications:
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: PV
+      value: 
+      objectReference: {fileID: 8892629432335527794}
+    - target: {fileID: 2717424059356939665, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
+      propertyPath: player_Pool
+      value: 
+      objectReference: {fileID: 2672408535657083329}
     - target: {fileID: 3392874977935699561, guid: aeca283f039d6594f956967bb8a2efc4, type: 3}
       propertyPath: m_Name
       value: Support_SkillThree (1)

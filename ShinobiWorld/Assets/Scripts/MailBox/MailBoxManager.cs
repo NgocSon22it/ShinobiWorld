@@ -1,6 +1,7 @@
 using Assets.Scripts.Database.DAO;
 using Assets.Scripts.MailBox;
 using Assets.Scripts.Mission;
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ public class MailBoxManager : MonoBehaviour
 {
     public static MailBoxManager Instance;
 
+    [Header("Mailbox")]
     public GameObject MailBoxPanel;
     public GameObject SystemPrefab;
     public GameObject BXHPrefab;
@@ -21,13 +23,29 @@ public class MailBoxManager : MonoBehaviour
     public GameObject ScrollView;
     public GameObject Detail;
     public GameObject DeleteReadBtn;
+    public Button CloseBtn, OpenBtn;
     public Transform Content;
+
+
+    [Header("ConfirmDelete")]
     public GameObject ConfirmDeletePanel;
     public TMP_Text ConfirmDeleteMessage;
+    public Button CancelBtn, CloseConfirmBtn, DeleteReceivedBtn, DeleteReadAllBtn;
+
 
     private void Awake()
     {
         Instance = this;
+        OpenBtn.onClick.AddListener(Open);
+        
+        DeleteReadBtn.GetComponent<Button>().onClick.AddListener(ConfirmDelete);
+        CloseBtn.onClick.AddListener(Close);
+
+        CancelBtn.GetComponent<Button>().onClick.AddListener(CloseConfirmDelete);
+        CloseConfirmBtn.GetComponent<Button>().onClick.AddListener(CloseConfirmDelete);
+        DeleteReceivedBtn.GetComponent<Button>().onClick.AddListener(DeleteReadAndReceivedBonus );
+        DeleteReadAllBtn.GetComponent<Button>().onClick.AddListener(DeleteReadAll);
+
     }
 
     public void Open()
@@ -51,19 +69,19 @@ public class MailBoxManager : MonoBehaviour
 
     public void GetList(int ID)
     {
-        References.listAccountMailBox = AccountMailBox_DAO.GetAllByUserID(References.accountRefer.ID);
-        var list = References.listAccountMailBox;
+        var list = References.listMailBox = MailBox_DAO.GetAllByUserID(References.accountRefer.ID);
 
         for (var i = 0; i < list.Count; ++i)
         {
-            if (list[i].MailBoxID.Contains(References.MailSystem))
+            if (list[i].MailID.Contains(References.MailSystem))
                 Instantiate(SystemPrefab, Content)
                     .GetComponent<MailBoxItem>()
-                    .Setup(list[i], (list[i].ID == ID)? true: (i == 0));
-            else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>().Setup(list[i], (list[i].ID == ID) ? true : (i == 0), false);
+                    .Setup(list[i], (list[i].ID == ID) ? true : (i == 0));
+            else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>()
+                    .Setup(list[i], (list[i].ID == ID) ? true : (i == 0), false);
         }
 
-        if (References.listAccountMailBox.Count <= 0)
+        if (list.Count <= 0)
         {
             MessageTxt.SetActive(true);
             ScrollView.SetActive(false);
@@ -83,8 +101,8 @@ public class MailBoxManager : MonoBehaviour
         foreach (Transform child in Content)
         {
             child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
-            
-            if(child.gameObject.GetComponent<MailBoxItem>().accountMail.IsRead)
+
+            if (child.gameObject.GetComponent<MailBoxItem>().selectedMailbox.IsRead)
                 child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 150);
         }
     }
@@ -92,7 +110,7 @@ public class MailBoxManager : MonoBehaviour
     {
         ConfirmDeletePanel.SetActive(true);
 
-        var isClaim = References.listAccountMailBox.Any(obj => !obj.IsClaim);
+        var isClaim = References.listMailBox.Any(obj => !obj.IsClaim);
 
         if (isClaim) ConfirmDeleteMessage.text = Message.MailboxDeleteNotReceivedBonus;
         else ConfirmDeleteMessage.text = Message.MailboxDelete;
@@ -105,14 +123,14 @@ public class MailBoxManager : MonoBehaviour
 
     public void DeleteReadAndReceivedBonus()
     {
-        AccountMailBox_DAO.DeleteReadAndReceivedBonus(References.accountRefer.ID);
+        MailBox_DAO.DeleteReadAndReceivedBonus(References.accountRefer.ID);
         CloseConfirmDelete();
         Reload(0);
     }
 
     public void DeleteReadAll()
     {
-        AccountMailBox_DAO.DeleteReadAll(References.accountRefer.ID); 
+        MailBox_DAO.DeleteReadAll(References.accountRefer.ID);
         CloseConfirmDelete();
         Reload(0);
     }

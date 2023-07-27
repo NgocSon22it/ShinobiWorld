@@ -13,17 +13,21 @@ public class TrophyManager : MonoBehaviourPunCallbacks
 {
     public GameObject TrophyPanel;
     public TMP_Text Name, Level, TrophyName, Cost, MessageTxt;
-    public Button RegisterUpgradeBtn, GetNewTrophyBtn;
+    public Button RegisterUpgradeBtn, GetNewTrophyBtn, CloseBtn;
 
     Trophy_Entity NextTrophy;
 
     public static TrophyManager Instance;
 
-    //public TrophiesID NextTrophy;
+    //public TrophyID NextTrophy;
 
     private void Awake()
     {
         Instance = this;
+
+        RegisterUpgradeBtn.onClick.AddListener(RegisterUpgradeTrophy);
+        GetNewTrophyBtn.onClick.AddListener(GetNewTrophy);
+        CloseBtn.onClick.AddListener(Close);
     }
 
     public void Open()
@@ -37,13 +41,13 @@ public class TrophyManager : MonoBehaviourPunCallbacks
         Cost.color = Color.black;
         Level.color = Color.black;
 
-        var currentTrophy = (int)Enum.Parse(typeof(TrophiesID), References.accountRefer.TrophiesID);
-        var nextTrophy = ((TrophiesID)((currentTrophy + 1 >= 4) ? currentTrophy : ++currentTrophy)).ToString();
+        var currentTrophy = (int)Enum.Parse(typeof(TrophyID), References.accountRefer.TrophyID);
+        var nextTrophy = ((TrophyID)((currentTrophy + 1 >= 4) ? currentTrophy : ++currentTrophy)).ToString();
         NextTrophy = References.listTrophy.Find(obj => obj.ID.Equals(nextTrophy));
 
         Name.text = PhotonNetwork.NickName;
         Level.text = References.accountRefer.Level.ToString();
-        TrophyName.text = References.listTrophy.Find(obj => obj.ID.Equals(References.accountRefer.TrophiesID)).Name;
+        TrophyName.text = References.listTrophy.Find(obj => obj.ID.Equals(References.accountRefer.TrophyID)).Name;
         Cost.text = NextTrophy.Cost.ToString();
 
         GetNewTrophyBtn.interactable = References.accountRefer.IsUpgradeTrophy;

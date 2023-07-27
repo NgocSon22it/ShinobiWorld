@@ -84,13 +84,13 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void Open()
     {
-        Game_Manager.Instance.IsBusy = true;
+        //Game_Manager.Instance.IsBusy = true;
         //References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
 
-        References.listAccountEquipment = AccountEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-        References.listAccountSkill = AccountSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
-        References.accountWeapon = AccountWeapon_DAO.GetAccountWeaponByID(References.accountRefer.ID);
-        References.weapon = Weapon_DAO.GetWeaponByID(References.accountWeapon.WeaponID);
+        References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+        References.listHasSkill = HasSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
+        References.hasWeapon = HasWeapon_DAO.GetHasWeaponByID(References.accountRefer.ID);
+        References.weapon = Weapon_DAO.GetWeaponByID(References.hasWeapon.WeaponID);
 
         InfoPanel.SetActive(true);
         
@@ -106,7 +106,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public void Close()
     {
         InfoPanel.SetActive(false);
-        Game_Manager.Instance.IsBusy = false;
+        //Game_Manager.Instance.IsBusy = false;
     }
 
     public void SetupPreview()
@@ -114,7 +114,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
         Name_Preview.text = PhotonNetwork.NickName;
         //Name_Preview.text = "Thien";
         Role.text = References.listRole.Find(obj => obj.ID == References.accountRefer.RoleInGameID).Name;
-        Trophy.text = References.listTrophy.Find(obj => obj.ID == References.accountRefer.TrophiesID).Name;
+        Trophy.text = References.listTrophy.Find(obj => obj.ID == References.accountRefer.TrophyID).Name;
 
         LoadLayout();
         SetupPreviewBtn();
@@ -183,7 +183,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public void SetupPreviewSkillBtn()
     {
         var role = References.accountRefer.RoleInGameID.Replace("Role_", "");
-        var list = References.ListSkill.FindAll(obj => obj.RoleInGameID == References.accountRefer.RoleInGameID);
+        var list = References.listSkill.FindAll(obj => obj.RoleInGameID == References.accountRefer.RoleInGameID);
 
         foreach (var skill in list)
         {
@@ -202,7 +202,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
             }
         }
 
-        foreach (var skill in References.listAccountSkill)
+        foreach (var skill in References.listHasSkill)
         {
             var index = skill.SkillID.Replace("Skill_" + role, "");
 
@@ -268,7 +268,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void SetupPreviewEquipmentBtn()
     {
-        var listUsing = References.listAccountEquipment.FindAll(obj => obj.IsUse);
+        var listUsing = References.listBagEquipment.FindAll(obj => obj.IsUse);
         
         foreach (var equip in listUsing)
         {
@@ -336,21 +336,21 @@ public class Player_Info : MonoBehaviourPunCallbacks
         Coin_Player.text = References.accountRefer.Coin.ToString();
     }
 
-    public void ShowDetailSkill(AccountSkill_Entity skill)
+    public void ShowDetailSkill(HasSkill_Entity skill)
     {
         //Name_Skill, Level_Skill, Damage_Skill, Chakra_Skill, Cooldown_Skill
         Init();
         
         DetailSkill.SetActive(true);
 
-        Name_Skill.text = References.ListSkill.Find(obj => obj.ID == skill.SkillID).Name;
+        Name_Skill.text = References.listSkill.Find(obj => obj.ID == skill.SkillID).Name;
         Level_Skill.text = skill.Level.ToString();
         Damage_Skill.text = skill.Damage.ToString();
         Chakra_Skill.text = skill.Chakra.ToString();
         Cooldown_Skill.text = skill.Cooldown.ToString();
     }
 
-    public void ShowDetailEquipment(AccountEquipment_Entity equip)
+    public void ShowDetailEquipment(BagEquipment_Entity equip)
     {
         //Name_Equipment, Level_Equipment, Damage_Equipment, Health_Equipment, Chakra_Equipment;
         Init();
@@ -374,8 +374,8 @@ public class Player_Info : MonoBehaviourPunCallbacks
         DetailWeapon.SetActive(true);
 
         Name_Weapon.text = References.weapon.Name;
-        Level_Weapon.text = References.accountWeapon.Level.ToString();
-        Damage_Weapon.text = References.accountWeapon.Damage.ToString();
+        Level_Weapon.text = References.hasWeapon.Level.ToString();
+        Damage_Weapon.text = References.hasWeapon.Damage.ToString();
     }
 
 

@@ -32,8 +32,8 @@ namespace Assets.Scripts.Database.DAO
                         var obj = new Mission_Entity
                         {
                             ID = dr["ID"].ToString(),
-                            TrophiesID = dr["TrophiesID"].ToString(),
-                            BossID = dr["BossID"].ToString(),
+                            TrophyID = dr["TrophyID"].ToString(),
+                            EnemyID = dr["EnemyID"].ToString(),
                             CategoryEquipmentID = dr["CategoryEquipmentID"].ToString(),
                             RequiredStrength = Convert.ToInt32(dr["RequiredStrength"]),
                             Content = dr["Content"].ToString(),

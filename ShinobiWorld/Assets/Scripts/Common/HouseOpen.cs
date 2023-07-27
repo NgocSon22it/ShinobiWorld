@@ -12,38 +12,31 @@ namespace Assets.Scripts.Mission
 {
     public class HouseOpen : MonoBehaviour
     {
-        public GameObject Panel;
         public House house;
         private bool isOpen = false;
 
         public string HouseName;
 
-        public void OpenHousePanel()
-        {
-            Panel.SetActive(true);
-        }
-
-        public void CloseHousePanel()
-        {
-            Panel.SetActive(false);
-        }
-
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.O) && isOpen)
             {
-                OpenHousePanel();
-
                 switch (house)
                 {
                     case House.Hokage:
-                        GetComponent<MissionManager>().Open();
+                        MissionManager.Instance.Open();
                         break;
                     case House.Shop:
-                        Panel.GetComponent<ShopManager>().OnShopBtnClick();
+                        ShopManager.Instance.OnShopBtnClick();
                         break;
                     case House.School:
-                        GetComponent<SchoolManager>().Open();
+                        SchoolManager.Instance.Open();
+                        break;
+                    case House.Arena:
+                        ArenaManager.Instance.Open();
+                        break;
+                    case House.Portal:
+                        Portal_Manager.Instance.Open();
                         break;
                 }
             }

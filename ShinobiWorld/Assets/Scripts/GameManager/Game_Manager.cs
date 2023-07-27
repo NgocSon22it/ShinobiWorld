@@ -17,9 +17,9 @@ using System.Data;
 using Unity.VisualScripting;
 using System.Data.SqlTypes;
 using System;
+using Assets.Scripts.GameManager;
 
-
-public class Game_Manager : MonoBehaviourPunCallbacks
+public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public GameObject PlayerManager;
 
@@ -29,41 +29,42 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject PlayerRange;
     [SerializeField] GameObject PlayerSupport;
 
+    [SerializeField] PolygonCollider2D CameraBox;
 
     public static Game_Manager Instance;
 
     ExitGames.Client.Photon.Hashtable PlayerProperties = new ExitGames.Client.Photon.Hashtable();
 
-    [SerializeField] List<GameObject> List_LangLa1 = new List<GameObject>();
-
-    [SerializeField] List<GameObject> List_LangLa2 = new List<GameObject>();
-
-    [SerializeField] List<GameObject> List_LangLa3 = new List<GameObject>();
-
-    [SerializeField] List<GameObject> List_LangLa4 = new List<GameObject>();
-
     public bool IsBusy;
 
-    SqlDateTime dateTime;
+    public AccountStatus AccountStatus;
 
-    public Vector3 PlayerReconnectPosition;
+    public string CurrentAreaName;
 
     RoomOptions roomOptions = new RoomOptions();
+
+    [Header("Player Instance")]
+    [SerializeField] GameObject LoadingPrefabs;
+
+    public GameObject LoadingInstance;
 
     private void Awake()
     {
         Instance = this;
-    }
 
+    }
     // Start is called before the first frame update
     void Start()
     {
+        LoadingInstance = Instantiate(LoadingPrefabs);
+        LoadingInstance.GetComponent<Loading>().Begin();
+
         if (PhotonNetwork.IsConnectedAndReady)
         {
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
         }
     }
 
@@ -71,12 +72,13 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
 
-        SetupPlayer(References.PlayerSpawnPosition);
+        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);
         ChatManager.Instance.ConnectToChat();
-        StartCoroutine(SpawnEnemy());
+        LoadingInstance.GetComponent<Loading>().End();
+
     }
 
-    public void SetupPlayer(Vector3 position)
+    public void SetupPlayer(Vector3 position, PolygonCollider2D CameraBox, AccountStatus accountStatus)
     {
         if (PlayerManager == null && PhotonNetwork.IsConnectedAndReady)
         {
@@ -95,33 +97,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks
                     PlayerManager = PhotonNetwork.Instantiate("Player/Support/" + Path.Combine(PlayerSupport.name), position, Quaternion.identity);
                     break;
             }
+            PlayerManager.GetComponent<PlayerBase>().CameraBox = CameraBox;
+            AccountStatus = accountStatus;
             ReloadPlayerProperties();
             Debug.Log("Successfully joined room S1!");
-        }
-    }
-
-    public IEnumerator SpawnEnemy()
-    {
-        while (true)
-        {
-            // Get the current time
-            dateTime = new SqlDateTime(System.DateTime.Now);
-            foreach (GameObject enemy in List_LangLa1)
-            {
-                Enemy enemyScript = enemy.GetComponent<Enemy>();
-                if (enemyScript != null)
-                {
-                    if (dateTime >= enemyScript.areaBoss_Entity.TimeSpawn
-                        && enemyScript.areaBoss_Entity.isDead == false
-                        && enemyScript.areaBoss_Entity.CurrentHealth > 0)
-                    {
-                        enemyScript.LoadHealthUI();
-                        enemy.SetActive(true);
-                    }
-                }
-            }
-            // Wait for the next frame
-            yield return new WaitForSecondsRealtime(0.1f);
         }
     }
 
@@ -129,19 +108,22 @@ public class Game_Manager : MonoBehaviourPunCallbacks
     public void ReloadPlayerProperties()
     {
         References.UpdateAccountToDB();
-        References.LoadAccountWeaponNSkill(Role);
+        References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
-        string AccountJson = JsonUtility.ToJson(References.accountRefer);
-        string AccountWeaponJson = JsonUtility.ToJson(References.accountWeapon);
-        string AccountSkillOneJson = JsonUtility.ToJson(References.accountSkillOne);
-        string AccountSkillTwoJson = JsonUtility.ToJson(References.accountSkillTwo);
-        string AccountSkillThreeJson = JsonUtility.ToJson(References.accountSkillThree);
 
+        int accountStatus = (int)AccountStatus;
+        string AccountJson = JsonUtility.ToJson(References.accountRefer);
+        string HasWeaponJson = JsonUtility.ToJson(References.hasWeapon);
+        string HasSkillOneJson = JsonUtility.ToJson(References.hasSkillOne);
+        string HasSkillTwoJson = JsonUtility.ToJson(References.hasSkillTwo);
+        string HasSkillThreeJson = JsonUtility.ToJson(References.hasSkillThree);
+
+        PlayerProperties["AccountStatus"] = accountStatus;
         PlayerProperties["Account"] = AccountJson;
-        PlayerProperties["AccountWeapon"] = AccountWeaponJson;
-        PlayerProperties["AccountSkillOne"] = AccountSkillOneJson;
-        PlayerProperties["AccountSkillTwo"] = AccountSkillTwoJson;
-        PlayerProperties["AccountSkillThree"] = AccountSkillThreeJson;
+        PlayerProperties["HasWeapon"] = HasWeaponJson;
+        PlayerProperties["HasSkillOne"] = HasSkillOneJson;
+        PlayerProperties["HasSkillTwo"] = HasSkillTwoJson;
+        PlayerProperties["HasSkillThree"] = HasSkillThreeJson;
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
     }
@@ -157,7 +139,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        References.UpdateAccountToDB();
         ReloadPlayerProperties();
     }
 
@@ -189,9 +170,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks
         References.accountRefer.CurrentHealth = References.accountRefer.Health;
         References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
-        References.UpdateAccountToDB();
         ReloadPlayerProperties();
-        PlayerManager.GetComponent<PlayerBase>().SetUpPlayerLive();
+        PlayerManager.GetComponent<PlayerBase>().CallRpcPlayerLive();
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
     }
 
@@ -210,27 +190,74 @@ public class Game_Manager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        /*Debug.Log(Message.HaveWifi);
-        if (PhotonNetwork.IsConnected)
+        if (PhotonNetwork.IsConnectedAndReady)
         {
-            PhotonNetwork.JoinOrCreateRoom("S1", roomOptions, TypedLobby.Default);
-        }*/
+            roomOptions.MaxPlayers = 0;
+            roomOptions.IsOpen = true;
+            roomOptions.BroadcastPropsChangeToAll = true;
+            PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
+        }
     }
 
-    private IEnumerator RetryConnection()
-    {
-        yield return new WaitForSeconds(5f);  // Wait for 5 seconds before retrying
-
-        PhotonNetwork.ConnectUsingSettings();
-    }
 
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
+        if (References.accountRefer != null)
         {
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
             References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
         }
 
+    }
+
+    public void SpawnEnemyAfterDie(string AreaID, string EnemyID, int ViewID, Coroutine SpawnEnemyCoroutine)
+    {
+        if (SpawnEnemyCoroutine == null)
+        {
+            SpawnEnemyCoroutine = StartCoroutine(SpawnEnemy(AreaID, EnemyID, ViewID, SpawnEnemyCoroutine));
+        }
+    }
+
+
+    IEnumerator SpawnEnemy(string AreaID, string EnemyID, int ViewID, Coroutine SpawnEnemyCoroutine)
+    {
+        yield return new WaitForSeconds(10f);
+        gameObject.SetActive(true);
+        if (PhotonNetwork.IsConnected)
+        {
+            object[] data = new object[] { ViewID };
+            PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyActive, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+        }
+        AreaEnemy_DAO.SetAreaEnemyAlive(AreaID, EnemyID);
+
+        if(SpawnEnemyCoroutine != null)
+        {
+            StopCoroutine(SpawnEnemyCoroutine);
+        }
+    }
+
+    public void ShowEndgamePanel()
+    {
+        PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == (byte)CustomEventCode.EnemyDeactivate)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int viewID = (int)data[0];
+
+            GameObject enemyObject = PhotonView.Find(viewID).gameObject;
+            enemyObject.SetActive(false);
+        }
+        else if (photonEvent.Code == (byte)CustomEventCode.EnemyActive)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            int viewID = (int)data[0];
+
+            GameObject enemyObject = PhotonView.Find(viewID).gameObject;
+            enemyObject.SetActive(true);
+        }
     }
 }
