@@ -49,6 +49,8 @@ public static class References
 
     public static List<Skill_Entity> listSkill = Skill_DAO.GetAllSkill();
 
+    public static List<Setting_Entity> listSetting = Setting_DAO.GetAllSetting();
+
     public static HasSkill_Entity hasSkillOne = new HasSkill_Entity();
     public static HasSkill_Entity hasSkillTwo = new HasSkill_Entity();
     public static HasSkill_Entity hasSkillThree = new HasSkill_Entity();
@@ -222,7 +224,7 @@ public static class References
 }
 public enum CustomEventCode
 {
-    EnemyDeactivate = 1
+    EnemyDeactivate = 1, EnemyActive = 2
 }
 
 public enum AccountStatus

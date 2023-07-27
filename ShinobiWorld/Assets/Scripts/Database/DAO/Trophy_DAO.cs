@@ -32,10 +32,12 @@ namespace Assets.Scripts.Database.DAO
                         var obj = new Trophy_Entity
                         {
                             ID = dr["ID"].ToString(),
+                            BossID = dr["BossID"].ToString(),
                             Name = dr["Name"].ToString(),
                             Cost = Convert.ToInt32(dr["Cost"]),
                             ContraitLevelAccount = Convert.ToInt32(dr["ContraitLevelAccount"]),
-                            Description = dr["Description"].ToString(),
+                            Health = Convert.ToInt32(dr["Health"]),
+                            Speed = Convert.ToInt32(dr["Speed"]),
                             Delete = Convert.ToBoolean(dr["Delete"])
                         };
                         list.Add(obj);
