@@ -117,7 +117,7 @@ public class Asuma : Enemy
             RandomState = Random.Range(1, 4);
         }
 
-        TargetPosition = FindClostestTarget(100f, "Player");
+        //TargetPosition = FindClostestTarget(100f, "Player");
         animator.SetTrigger("Skill" + RandomState);
         IsSkilling = true;
 

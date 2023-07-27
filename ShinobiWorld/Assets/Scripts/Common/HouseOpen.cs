@@ -35,6 +35,9 @@ namespace Assets.Scripts.Mission
                     case House.Arena:
                         ArenaManager.Instance.Open();
                         break;
+                    case House.Portal:
+                        Portal_Manager.Instance.Open();
+                        break;
                 }
             }
         }
