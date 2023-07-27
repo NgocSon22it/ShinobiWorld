@@ -18260,7 +18260,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2514170697467293179
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18996,9 +18996,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1216427983523946056}
-        m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
-        m_MethodName: SetUpKey
+      - m_Target: {fileID: 3260860449363551100}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: SelectKey
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -28709,8 +28709,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1216427983523946056}
-        m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
+      - m_Target: {fileID: 3260860449363551100}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
         m_MethodName: SetDefaultKey
         m_Mode: 1
         m_Arguments:
@@ -30453,7 +30453,6 @@ GameObject:
   - component: {fileID: 4412084099510779853}
   - component: {fileID: 4412084099510779852}
   - component: {fileID: 3260860449363551100}
-  - component: {fileID: 1216427983523946056}
   m_Layer: 5
   m_Name: PlayerAllUI_Remake
   m_TagString: Untagged
@@ -30602,26 +30601,14 @@ MonoBehaviour:
   SkillThree_Keycode: {fileID: 2256235182487078100}
   House_Message: {fileID: 3826300205349557136}
   HouseTxt: {fileID: 411577765972207983}
-  GotoMenuBtn: {fileID: 6887997330767595547}
-  BackgroundPanel: {fileID: 707777853018638545}
---- !u!114 &1216427983523946056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4412084099510779851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1ac7ea58b8217b4f8640a413ce9eaba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   ListSkillTxt:
   - {fileID: 6079535540004028629}
   - {fileID: 3448863628770384253}
   - {fileID: 6826324214672179363}
   CustomKeyPanel: {fileID: 1970449549648651262}
-  Message: {fileID: 2785874025775522230}
+  CustomKeyMessage: {fileID: 2785874025775522230}
+  GotoMenuBtn: {fileID: 6887997330767595547}
+  BackgroundPanel: {fileID: 707777853018638545}
 --- !u!1 &4412084099969225808
 GameObject:
   m_ObjectHideFlags: 0
@@ -36053,8 +36040,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1216427983523946056}
-        m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
+      - m_Target: {fileID: 3260860449363551100}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
         m_MethodName: SelectKey
         m_Mode: 3
         m_Arguments:
@@ -44516,8 +44503,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1216427983523946056}
-        m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
+      - m_Target: {fileID: 3260860449363551100}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
         m_MethodName: SelectKey
         m_Mode: 3
         m_Arguments:
@@ -45503,8 +45490,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1216427983523946056}
-        m_TargetAssemblyTypeName: CustomKey_Manager, Assembly-CSharp
+      - m_Target: {fileID: 3260860449363551100}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
         m_MethodName: CloseCustomKeyPanel
         m_Mode: 1
         m_Arguments:

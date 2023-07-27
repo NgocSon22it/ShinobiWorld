@@ -19,10 +19,10 @@ public class AsumaClone : Enemy
     new void Start()
     {
         base.Start();
-        boss_Entity = Boss_DAO.GetBossByID("Boss_Asuma");
-        boss_Entity.Health /= 2;
-        CurrentHealth = boss_Entity.Health;
-        LoadHealthUI(CurrentHealth, boss_Entity.Health);
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health;
+        boss_Health /= 2;
+        CurrentHealth = boss_Health;
+        LoadHealthUI(CurrentHealth, boss_Health);
     }
 
     new void Update()

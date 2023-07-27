@@ -34,8 +34,6 @@ namespace Assets.Scripts.GameManager
 
         public void Begin()
         {
-            Debug.Log("Startttttttttttttttttttt");
-            Debug.Log("11111");
             Background.gameObject.SetActive(true);
 
             if (rotateCoroutine == null)
@@ -46,14 +44,10 @@ namespace Assets.Scripts.GameManager
             {
                 loadTxtCoroutine = StartCoroutine(LoadTxtCoroutine());
             }
-            //rotateCoroutine = StartCoroutine(RotateCoroutine());
-            //loadTxtCoroutine = StartCoroutine(LoadTxtCoroutine());
         }
 
         public void End()
         {
-            Debug.Log("Endddddddd");
-
             if (rotateCoroutine != null)
             {
                 StopCoroutine(rotateCoroutine);

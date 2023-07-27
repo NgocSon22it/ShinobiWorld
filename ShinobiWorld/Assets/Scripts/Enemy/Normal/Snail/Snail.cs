@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Snail : Enemy
 {
+    [SerializeField] List<GameObject> ListAttack_Hit = new List<GameObject>();
     new void Awake()
     {
-        EnemyID = "Snail";
-        SetUp(EnemyID, AreaName);
+        SetUp(EnemyID, AreaID);
     }
     // Start is called before the first frame update
     new void Start()
@@ -51,7 +51,8 @@ public class Snail : Enemy
                 }
             }
         }
-        
+
+        playerInRange = CheckPlayerInRange();
 
         animator.SetBool("PlayerInRange", playerInRange);
         animator.SetBool("Walk", isMoving);
@@ -60,21 +61,29 @@ public class Snail : Enemy
 
     public void Animation_SkillOne()
     {
-        if (TargetPosition != Vector3.negativeInfinity)
+        if (TargetPosition != Vector3.zero)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
-
 
             if (SkillOne != null)
             {
-                SkillOne.transform.position = transform.position;
-                SkillOne.transform.rotation = transform.rotation;
-                SkillOne.GetComponent<Bat_SkillOne>().SetUp(100);
+                SkillOne.transform.position = TargetPosition;
+                SkillOne.GetComponent<Snail_Attack>().SetUp(100);
+                SkillOne.GetComponent<Snail_Attack>().SetUpPoint(transform.position, TargetPosition);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 3);
             }
         }
+    }
+
+    public GameObject GetAttack_Hit()
+    {
+        for (int i = 0; i < ListAttack_Hit.Count; i++)
+        {
+            if (!ListAttack_Hit[i].activeInHierarchy)
+            {
+                return ListAttack_Hit[i];
+            }
+        }
+        return null;
     }
 }

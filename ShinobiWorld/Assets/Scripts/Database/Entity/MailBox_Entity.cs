@@ -11,7 +11,7 @@ namespace Assets.Scripts.Database.Entity
         public int ID;
         public string AccountID;
         public string MailID;
-        public DateTime DateAdd;
+        public DateTime AddDate;
         public bool IsClaim;
         public bool IsRead;
         public bool Delete;
