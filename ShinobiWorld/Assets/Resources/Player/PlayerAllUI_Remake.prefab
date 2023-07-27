@@ -33744,9 +33744,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PortalPanel: {fileID: 1004471710283729397}
-  Teleport_DropDown: {fileID: 4419475209003760972}
-  SelectedArea: 
-  listArea: []
 --- !u!1 &5172874981838856665
 GameObject:
   m_ObjectHideFlags: 0
@@ -41165,12 +41162,18 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options: []
+    m_Options:
+    - m_Text: Option A
+      m_Image: {fileID: 0}
+    - m_Text: Option B
+      m_Image: {fileID: 0}
+    - m_Text: Option C
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8628511207313775282}
-        m_TargetAssemblyTypeName: Portal_Manager, Assembly-CSharp
+      - m_Target: {fileID: 1315401504640214145}
+        m_TargetAssemblyTypeName: MissionManager, Assembly-CSharp
         m_MethodName: OnDropdownValueChanged
         m_Mode: 0
         m_Arguments:
@@ -42123,8 +42126,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8628511207313775282}
-        m_TargetAssemblyTypeName: Portal_Manager, Assembly-CSharp
+      - m_Target: {fileID: 1315401504640214145}
+        m_TargetAssemblyTypeName: MissionManager, Assembly-CSharp
         m_MethodName: TeleportToSelectArea
         m_Mode: 1
         m_Arguments:
