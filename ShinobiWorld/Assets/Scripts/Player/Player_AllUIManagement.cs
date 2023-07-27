@@ -251,8 +251,8 @@ public class Player_AllUIManagement : MonoBehaviour
             skillImage.sprite = Resources.Load<Sprite>(image);
             skillcost.text = skill.Chakra.ToString();
 
+            Debug.Log(skillName);
             skillValue = Player.AccountEntity.CustomSettings.Find(obj => obj.SettingID == "Key_" + skillName).Value;
-
             skillkey.text = ShowKey(skillValue);
             Player.playerInput.actions[skillName].ApplyBindingOverride(skillValue);
         }
