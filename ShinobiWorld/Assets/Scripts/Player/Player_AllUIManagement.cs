@@ -1,9 +1,14 @@
-﻿using Photon.Realtime;
+﻿using Assets.Scripts.Database.DAO;
+using Assets.Scripts.Database.Entity;
+using Photon.Pun.Demo.SlotRacer;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
@@ -68,9 +73,21 @@ public class Player_AllUIManagement : MonoBehaviour
     public GameObject House_Message;
     [SerializeField] TMP_Text HouseTxt;
 
+    [Header("Custom Key")]
+    [SerializeField] List<TMP_Text> ListSkillTxt;
+
+    [SerializeField] GameObject CustomKeyPanel;
+
+    [SerializeField] TMP_Text CustomKeyMessage;
+
+    int IndexKey;
+    string KeyboardExtension = "/Keyboard/";
+
+    private bool isWaitingForKeyPress = false;
+
     public Button GotoMenuBtn;
     public GameObject BackgroundPanel;
-    string image;
+    string image, skillValue;
 
     private void Awake()
     {
@@ -82,9 +99,70 @@ public class Player_AllUIManagement : MonoBehaviour
         GotoMenuBtn.onClick.AddListener(() => Game_Manager.Instance.GoToMenu());
     }
 
+    public void LoadPlayerKey()
+    {
+        if (Player != null)
+        {
+            SetUp_LoadKey(0, "SkillOne");
+            SetUp_LoadKey(1, "SkillTwo");
+            SetUp_LoadKey(2, "SkillThree");
+        }
+
+    }
+    public void OpenCustomKeyPanel()
+    {
+        CustomKeyPanel.SetActive(true);
+        Game_Manager.Instance.IsBusy = true;
+        LoadPlayerKey();
+    }
+    public void CloseCustomKeyPanel()
+    {
+        CustomKeyPanel.SetActive(false);
+        isWaitingForKeyPress = false;
+        Game_Manager.Instance.IsBusy = false;
+    }
+
+    public void SelectKey(int Key)
+    {
+        LoadPlayerKey();
+        ListSkillTxt[Key].text = "Nhấn vào phím muốn thay đổi";
+        IndexKey = Key;
+        isWaitingForKeyPress = true;
+        CustomKeyMessage.text = "";
+    }
+
+    public void ChangeKey(int Key, string NewKey)
+    {
+        if (IsThatKeyInUse(NewKey))
+        {
+            CustomKeyMessage.text = "Phím đó sử dụng rồi!";
+            isWaitingForKeyPress = true;
+        }
+        else
+        {
+            CustomKeyMessage.text = "";
+
+            switch (Key)
+            {
+                case 0:
+                    SetUp_ChangeKey("SkillOne", NewKey);
+                    break;
+                case 1:
+                    SetUp_ChangeKey("SkillTwo", NewKey);
+                    break;
+                case 2:
+                    SetUp_ChangeKey("SkillThree", NewKey);
+                    break;
+            }
+
+            ListSkillTxt[IndexKey].text = ShowKey(NewKey);
+            Game_Manager.Instance.ReloadPlayerProperties();
+        }
+    }
+
     public string ShowKey(string Key)
     {
-        return Key.Replace("/Keyboard/", "").ToUpper();
+        return Key.Replace(KeyboardExtension, "").ToUpper();
     }
 
     public void ShowHouseMessage(string HouseName)
@@ -106,39 +184,89 @@ public class Player_AllUIManagement : MonoBehaviour
             SkillOne();
             SkillTwo();
             SkillThree();
+
+            if (isWaitingForKeyPress)
+            {
+                foreach (var device in InputSystem.devices)
+                {
+                    foreach (var control in device.allControls)
+                    {
+                        if (control is KeyControl keyControl && keyControl.wasPressedThisFrame)
+                        {
+                            isWaitingForKeyPress = false;
+                            ChangeKey(IndexKey, keyControl.path);
+                            return;
+                        }
+                    }
+                }
+            }
         }
     }
 
+    public void SetDefaultKey()
+    {
+        SetUp_DefaultKey(0, "SkillOne");
+        SetUp_DefaultKey(1, "SkillTwo");
+        SetUp_DefaultKey(2, "SkillThree");
+
+        Game_Manager.Instance.ReloadPlayerProperties();
+        CustomKeyMessage.text = "";
+        isWaitingForKeyPress = false;
+    }
+    public void SetUp_LoadKey(int Key, string KeyName)
+    {
+        skillValue = Player.AccountEntity.CustomSettings.Find(obj => obj.SettingID == "Key_" + KeyName).Value;
+        ListSkillTxt[Key].text = ShowKey(skillValue);
+    }
+    public void SetUp_DefaultKey(int Key, string KeyName)
+    {
+        skillValue = References.listSetting.Find(obj => obj.ID == "Key_" + KeyName).Value;
+        ListSkillTxt[Key].text = ShowKey(skillValue);
+        Player.playerInput.actions[KeyName].ApplyBindingOverride(skillValue);
+        Account_DAO.ChangeKey(Player.AccountEntity.ID, "Key_" + KeyName, skillValue);
+    }
+    public void SetUp_ChangeKey(string KeyName, string NewKey)
+    {
+        Debug.Log(NewKey);
+        Player.playerInput.actions[KeyName].ApplyBindingOverride(NewKey);
+        Account_DAO.ChangeKey(Player.AccountEntity.ID, "Key_" + KeyName, NewKey);
+    }
+    public bool IsThatKeyInUse(string NewKey)
+    {
+        foreach (CustomSetting_Entity customSetting_Entity in Player.AccountEntity.CustomSettings)
+        {
+            if (NewKey.Equals(customSetting_Entity.Value))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public void SetUp_SetUpPlayer(HasSkill_Entity skill, Image skillImage, TMP_Text skillcost, TMP_Text skillkey, string skillName)
+    {
+        if (skill != null)
+        {
+            image = References.listSkill.Find(obj => obj.ID == skill.SkillID).Image;
+            skillImage.sprite = Resources.Load<Sprite>(image);
+            skillcost.text = skill.Chakra.ToString();
+
+            skillValue = Player.AccountEntity.CustomSettings.Find(obj => obj.SettingID == "Key_" + skillName).Value;
+
+            skillkey.text = ShowKey(skillValue);
+            Player.playerInput.actions[skillName].ApplyBindingOverride(skillValue);
+        }
+    }
     public void SetUpPlayer(PlayerBase player)
     {
         Player = player;
-        if (player.SkillOne_Entity != null)
-        {
-            image = References.listSkill.Find(obj => obj.ID == player.SkillOne_Entity.SkillID).Image;
-            SkillOne_Image.sprite = Resources.Load<Sprite>(image);
-            SkillOne_CostChakra.text = player.SkillOne_Entity.Chakra.ToString();
-            //SkillOne_KeyCode.text = ShowKey(player.SkillOne_Entity.Key.ToString());
-            //player.playerInput.actions["SkillOne"].ApplyBindingOverride(player.SkillOne_Entity.Key);
-        }
-        if (player.SkillTwo_Entity != null)
-        {
-            image = References.listSkill.Find(obj => obj.ID == player.SkillTwo_Entity.SkillID).Image;
-            SkillTwo_Image.sprite = Resources.Load<Sprite>(image);
-            SkillTwo_CostChakra.text = player.SkillTwo_Entity.Chakra.ToString();
-            //SkillTwo_Keycode.text = ShowKey(player.SkillTwo_Entity.Key.ToString());
-            //player.playerInput.actions["SkillTwo"].ApplyBindingOverride(player.SkillTwo_Entity.Key);
 
-        }
-        if (player.SkillThree_Entity != null)
-        {
-            image = References.listSkill.Find(obj => obj.ID == player.SkillThree_Entity.SkillID).Image;
-            SkillThree_Image.sprite = Resources.Load<Sprite>(image);
-            SkillThree_CostChakra.text = player.SkillThree_Entity.Chakra.ToString();
-            //SkillThree_Keycode.text = ShowKey(player.SkillThree_Entity.Key.ToString());
-            //player.playerInput.actions["SkillThree"].ApplyBindingOverride(player.SkillThree_Entity.Key);
+        SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
+        SetUp_SetUpPlayer(player.SkillTwo_Entity, SkillTwo_Image, SkillTwo_CostChakra, SkillTwo_Keycode, "SkillTwo");
+        SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
 
-        }
     }
+
 
     public void SetUpCoinUI(int Coin)
     {
@@ -233,7 +361,6 @@ public class Player_AllUIManagement : MonoBehaviour
             SkillOne_Cooldown.fillAmount = 1f;
         }
     }
-
     public void SkillTwo()
     {
         if (Player.SkillTwo_Entity != null)

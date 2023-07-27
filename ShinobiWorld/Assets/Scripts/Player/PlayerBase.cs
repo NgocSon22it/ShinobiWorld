@@ -357,10 +357,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PhotonNetwork.LoadLevel("BossArena_Kakashi");
             }
 
-            if (Input.GetKeyDown(KeyCode.O))
+            if (Input.GetKeyDown(KeyCode.U))
             {
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("PK");
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().OpenCustomKeyPanel();
             }
 
             if (!CanWalking)

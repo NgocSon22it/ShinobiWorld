@@ -7,8 +7,7 @@ public class Crap : Enemy
 {
     new void Awake()
     {
-        EnemyID = "Crap";
-        SetUp(EnemyID, AreaName);
+        SetUp(EnemyID, AreaID);
     }
     // Start is called before the first frame update
     new void Start()
