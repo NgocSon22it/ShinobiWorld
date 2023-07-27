@@ -260,13 +260,14 @@ public class Player_AllUIManagement : MonoBehaviour
     public void SetUpPlayer(PlayerBase player)
     {
         Player = player;
-
-        SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
-        SetUp_SetUpPlayer(player.SkillTwo_Entity, SkillTwo_Image, SkillTwo_CostChakra, SkillTwo_Keycode, "SkillTwo");
-        SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
+        if (Player != null)
+        {
+            SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
+            SetUp_SetUpPlayer(player.SkillTwo_Entity, SkillTwo_Image, SkillTwo_CostChakra, SkillTwo_Keycode, "SkillTwo");
+            SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
+        }
 
     }
-
 
     public void SetUpCoinUI(int Coin)
     {
