@@ -80,9 +80,8 @@ public class Player_AllUIManagement : MonoBehaviour
 
     [SerializeField] TMP_Text CustomKeyMessage;
 
-    [Header("Separate Status (Normal Vs PK, Arena)")]
+    [Header("Separate Status")]
     [SerializeField] GameObject UI_Normal;
-    [SerializeField] GameObject UI_PKArena;
 
     int IndexKey;
     string KeyboardExtension = "/Keyboard/";
@@ -269,11 +268,9 @@ public class Player_AllUIManagement : MonoBehaviour
         {
             case AccountStatus.Normal:
                 UI_Normal.SetActive(true);
-                UI_PKArena.SetActive(false);
                 break;
             default:
                 UI_Normal.SetActive(false);
-                UI_PKArena.SetActive(true);
                 break;
 
         }
