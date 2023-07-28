@@ -80,6 +80,10 @@ public class Player_AllUIManagement : MonoBehaviour
 
     [SerializeField] TMP_Text CustomKeyMessage;
 
+    [Header("Separate Status (Normal Vs PK, Arena)")]
+    [SerializeField] GameObject UI_Normal;
+    [SerializeField] GameObject UI_PKArena;
+
     int IndexKey;
     string KeyboardExtension = "/Keyboard/";
 
@@ -260,6 +264,19 @@ public class Player_AllUIManagement : MonoBehaviour
     public void SetUpPlayer(PlayerBase player)
     {
         Player = player;
+
+        switch (player.accountStatus)
+        {
+            case AccountStatus.Normal:
+                UI_Normal.SetActive(true);
+                UI_PKArena.SetActive(false);
+                break;
+            default:
+                UI_Normal.SetActive(false);
+                UI_PKArena.SetActive(true);
+                break;
+
+        }
         if (Player != null)
         {
             SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
