@@ -4,6 +4,7 @@ using Assets.Scripts.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
@@ -48,7 +49,7 @@ namespace Assets.Scripts.Bag.Item
                 Price.text = price.ToString();
                 isUpdatePrice = true;
             }
-            if (!Amount.IsUnityNull())  Amount.text = "1";
+            if (!Amount.IsUnityNull()) Amount.text = "1";
             Description.text = item.Description;
         }
 
@@ -116,6 +117,19 @@ namespace Assets.Scripts.Bag.Item
             References.UpdateAccountToDB();
 
             HasItem_DAO.UseItem(References.accountRefer.ID, item.ID);
+
+            var health = References.accountRefer.CurrentHealth + item.HealthBonus;
+            var chakra = References.accountRefer.CurrentChakra + item.ChakraBonus;
+            var strength = References.accountRefer.CurrentStrength + item.StrengthBonus;
+
+            References.accountRefer.CurrentHealth
+                = (health >= References.accountRefer.Health) ? References.accountRefer.Health : health;
+
+            References.accountRefer.CurrentChakra
+                = (chakra >= References.accountRefer.Chakra) ? References.accountRefer.Chakra : chakra;
+
+            References.accountRefer.CurrentStrength
+                = (strength >= References.accountRefer.Strength) ? References.accountRefer.Strength : strength;
 
             Game_Manager.Instance.ReloadPlayerProperties();
 

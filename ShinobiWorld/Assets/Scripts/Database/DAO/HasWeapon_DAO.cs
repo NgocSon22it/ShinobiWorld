@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Data;
 using UnityEngine;
 
-public static class HasWeapon_DAO 
+public static class HasWeapon_DAO
 {
     static string ConnectionStr = ShinobiWorldConnect.GetConnectShinobiWorld();
     public static HasWeapon_Entity GetHasWeaponByID(string UserID)
@@ -41,6 +41,21 @@ public static class HasWeapon_DAO
             {
                 connection.Close();
             }
+        }
+        return null;
+    }
+
+    public static HasWeapon_Entity UpdateWeaponByID(string UserID, int damage)
+    {
+        using (SqlConnection connection = new SqlConnection(ConnectionStr))
+        {
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = "UPDATE [dbo].[HasWeapon] SET Damage += @damage WHERE AccountID = @AccountID ";
+            cmd.Parameters.AddWithValue("@AccountID", UserID);
+            cmd.Parameters.AddWithValue("@damage", damage);
+            connection.Open();
+            cmd.ExecuteNonQuery();
+            connection.Close();
         }
         return null;
     }
