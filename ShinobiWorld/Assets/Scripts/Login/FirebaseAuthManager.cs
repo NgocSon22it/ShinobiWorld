@@ -99,11 +99,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     Account_DAO.ChangeStateOnline(user.UserId, true);
                     References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
 
-                    /*if (References.accountRefer.ResetLimitDate.Date < DateTime.Now.Date)
-                    {
-                        HasItem_DAO.ResetLimitBuyItem(References.accountRefer.ID, References.listHasItem);
-                    }*/
-
                     if (!PhotonNetwork.IsConnected)
                     {
                         PhotonNetwork.ConnectUsingSettings();
@@ -230,11 +225,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
-
-                        if (References.accountRefer.ResetLimitDate.Date < DateTime.Now.Date)
-                        {
-                            HasItem_DAO.ResetLimitBuyItem(References.accountRefer.ID, References.listHasItem);
-                        }
 
                         if (!PhotonNetwork.IsConnected)
                         {
