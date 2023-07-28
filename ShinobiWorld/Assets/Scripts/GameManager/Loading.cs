@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.GameManager
 {
@@ -14,8 +15,9 @@ namespace Assets.Scripts.GameManager
         public GameObject Background, clock;
         public TMP_Text Txt;
         public float rotationSpeed, speed;
+        public Image LoadingImage;
 
-        private Coroutine rotateCoroutine, loadTxtCoroutine; // Lưu trữ tham chiếu tới Coroutine.
+        private Coroutine rotateCoroutine, loadTxtCoroutine, DelayCoroutine; // Lưu trữ tham chiếu tới Coroutine.
 
         List<string> list = new List<string> { ".", "..", "..." };
 
@@ -30,12 +32,18 @@ namespace Assets.Scripts.GameManager
         {
             rotationSpeed = -300f;
             speed = 0.5f;
+            
+        }
+
+        public void SetUpImage(Sprite sprite)
+        {
+            LoadingImage.sprite = sprite;
         }
 
         public void Begin()
         {
             Background.gameObject.SetActive(true);
-
+            Game_Manager.Instance.IsBusy = true;
             if (rotateCoroutine == null)
             {
                 rotateCoroutine = StartCoroutine(RotateCoroutine());
@@ -44,10 +52,24 @@ namespace Assets.Scripts.GameManager
             {
                 loadTxtCoroutine = StartCoroutine(LoadTxtCoroutine());
             }
+            if (DelayCoroutine != null)
+            {
+                StopCoroutine(DelayCoroutine);
+                DelayCoroutine = null;
+            }
         }
 
         public void End()
         {
+            if (DelayCoroutine == null)
+            {
+                DelayCoroutine = StartCoroutine(DelayBackground());
+            }
+        }
+
+        IEnumerator DelayBackground()
+        {
+            yield return new WaitForSeconds(3f);
             if (rotateCoroutine != null)
             {
                 StopCoroutine(rotateCoroutine);
@@ -59,6 +81,7 @@ namespace Assets.Scripts.GameManager
             rotateCoroutine = null;
             loadTxtCoroutine = null;
             Background.gameObject.SetActive(false);
+            Game_Manager.Instance.IsBusy = false;
 
         }
 

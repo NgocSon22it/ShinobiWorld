@@ -45,10 +45,14 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Player Instance")]
     [SerializeField] GameObject LoadingPrefabs;
-    [SerializeField] GameObject InfoPrefabs;
 
-    public GameObject LoadingInstance;
+    [SerializeField] Sprite LoadingImage;
+
+    GameObject LoadingInstance;
+
+    [SerializeField] GameObject InfoPrefabs;
     public GameObject InfoInstance;
+
 
     private void Awake()
     {
@@ -59,6 +63,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     void Start()
     {
         LoadingInstance = Instantiate(LoadingPrefabs);
+        LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
         LoadingInstance.GetComponent<Loading>().Begin();
 
         InfoInstance = Instantiate(InfoPrefabs);
