@@ -37,6 +37,9 @@ public class Player_AllUIManagement : MonoBehaviour
     [Header("Name")]
     [SerializeField] TMP_Text CoinTxt;
 
+    [Header("Avatar")]
+    [SerializeField] Image Avatar;
+
     [Header("Strength")]
     [SerializeField] TMP_Text StrengthTxt;
 
@@ -316,6 +319,11 @@ public class Player_AllUIManagement : MonoBehaviour
     public void LoadNameUI(string Name)
     {
         NickNameTxt.text = Name;
+    }
+
+    public void LoadAvatarUI(string avatarPath)
+    {
+        Avatar.sprite = Resources.Load<Sprite>("Player/Avatar/" + avatarPath);
     }
 
     public void LoadHealthUI(float TotalHealth, float CurrentHealth)

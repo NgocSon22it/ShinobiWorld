@@ -238,6 +238,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadAvatarUI(AccountEntity.HairID.Replace("Hair_", ""));
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpPlayer(this);
 
