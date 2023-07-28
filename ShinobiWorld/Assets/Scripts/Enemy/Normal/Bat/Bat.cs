@@ -17,9 +17,8 @@ public class Bat : Enemy
     {
         base.Start();
     }
-    new void Update()
+    new void FixedUpdate()
     {
-        base.Update();
         AttackAndMove();
     }
 

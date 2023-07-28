@@ -129,7 +129,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         }
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
 
     }

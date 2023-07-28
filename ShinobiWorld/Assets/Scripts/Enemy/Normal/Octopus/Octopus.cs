@@ -15,9 +15,8 @@ public class Octopus : Enemy
     {
         base.Start();
     }
-    new void Update()
+    new void FixedUpdate()
     {
-        base.Update();
         AttackAndMove();
     }
 

@@ -30,7 +30,7 @@ public class Iruka : Enemy
         base.Start();
     }
 
-    new void Update()
+    new void FixedUpdate()
     {
         AttackAndMove();
 
