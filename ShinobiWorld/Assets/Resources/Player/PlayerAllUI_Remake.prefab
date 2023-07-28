@@ -32832,6 +32832,7 @@ MonoBehaviour:
   HealthNumberTxt: {fileID: 848075659074521055}
   ChakraNumberTxt: {fileID: 6966374874113092941}
   CoinTxt: {fileID: 4412084099022066914}
+  Avatar: {fileID: 5785437618258802814}
   StrengthTxt: {fileID: 4278659914267614094}
   PowerTxt: {fileID: 4412084099969225810}
   Mission: {fileID: 5378464132634263767}
@@ -41103,6 +41104,9 @@ MonoBehaviour:
   MessageTxt: {fileID: 792458061}
   Upgrade_Btn: {fileID: 660607510415429531}
   NextLevel: {fileID: 1581276990576710244}
+  HealthBonus: 0
+  ChakraBonus: 0
+  DamageBonus: 0
   DowngradePanel: {fileID: 316719416339127918}
   CostReturn: {fileID: 316719416462862405}
 --- !u!1 &6123070246322351721
@@ -48314,8 +48318,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -218, y: -20.1}
-  m_SizeDelta: {x: 111.0287, y: 111.0361}
+  m_AnchoredPosition: {x: -219.5, y: -19}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8865110561199188924
 CanvasRenderer:
@@ -48345,7 +48349,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 375577078, guid: 10eeb74c5b1443c47a15e209b2dfb4db, type: 3}
+  m_Sprite: {fileID: -1225938547, guid: 735292c0bfe8aa34699c5ec4048bcf09, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -53818,6 +53822,9 @@ MonoBehaviour:
   MessageTxt: {fileID: 0}
   Upgrade_Btn: {fileID: 0}
   NextLevel: {fileID: 0}
+  HealthBonus: 0
+  ChakraBonus: 0
+  DamageBonus: 0
   DowngradePanel: {fileID: 0}
   CostReturn: {fileID: 0}
 --- !u!1 &8777673995891839809
