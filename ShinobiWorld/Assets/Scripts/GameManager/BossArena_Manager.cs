@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossArena_Manager : MonoBehaviourPunCallbacks
 {
@@ -21,11 +22,17 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
     float TotalTime = 180f;
     float currentTime;
     [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
+    [SerializeField] GameObject ReadyBase;
 
     [Header("Battle Start")]
+    float TotalProgress = 1f, CurrentProgress = 0f;
+    bool BattleStart, ProgressRun;
+    Coroutine ProgressBar_Coroutine;
+    [SerializeField] GameObject ProgressBar;
+    [SerializeField] Image CurrentProgressBar;
     float ReadyTime = 3f;
-
     [SerializeField] TMP_Text Battle_Start_CountdownTxt;
+    public int RequireNumber, CurrentNumber;
 
     [Header("Battle End")]
     [SerializeField] GameObject Battle_End_Panel;
@@ -33,7 +40,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
 
     bool BattleEnd;
 
-    public static BossArena_Manager Instance; 
+    public static BossArena_Manager Instance;
 
     private void Awake()
     {
@@ -49,6 +56,30 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.Arena);
     }
 
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Game_Manager.Instance.ReloadPlayerProperties();
+    }
+
+    public void CheckPlayerReady()
+    {
+        RequireNumber = PhotonNetwork.PlayerList.Length;
+        if (CurrentNumber == RequireNumber && BattleStart == false) 
+        {
+            ProgressRun = true;
+            ProgressBar_Coroutine = StartCoroutine(Battle_ProgressBar());
+        }
+        else
+        {
+            if (ProgressBar_Coroutine != null)
+            {
+                StopCoroutine(ProgressBar_Coroutine);
+            }
+            ProgressBar.SetActive(false);
+            ProgressRun = false;
+            CurrentProgress = 0f;
+        }
+    }
 
     public override void OnConnectedToMaster()
     {
@@ -120,6 +151,24 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
 
             currentTime--;
         }
+
+    }
+
+    private IEnumerator Battle_ProgressBar()
+    {
+        ProgressBar.SetActive(true);
+        while (CurrentProgress < TotalProgress && ProgressRun)
+        {
+            CurrentProgress += 0.005f;
+            CurrentProgressBar.fillAmount = CurrentProgress / TotalProgress;
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        BattleStart = true;
+        ProgressBar.SetActive(false);
+        StartCoroutine(Battle_StartCoroutine());
+        Game_Manager.Instance.IsBusy = true;
+        ReadyBase.SetActive(false);
 
     }
 

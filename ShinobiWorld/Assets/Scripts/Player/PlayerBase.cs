@@ -357,6 +357,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PhotonNetwork.LoadLevel("BossArena_Asuma");
             }
 
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("PK");
+            }
+
             if (Input.GetKeyDown(KeyCode.U))
             {
                 PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().OpenCustomKeyPanel();
