@@ -33,7 +33,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
 
     bool BattleEnd;
 
-    public static BossArena_Manager Instance;
+    public static BossArena_Manager Instance; 
 
     private void Awake()
     {
@@ -46,19 +46,18 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Game_Manager.Instance.IsBusy = true;
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.Arena);
-        StartCoroutine(Battle_StartCoroutine());
-
     }
+
 
     public override void OnConnectedToMaster()
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
             RoomOptions roomOptions = new RoomOptions();
-            roomOptions.MaxPlayers = 1;
-            PhotonNetwork.CreateRoom(References.accountRefer.ID, roomOptions, TypedLobby.Default);
+            roomOptions.MaxPlayers = 5;
+            roomOptions.BroadcastPropsChangeToAll = true;
+            PhotonNetwork.JoinOrCreateRoom("123", roomOptions, TypedLobby.Default);
         }
     }
 
