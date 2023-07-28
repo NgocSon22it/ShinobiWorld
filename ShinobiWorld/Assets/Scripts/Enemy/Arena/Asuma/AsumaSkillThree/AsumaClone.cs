@@ -25,7 +25,7 @@ public class AsumaClone : Enemy
         LoadHealthUI(CurrentHealth, boss_Health);
     }
 
-    new void Update()
+    new void FixedUpdate()  
     {
         AttackAndMove();
 

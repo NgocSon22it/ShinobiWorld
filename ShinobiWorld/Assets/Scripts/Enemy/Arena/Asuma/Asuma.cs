@@ -6,7 +6,7 @@ public class Asuma : Enemy
 {
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
-    
+
 
     //SkillThree
     bool IsSummonClone;
@@ -28,9 +28,16 @@ public class Asuma : Enemy
         LoadHealthUI(CurrentHealth, boss_Health);
     }
 
-    new void Update()
+    new void FixedUpdate()
     {
-        AttackAndMove();
+        if (photonView.IsMine)
+        {
+            AttackAndMove();
+        }
+        else
+        {
+
+        }
     }
 
     public void AttackAndMove()

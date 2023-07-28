@@ -15,9 +15,8 @@ public class Crap : Enemy
         base.Start();
     }
 
-    new void Update()
+    new void FixedUpdate()
     {
-        base.Update();
         Move();
     }
 
