@@ -9,11 +9,6 @@ public class Iruka : Enemy
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
 
-    //SkillTwo
-    public Vector2 SkillRandomPosition;
-    Vector2 Skill_MinPosition, Skill_MaxPosition;
-    float X, Y;
-
     //Skill Three
     public float dashSpeed;
     public float dashDuration;
@@ -117,17 +112,6 @@ public class Iruka : Enemy
         IsStartCoroutine = false;
     }
 
-    public Vector2 GetRandomSkillPosition()
-    {
-        Skill_MinPosition = movementBounds.bounds.min;
-        Skill_MaxPosition = movementBounds.bounds.max;
-
-        // Generate random X and Y coordinates within the collider bounds
-        X = Random.Range(Skill_MinPosition.x, Skill_MaxPosition.x);
-        Y = Random.Range(Skill_MinPosition.y, Skill_MaxPosition.y);
-
-        return new Vector2(X, Y);
-    }
     IEnumerator SkillTwo_Fire()
     {
         for (int i = 0; i < 10; i++)
@@ -135,9 +119,8 @@ public class Iruka : Enemy
             GameObject SkillOne = boss_Pool.GetSkillTwoFromPool();
             if (SkillOne != null)
             {
-                SkillRandomPosition = GetRandomSkillPosition();
 
-                SkillOne.transform.position = SkillRandomPosition;
+                SkillOne.transform.position = TargetPosition;
                 SkillOne.GetComponent<Iruka_SkillTwo>().SetUp(100);
                 SkillOne.SetActive(true);
                 yield return new WaitForSeconds(0.3f);
@@ -151,8 +134,7 @@ public class Iruka : Enemy
     {
         isDashing = true;
         dashTimer = 0f;
-        SkillRandomPosition = GetRandomSkillPosition();
-        Vector3 direction = (SkillRandomPosition - (Vector2)transform.Find("MainPoint").position).normalized;
+        Vector3 direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
 
         while (dashTimer < dashDuration)
         {
