@@ -72,8 +72,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
 
-        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);
-        ChatManager.Instance.ConnectToChat();
+        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);      
         LoadingInstance.GetComponent<Loading>().End();
 
     }
