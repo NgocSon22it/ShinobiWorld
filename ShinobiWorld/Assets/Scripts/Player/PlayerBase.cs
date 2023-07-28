@@ -209,7 +209,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
                 PlayerHealthChakraUI.SetActive(false);
-
+                PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat("123");
                 CallInvoke();
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
@@ -354,7 +354,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             if (Input.GetKeyDown(KeyCode.I))
             {
                 PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("BossArena_Kakashi");
+                PhotonNetwork.LoadLevel("BossArena_Asuma");
             }
 
             if (Input.GetKeyDown(KeyCode.U))

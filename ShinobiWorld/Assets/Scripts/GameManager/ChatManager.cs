@@ -1,4 +1,4 @@
-using Assets.Scripts.Database.DAO;
+﻿using Assets.Scripts.Database.DAO;
 using ExitGames.Client.Photon;
 using Photon.Chat;
 using Photon.Pun;
@@ -21,6 +21,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     [SerializeField] Scrollbar VerticalScroll;
 
+    public string ServerName;
+
     public bool IsTypingChat;
 
     string CurrentChat;
@@ -42,9 +44,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        Debug.Log("Connected To Chat");
+        Debug.Log("Kết nối đến chat thành công!");
         isConnected = true;
-        chatClient.Subscribe(new string[] { "Akatsucana" });
+        chatClient.Subscribe(new string[] { ServerName });
     }
 
     public void OnDisconnected()
@@ -136,12 +138,13 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] string userID;
     bool isConnected;
 
-    public void ConnectToChat()
+    public void ConnectToChat(string ServerName)
     {
+        this.ServerName = ServerName;
         isConnected = true;
         chatClient = new ChatClient(this);
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(References.accountRefer.Name));
-        Debug.Log("Connecting");
+        Debug.Log("Đang kết nối");
     }
 
     public void TypeChatOnValueChange(string value)
@@ -152,7 +155,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void SummitPublicChat()
     {
-        chatClient.PublishMessage("Akatsucana", CurrentChat);
+        chatClient.PublishMessage(ServerName, CurrentChat);
         ChatField.text = "";
         CurrentChat = "";
     }
@@ -161,14 +164,12 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         IsTypingChat = value;
         TypingChatObject.SetActive(value);
-        //Game_Manager.Instance.IsBusy = value;
+        Game_Manager.Instance.IsBusy = value;
     }
 
     public void FocusTyping()
     {
-        // Select the input field
         ChatField.Select();
-        // Set the focus to the input field
         ChatField.ActivateInputField();
     }
 
