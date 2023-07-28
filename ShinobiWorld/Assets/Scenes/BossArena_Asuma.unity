@@ -644,7 +644,7 @@ GameObject:
   - component: {fileID: 689759581}
   m_Layer: 8
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1021,17 +1021,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 890409750, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1845212311711525905, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
       propertyPath: m_Name
       value: Asuma
-      objectReference: {fileID: 0}
-    - target: {fileID: 1845212311711525905, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5374706054952615497, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
-      propertyPath: List_SkillTwo.Array.size
-      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5374706054952615497, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
       propertyPath: List_SkillOne.Array.data[0]
@@ -1073,26 +1069,6 @@ PrefabInstance:
       propertyPath: List_SkillThree.Array.data[1]
       value: 
       objectReference: {fileID: 2024493408}
-    - target: {fileID: 7883954314747761025, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.9999959
-      objectReference: {fileID: 0}
-    - target: {fileID: 7883954314747761025, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7883954314747761025, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7883954314747761025, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.0028747467
-      objectReference: {fileID: 0}
-    - target: {fileID: 7883954314747761025, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0.329
-      objectReference: {fileID: 0}
     - target: {fileID: 8653696923719004972, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -16667,7 +16643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5983041001299212584
 RectTransform:
   m_ObjectHideFlags: 0
