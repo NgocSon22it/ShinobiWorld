@@ -45,8 +45,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Player Instance")]
     [SerializeField] GameObject LoadingPrefabs;
+    [SerializeField] GameObject InfoPrefabs;
 
     public GameObject LoadingInstance;
+    public GameObject InfoInstance;
 
     private void Awake()
     {
@@ -58,6 +60,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         LoadingInstance = Instantiate(LoadingPrefabs);
         LoadingInstance.GetComponent<Loading>().Begin();
+
+        InfoInstance = Instantiate(InfoPrefabs);
 
         if (PhotonNetwork.IsConnectedAndReady)
         {
