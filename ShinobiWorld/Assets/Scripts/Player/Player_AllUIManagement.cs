@@ -80,6 +80,9 @@ public class Player_AllUIManagement : MonoBehaviour
 
     [SerializeField] TMP_Text CustomKeyMessage;
 
+    [Header("Separate Status")]
+    [SerializeField] GameObject UI_Normal;
+
     int IndexKey;
     string KeyboardExtension = "/Keyboard/";
 
@@ -251,8 +254,8 @@ public class Player_AllUIManagement : MonoBehaviour
             skillImage.sprite = Resources.Load<Sprite>(image);
             skillcost.text = skill.Chakra.ToString();
 
+            Debug.Log(skillName);
             skillValue = Player.AccountEntity.CustomSettings.Find(obj => obj.SettingID == "Key_" + skillName).Value;
-
             skillkey.text = ShowKey(skillValue);
             Player.playerInput.actions[skillName].ApplyBindingOverride(skillValue);
         }
@@ -261,9 +264,22 @@ public class Player_AllUIManagement : MonoBehaviour
     {
         Player = player;
 
-        SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
-        SetUp_SetUpPlayer(player.SkillTwo_Entity, SkillTwo_Image, SkillTwo_CostChakra, SkillTwo_Keycode, "SkillTwo");
-        SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
+        switch (player.accountStatus)
+        {
+            case AccountStatus.Normal:
+                UI_Normal.SetActive(true);
+                break;
+            default:
+                UI_Normal.SetActive(false);
+                break;
+
+        }
+        if (Player != null)
+        {
+            SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
+            SetUp_SetUpPlayer(player.SkillTwo_Entity, SkillTwo_Image, SkillTwo_CostChakra, SkillTwo_Keycode, "SkillTwo");
+            SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
+        }
 
     }
 

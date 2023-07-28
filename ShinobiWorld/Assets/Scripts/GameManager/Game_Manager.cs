@@ -64,7 +64,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(CurrentAreaName, roomOptions, TypedLobby.Default);
         }
     }
 
@@ -72,8 +72,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
 
-        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);
-        ChatManager.Instance.ConnectToChat();
+        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);      
         LoadingInstance.GetComponent<Loading>().End();
 
     }
@@ -195,7 +194,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             roomOptions.MaxPlayers = 0;
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(References.ServerName, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(CurrentAreaName, roomOptions, TypedLobby.Default);
         }
     }
 
