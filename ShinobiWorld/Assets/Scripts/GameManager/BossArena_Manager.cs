@@ -35,6 +35,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
 
     public static BossArena_Manager Instance;
 
+    ExitGames.Client.Photon.Hashtable BossArenaProperties = new ExitGames.Client.Photon.Hashtable();
+
     private void Awake()
     {
         Instance = this;
