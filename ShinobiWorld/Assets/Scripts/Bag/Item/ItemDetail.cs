@@ -17,6 +17,8 @@ namespace Assets.Scripts.Bag.Item
 {
     public class ItemDetail : MonoBehaviour
     {
+        public GameObject BagManagerObj;
+
         public Image Image;
         public TMP_Text Name, Own, Price, Description;
         public TMP_InputField Amount;
@@ -28,10 +30,11 @@ namespace Assets.Scripts.Bag.Item
         public Item_Entity item;
 
         public static ItemDetail Instance;
-
+        public BagManager BagManagerInstance;
         private void Awake()
         {
             Instance = this;
+            BagManagerInstance = BagManagerObj.GetComponent<BagManager>();
         }
 
         public void ShowDetail(string ID)
@@ -109,7 +112,7 @@ namespace Assets.Scripts.Bag.Item
 
             References.AddCoin(int.Parse(Price.text));
 
-            BagManager.Instance.ReloadItem(item.ID);
+            BagManagerInstance.ReloadItem(item.ID);
         }
 
         public void Use()
@@ -133,7 +136,7 @@ namespace Assets.Scripts.Bag.Item
 
             Game_Manager.Instance.ReloadPlayerProperties();
 
-            BagManager.Instance.ReloadItem(item.ID);
+            BagManagerInstance.ReloadItem(item.ID);
         }
     }
 }

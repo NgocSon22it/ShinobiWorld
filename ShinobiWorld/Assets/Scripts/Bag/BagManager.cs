@@ -27,10 +27,15 @@ namespace Assets.Scripts.Shop
 
         public static BagManager Instance;
 
+        public EquipmentDetail EquipmentDetailInstance;
+        public ItemDetail ItemDetailInstance;
+
         public Intention Intention;
         private void Awake()
         {
             Instance = this;
+            EquipmentDetailInstance = prefabEquipmentDetail.GetComponent<EquipmentDetail>();
+            ItemDetailInstance = prefabItemDetail.GetComponent<ItemDetail>();
         }
 
         public void OnBagBtnClick()
@@ -59,8 +64,7 @@ namespace Assets.Scripts.Shop
             if (listHasItem.Count <= 0) { ShowMessage(); }
             else
             {
-                Content.GetChild(0).gameObject.GetComponent<Image>().color = new Color32(190, 140, 10, 255);
-                ItemDetail.Instance.ShowDetail(listHasItem[0].ItemID);
+                ItemDetailInstance.ShowDetail(listHasItem[0].ItemID);
                 
             }
         }
@@ -78,8 +82,7 @@ namespace Assets.Scripts.Shop
             if (listBagEquipment.Count <= 0) { ShowMessage(); }
             else
             {
-                Content.GetChild(0).gameObject.GetComponent<Image>().color = new Color32(190, 140, 10, 255);
-                EquipmentDetail.Instance.ShowDetail(listBagEquipment[0].ID, listBagEquipment[0].EquipmentID);
+                EquipmentDetailInstance.ShowDetail(listBagEquipment[0].ID, listBagEquipment[0].EquipmentID);
                 
             }
         }
@@ -123,15 +126,14 @@ namespace Assets.Scripts.Shop
 
             listHasItem = References.listHasItem.FindAll(obj => obj.Amount > 0);
 
+            var isFirst = true;
             foreach (var HasItem in listHasItem)
             {
                 var item = References.listItem.Find(obj => obj.ID == HasItem.ItemID);
-                var itemManager = prefabItemBag.GetComponent<ItemBag>();
-                itemManager.ID = item.ID;
-                itemManager.Image.sprite = Resources.Load<Sprite>(item.Image);
-                itemManager.Name.text = item.Name;
-                itemManager.Own.text = HasItem.Amount.ToString();
-                Instantiate(prefabItemBag, Content);
+                Instantiate(prefabItemBag, Content)
+                   .GetComponent<ItemBag>()
+                   .Setup(item, HasItem.Amount, ItemDetailInstance, isFirst);
+                isFirst = false;
             }
         }
 
@@ -140,12 +142,13 @@ namespace Assets.Scripts.Shop
             listBagEquipment =  References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
             if(Intention == Intention.Sell) listBagEquipment = References.listBagEquipment.FindAll(obj => obj.IsUse == false);
-
+            var isFirst = true;
             foreach (var BagEquipment in listBagEquipment)
             {
                 Instantiate(prefabEquipmentBag, Content)
                    .GetComponent<EquipmentBag>()
-                   .Setup(BagEquipment);
+                   .Setup(BagEquipment, EquipmentDetailInstance, isFirst);
+                isFirst = false;
             }
         }
 
@@ -158,8 +161,8 @@ namespace Assets.Scripts.Shop
             {
                 var HasItem = listHasItem.Find(obj => obj.ItemID == ID);
 
-                if (HasItem != null) ItemDetail.Instance.ShowDetail(ID);
-                else ItemDetail.Instance.ShowDetail(listHasItem[0].ItemID);
+                if (HasItem != null) ItemDetailInstance.ShowDetail(ID);
+                else ItemDetailInstance.ShowDetail(listHasItem[0].ItemID);
             }
         }
 
@@ -177,8 +180,8 @@ namespace Assets.Scripts.Shop
                 var BagEquipment = listBagEquipment.Find(obj => obj.ID == ID &&
                                                                             obj.EquipmentID == EquipmentID);
 
-                if (BagEquipment != null) EquipmentDetail.Instance.ShowDetail(ID, EquipmentID);
-                else EquipmentDetail.Instance.ShowDetail(listBagEquipment[0].ID, listBagEquipment[0].EquipmentID);
+                if (BagEquipment != null) EquipmentDetailInstance.ShowDetail(ID, EquipmentID);
+                else EquipmentDetailInstance.ShowDetail(listBagEquipment[0].ID, listBagEquipment[0].EquipmentID);
             }
         }
 

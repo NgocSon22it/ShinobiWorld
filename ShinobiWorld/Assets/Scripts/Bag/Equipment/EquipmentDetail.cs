@@ -16,6 +16,7 @@ namespace Assets.Scripts.Bag.Equipment
 {
     public class EquipmentDetail : MonoBehaviour
     {
+        public GameObject BagManagerObj;
         [Header("Detail")]
         public Image Image;
         public TMP_Text Name, Level, Price, UpgradeCost, Description, MessageError, UseBtn_Text;
@@ -41,10 +42,12 @@ namespace Assets.Scripts.Bag.Equipment
 
         public static EquipmentDetail Instance;
         public BagEquipment_Entity BagEquipment;
+        public BagManager BagManagerInstance;
 
         private void Awake()
         {
             Instance = this;
+            BagManagerInstance = BagManagerObj.GetComponent<BagManager>();
         }
 
         public void ShowDetail(int ID, string EquipmentID)
@@ -91,7 +94,7 @@ namespace Assets.Scripts.Bag.Equipment
 
             References.AddCoin(int.Parse(Price.text));
 
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID, true);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID, true);
         }
 
         public void OnUseBtnClick()
@@ -120,7 +123,7 @@ namespace Assets.Scripts.Bag.Equipment
             Game_Manager.Instance.ReloadPlayerProperties();
 
             //References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
         }
 
         public void Remove()
@@ -135,7 +138,7 @@ namespace Assets.Scripts.Bag.Equipment
             Game_Manager.Instance.ReloadPlayerProperties();
 
             //References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
         }
 
         public void OnCloseBtnClick()
@@ -227,7 +230,7 @@ namespace Assets.Scripts.Bag.Equipment
 
             //References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
             OnUpgradeBtnClick();
             //UpgradePanel.SetActive(false);
         }
@@ -251,7 +254,7 @@ namespace Assets.Scripts.Bag.Equipment
 
             //References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
 
             DowngradePanel.SetActive(false);
         }
