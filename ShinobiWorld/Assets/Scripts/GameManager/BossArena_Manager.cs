@@ -10,7 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BossArena_Manager : MonoBehaviourPunCallbacks
+public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     [SerializeField] GameObject Boss;
     [SerializeField] GameObject BossPool;
@@ -46,6 +46,11 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
     [Header("Player Instance")]
     [SerializeField] GameObject LoadingPrefabs;
     [SerializeField] Sprite LoadingImage;
+
+    private const byte ShowEndgamePanelEventCode = 1;
+    private const string EndGamePro = "EndGame";
+
+    RoomOptions roomOptions = new RoomOptions();
 
     GameObject LoadingInstance;
 
@@ -105,8 +110,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         if (PhotonNetwork.IsConnectedAndReady)
-        {
-            RoomOptions roomOptions = new RoomOptions();
+        {           
             roomOptions.MaxPlayers = 5;
             roomOptions.BroadcastPropsChangeToAll = true;
             PhotonNetwork.JoinOrCreateRoom("123", roomOptions, TypedLobby.Default);
@@ -136,25 +140,16 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
     {
 
         BossPool.SetActive(false);
-        Battle_End_Panel.SetActive(true);
-        Game_Manager.Instance.IsBusy = true;
-
-        if (Boss.gameObject.activeInHierarchy)
-        {
-            Boss.GetComponent<Enemy>().Disappear();
-        }
-
+        Boss.SetActive(false);
         BattleEnd = true;
 
         if (Win)
         {
-            Battle_End_Text.text = "Thắng";
-            Battle_End_Text.color = Color.white;
+            ShowEndgamePanel("Thắng");
         }
         else
         {
-            Battle_End_Text.text = "Thua";
-            Battle_End_Text.color = Color.black;
+            ShowEndgamePanel("Thua");
         }
 
     }
@@ -193,6 +188,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
         Game_Manager.Instance.IsBusy = true;
         ReadyBase.SetActive(false);
         GuideTxt.SetActive(false);
+        roomOptions.IsOpen = false;
 
     }
 
@@ -223,5 +219,27 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
         }
 
+    }
+
+    public void ShowEndgamePanel(string Text)
+    {
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { EndGamePro, Text } }) ;
+
+        PhotonNetwork.RaiseEvent(ShowEndgamePanelEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == ShowEndgamePanelEventCode)
+        {
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(EndGamePro, out object EndText) && EndText != null)
+            {
+                string End = (string)EndText;
+                Battle_End_Text.text = End;              
+            }
+
+            Game_Manager.Instance.IsBusy = true;
+            Battle_End_Panel.SetActive(true);
+        }
     }
 }

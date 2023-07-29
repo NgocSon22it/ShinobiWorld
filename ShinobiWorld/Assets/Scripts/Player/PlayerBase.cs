@@ -412,7 +412,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             switch (accountStatus)
             {
                 case AccountStatus.Normal:
-                    References.UpdateAccountToDB();
                     Game_Manager.Instance.ReloadPlayerProperties();
                     if (AccountEntity.CurrentHealth <= 0)
                     {
@@ -425,7 +424,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                     if (AccountEntity.CurrentHealth <= 0)
                     {
-                        BossArena_Manager.Instance.Battle_End(false);
+                        //BossArena_Manager.Instance.Battle_End(false);
                     }
 
                     break;
@@ -444,7 +443,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
                 CancelInvoke(nameof(RegenChakra));
                 CancelInvoke(nameof(RegenHealth));
-                photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
+                photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.All);
             }
 
             LoadPlayerHealthUI();
