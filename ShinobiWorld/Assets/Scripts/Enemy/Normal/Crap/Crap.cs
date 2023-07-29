@@ -17,7 +17,14 @@ public class Crap : Enemy
 
     new void FixedUpdate()
     {
-        Move();
+        if (!photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * lerpFactor);
+        }
+        else
+        {
+            Move();
+        }
     }
 
     public void Move()

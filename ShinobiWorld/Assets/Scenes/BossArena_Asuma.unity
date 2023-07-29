@@ -14220,6 +14220,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4656005263398450584}
     - target: {fileID: 1395550231604775681, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
+      propertyPath: DeathEffect
+      value: 
+      objectReference: {fileID: 1297052564}
+    - target: {fileID: 1395550231604775681, guid: c54c9dcb25efbed4f93d6475e78f03e2, type: 3}
       propertyPath: List_SmokeSummon.Array.data[0]
       value: 
       objectReference: {fileID: 8469141566271498650}
@@ -14602,6 +14606,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b482db22f3e02d847983890f7d967668, type: 3}
+--- !u!1 &1297052564 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6273843248323650677, guid: b482db22f3e02d847983890f7d967668, type: 3}
+  m_PrefabInstance: {fileID: 1297052563}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1467619155
 GameObject:
   m_ObjectHideFlags: 0
@@ -17115,6 +17124,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8469141566065252229, guid: b0c60b6ae3249f54aa3d2713013bbb28, type: 3}
+      propertyPath: HealthChakraUI
+      value: 
+      objectReference: {fileID: 8469141566271498651}
     - target: {fileID: 8469141566065252231, guid: b0c60b6ae3249f54aa3d2713013bbb28, type: 3}
       propertyPath: sceneViewId
       value: 1
@@ -17129,5 +17142,10 @@ GameObject:
 --- !u!1 &8469141566271498650 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6049371526478908811, guid: b0c60b6ae3249f54aa3d2713013bbb28, type: 3}
+  m_PrefabInstance: {fileID: 8469141566271498648}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8469141566271498651 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8469141566179371761, guid: b0c60b6ae3249f54aa3d2713013bbb28, type: 3}
   m_PrefabInstance: {fileID: 8469141566271498648}
   m_PrefabAsset: {fileID: 0}

@@ -48,6 +48,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] Sprite LoadingImage;
 
     private const byte ShowEndgamePanelEventCode = 1;
+    private const byte ActiveBossEventCode = 2;
+
     private const string EndGamePro = "EndGame";
 
     RoomOptions roomOptions = new RoomOptions();
@@ -107,6 +109,25 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    public void CheckPlayerDead()
+    {
+        PlayerBase[] players = FindObjectsOfType<PlayerBase>();
+
+        foreach (var player in players)
+        {
+            if (player.AccountEntity.CurrentHealth > 0)
+            {
+                // At least one player is still alive, so return without taking further action.
+                return;
+            }
+        }
+
+        // If this point is reached, all players are defeated, so handle the "lose" condition here.
+        Battle_End(false);
+
+    }
+
+
     public override void OnConnectedToMaster()
     {
         if (PhotonNetwork.IsConnectedAndReady)
@@ -132,17 +153,13 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Battle_Start_CountdownTxt.gameObject.SetActive(false);
         Game_Manager.Instance.IsBusy = false;
         Boss.SetActive(true);
+        ActiveBoss();
         StartCoroutine(Battle_FightCoroutine());
 
     }
 
     public void Battle_End(bool Win)
     {
-
-        BossPool.SetActive(false);
-        Boss.SetActive(false);
-        BattleEnd = true;
-
         if (Win)
         {
             ShowEndgamePanel("Thắng");
@@ -169,6 +186,9 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
             currentTime--;
         }
+
+        Battle_Fight_CountdownTxt.text = "00:00";
+        Battle_End(false);
 
     }
 
@@ -201,6 +221,11 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        CheckPlayerDead();
+    }
+
     public void ReturnToKonoha()
     {
         if (PhotonNetwork.InRoom)
@@ -228,6 +253,11 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.RaiseEvent(ShowEndgamePanelEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
     }
 
+    public void ActiveBoss()
+    {
+        PhotonNetwork.RaiseEvent(ActiveBossEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
+
     public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code == ShowEndgamePanelEventCode)
@@ -238,8 +268,16 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 Battle_End_Text.text = End;              
             }
 
+            BossPool.SetActive(false);
+            Boss.SetActive(false);
+            BattleEnd = true;
+            StopAllCoroutines();
             Game_Manager.Instance.IsBusy = true;
             Battle_End_Panel.SetActive(true);
+        }
+        else if (photonEvent.Code == ActiveBossEventCode)
+        {
+            Boss.SetActive(true);
         }
     }
 }
