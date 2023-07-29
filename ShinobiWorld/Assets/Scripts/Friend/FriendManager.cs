@@ -35,7 +35,6 @@ public class FriendManager : MonoBehaviour
 
     public void Start()
     {
-
         Init();
         Notify.SetActive((listRequest.Count > 0));
     }
