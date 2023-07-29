@@ -73,7 +73,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(CurrentAreaName, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom("1", roomOptions, TypedLobby.Default);
         }
     }
 

@@ -51,7 +51,7 @@ public class Asuma : Enemy
         if (isMoving)
         {
             MovePosition = aIPath.desiredVelocity;
-            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius,AttackableLayer);
+            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius, AttackableLayer);
             if (CanAttackPlayer)
             {
                 aIPath.canMove = false;
