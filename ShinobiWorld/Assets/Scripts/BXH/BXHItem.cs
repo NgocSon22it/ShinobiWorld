@@ -43,21 +43,19 @@ namespace Assets.Scripts.BXH
             Trophy.text = References.listTrophy.Find(obj => obj.ID == account.TrophyID).Name;
             Power.text = account.Power.ToString();
 
-            AddFriendBtn.GetComponent<Button>().onClick.AddListener(AddFriend);
+            AddFriendBtn.GetComponent<Button>().onClick.AddListener(SendFriendRequest);
 
             AddFriendBtn.SetActive(
                 !References.listAllFriend
-                    .Any(obj => (obj.MyAccountID == References.accountRefer.ID && obj.FriendAccountID == selectedAccount.ID)
-                             || (obj.FriendAccountID == References.accountRefer.ID && obj.MyAccountID == selectedAccount.ID)));
+                    .Any(obj => (obj.MyAccountID + obj.FriendAccountID).Contains(References.accountRefer.ID) 
+                                 && (obj.MyAccountID + obj.FriendAccountID).Contains(selectedAccount.ID)));
         }
 
-        public void AddFriend()
+        public void SendFriendRequest()
         {
             Friend_DAO.AddFriend(References.accountRefer.ID, selectedAccount.ID);
 
-            var newFriend =  new FriendInfo();
-            newFriend.ID =  selectedAccount.ID;
-            References.listRequestInfo.Add(newFriend);
+            AddFriendBtn.SetActive(false);
 
             if (Account_DAO.StateOnline(selectedAccount.ID))
             {

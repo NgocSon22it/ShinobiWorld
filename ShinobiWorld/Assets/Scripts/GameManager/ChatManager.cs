@@ -94,14 +94,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                         break;
                     case TypePriviteMessage.PKRequest:
 
-                        if (mess[1] == "0")
-                        {
-                            PKRequestManager.Instance.Open(senderName);
-                        }
-                        else if (mess[1] == "1")
-                        {
-                            PKRequestManager.Instance.ShowAccept(senderName);
-                        }
+                        //Get Pk room ID =  mess[1]
+                        var PKRoomID = mess[1];
 
                         break;
                     case TypePriviteMessage.Text:
