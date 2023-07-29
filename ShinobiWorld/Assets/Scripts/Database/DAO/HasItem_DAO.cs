@@ -90,8 +90,8 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[UseItem] @UserID, @ItemID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.CommandText = "UPDATE [dbo].[HasItem] SET [Amount] -= 1 WHERE AccountID = @AccountID and ItemID = @ItemID";
+                cmd.Parameters.AddWithValue("@AccountID", UserID);
                 cmd.Parameters.AddWithValue("@ItemID", ItemID);
                 connection.Open();
                 cmd.ExecuteNonQuery();

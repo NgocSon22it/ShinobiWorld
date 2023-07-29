@@ -35,6 +35,8 @@ public class Message
     public static string Skill_NotForRole = "Kỹ năng này không trong vai trò của bạn!";
     public static string Skill_MaxLevel = "Kỹ năng này đã đạt đến cấp độ tối đa!";
     public static string NotEnoughLevel = "Bạn cần đạt cấp độ {0}";
+    public static string Equip_MaxLevel = "Trang bị này đã đạt đến cấp độ tối đa!";
+
 
     public static string MissionFinish = "Trạng thái: Hoàn thành";
     public static string MissionNone = "Bạn không có nhiệm vụ nào. \nVui lòng đến nhà Hokage để nhận nhiệm vụ.";

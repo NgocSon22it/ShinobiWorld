@@ -234,10 +234,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerCameraInstance.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = CameraBox;
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(photonView.Owner.NickName);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(AccountEntity.Name);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadAvatarUI(AccountEntity.HairID.Replace("Hair_", ""));
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpPlayer(this);
 
@@ -355,6 +356,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             {
                 PhotonNetwork.LeaveRoom();
                 PhotonNetwork.LoadLevel("BossArena_Asuma");
+            }
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("PK");
             }
 
             if (Input.GetKeyDown(KeyCode.U))

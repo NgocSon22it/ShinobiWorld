@@ -108,7 +108,7 @@ namespace Assets.Scripts.Database.DAO
             {
                 SqlCommand cmd = connection.CreateCommand();
                 cmd.CommandText = "Update BagEquipment " +
-                                    "set [Level] += 1, Damage = @Damage, Health = @Health, Chakra = @Chakra " +
+                                    "set [Level] += 1, Damage += @Damage, Health += @Health, Chakra += @Chakra " +
                                     "where AccountID = @UserID " +
                                     "and EquipmentID = @EquipmentID " +
                                     "and ID = @ID";

@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 {
     // Entity
     public Enemy_Entity enemy_Entity = new Enemy_Entity();
-    public int boss_Health;
+    protected int boss_Health;
     public AreaEnemy_Entity AreaEnemy_Entity = new AreaEnemy_Entity();
 
     //Separate
@@ -78,17 +78,21 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     // Facing
     public bool FacingRight = false;
 
+    // Lag Reduce
+    protected Vector3 networkPosition;
+    protected float lerpFactor = 15f;
+
     public void SetUp(string EnemyID, string AreaID)
     {
         if (!string.IsNullOrEmpty(EnemyID) && !string.IsNullOrEmpty(AreaID))
         {
             enemy_Entity = Enemy_DAO.GetEnemyByID(EnemyID);
-            AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaID, EnemyID); 
+            AreaEnemy_Entity = AreaEnemy_DAO.GetAreaEnemyByID(AreaID, EnemyID);
 
             if (enemy_Entity != null && AreaEnemy_Entity != null)
             {
                 SqlDateTime dateTime = new SqlDateTime(System.DateTime.Now);
-                if(AreaEnemy_Entity.TimeSpawn <= dateTime) { AreaEnemy_Entity.IsDead = false; AreaEnemy_DAO.SetAreaEnemyAlive(AreaID, EnemyID); }
+                if (AreaEnemy_Entity.TimeSpawn <= dateTime) { AreaEnemy_Entity.IsDead = false; AreaEnemy_DAO.SetAreaEnemyAlive(AreaID, EnemyID); }
 
                 if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false)
                 {
@@ -127,10 +131,11 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         }
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
 
     }
+
 
     public void LoadHealthUI(float CurrentHealth, float TotalHealth)
     {
@@ -156,7 +161,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public void TakeDamage_Arena(int Damage)
     {
         CurrentHealth -= Damage;
-        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+        LoadHealthUI(CurrentHealth, boss_Health);
+
         switch (gameObject.tag)
         {
             case "Enemy":
@@ -221,7 +227,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
             case BossType.BossType_Normal:
                 CurrentHealth = enemy_Entity.Health;
-                AreaEnemy_DAO.SetAreaEnemyDie(AreaID, EnemyID);              
+                AreaEnemy_DAO.SetAreaEnemyDie(AreaID, EnemyID);
                 Game_Manager.Instance.SpawnEnemyAfterDie(AreaID, EnemyID, photonView.ViewID, SpawnEnemyCoroutine);
                 break;
 
@@ -233,7 +239,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         DeathEffect.SetActive(true);
     }
 
-    
+
 
     public Vector2 GetRandomPosition()
     {
@@ -324,39 +330,34 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     {
         if (stream.IsWriting)
         {
-            if (BossType == BossType.BossType_Normal)
-            {
-                stream.SendNext(CurrentHealth);
-                stream.SendNext(transform.position);
 
-                stream.SendNext(playerInRange);
-                stream.SendNext(isMoving);
+            stream.SendNext(CurrentHealth);
+            stream.SendNext(boss_Health);
+            stream.SendNext(transform.position);
 
-                stream.SendNext(TargetPosition);
+            stream.SendNext(playerInRange);
+            stream.SendNext(isMoving);
 
-                stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
-            }
+            stream.SendNext(TargetPosition);
 
-
+            stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
 
         }
         else
         {
-            if (BossType == BossType.BossType_Normal)
-            {
-                CurrentHealth = (int)stream.ReceiveNext();
 
-                LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+            CurrentHealth = (int)stream.ReceiveNext();
+            boss_Health = (int)stream.ReceiveNext();
+            MovePosition = (Vector3)stream.ReceiveNext();
 
-                MovePosition = (Vector3)stream.ReceiveNext();
+            playerInRange = (bool)stream.ReceiveNext();
+            isMoving = (bool)stream.ReceiveNext();
 
-                playerInRange = (bool)stream.ReceiveNext();
-                isMoving = (bool)stream.ReceiveNext();
+            TargetPosition = (Vector3)stream.ReceiveNext();
 
-                TargetPosition = (Vector3)stream.ReceiveNext();
+            HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
 
-                HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
-            }
+            LoadHealthUI(CurrentHealth, enemy_Entity.Health);
         }
     }
 
