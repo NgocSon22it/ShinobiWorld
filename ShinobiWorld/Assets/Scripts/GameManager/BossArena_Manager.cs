@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Database.DAO;
+using Assets.Scripts.GameManager;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
@@ -15,6 +16,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
     [SerializeField] GameObject BossPool;
 
     [SerializeField] Transform SpawnPoint;
+
+    [SerializeField] GameObject GuideTxt;
 
     [SerializeField] PolygonCollider2D CameraBox;
 
@@ -40,7 +43,20 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
 
     bool BattleEnd;
 
+    [Header("Player Instance")]
+    [SerializeField] GameObject LoadingPrefabs;
+    [SerializeField] Sprite LoadingImage;
+
+    GameObject LoadingInstance;
+
     public static BossArena_Manager Instance;
+
+    private void Start()
+    {
+        LoadingInstance = Instantiate(LoadingPrefabs);
+        LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
+        LoadingInstance.GetComponent<Loading>().Begin();
+    }
 
     private void Awake()
     {
@@ -54,11 +70,13 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.Arena);
+        LoadingInstance.GetComponent<Loading>().End();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Game_Manager.Instance.ReloadPlayerProperties();
+        CheckPlayerReady();
     }
 
     public void CheckPlayerReady()
@@ -67,6 +85,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
         if (CurrentNumber == RequireNumber && BattleStart == false) 
         {
             ProgressRun = true;
+            GuideTxt.SetActive(false);
             ProgressBar_Coroutine = StartCoroutine(Battle_ProgressBar());
         }
         else
@@ -75,7 +94,9 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
             {
                 StopCoroutine(ProgressBar_Coroutine);
             }
+
             ProgressBar.SetActive(false);
+            GuideTxt.SetActive(true);
             ProgressRun = false;
             CurrentProgress = 0f;
         }
@@ -127,11 +148,13 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
 
         if (Win)
         {
-            Battle_End_Text.text = "Bạn Đã Thắng!";
+            Battle_End_Text.text = "Thắng";
+            Battle_End_Text.color = Color.white;
         }
         else
         {
-            Battle_End_Text.text = "Bạn Đã Thua!";
+            Battle_End_Text.text = "Thua";
+            Battle_End_Text.color = Color.black;
         }
 
     }
@@ -169,6 +192,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks
         StartCoroutine(Battle_StartCoroutine());
         Game_Manager.Instance.IsBusy = true;
         ReadyBase.SetActive(false);
+        GuideTxt.SetActive(false);
 
     }
 

@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,16 +7,12 @@ public class Asuma : Enemy
 {
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
-    
+
 
     //SkillThree
     bool IsSummonClone;
     [SerializeField] List<GameObject> List_SmokeSummon = new List<GameObject>();
 
-    //Get Skill Position
-    public Vector2 SkillRandomPosition;
-    Vector2 Skill_MinPosition, Skill_MaxPosition;
-    float X, Y;
 
     bool IsSkilling;
     int RandomState;
@@ -28,9 +25,16 @@ public class Asuma : Enemy
         LoadHealthUI(CurrentHealth, boss_Health);
     }
 
-    new void Update()
+    new void FixedUpdate()
     {
-        AttackAndMove();
+        if (!photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * lerpFactor);
+        }
+        else
+        {
+            AttackAndMove();
+        }
     }
 
     public void AttackAndMove()
@@ -62,13 +66,13 @@ public class Asuma : Enemy
         if (TargetPosition != Vector3.negativeInfinity)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
+
+            direction = TargetPosition - transform.Find("MainPoint").position;
+            direction.Normalize();
 
             if (SkillOne != null)
             {
                 SkillOne.transform.position = transform.Find("MainPoint").position;
-                SkillOne.transform.rotation = transform.rotation;
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
@@ -108,6 +112,7 @@ public class Asuma : Enemy
     public IEnumerator RandomAttack()
     {
         IsStartCoroutine = true;
+
         if (IsSummonClone)
         {
             RandomState = Random.Range(1, 3);
@@ -117,8 +122,7 @@ public class Asuma : Enemy
             RandomState = Random.Range(1, 4);
         }
 
-        //TargetPosition = FindClostestTarget(100f, "Player");
-        animator.SetTrigger("Skill" + RandomState);
+        photonView.RPC(nameof(CallAnimation), RpcTarget.All, "Skill" + RandomState);
         IsSkilling = true;
 
         while (IsSkilling)
@@ -130,6 +134,13 @@ public class Asuma : Enemy
         isMoving = true;
         IsStartCoroutine = false;
     }
+
+    [PunRPC]
+    public void CallAnimation(string AnimationName)
+    {
+        animator.SetTrigger(AnimationName);
+    }
+
     public void SkillThree_Clone()
     {
         for (int i = 0; i < 2; i++)
@@ -139,12 +150,10 @@ public class Asuma : Enemy
 
             if (SkillThree != null)
             {
-                SkillRandomPosition = GetRandomSkillPosition();
-
-                Smoke.transform.position = SkillRandomPosition;
+                Smoke.transform.position = TargetPosition;
                 Smoke.SetActive(true);
 
-                SkillThree.transform.position = SkillRandomPosition;
+                SkillThree.transform.position = TargetPosition;
                 SkillThree.SetActive(true);
             }
         }
@@ -154,31 +163,18 @@ public class Asuma : Enemy
     }
     public void SkillTwo_Fire()
     {
-        for (int i = 0; i < 3; i++)
-        {
-            GameObject SkillTwo = boss_Pool.GetSkillTwoFromPool();
-            if (SkillTwo != null)
-            {
-                SkillRandomPosition = GetRandomSkillPosition();
 
-                SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(30);
-                SkillTwo.transform.position = SkillRandomPosition;
-                SkillTwo.SetActive(true);
-            }
+        GameObject SkillTwo = boss_Pool.GetSkillTwoFromPool();
+        if (SkillTwo != null)
+        {
+
+            SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(30);
+            SkillTwo.transform.position = TargetPosition;
+            SkillTwo.SetActive(true);
         }
+
         SetUpSkilling(3f);
 
-    }
-    public Vector2 GetRandomSkillPosition()
-    {
-        Skill_MinPosition = movementBounds.bounds.min;
-        Skill_MaxPosition = movementBounds.bounds.max;
-
-        // Generate random X and Y coordinates within the collider bounds
-        X = Random.Range(Skill_MinPosition.x, Skill_MaxPosition.x);
-        Y = Random.Range(Skill_MinPosition.y, Skill_MaxPosition.y);
-
-        return new Vector2(X, Y);
     }
     public void SetUpSkilling(float Seconds)
     {

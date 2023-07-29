@@ -99,7 +99,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     Account_DAO.ChangeStateOnline(user.UserId, true);
                     References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
 
-
                     if (!PhotonNetwork.IsConnected)
                     {
                         PhotonNetwork.ConnectUsingSettings();
@@ -226,7 +225,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
-
 
                         if (!PhotonNetwork.IsConnected)
                         {

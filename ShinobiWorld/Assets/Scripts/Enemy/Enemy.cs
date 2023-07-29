@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 {
     // Entity
     public Enemy_Entity enemy_Entity = new Enemy_Entity();
-    public int boss_Health;
+    protected int boss_Health;
     public AreaEnemy_Entity AreaEnemy_Entity = new AreaEnemy_Entity();
 
     //Separate
@@ -78,7 +78,9 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     // Facing
     public bool FacingRight = false;
 
-
+    // Lag Reduce
+    protected Vector3 networkPosition;
+    protected float lerpFactor = 15f;
 
     public void SetUp(string EnemyID, string AreaID)
     {
@@ -129,7 +131,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         }
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
 
     }
@@ -159,7 +161,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public void TakeDamage_Arena(int Damage)
     {
         CurrentHealth -= Damage;
-        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+        LoadHealthUI(CurrentHealth, boss_Health);
+
         switch (gameObject.tag)
         {
             case "Enemy":
@@ -329,6 +332,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
 
             stream.SendNext(CurrentHealth);
+            stream.SendNext(boss_Health);
             stream.SendNext(transform.position);
 
             stream.SendNext(playerInRange);
@@ -338,17 +342,12 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
             stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
 
-
-
-
         }
         else
         {
 
             CurrentHealth = (int)stream.ReceiveNext();
-
-            LoadHealthUI(CurrentHealth, enemy_Entity.Health);
-
+            boss_Health = (int)stream.ReceiveNext();
             MovePosition = (Vector3)stream.ReceiveNext();
 
             playerInRange = (bool)stream.ReceiveNext();
@@ -358,6 +357,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
             HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
 
+            LoadHealthUI(CurrentHealth, enemy_Entity.Health);
         }
     }
 

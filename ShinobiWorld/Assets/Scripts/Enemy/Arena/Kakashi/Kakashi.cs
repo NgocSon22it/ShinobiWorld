@@ -10,10 +10,6 @@ public class Kakashi : Enemy
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
 
-    //SkillTwo
-    public Vector2 SkillRandomPosition;
-    Vector2 Skill_MinPosition, Skill_MaxPosition;
-    float X, Y;
     [SerializeField] List<GameObject> List_Electric = new List<GameObject>();
     [SerializeField] List<GameObject> List_Fire = new List<GameObject>();
 
@@ -34,7 +30,7 @@ public class Kakashi : Enemy
         base.Start();
     }
 
-    new void Update()
+    new void FixedUpdate()
     {
         AttackAndMove();
 
@@ -158,47 +154,30 @@ public class Kakashi : Enemy
 
     public void SkillTwo_Electric()
     {
-        for (int i = 0; i < 10; i++)
+        GameObject SkillOne = GetElectric();
+        if (SkillOne != null)
         {
-            GameObject SkillOne = GetElectric();
-            if (SkillOne != null)
-            {
-                SkillRandomPosition = GetRandomSkillPosition();
-                SkillOne.GetComponent<Kakashi_SkillTwo_Electric>().SetUp(100);
-                SkillOne.transform.position = SkillRandomPosition;
-                SkillOne.SetActive(true);
-            }
+            SkillOne.GetComponent<Kakashi_SkillTwo_Electric>().SetUp(100);
+            SkillOne.transform.position = TargetPosition;
+            SkillOne.SetActive(true);
         }
+
         SetUpSkilling(3f);
 
     }
     public void SkillTwo_Fire()
     {
-        for (int i = 0; i < 10; i++)
+
+        GameObject SkillOne = GetFire();
+        if (SkillOne != null)
         {
-            GameObject SkillOne = GetFire();
-            if (SkillOne != null)
-            {
-                SkillRandomPosition = GetRandomSkillPosition();
-
-                SkillOne.transform.position = SkillRandomPosition;
-                SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUpPoint(SkillRandomPosition);
-                SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUp(100);
-                SkillOne.SetActive(true);
-            }
+            SkillOne.transform.position = TargetPosition;
+            SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUpPoint(TargetPosition);
+            SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUp(100);
+            SkillOne.SetActive(true);
         }
+
         SetUpSkilling(3f);
-    }
-    public Vector2 GetRandomSkillPosition()
-    {
-        Skill_MinPosition = movementBounds.bounds.min;
-        Skill_MaxPosition = movementBounds.bounds.max;
-
-        // Generate random X and Y coordinates within the collider bounds
-        X = Random.Range(Skill_MinPosition.x, Skill_MaxPosition.x);
-        Y = Random.Range(Skill_MinPosition.y, Skill_MaxPosition.y);
-
-        return new Vector2(X, Y);
     }
     public GameObject GetElectric()
     {
