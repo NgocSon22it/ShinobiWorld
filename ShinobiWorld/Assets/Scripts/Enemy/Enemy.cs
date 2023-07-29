@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public Vector3 TargetPosition;
 
     public bool playerInRange = false;
-    public float detectionRadius = 5f;
+    public float detectionRadius;
     public LayerMask AttackableLayer;
 
     public float LocalScaleX;
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public int CurrentHealth;
 
     // MainPoint
-    [SerializeField] Transform MainPoint;
+    [SerializeField] protected Transform MainPoint;
 
     //Health UI
     [SerializeField] Image CurrentHealth_UI;
@@ -80,7 +80,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     // Lag Reduce
     protected Vector3 networkPosition;
-    protected float lerpFactor = 15f;
+    public float lerpFactor;
 
     public void SetUp(string EnemyID, string AreaID)
     {
@@ -124,11 +124,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public void Start()
     {
         LocalScaleX = transform.localScale.x;
-        MovePosition = GetRandomPosition();
-        if (ObjectPool != null)
-        {
-            ObjectPool.transform.SetParent(null);
-        }
+        if (movementBounds != null) { MovePosition = GetRandomPosition();}
+        if (ObjectPool != null) { ObjectPool.transform.SetParent(null);}
     }
 
     public void FixedUpdate()
