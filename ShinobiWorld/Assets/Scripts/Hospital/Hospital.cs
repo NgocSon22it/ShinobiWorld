@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Scripts.Database.DAO;
+using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +24,11 @@ namespace Assets.Scripts.Hospital
 
         private int remainingDuration;
 
-        public static Hospital Instance;
+        //public static Hospital Instance;
 
         private void Awake()
         {
-            Instance = this;
+            //Instance = this;
             ReSpawnBtn.onClick.AddListener(OnRespawnClick);
         }
 
@@ -58,6 +60,7 @@ namespace Assets.Scripts.Hospital
             {
                 UpdateUI(remainingDuration);
                 remainingDuration--;
+                References.accountRefer.TimeRespawn = remainingDuration;
                 yield return new WaitForSeconds(1f);
             }
             End();
@@ -73,7 +76,11 @@ namespace Assets.Scripts.Hospital
         {
             StopAllCoroutines();
             DiePanel.SetActive(false);
-            Game_Manager.Instance.ReloadPlayerProperties();
+            References.accountRefer.IsDead = false;
+            References.accountRefer.TimeRespawn = 0;
+            References.accountRefer.CurrentHealth = References.accountRefer.Health;
+            References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
+            //Game_Manager.Instance.ReloadPlayerProperties();
             Game_Manager.Instance.GoingOutHospital();
         }
 

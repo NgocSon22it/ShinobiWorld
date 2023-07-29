@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
+using Assets.Scripts.Hospital;
 using Photon.Pun.Demo.SlotRacer;
 using Photon.Realtime;
 using System.Collections;
@@ -86,11 +87,14 @@ public class Player_AllUIManagement : MonoBehaviour
     [Header("Separate Status")]
     [SerializeField] GameObject UI_Normal;
 
+    [Header("Hospital")]
+    public GameObject HospitalPanel;
+
     int IndexKey;
     string KeyboardExtension = "/Keyboard/";
 
     private bool isWaitingForKeyPress = false;
-
+    [Header("Setup")]
     public Button GotoMenuBtn;
     public GameObject BackgroundPanel;
     string image, skillValue;
@@ -441,6 +445,11 @@ public class Player_AllUIManagement : MonoBehaviour
         {
             SkillThree_Cooldown.fillAmount = 1f;
         }
+    }
+
+    public void ShowDiePanel(int timeRespawn)
+    {
+        HospitalPanel.GetComponent<Hospital>().SetDuration(timeRespawn).Begin();
     }
 
 }
