@@ -411,14 +411,14 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //private void OnApplicationQuit()
-    //{
-    //    if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
-    //    {
-    //        References.UpdateAccountToDB();
-    //        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-    //    }
-    //}
+    private void OnApplicationQuit()
+    {
+        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
+        {
+            References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
+    }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
