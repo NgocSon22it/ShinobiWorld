@@ -395,7 +395,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             double timeToReachGoal = currentPacketTime - lastPacketTime;
             currentTime += Time.deltaTime;
 
-            //Update remote player
             transform.position = Vector3.Lerp(positionAtLastPacket, realPosition, (float)(currentTime / timeToReachGoal));
 
         }
@@ -424,7 +423,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                     if (AccountEntity.CurrentHealth <= 0)
                     {
-                        //BossArena_Manager.Instance.Battle_End(false);
+                        BossArena_Manager.Instance.CheckPlayerDead();
                     }
 
                     break;
