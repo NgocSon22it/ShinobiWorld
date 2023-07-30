@@ -430,5 +430,45 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+
+        public static List<Account_Entity> GetAllAccountForInvite()
+        {
+            var list = new List<Account_Entity>();
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "select * from Account where IsOnline = 1";
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        var obj = new Account_Entity
+                        {
+                            ID = dr["ID"].ToString(),
+                            Name = dr["Name"].ToString(),
+                            TrophyID = dr["TrophyID"].ToString(),
+                            Level = Convert.ToInt32(dr["Level"]),
+                            Power = Convert.ToInt32(dr["Power"])
+                        };
+
+                        list.Add(obj);
+                    }
+                }
+
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+
+            return list;
+        }
     }
 }

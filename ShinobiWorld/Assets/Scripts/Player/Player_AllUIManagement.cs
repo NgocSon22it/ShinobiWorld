@@ -18,7 +18,7 @@ public class Player_AllUIManagement : MonoBehaviour
     public static Player_AllUIManagement Instance;
 
     [Header("Player")]
-    [SerializeField] PlayerBase Player;
+    public PlayerBase Player;
 
     [Header("Level UI")]
     [SerializeField] TMP_Text CurrentLevel;
@@ -85,7 +85,8 @@ public class Player_AllUIManagement : MonoBehaviour
     [SerializeField] TMP_Text CustomKeyMessage;
 
     [Header("Separate Status")]
-    [SerializeField] GameObject UI_Normal;
+    [SerializeField] List<GameObject> UI_Normal;
+    [SerializeField] List<GameObject> UI_ArenaPK;
 
     [Header("Hospital")]
     public GameObject HospitalPanel;
@@ -274,10 +275,10 @@ public class Player_AllUIManagement : MonoBehaviour
         switch (player.accountStatus)
         {
             case AccountStatus.Normal:
-                UI_Normal.SetActive(true);
+                SetUp_UI(true, false);
                 break;
             default:
-                UI_Normal.SetActive(false);
+                SetUp_UI(false, true);
                 break;
 
         }
@@ -288,6 +289,18 @@ public class Player_AllUIManagement : MonoBehaviour
             SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
         }
 
+    }
+
+    public void SetUp_UI(bool NormalUI, bool ArenaPkUI)
+    {
+        foreach(GameObject a in UI_Normal)
+        {
+            a.SetActive(NormalUI);
+        }
+        foreach (GameObject a in UI_ArenaPK)
+        {
+            a.SetActive(ArenaPkUI);
+        }
     }
 
     public void SetUpCoinUI(int Coin)

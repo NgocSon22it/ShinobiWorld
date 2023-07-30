@@ -355,12 +355,14 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (Input.GetKeyDown(KeyCode.I))
             {
+                PhotonNetwork.IsMessageQueueRunning = false;
                 PhotonNetwork.LeaveRoom();
                 PhotonNetwork.LoadLevel("BossArena_Asuma");
             }
 
             if (Input.GetKeyDown(KeyCode.O))
             {
+                PhotonNetwork.IsMessageQueueRunning = false;
                 PhotonNetwork.LeaveRoom();
                 PhotonNetwork.LoadLevel("PK");
             }
