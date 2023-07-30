@@ -82,7 +82,6 @@ namespace Assets.Scripts.GameManager
             loadTxtCoroutine = null;
             Background.gameObject.SetActive(false);
             Game_Manager.Instance.IsBusy = false;
-
         }
 
         IEnumerator RotateCoroutine()
