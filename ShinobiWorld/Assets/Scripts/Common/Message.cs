@@ -14,6 +14,7 @@ public class Message
     public static string EmailAlready = "Email đã tồn tại";
     public static string EmailNotExist = "Email không tồn tại";
     public static string EmailMessage = "Vui lòng xác nhận địa chỉ email \n Email xác minh đã được gửi đến {0}";
+    public static string EmailResetPassMessage = "Email thay đổi mật khẩu đã được gửi đến {0}";
 
     public static string PasswordEmpty = "Mật khẩu trống";
     public static string PasswordInvalid = "Mật khẩu phải có ít nhất 8 ký tự và không được có khoảng trắng";

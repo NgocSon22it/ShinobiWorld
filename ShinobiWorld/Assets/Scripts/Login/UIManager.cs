@@ -39,6 +39,11 @@ public class UIManager : MonoBehaviour
     public TMP_InputField confirmPasswordRegisterField;
     public GameObject registrationPanel;
 
+    // Reset Variables
+    [Space]
+    [Header("Reset")]
+    public TMP_InputField emailResetField;
+    public GameObject resetPanel;
 
     private void Awake()
     {
@@ -83,10 +88,17 @@ public class UIManager : MonoBehaviour
         popupPanel.SetActive(false);
     }
 
+    public void OpenResetPanel()
+    {
+        ClearUI();
+        resetPanel.SetActive(true);
+    }
+
     void ClearUI()
     {
         loginPanel.SetActive(false);
         registrationPanel.SetActive(false);
+        resetPanel.SetActive(false);
         //emailVerificationPanel.SetActive(false);
         gamePanel.SetActive(false);
         popupPanel.SetActive(false);
@@ -97,5 +109,7 @@ public class UIManager : MonoBehaviour
         confirmPasswordRegisterField.text = "";
         passwordRegisterField.text = "";
         emailRegisterField.text = "";
+
+        emailResetField.text = "";
     }
 }
