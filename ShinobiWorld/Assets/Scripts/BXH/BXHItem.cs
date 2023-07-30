@@ -61,7 +61,7 @@ namespace Assets.Scripts.BXH
             {
                 ChatManager.Instance.chatClient
                     .SendPrivateMessage(selectedAccount.Name, 
-                        string.Format(Message.PriviteMessage, TypePriviteMessage.FriendRequest.ToString(), ""));
+                        string.Format(Message.PrivateMessage, TypePrivateMessage.FriendRequest.ToString(), ""));
             }
         }
     }
