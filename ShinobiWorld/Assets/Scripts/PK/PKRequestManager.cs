@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Database.DAO;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -37,6 +38,14 @@ public class PKRequestManager : MonoBehaviour
         AcceptPanel.SetActive(true);
         AcceptContent.text = $"{senderName} đã chấp nhận lời thách đấu!";
         CloseAcceptPanel.onClick.AddListener(() => { AcceptPanel.SetActive(false); });
+    }
+
+    public void SendPKMessage(string receiverName, string roomID)
+    {
+         ChatManager.Instance.chatClient
+                .SendPrivateMessage(receiverName,
+                string.Format(Message.PriviteMessage, TypePriviteMessage.PKRequest.ToString(), "roomID"));
+       
     }
 
     public void Accept()

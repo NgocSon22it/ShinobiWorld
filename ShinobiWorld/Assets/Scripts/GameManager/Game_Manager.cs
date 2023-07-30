@@ -73,7 +73,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(CurrentAreaName, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom("1", roomOptions, TypedLobby.Default);
         }
     }
 
@@ -83,7 +83,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);      
         LoadingInstance.GetComponent<Loading>().End();
-
     }
 
     public void SetupPlayer(Vector3 position, PolygonCollider2D CameraBox, AccountStatus accountStatus)
@@ -115,6 +114,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void ReloadPlayerProperties()
     {
+        if(References.accountRefer.CurrentHealth <= 0) References.accountRefer.IsDead = true;
         References.UpdateAccountToDB();
         References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
@@ -168,15 +168,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    public void GoingToHospital()
-    {
-        Hospital.Instance.SetDuration(References.RespawnTime).Begin();
-    }
-
     public void GoingOutHospital()
     {
-        References.accountRefer.CurrentHealth = References.accountRefer.Health;
-        References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
+        //References.accountRefer.CurrentHealth = References.accountRefer.Health;
+        //References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
         ReloadPlayerProperties();
         PlayerManager.GetComponent<PlayerBase>().CallRpcPlayerLive();
@@ -210,6 +205,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnApplicationQuit()
     {
+        Debug.Log("OnApplicationQuit GameManager");
         if (References.accountRefer != null)
         {
             References.UpdateAccountToDB();

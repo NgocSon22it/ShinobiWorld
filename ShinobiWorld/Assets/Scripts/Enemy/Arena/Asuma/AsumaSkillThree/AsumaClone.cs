@@ -1,4 +1,5 @@
 using Assets.Scripts.Database.Entity;
+using Pathfinding;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,13 @@ public class AsumaClone : Enemy
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
     bool IsSkilling;
+
+    [SerializeField] AIPath aIPath;
+    [SerializeField] AIDestinationSetter destinationSetter;
+    public float attackRadius;
+    public bool CanAttackPlayer;
+    GameObject Target;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -16,6 +24,8 @@ public class AsumaClone : Enemy
         boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health;
         boss_Health /= 2;
         CurrentHealth = boss_Health;
+        Target = FindClostestTargetToFollow(detectionRadius, "Player");
+        destinationSetter.target = Target.transform;
         LoadHealthUI(CurrentHealth, boss_Health);
     }
 
@@ -34,16 +44,15 @@ public class AsumaClone : Enemy
 
     public void AttackAndMove()
     {
-
         if (isMoving)
         {
-            transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
-
-            if (transform.position == MovePosition)
+            MovePosition = aIPath.desiredVelocity;
+            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius, AttackableLayer);
+            if (CanAttackPlayer)
             {
+                aIPath.canMove = false;
                 isMoving = false;
             }
-
         }
         else
         {
@@ -106,7 +115,9 @@ public class AsumaClone : Enemy
             yield return null;
         }
 
-        MovePosition = GetRandomPosition();
+        Target = FindClostestTargetToFollow(detectionRadius, "Player");
+        destinationSetter.target = Target.transform;
+        aIPath.canMove = true;
         isMoving = true;
         IsStartCoroutine = false;
     }
@@ -131,6 +142,39 @@ public class AsumaClone : Enemy
         StartCoroutine(WaitMomentForSkill(Seconds));
     }
 
+    public GameObject FindClostestTargetToFollow(float Range, string TargetTag)
+    {
+        float distanceToClosestTarget = Mathf.Infinity;
+        GameObject closestTargetPosition = null;
+
+        GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
+
+        foreach (GameObject currentTarget in allTarget)
+        {
+            float distanceToTarget = (currentTarget.transform.position - this.transform.position).sqrMagnitude;
+            if (distanceToTarget < distanceToClosestTarget
+                && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range
+                && currentTarget.GetComponent<BoxCollider2D>().enabled)
+            {
+                distanceToClosestTarget = distanceToTarget;
+                closestTargetPosition = currentTarget;
+
+            }
+        }
+
+        return closestTargetPosition;
+    }
+    public void FollowPlayer()
+    {
+        if (MainPoint.position.x < Target.transform.position.x && !FacingRight)
+        {
+            Flip();
+        }
+        else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
+        {
+            Flip();
+        }
+    }
     IEnumerator WaitMomentForSkill(float Seconds)
     {
         yield return new WaitForSeconds(Seconds);

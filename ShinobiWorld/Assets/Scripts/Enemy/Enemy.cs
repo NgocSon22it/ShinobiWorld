@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public Vector3 TargetPosition;
 
     public bool playerInRange = false;
-    public float detectionRadius = 5f;
+    public float detectionRadius;
     public LayerMask AttackableLayer;
 
     public float LocalScaleX;
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public int CurrentHealth;
 
     // MainPoint
-    [SerializeField] Transform MainPoint;
+    [SerializeField] protected Transform MainPoint;
 
     //Health UI
     [SerializeField] Image CurrentHealth_UI;
@@ -80,7 +80,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     // Lag Reduce
     protected Vector3 networkPosition;
-    protected float lerpFactor = 15f;
+    protected float lerpFactor = 5f;
 
     public void SetUp(string EnemyID, string AreaID)
     {
@@ -97,8 +97,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
                 if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false)
                 {
                     CurrentHealth = enemy_Entity.Health;
-                    gameObject.SetActive(true);
                     LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+                    gameObject.SetActive(true);
                 }
                 else
                 {
@@ -124,11 +124,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public void Start()
     {
         LocalScaleX = transform.localScale.x;
-        MovePosition = GetRandomPosition();
-        if (ObjectPool != null)
-        {
-            ObjectPool.transform.SetParent(null);
-        }
+        if (movementBounds != null) { MovePosition = GetRandomPosition(); }
+        if (ObjectPool != null) { ObjectPool.transform.SetParent(null); }
     }
 
     public void FixedUpdate()
@@ -209,7 +206,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
             if (PhotonNetwork.IsConnected)
             {
-                // Notify all players that the enemy has been deactivated
                 object[] data = new object[] { photonView.ViewID };
                 PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
             }
@@ -238,8 +234,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         DeathEffect.transform.position = transform.position;
         DeathEffect.SetActive(true);
     }
-
-
 
     public Vector2 GetRandomPosition()
     {
@@ -333,6 +327,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
             stream.SendNext(CurrentHealth);
             stream.SendNext(boss_Health);
+            stream.SendNext(enemy_Entity.Health);
             stream.SendNext(transform.position);
 
             stream.SendNext(playerInRange);
@@ -348,6 +343,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
             CurrentHealth = (int)stream.ReceiveNext();
             boss_Health = (int)stream.ReceiveNext();
+            enemy_Entity.Health = (int)stream.ReceiveNext();
             MovePosition = (Vector3)stream.ReceiveNext();
 
             playerInRange = (bool)stream.ReceiveNext();
@@ -356,8 +352,14 @@ public class Enemy : MonoBehaviourPun, IPunObservable
             TargetPosition = (Vector3)stream.ReceiveNext();
 
             HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
-
-            LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+            if (BossType == BossType.BossType_Normal)
+            {
+                LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+            }
+            else
+            {
+                LoadHealthUI(CurrentHealth, boss_Health);
+            }
         }
     }
 

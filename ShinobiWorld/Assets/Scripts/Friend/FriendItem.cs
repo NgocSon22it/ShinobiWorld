@@ -16,7 +16,7 @@ namespace Assets.Scripts.Friend
         public TMP_Text Name, Trophy;
         public GameObject Online;
         public GameObject MySelf;
-        public Button ChatBnt, PKBtn, UnFriendBtn, AcceptBtn;
+        public Button ChatBnt, InfoBtn, UnFriendBtn, AcceptBtn;
         FriendInfo selectedfriend;
 
         private void Awake()
@@ -25,7 +25,7 @@ namespace Assets.Scripts.Friend
 
             if(!UnFriendBtn.IsUnityNull())UnFriendBtn.onClick.AddListener(() => DeleteFriend());
             if(!AcceptBtn.IsUnityNull()) AcceptBtn.onClick.AddListener(() => Accept());
-            if(!PKBtn.IsUnityNull()) PKBtn.onClick.AddListener(() => SendPKMessage());
+            if(!InfoBtn.IsUnityNull()) InfoBtn.onClick.AddListener(ViewFriendInfo);
         }
 
         public void OnClick()
@@ -65,14 +65,10 @@ namespace Assets.Scripts.Friend
             FriendManager.Instance.Reload();
         }
 
-        public void SendPKMessage()
+       
+        public void ViewFriendInfo()
         {
-            if (Account_DAO.StateOnline(selectedfriend.ID))
-            {
-                ChatManager.Instance.chatClient
-                    .SendPrivateMessage(selectedfriend.Name,
-                    string.Format(Message.PriviteMessage, TypePriviteMessage.PKRequest.ToString(), "0"));
-            }
+
         }
     }
 }

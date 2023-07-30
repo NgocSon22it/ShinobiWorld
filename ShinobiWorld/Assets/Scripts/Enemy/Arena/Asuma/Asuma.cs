@@ -1,6 +1,8 @@
+using Pathfinding;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Asuma : Enemy
@@ -8,11 +10,15 @@ public class Asuma : Enemy
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
 
-
     //SkillThree
     bool IsSummonClone;
     [SerializeField] List<GameObject> List_SmokeSummon = new List<GameObject>();
 
+    [SerializeField] AIPath aIPath;
+    [SerializeField] AIDestinationSetter destinationSetter;
+    public float attackRadius;
+    public bool CanAttackPlayer;
+    GameObject Target;
 
     bool IsSkilling;
     int RandomState;
@@ -22,6 +28,8 @@ public class Asuma : Enemy
         base.Start();
         boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health;
         CurrentHealth = boss_Health;
+        Target = FindClostestTargetToFollow(detectionRadius, "Player");      
+        destinationSetter.target = Target.transform;
         LoadHealthUI(CurrentHealth, boss_Health);
     }
 
@@ -42,13 +50,13 @@ public class Asuma : Enemy
 
         if (isMoving)
         {
-            transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
-
-            if (transform.position == MovePosition)
+            MovePosition = aIPath.desiredVelocity;
+            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius, AttackableLayer);
+            if (CanAttackPlayer)
             {
+                aIPath.canMove = false;
                 isMoving = false;
             }
-
         }
         else
         {
@@ -130,7 +138,9 @@ public class Asuma : Enemy
             yield return null;
         }
 
-        MovePosition = GetRandomPosition();
+        Target = FindClostestTargetToFollow(detectionRadius, "Player");
+        destinationSetter.target = Target.transform;
+        aIPath.canMove = true;
         isMoving = true;
         IsStartCoroutine = false;
     }
@@ -176,6 +186,42 @@ public class Asuma : Enemy
         SetUpSkilling(3f);
 
     }
+
+    public void FollowPlayer()
+    {
+        if (MainPoint.position.x < Target.transform.position.x && !FacingRight)
+        {
+            Flip();
+        }
+        else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
+        {
+            Flip();
+        }
+    }
+
+    public GameObject FindClostestTargetToFollow(float Range, string TargetTag)
+    {
+        float distanceToClosestTarget = Mathf.Infinity;
+        GameObject closestTargetPosition = null;
+
+        GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
+
+        foreach (GameObject currentTarget in allTarget)
+        {
+            float distanceToTarget = (currentTarget.transform.position - this.transform.position).sqrMagnitude;
+            if (distanceToTarget < distanceToClosestTarget
+                && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range
+                && currentTarget.GetComponent<BoxCollider2D>().enabled)
+            {
+                distanceToClosestTarget = distanceToTarget;
+                closestTargetPosition = currentTarget;
+
+            }
+        }
+
+        return closestTargetPosition;
+    }
+
     public void SetUpSkilling(float Seconds)
     {
         StartCoroutine(WaitMomentForSkill(Seconds));
@@ -184,5 +230,11 @@ public class Asuma : Enemy
     {
         yield return new WaitForSeconds(Seconds);
         IsSkilling = false;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(MainPoint.position, attackRadius);
     }
 }
