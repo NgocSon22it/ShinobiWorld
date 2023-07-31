@@ -26,7 +26,7 @@ namespace Assets.Scripts.Mission
         public void OnClick()
         {
             MissionManager.Instance.ResetColor();
-            GetComponent<Image>().color = new Color32(190, 140, 10, 255);
+            GetComponent<Image>().color = References.ItemColorSelected;
         }
 
         public void Setup(Mission_Entity mission)
@@ -65,6 +65,7 @@ namespace Assets.Scripts.Mission
                 case StatusMission.Doing:
                     //Cancel mission
                     HasMission_DAO.ChangeStatusMission(References.accountRefer.ID, selected.ID, StatusMission.None);
+                    HasMission_DAO.DoingMission(References.accountRefer.ID, selected.ID, 0);
                     MissionManager.Instance.CancelMission();
                     
                     break;

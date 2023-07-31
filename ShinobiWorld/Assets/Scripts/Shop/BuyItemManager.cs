@@ -71,6 +71,8 @@ namespace Assets.Scripts.Shop
                 itemManager.Image.sprite = Resources.Load<Sprite>(item.Image);
                 itemManager.Cost.text = item.BuyCost.ToString();
                 itemManager.Name.text = item.Name;
+                itemManager.GetComponent<Image>().color = References.ItemColorDefaul;
+
                 Instantiate(ItemTemplate, Content);
             }
             
