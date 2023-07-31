@@ -216,6 +216,7 @@ public class MissionManager : MonoBehaviour
     {
         Game_Manager.Instance.IsBusy = false;
         References.PlayerSpawnPosition = new Vector3(SelectedArea.XPosition, SelectedArea.YPosition, 0);
+        PhotonNetwork.IsMessageQueueRunning = false;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(SelectedArea.MapID);
     }

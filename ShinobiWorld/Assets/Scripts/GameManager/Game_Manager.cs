@@ -53,6 +53,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject InfoPrefabs;
     public GameObject InfoInstance;
 
+    [Header("JoinRoom Failed")]
+    [SerializeField] GameObject JoinRoomFailedPrefabs;
+    GameObject JoinRoomFailedInstance;
 
     private void Awake()
     {
@@ -80,9 +83,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedRoom()
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
-
-        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);      
+        References.IsInvite = false;
+        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);    
         LoadingInstance.GetComponent<Loading>().End();
+        PhotonNetwork.IsMessageQueueRunning = true;
     }
 
     public void SetupPlayer(Vector3 position, PolygonCollider2D CameraBox, AccountStatus accountStatus)
@@ -137,12 +141,12 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.Log("Create Room Failed");
+        JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.Log("Join Room Failed");
+        JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
@@ -163,6 +167,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (PhotonNetwork.InRoom)
         {
+            PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(Scenes.Login);
         }
@@ -170,8 +175,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void GoingOutHospital()
     {
-        //References.accountRefer.CurrentHealth = References.accountRefer.Health;
-        //References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
         ReloadPlayerProperties();
         PlayerManager.GetComponent<PlayerBase>().CallRpcPlayerLive();
@@ -180,15 +183,14 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        /*if (cause != DisconnectCause.DisconnectByClientLogic)
+        if (cause != DisconnectCause.DisconnectByClientLogic)
         {
             Debug.Log(Message.LostWifi);
-            References.IsDisconnect = true;
-            if (References.IsDisconnect && !PhotonNetwork.IsConnected)
+            if (!PhotonNetwork.IsConnected)
             {
-                StartCoroutine(RetryConnection());
+                
             }
-        }*/
+        }
     }
 
     public override void OnConnectedToMaster()

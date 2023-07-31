@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Skill_Item : MonoBehaviour
-    //, IPointerDownHandler
 {
     [SerializeField] Image SkillImage;
     public Image Background;
@@ -16,11 +15,7 @@ public class Skill_Item : MonoBehaviour
 
     Skill_Entity skill_Entity;
 
-    //public void OnPointerDown(PointerEventData eventData)
-    //{
-    //    Skill_Manager.Instance.SetUpSelectedSkill(skill_Entity);
-    //    Background.color = new Color32(190, 140, 10, 255);
-    //}
+
     public void OnClick()
     {
         Skill_Manager.Instance.SetUpSelectedSkill(skill_Entity);
