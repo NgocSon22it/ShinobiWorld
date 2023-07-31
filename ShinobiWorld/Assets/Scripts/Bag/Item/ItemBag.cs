@@ -24,7 +24,9 @@ public class ItemBag : MonoBehaviour
 
     public void Setup(Item_Entity item, int amount , ItemDetail detail, bool isFisrt)
     {
-        if(isFisrt) GetComponent<Image>().color = References.ItemColorSelected;
+        GetComponent<Image>().color = References.ItemColorDefaul;
+
+        if (isFisrt) GetComponent<Image>().color = References.ItemColorSelected;
         ItemDetail = detail;
 
         ID = item.ID;

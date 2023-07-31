@@ -16,6 +16,8 @@ public class BXHManager : MonoBehaviour
     public Button OpenBtn, CloseBtn;
     public static BXHManager Instance;
 
+    List<Account_Entity> list = new List<Account_Entity> ();
+
     private void Awake()
     {
         Instance = this;
@@ -24,6 +26,15 @@ public class BXHManager : MonoBehaviour
         CloseBtn.onClick.AddListener(Close);
     }
 
+    private void Start()
+    {
+        if (DateTime.Today.Day == 1)
+        {
+            SortRank();
+            SendMailRank();
+            References.listMailBox = MailBox_DAO.GetAllByUserID(References.accountRefer.ID);
+        }
+    }
     public void Open()
     {
         BXHMessage.SetActive(false);
@@ -46,10 +57,7 @@ public class BXHManager : MonoBehaviour
     public void GetList()
     {
         Destroy();
-        var list = Account_DAO.GetAllAccount();
-        list.Sort((s1, s2) => s2.Power.CompareTo(s1.Power)); //descending order
-
-
+        SortRank();
         if (list.Count <= 0) BXHMessage.SetActive(true);
         else
         {
@@ -62,17 +70,10 @@ public class BXHManager : MonoBehaviour
 
     }
 
-    public void Reload()
+    public void SortRank()
     {
-        GetList();
-    }
-
-    public void ResetColor()
-    {
-        foreach (Transform child in Content)
-        {
-            child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
-        }
+        list = Account_DAO.GetAllAccount();
+        list.Sort((s1, s2) => s2.Power.CompareTo(s1.Power)); //descending order
     }
 
     public void Close()
@@ -80,6 +81,14 @@ public class BXHManager : MonoBehaviour
         Destroy();
         BXHPanel.SetActive(false);
         Game_Manager.Instance.IsBusy = false;
+    }
+
+    public void SendMailRank()
+    {
+        for(var i = 0; i < 3; ++i)
+        {
+            MailBox_DAO.AddMailbox(list[i].ID, References.listMail[i+1].ID, false);
+        }
     }
 
 }

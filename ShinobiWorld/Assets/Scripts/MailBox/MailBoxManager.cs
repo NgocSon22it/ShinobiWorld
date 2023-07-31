@@ -25,6 +25,7 @@ public class MailBoxManager : MonoBehaviour
     public GameObject DeleteReadBtn;
     public Button CloseBtn, OpenBtn;
     public Transform Content;
+    public GameObject Notify;
 
 
     [Header("ConfirmDelete")]
@@ -37,14 +38,27 @@ public class MailBoxManager : MonoBehaviour
     {
         Instance = this;
         OpenBtn.onClick.AddListener(Open);
-        
+
         DeleteReadBtn.GetComponent<Button>().onClick.AddListener(ConfirmDelete);
         CloseBtn.onClick.AddListener(Close);
 
         CancelBtn.GetComponent<Button>().onClick.AddListener(CloseConfirmDelete);
         CloseConfirmBtn.GetComponent<Button>().onClick.AddListener(CloseConfirmDelete);
-        DeleteReceivedBtn.GetComponent<Button>().onClick.AddListener(DeleteReadAndReceivedBonus );
+        DeleteReceivedBtn.GetComponent<Button>().onClick.AddListener(DeleteReadAndReceivedBonus);
         DeleteReadAllBtn.GetComponent<Button>().onClick.AddListener(DeleteReadAll);
+
+    }
+
+    private void Start()
+    {
+        Notify.SetActive(false);
+        References.listMailBox = MailBox_DAO.GetAllByUserID(References.accountRefer.ID);
+        CheckNotify();
+    }
+
+    public void CheckNotify()
+    {
+        Notify.SetActive(References.listMailBox.Any(obj => obj.IsRead == false));
 
     }
 
@@ -69,16 +83,16 @@ public class MailBoxManager : MonoBehaviour
 
     public void GetList(int ID)
     {
-        var list = References.listMailBox = MailBox_DAO.GetAllByUserID(References.accountRefer.ID);
+        var list = References.listMailBox;
 
         for (var i = 0; i < list.Count; ++i)
         {
             if (list[i].MailID.Contains(References.MailSystem))
                 Instantiate(SystemPrefab, Content)
                     .GetComponent<MailBoxItem>()
-                    .Setup(list[i], (list[i].ID == ID) ? true : (i == 0));
+                    .Setup(list[i], (list[i].ID == ID) ? true : (i == 0), i);
             else Instantiate(BXHPrefab, Content).GetComponent<MailBoxItem>()
-                    .Setup(list[i], (list[i].ID == ID) ? true : (i == 0), false);
+                    .Setup(list[i], (list[i].ID == ID) ? true : (i == 0), i, false);
         }
 
         if (list.Count <= 0)
@@ -100,10 +114,10 @@ public class MailBoxManager : MonoBehaviour
     {
         foreach (Transform child in Content)
         {
-            child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
+            child.gameObject.GetComponent<Image>().color = References.MailColorDefaul;
 
             if (child.gameObject.GetComponent<MailBoxItem>().selectedMailbox.IsRead)
-                child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 150);
+                child.gameObject.GetComponent<Image>().color = References.ItemColorDefaul;
         }
     }
     public void ConfirmDelete()

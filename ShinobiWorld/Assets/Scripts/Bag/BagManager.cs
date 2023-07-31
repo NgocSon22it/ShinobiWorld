@@ -47,13 +47,15 @@ namespace Assets.Scripts.Shop
 
         public void  ResetColorBtn()
         {
-            EquipmentBtn.GetComponent<Image>().color = new Color32(185, 183, 183, 255);
-            ItemBtn.GetComponent<Image>().color = new Color32(185, 183, 183, 255);
+            EquipmentBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
+            ItemBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
         }
 
         public void OnItemBtnClick()
         {
-            if(!ItemBtn.IsUnityNull())ItemBtn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+            if(!ItemBtn.IsUnityNull())ItemBtn.GetComponent<Image>().color = References.ButtonColorSelected;
+            if(!EquipmentBtn.IsUnityNull()) EquipmentBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
+
             Game_Manager.Instance.IsBusy = true;
             //References.listHasItem = HasItem_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
@@ -71,7 +73,9 @@ namespace Assets.Scripts.Shop
 
         public void OnEquipmentBtnClick()
         {
-            EquipmentBtn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+            EquipmentBtn.GetComponent<Image>().color = References.ButtonColorSelected;
+            if (!ItemBtn.IsUnityNull()) ItemBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
+
             Game_Manager.Instance.IsBusy = true;
             References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
             CloseMessage();
@@ -189,7 +193,7 @@ namespace Assets.Scripts.Shop
         {
             foreach (Transform child in Content)
             {
-                child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
+                child.gameObject.GetComponent<Image>().color = References.ItemColorDefaul;
             }
         }
     }
