@@ -23,6 +23,7 @@ namespace Assets.Scripts.Bag.Item
         public TMP_Text Name, Own, Price, Description;
         public TMP_InputField Amount;
         public Button MinBtn, PlusBtn;
+        public GameObject UseBtn;
 
         public int price;
         public bool isUpdatePrice = true;
@@ -39,7 +40,6 @@ namespace Assets.Scripts.Bag.Item
 
         public void ShowDetail(string ID)
         {
-
             item = References.listItem.Find(obj => obj.ID == ID);
             var HasItem = References.listHasItem.Find(obj => obj.ItemID == ID);
 
@@ -54,6 +54,8 @@ namespace Assets.Scripts.Bag.Item
             }
             if (!Amount.IsUnityNull()) Amount.text = "1";
             Description.text = item.Description;
+
+            if (!UseBtn.IsUnityNull() & item.ID == References.TeleTickerID) UseBtn.SetActive(!(HasItem.Amount > 0));
         }
 
         public void CheckAmount()

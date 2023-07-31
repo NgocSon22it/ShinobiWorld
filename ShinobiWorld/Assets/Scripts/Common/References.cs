@@ -81,6 +81,7 @@ public static class References
     public static Color32 MailColorDefaul = new Color32(96, 38, 0, 255);
 
     public static string MailSystem = "System";
+    public static string TeleTickerID = "Item_Tele";
 
     public static bool IsDead;
 
