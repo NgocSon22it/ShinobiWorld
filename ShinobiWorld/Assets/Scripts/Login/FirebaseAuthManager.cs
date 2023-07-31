@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 using System;
 using UnityEngine.UIElements;
+using UnityEngine.Tilemaps;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -252,7 +253,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private IEnumerator RegisterAsync(string email, string password, string confirmPassword)
     {
-       if (email == "")
+        if (email == "")
         {
             Debug.LogError("ShinobiWorld " + Message.EmailEmpty);
             UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
@@ -264,17 +265,17 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             UIManager.Instance.OpenPopupPanel(Message.PasswordEmpty);
 
         }
-        else if (password.Length < 8)
+        else if (password.Length < 6)
         {
             Debug.LogError("ShinobiWorld " + "Password must be at least 8 characters");
             UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
 
         }
-        else if (password.Contains(" "))
-        {
-            Debug.LogError("ShinobiWorld " + "Password mustn't be space");
-            UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
-        }
+        //else if (password.Contains(" "))
+        //{
+        //    Debug.LogError("ShinobiWorld " + "Password mustn't be space");
+        //    UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
+        //}
         else if (password != confirmPassword)
         {
             Debug.LogError("ShinobiWorld " + Message.PasswordNotMatch);
@@ -411,14 +412,14 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //private void OnApplicationQuit()
-    //{
-    //    if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
-    //    {
-    //        References.UpdateAccountToDB();
-    //        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-    //    }
-    //}
+    private void OnApplicationQuit()
+    {
+        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
+        {
+            References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
+    }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -446,6 +447,62 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             Account_DAO.ChangeStateOnline(user.UserId, false);
             auth.SignOut();
             PhotonNetwork.Disconnect();
+        }
+    }
+
+
+    public void ResetPassword()
+    {
+        var email = UIManager.Instance.emailResetField.text;
+       
+        StartCoroutine(ResetPassword(email));
+    }
+
+
+    private IEnumerator ResetPassword(string email)
+    {
+        if (email == "")
+        {
+            Debug.LogError("ShinobiWorld " + Message.EmailEmpty);
+            UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
+
+        }
+        else
+        {
+            var resetTask = auth.SendPasswordResetEmailAsync(email);
+
+            yield return new WaitUntil(() => resetTask.IsCompleted);
+
+            if (resetTask.Exception != null)
+            {
+                Debug.LogError("ShinobiWorld " + resetTask.Exception);
+
+                FirebaseException firebaseException = resetTask.Exception.GetBaseException() as FirebaseException;
+                AuthError authError = (AuthError)firebaseException.ErrorCode;
+
+                string failedMessage = "Gửi email đặt lại mật khẩu không thành công! ";
+                switch (authError)
+                {
+                    case AuthError.InvalidEmail:
+                        failedMessage += Message.EmailInvalid;
+                        break;
+                    case AuthError.MissingEmail:
+                        failedMessage += Message.EmailEmpty;
+                        break;
+                    default:
+                        Debug.Log(failedMessage += authError.ToString() + "default");
+                        failedMessage = Message.ErrorSystem;
+                        break;
+                }
+
+                UIManager.Instance.OpenPopupPanel(failedMessage);
+
+            }
+            else
+            {
+                UIManager.Instance.OpenLoginPanel();
+                UIManager.Instance.OpenPopupPanel(string.Format(Message.EmailResetPassMessage, email));
+            }
         }
     }
 }

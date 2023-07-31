@@ -67,8 +67,6 @@ public static class References
 
     public static int ExpercienceToNextLevel;
 
-    public static bool IsDisconnect = false;
-
     public static string TrophyID_RemakeMission = TrophyID.Trophy_Jonin.ToString();
 
     public static string UISkillDefault = "Background/UI_OrangeFill";
@@ -86,6 +84,10 @@ public static class References
     public static bool IsDead;
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
+
+    public static string SceneNameInvite;
+    public static string RoomNameInvite;
+    public static bool IsInvite;
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
@@ -237,7 +239,7 @@ public enum CustomEventCode
 
 public enum AccountStatus
 {
-    Normal, Arena, PK
+    Normal, Arena, PK, WaitingRoom
 }
 
 public enum TypeSell

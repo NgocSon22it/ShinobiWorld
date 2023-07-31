@@ -16,7 +16,14 @@ public class OstrichChicken : Enemy
     }
     new void FixedUpdate()
     {
-        AttackAndMove();
+        if (!photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * lerpFactor);
+        }
+        else
+        {
+            AttackAndMove();
+        }
     }
 
     public void AttackAndMove()

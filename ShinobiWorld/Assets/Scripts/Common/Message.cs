@@ -14,6 +14,7 @@ public class Message
     public static string EmailAlready = "Email đã tồn tại";
     public static string EmailNotExist = "Email không tồn tại";
     public static string EmailMessage = "Vui lòng xác nhận địa chỉ email \n Email xác minh đã được gửi đến {0}";
+    public static string EmailResetPassMessage = "Email thay đổi mật khẩu đã được gửi đến {0}";
 
     public static string PasswordEmpty = "Mật khẩu trống";
     public static string PasswordInvalid = "Mật khẩu phải có ít nhất 8 ký tự và không được có khoảng trắng";
@@ -53,10 +54,11 @@ public class Message
     public static string TrophyUpgradeError = "Bạn không đủ điều kiện để nâng cấp danh hiệu";
 
     public static string PKMessage = "{0} muốn thách đấu với bạn?";
-    public static string PriviteMessage = "{0}:{1}";
+    public static string BossAreaMessage = "mời bạn cùng tham chiến với boss!";
+    public static string PrivateMessage = "{0}:{1}:{2}:{3}";
 }
 
-public enum TypePriviteMessage
+public enum TypePrivateMessage
 {
-    FriendRequest, PKRequest, Text
+    FriendRequest, PKRequest, Arena, Text
 }
