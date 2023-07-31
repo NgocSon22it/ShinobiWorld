@@ -96,18 +96,12 @@ public class Player_AllUIManagement : MonoBehaviour
 
     private bool isWaitingForKeyPress = false;
     [Header("Setup")]
-    public Button GotoMenuBtn;
     public GameObject BackgroundPanel;
     string image, skillValue;
 
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Start()
-    {
-        GotoMenuBtn.onClick.AddListener(() => Game_Manager.Instance.GoToMenu());
     }
 
     public void LoadPlayerKey()
@@ -123,14 +117,12 @@ public class Player_AllUIManagement : MonoBehaviour
     public void OpenCustomKeyPanel()
     {
         CustomKeyPanel.SetActive(true);
-        Game_Manager.Instance.IsBusy = true;
         LoadPlayerKey();
     }
     public void CloseCustomKeyPanel()
     {
         CustomKeyPanel.SetActive(false);
         isWaitingForKeyPress = false;
-        Game_Manager.Instance.IsBusy = false;
     }
 
     public void SelectKey(int Key)
@@ -238,7 +230,6 @@ public class Player_AllUIManagement : MonoBehaviour
     }
     public void SetUp_ChangeKey(string KeyName, string NewKey)
     {
-        Debug.Log(NewKey);
         Player.playerInput.actions[KeyName].ApplyBindingOverride(NewKey);
         Account_DAO.ChangeKey(Player.AccountEntity.ID, "Key_" + KeyName, NewKey);
     }
@@ -262,7 +253,6 @@ public class Player_AllUIManagement : MonoBehaviour
             skillImage.sprite = Resources.Load<Sprite>(image);
             skillcost.text = skill.Chakra.ToString();
 
-            Debug.Log(skillName);
             skillValue = Player.AccountEntity.CustomSettings.Find(obj => obj.SettingID == "Key_" + skillName).Value;
             skillkey.text = ShowKey(skillValue);
             Player.playerInput.actions[skillName].ApplyBindingOverride(skillValue);
