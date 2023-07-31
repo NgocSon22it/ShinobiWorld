@@ -134,5 +134,36 @@ namespace Assets.Scripts.Database.DAO
                 }
             }
         }
+
+        public static int GetTeleTicket(string UserID)
+        {
+            var amount = 0;
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT Amount FROM [dbo].[HasItem] WHERE AccountID = @UserID and ItemID = @ItemID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@ItemID", References.TeleTickerID);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        amount = (dr["Amount"] != DBNull.Value )? Convert.ToInt32(dr["Amount"]) : 0;
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+
+            return amount;
+        }
     }
 }
