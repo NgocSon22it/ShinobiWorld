@@ -77,6 +77,9 @@ public class Player_AllUIManagement : MonoBehaviour
     public GameObject House_Message;
     [SerializeField] TMP_Text HouseTxt;
 
+    [Header("Full Map")]
+    [SerializeField] GameObject MapPanel;
+
     [Header("Custom Key")]
     [SerializeField] List<TMP_Text> ListSkillTxt;
 
@@ -114,6 +117,13 @@ public class Player_AllUIManagement : MonoBehaviour
         }
 
     }
+
+    public void ToggleFullMap(bool value)
+    {
+        Game_Manager.Instance.IsBusy = value;
+        MapPanel.SetActive(value);
+    }
+
     public void OpenCustomKeyPanel()
     {
         CustomKeyPanel.SetActive(true);
