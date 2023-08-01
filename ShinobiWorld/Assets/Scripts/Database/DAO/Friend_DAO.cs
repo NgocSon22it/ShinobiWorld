@@ -23,7 +23,7 @@ namespace Assets.Scripts.Database.DAO
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM [dbo].[Friend] where (FriendAccountID = @UserID or MyAccountID = @UserID) and [Delete] = 0";
+                    cmd.CommandText = "SELECT * FROM [dbo].[Friend] where (FriendAccountID = @UserID or MyAccountID = @UserID)";
                     cmd.Parameters.AddWithValue("@UserID", UserID);
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
@@ -33,11 +33,9 @@ namespace Assets.Scripts.Database.DAO
                     {
                         var obj = new Friend_Entity
                         {
-                            ID = Convert.ToInt32(dr["ID"]),
                             MyAccountID = dr["MyAccountID"].ToString(),
                             FriendAccountID = dr["FriendAccountID"].ToString(),
-                            IsFriend = Convert.ToBoolean(dr["IsFriend"]),
-                            Delete = Convert.ToBoolean(dr["Delete"])
+                            IsFriend = Convert.ToBoolean(dr["IsFriend"])
                         };
 
                         list.Add(obj);
@@ -117,9 +115,9 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Friend set [Delete] = 1  " +
-                                    "where (MyAccountID = @UserID and FriendAccountID =  @FriendAccountID) " +
-                                    "or (MyAccountID = @FriendAccountID and FriendAccountID =  @UserID)";
+                cmd.CommandText = "DELETE FROM [dbo].[Friend] " +
+                    "WHERE (MyAccountID = @UserID and FriendAccountID = @FriendAccountID) " +
+                    "or (MyAccountID = @FriendAccountID and FriendAccountID = @UserID)";
                 cmd.Parameters.AddWithValue("@UserID", MyAccountID);
                 cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
                 connection.Open();
@@ -142,6 +140,21 @@ namespace Assets.Scripts.Database.DAO
             }
         }
 
+        public static void UpdateFriend(string MyAccountID, string FriendAccountID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update Friend set [Delete] = 0, IsFriend = 0  " +
+                                    "where (MyAccountID = @UserID and FriendAccountID =  @FriendAccountID) " +
+                                    "or (MyAccountID = @FriendAccountID and FriendAccountID =  @UserID)";
+                cmd.Parameters.AddWithValue("@UserID", MyAccountID);
+                cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
 
     }
 }

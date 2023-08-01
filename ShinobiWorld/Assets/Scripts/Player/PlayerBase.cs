@@ -166,6 +166,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         PlayerNickName.text = photonView.Owner.NickName;
         LoadLayout();
         LoadAllAccountUI();
+        if (References.accountRefer.IsDead) Dead(References.accountRefer.TimeRespawn);
 
     }
 
@@ -209,7 +210,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
                 PlayerHealthChakraUI.SetActive(false);
-
+                PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
                 CallInvoke();
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
@@ -234,10 +235,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerCameraInstance.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = CameraBox;
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadExperienceUI(AccountEntity.Level, AccountEntity.Exp, AccountEntity.Level * 100);
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(photonView.Owner.NickName);
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadNameUI(AccountEntity.Name);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpCoinUI(AccountEntity.Coin);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadStrengthUI(AccountEntity.Strength, AccountEntity.CurrentStrength);
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadPowerUI(Account_DAO.GetAccountPowerByID(AccountEntity.ID));
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().LoadAvatarUI(AccountEntity.HairID.Replace("Hair_", ""));
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().SetUpPlayer(this);
 
@@ -351,15 +353,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
 
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.M))
             {
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("BossArena_Kakashi");
-            }
-
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().OpenCustomKeyPanel();
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ToggleFullMap(true);
             }
 
             if (!CanWalking)
@@ -388,7 +384,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             double timeToReachGoal = currentPacketTime - lastPacketTime;
             currentTime += Time.deltaTime;
 
-            //Update remote player
             transform.position = Vector3.Lerp(positionAtLastPacket, realPosition, (float)(currentTime / timeToReachGoal));
 
         }
@@ -405,20 +400,14 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             switch (accountStatus)
             {
                 case AccountStatus.Normal:
-                    References.UpdateAccountToDB();
                     Game_Manager.Instance.ReloadPlayerProperties();
-                    if (AccountEntity.CurrentHealth <= 0)
-                    {
-                        Game_Manager.Instance.GoingToHospital();
-                    }
-
                     break;
 
                 case AccountStatus.Arena:
 
                     if (AccountEntity.CurrentHealth <= 0)
                     {
-                        BossArena_Manager.Instance.Battle_End(false);
+                        BossArena_Manager.Instance.CheckPlayerDead();
                     }
 
                     break;
@@ -431,14 +420,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                     break;
             }
 
-            if (AccountEntity.CurrentHealth <= 0)
-            {
-                AccountEntity.CurrentHealth = 0;
-                References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
-                CancelInvoke(nameof(RegenChakra));
-                CancelInvoke(nameof(RegenHealth));
-                photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
-            }
+            if (AccountEntity.CurrentHealth <= 0) Dead(References.RespawnTime);
 
             LoadPlayerHealthUI();
 
@@ -446,6 +428,19 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
 
 
+    }
+
+    public void Dead(int timeRespawn)
+    {
+        if (accountStatus == AccountStatus.Normal)
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(timeRespawn);
+
+        AccountEntity.CurrentHealth = 0;
+        References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
+        CancelInvoke(nameof(RegenChakra));
+        CancelInvoke(nameof(RegenHealth));
+        CancelInvoke(nameof(RegenStrength));
+        photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.All);
     }
 
 

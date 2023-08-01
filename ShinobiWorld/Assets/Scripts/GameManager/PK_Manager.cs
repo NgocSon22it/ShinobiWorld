@@ -26,16 +26,29 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] Image CurrentProgressBar;
     [SerializeField] TMP_Text Battle_Start_CountdownTxt;
 
+    [SerializeField] GameObject GuideTxt;
+
+    [Header("Battle Time")]
+    float TotalTime = 180f;
+    float currentTime;
+    [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
+
     [Header("Battle End")]
     [SerializeField] GameObject BattleEnd_Panel;
+    [SerializeField] GameObject WinLose, Draw;
     [SerializeField] TMP_Text PlayerWin_Nametxt;
     [SerializeField] TMP_Text PlayerLose_Nametxt;
     string PlayerWin_Name, PlayerLose_Name;
 
     [Header("Player Instance")]
     [SerializeField] GameObject LoadingPrefabs;
+    [SerializeField] Sprite LoadingImage;
 
-    public GameObject LoadingInstance;
+    GameObject LoadingInstance;
+
+    [Header("JoinRoom Failed")]
+    [SerializeField] GameObject JoinRoomFailedPrefabs;
+    GameObject JoinRoomFailedInstance;
 
     [SerializeField] List<PK_ReadyBase> ListReady;
 
@@ -43,9 +56,12 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private const string WinnerTextPropKey = "WinnerText";
     private const string LoserTextPropKey = "LoserText";
+    [SerializeField] string SceneName;
 
     int PlayerCount;
     string PlayerLoseID;
+
+    RoomOptions roomOptions = new RoomOptions();
 
     public static PK_Manager Instance;
 
@@ -56,8 +72,20 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private void Start()
     {
         LoadingInstance = Instantiate(LoadingPrefabs);
+        LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
         LoadingInstance.GetComponent<Loading>().Begin();
+        References.SceneNameInvite = SceneName;
     }
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
+    }
+
 
     public void IsAllPlayerReady()
     {
@@ -74,6 +102,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PlayerCount == 2 && BattleStart == false)
         {
             ProgressRun = true;
+            GuideTxt.SetActive(false);
             ProgressBar_Coroutine = StartCoroutine(Battle_ProgressBar());
         }
         else
@@ -82,6 +111,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 StopCoroutine(ProgressBar_Coroutine);
             }
+            GuideTxt.SetActive(true);
             ProgressBar.SetActive(false);
             ProgressRun = false;
             CurrentProgress = 0f;
@@ -91,7 +121,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     // Function to raise the event to show the endgame panel for all players
     public void ShowEndgamePanel(string Winner, string Loser)
     {
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { WinnerTextPropKey, Winner }, { LoserTextPropKey, Loser } }); ;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { WinnerTextPropKey, Winner }, { LoserTextPropKey, Loser } });
 
         PhotonNetwork.RaiseEvent(ShowEndgamePanelEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
     }
@@ -145,8 +175,9 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnJoinedRoom()
     {
-        Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.Normal);
+        Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
+        PhotonNetwork.IsMessageQueueRunning = true;
     }
     private IEnumerator Battle_ProgressBar()
     {
@@ -164,6 +195,11 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Game_Manager.Instance.AccountStatus = AccountStatus.PK;
         Game_Manager.Instance.ReloadPlayerProperties();
         Game_Manager.Instance.IsBusy = true;
+        foreach (var p in ListReady)
+        {
+            p.gameObject.SetActive(false);
+        }
+        GuideTxt.SetActive(false);
 
     }
 
@@ -189,6 +225,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.InRoom)
         {
             Game_Manager.Instance.IsBusy = false;
+            PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(Scenes.Konoha);
         }
@@ -196,17 +233,21 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnConnectedToMaster()
     {
-       
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            RoomOptions roomOptions = new RoomOptions();
-            roomOptions.MaxPlayers = 2;
-            roomOptions.BroadcastPropsChangeToAll = true;
-            //PhotonNetwork.JoinOrCreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
-            PhotonNetwork.JoinOrCreateRoom("0", roomOptions, TypedLobby.Default);
-            Debug.Log(References.GenerateRandomString(10));
+            if (References.IsInvite)
+            {
+                PhotonNetwork.JoinRoom(References.RoomNameInvite);
+            }
+            else
+            {
+                roomOptions.MaxPlayers = 2;
+                roomOptions.BroadcastPropsChangeToAll = true;
+                PhotonNetwork.CreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
+            }
         }
     }
+
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Game_Manager.Instance.ReloadPlayerProperties();

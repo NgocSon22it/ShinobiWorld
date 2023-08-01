@@ -16,6 +16,7 @@ namespace Assets.Scripts.Bag.Equipment
 {
     public class EquipmentDetail : MonoBehaviour
     {
+        public GameObject BagManagerObj;
         [Header("Detail")]
         public Image Image;
         public TMP_Text Name, Level, Price, UpgradeCost, Description, MessageError, UseBtn_Text;
@@ -30,7 +31,10 @@ namespace Assets.Scripts.Bag.Equipment
         public TMP_Text LevelCurrent, HealthCurrent, ChakraCurrent, DamageCurrent;
         public TMP_Text LevelUpgrade, HealthUpgrade, ChakraUpgrade, DamageUpgrade;
         public TMP_Text CostUpgrade;
-        int HealthBonus, ChakraBonus, DamageBonus;
+        public TMP_Text MessageTxt;
+        public Button Upgrade_Btn;
+        public GameObject NextLevel;
+        public int HealthBonus, ChakraBonus, DamageBonus;
 
         [Header("Downgrade")]
         public GameObject DowngradePanel;
@@ -38,10 +42,12 @@ namespace Assets.Scripts.Bag.Equipment
 
         public static EquipmentDetail Instance;
         public BagEquipment_Entity BagEquipment;
+        public BagManager BagManagerInstance;
 
         private void Awake()
         {
             Instance = this;
+            BagManagerInstance = BagManagerObj.GetComponent<BagManager>();
         }
 
         public void ShowDetail(int ID, string EquipmentID)
@@ -69,8 +75,8 @@ namespace Assets.Scripts.Bag.Equipment
             if (!UpgradeBtn.IsUnityNull()) UpgradeBtn.interactable = true;
             if (!DowngradeBtn.IsUnityNull()) DowngradeBtn.interactable = true;
 
-            if (BagEquipment.Level >= 30)
-                if (!UpgradeBtn.IsUnityNull()) UpgradeBtn.interactable = false;
+            //if (BagEquipment.Level >= 30)
+            //    if (!UpgradeBtn.IsUnityNull()) UpgradeBtn.interactable = false;
 
             if (BagEquipment.IsUse || BagEquipment.Level <= 1)
                 if (!DowngradeBtn.IsUnityNull()) DowngradeBtn.interactable = false;
@@ -88,7 +94,7 @@ namespace Assets.Scripts.Bag.Equipment
 
             References.AddCoin(int.Parse(Price.text));
 
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID, true);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID, true);
         }
 
         public void OnUseBtnClick()
@@ -117,7 +123,7 @@ namespace Assets.Scripts.Bag.Equipment
             Game_Manager.Instance.ReloadPlayerProperties();
 
             //References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
         }
 
         public void Remove()
@@ -132,7 +138,7 @@ namespace Assets.Scripts.Bag.Equipment
             Game_Manager.Instance.ReloadPlayerProperties();
 
             //References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
         }
 
         public void OnCloseBtnClick()
@@ -144,37 +150,62 @@ namespace Assets.Scripts.Bag.Equipment
         public void OnUpgradeBtnClick()
         {
             UpgradePanel.SetActive(true);
+
             HealthObj.SetActive(false);
+            HealthUpgrade.text = string.Empty;
+            HealthBonus = 0;
+
             ChakraObj.SetActive(false);
+            ChakraUpgrade.text = string.Empty;
+            ChakraBonus = 0;
+
+
             DamageObj.SetActive(false);
+            DamageUpgrade.text = string.Empty;
+            DamageBonus = 0;
+
+            NextLevel.SetActive(true);
+
+            MessageTxt.text = string.Empty;
 
             CostUpgrade.text = UpgradeCost.text;
 
             LevelCurrent.text = Level.text;
             LevelUpgrade.text = (BagEquipment.Level + 1).ToString();
 
-            if (BagEquipment.Health != 0)
+            if (BagEquipment.Health > 0)
             {
-                HealthBonus = Convert.ToInt32(BagEquipment.Health * (1 + References.Uppercent_Equipment / 100f));
+                HealthBonus = Convert.ToInt32(BagEquipment.Health * References.Uppercent_Equipment / 100f);
                 HealthObj.SetActive(true);
                 HealthCurrent.text = BagEquipment.Health.ToString();
-                HealthUpgrade.text = HealthBonus.ToString();
+                HealthUpgrade.text = (BagEquipment.Health + HealthBonus).ToString();
             }
 
-            if (BagEquipment.Chakra != 0)
+            if (BagEquipment.Chakra > 0)
             {
-                ChakraBonus = Convert.ToInt32(BagEquipment.Chakra * (1 + References.Uppercent_Equipment / 100f));
+                ChakraBonus = Convert.ToInt32(BagEquipment.Chakra * References.Uppercent_Equipment / 100f);
                 ChakraObj.SetActive(true);
                 ChakraCurrent.text = BagEquipment.Chakra.ToString();
-                ChakraUpgrade.text = ChakraBonus.ToString();
+                ChakraUpgrade.text = (BagEquipment.Chakra + ChakraBonus).ToString();
             }
 
-            if (BagEquipment.Damage != 0)
+            if (BagEquipment.Damage > 0)
             {
-                DamageBonus = Convert.ToInt32(BagEquipment.Damage * (1 + References.Uppercent_Equipment / 100f));
+                DamageBonus = Convert.ToInt32(BagEquipment.Damage * References.Uppercent_Equipment / 100f);
                 DamageObj.SetActive(true);
                 DamageCurrent.text = BagEquipment.Damage.ToString();
-                DamageUpgrade.text = DamageBonus.ToString();
+                DamageUpgrade.text = (BagEquipment.Damage + DamageBonus).ToString();
+            }
+
+            if (References.accountRefer.Coin < int.Parse(CostUpgrade.text))
+            {
+                MessageTxt.text = Message.NotEnoughMoney.ToString();
+            }
+
+            if (BagEquipment.Level >= 30)
+            {
+                MessageTxt.text = Message.Equip_MaxLevel.ToString();
+                NextLevel.SetActive(false);
             }
         }
 
@@ -182,24 +213,24 @@ namespace Assets.Scripts.Bag.Equipment
         {
             if (BagEquipment.IsUse)
             {
-                BagEquipment_DAO.RemoveEquipment(BagEquipment.ID, References.accountRefer.ID, BagEquipment.EquipmentID);
-                References.accountRefer.Health -= BagEquipment.Health;
-                References.accountRefer.Chakra -= BagEquipment.Chakra;
-
-                References.UpdateAccountToDB();
-
                 BagEquipment_DAO.UpgradeEquipment(BagEquipment.ID, References.accountRefer.ID, BagEquipment.EquipmentID,
                                                     DamageBonus, HealthBonus, ChakraBonus);
-                BagEquipment_DAO.UseEquipment(BagEquipment.ID, References.accountRefer.ID, BagEquipment.EquipmentID);
+
+                References.accountRefer.Health += HealthBonus;
+                References.accountRefer.Chakra += ChakraBonus;
+                References.UpdateAccountToDB();
+
+                HasWeapon_DAO.UpdateWeaponByID(References.accountRefer.ID, DamageBonus);
+
             }
             else BagEquipment_DAO.UpgradeEquipment(BagEquipment.ID, References.accountRefer.ID, BagEquipment.EquipmentID,
                                                     DamageBonus, HealthBonus, ChakraBonus);
 
-            References.AddCoin(-int.Parse(CostUpgrade.text));
+            References.AddCoin(-int.Parse(CostUpgrade.text)); //Reload account ReloadPlayerProperties
 
             //References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
             OnUpgradeBtnClick();
             //UpgradePanel.SetActive(false);
         }
@@ -223,7 +254,7 @@ namespace Assets.Scripts.Bag.Equipment
 
             //References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
-            BagManager.Instance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
+            BagManagerInstance.ReloadEquipment(BagEquipment.ID, BagEquipment.EquipmentID);
 
             DowngradePanel.SetActive(false);
         }

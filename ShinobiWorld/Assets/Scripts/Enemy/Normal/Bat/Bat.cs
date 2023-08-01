@@ -17,10 +17,16 @@ public class Bat : Enemy
     {
         base.Start();
     }
-    new void Update()
+    new void FixedUpdate()
     {
-        base.Update();
-        AttackAndMove();
+        if (!photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * lerpFactor);
+        }
+        else
+        {
+            AttackAndMove();
+        }
     }
 
     public void AttackAndMove()

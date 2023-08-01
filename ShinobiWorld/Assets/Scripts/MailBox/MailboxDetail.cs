@@ -65,7 +65,6 @@ namespace Assets.Scripts.MailBox
 
             Content.text = string.Format(mail.Content,
                             mailbox.AddDate.Month.ToString(), mailbox.AddDate.Year.ToString());
-            Debug.Log(mailbox.IsClaim.ToString());
             ClaimBtn.SetActive(true);
 
             if (isSystem || mailbox.IsClaim) ClaimBtn.SetActive(false);
