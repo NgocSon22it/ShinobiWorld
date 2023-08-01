@@ -46,7 +46,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         Debug.Log("Kết nối đến chat thành công!");
         isConnected = true;
-        chatClient.Subscribe(new string[] { ServerName });
+        chatClient.Subscribe(new string[] { ServerName });      
     }
 
     public void OnDisconnected()
@@ -68,9 +68,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             mess = string.Format("[{2}] {0}: {1}", senders[i], messages[i], currentTimeString);
 
             ChatDisPlay.text += "\n " + mess;
-
-            Debug.Log(mess);
         }
+        InviteManager.Instance.CloseReceiveInvitePopup();
 
     }
 
@@ -92,11 +91,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                     case TypePrivateMessage.FriendRequest:
                         FriendManager.Instance.Notify.SetActive(true);
                         break;
-                    case TypePrivateMessage.PKRequest:
-
-                        //Get Pk room ID =  mess[1]
-                        var PKRoomID = mess[1];
-
+                    case TypePrivateMessage.PKRequest:                      
                         break;
                     case TypePrivateMessage.Text:
                         break;
@@ -142,7 +137,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         this.ServerName = ServerName;
         isConnected = true;
-        chatClient = new ChatClient(this);
+        chatClient = new ChatClient(this);      
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(References.accountRefer.Name));
         Debug.Log("Đang kết nối");
     }
@@ -150,7 +145,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void TypeChatOnValueChange(string value)
     {
         CurrentChat = value;
-        Debug.Log(CurrentChat);
     }
 
     public void SummitPublicChat()
@@ -177,22 +171,20 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && IsTypingChat == false && Game_Manager.Instance.IsBusy == false)
-        {
-            ToggleTyping(true);
-            FocusTyping();
-        }
-        else if (string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
-        {
-            ToggleTyping(false);
-        }
-
+       
         if (isConnected)
         {
             chatClient.Service();
-
+            if (Input.GetKeyDown(KeyCode.Return) && IsTypingChat == false && Game_Manager.Instance.IsBusy == false)
+            {
+                ToggleTyping(true);
+                FocusTyping();
+            }
+            else if (string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
+            {
+                ToggleTyping(false);
+            }
         }
-
         if (!string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
         {
             SummitPublicChat();

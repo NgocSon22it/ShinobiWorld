@@ -13,6 +13,7 @@ using UnityEngine.UI;
 
 public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
+    [SerializeField] Canvas sortCanvas;
     [SerializeField] GameObject Boss;
     [SerializeField] GameObject BossPool;
 
@@ -81,7 +82,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnJoinedRoom()
     {
-        Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.Arena);
+        References.ChatServer = PhotonNetwork.CurrentRoom.Name;
+        Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
     }
@@ -137,7 +139,6 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         Battle_End(false);
-
     }
 
 
@@ -153,7 +154,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 roomOptions.MaxPlayers = 5;
                 roomOptions.BroadcastPropsChangeToAll = true;
-                PhotonNetwork.JoinOrCreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
+                PhotonNetwork.CreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
             }
         }
     }
@@ -179,7 +180,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     public void Battle_End(bool Win)
-    {
+    {       
         if (Win)
         {
             ShowEndgamePanel("Thắng");
@@ -229,6 +230,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             PhotonNetwork.CurrentRoom.IsOpen = false;
         }
         StartCoroutine(Battle_StartCoroutine());
+        Game_Manager.Instance.AccountStatus = AccountStatus.Arena;
+        Game_Manager.Instance.ReloadPlayerProperties();
         Game_Manager.Instance.IsBusy = true;
         ReadyBase.SetActive(false);
         GuideTxt.SetActive(false);
@@ -291,7 +294,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 string End = (string)EndText;
                 Battle_End_Text.text = End;
             }
-
+            sortCanvas.sortingOrder = 31;
             BossPool.SetActive(false);
             Boss.SetActive(false);
             BattleEnd = true;

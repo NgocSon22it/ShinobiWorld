@@ -33,8 +33,6 @@ public class InviteManager : MonoBehaviour
     {
         Instance = this;
     }
-
-
     public void SendArenaMessage(string receiverName)
     {
         ChatManager.Instance.chatClient
@@ -105,6 +103,7 @@ public class InviteManager : MonoBehaviour
                 PhotonNetwork.LoadLevel(References.SceneNameInvite);
                 break;
         }
+        CloseReceiveInvitePopup();
     }
 
 
