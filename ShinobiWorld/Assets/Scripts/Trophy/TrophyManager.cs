@@ -79,6 +79,7 @@ public class TrophyManager : MonoBehaviourPunCallbacks
         References.AddCoin((-1)* NextTrophy.Cost);
         Account_DAO.UpgradeTrophyRegister(References.accountRefer.ID, true);
         References.LoadAccount();
+        Player_AllUIManagement.Instance.Ticket.SetActive(References.accountRefer.HasTicket);
         Close();
     }
 

@@ -74,12 +74,14 @@ public static class References
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
     
-    public static Color32 ItemColorSelected = new Color32(200, 145, 20, 255);
+    public static Color32 ItemColorSelected = new Color32(200, 120, 0, 255);
     public static Color32 ItemColorDefaul = new Color32(0, 0, 0, 100);
-    public static Color32 ButtonColorSelected = new Color32(255, 230, 230, 255);
-    public static Color32 ButtonColorDefaul = new Color32(150, 140, 140, 100);
+    public static Color32 ButtonColorSelected = new Color32(210, 195, 200, 255);
+    public static Color32 ButtonColorDefaul = new Color32(150, 140, 140, 255);
+    public static Color32 MailColorDefaul = new Color32(96, 38, 0, 255);
 
     public static string MailSystem = "System";
+    public static string TeleTickerID = "Item_Tele";
 
     public static bool IsDead;
 

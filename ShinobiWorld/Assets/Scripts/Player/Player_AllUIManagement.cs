@@ -94,6 +94,9 @@ public class Player_AllUIManagement : MonoBehaviour
     [Header("Hospital")]
     public GameObject HospitalPanel;
 
+    [Header("UpdateTrophy")]
+    public GameObject Ticket;
+
     int IndexKey;
     string KeyboardExtension = "/Keyboard/";
 
@@ -464,5 +467,4 @@ public class Player_AllUIManagement : MonoBehaviour
     {
         HospitalPanel.GetComponent<Hospital>().SetDuration(timeRespawn).Begin();
     }
-
 }
