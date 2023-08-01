@@ -69,9 +69,19 @@ public class Player_Info : MonoBehaviourPunCallbacks
     //Weapon
     public SpriteRenderer Weapon;
 
+    public Camera mainCamera; // Reference to the main camera
+    public Canvas canvas;
+
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
+        mainCamera = Camera.main;
+        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        canvas.worldCamera = mainCamera;
     }
 
     public void Init()
@@ -84,7 +94,9 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void Open()
     {
-        //Game_Manager.Instance.IsBusy = true;
+        Game_Manager.Instance.IsBusy = true;
+        Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().PlayerAllUIInstance.SetActive(false) ;
+
         //References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
 
         References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
@@ -106,7 +118,9 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public void Close()
     {
         InfoPanel.SetActive(false);
-        //Game_Manager.Instance.IsBusy = false;
+        Game_Manager.Instance.IsBusy = false;
+        Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().PlayerAllUIInstance.SetActive(true);
+
     }
 
     public void SetupPreview()

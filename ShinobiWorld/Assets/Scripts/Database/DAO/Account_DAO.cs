@@ -220,7 +220,8 @@ namespace Assets.Scripts.Database.DAO
                             WinTimes = Convert.ToInt32(dr["WinTimes"]),
                             IsUpgradeTrophy = Convert.ToBoolean(dr["IsUpgradeTrophy"]),
                             ResetLimitDate = Convert.ToDateTime(dr["ResetLimitDate"]),                           
-                            CustomSettings = CustomSetting_DAO.GetAllAccountCustomSetting(dr["ID"].ToString())
+                            CustomSettings = CustomSetting_DAO.GetAllAccountCustomSetting(dr["ID"].ToString()),
+                            TimeRespawn = Convert.ToInt32(dr["TimeRespawn"])
                         };
                         connection.Close();
                         return obj;
@@ -302,7 +303,21 @@ namespace Assets.Scripts.Database.DAO
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
                 SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set TrophyID = @Trophy, [Level] = @Level, Health = @Health, CurrentHealth = @CurrentHealth, Chakra = @Chakra, CurrentChakra = @CurrentChakra, [Exp] = @Exp, Coin = @Coin, [Power] = @Power, Strength = @Strenth, CurrentStrength = @CurrentStrength where ID = @UserID";
+                cmd.CommandText = "Update Account " +
+                                    "set TrophyID = @Trophy, " +
+                                    "[Level] = @Level, " +
+                                    "Health = @Health, " +
+                                    "CurrentHealth = @CurrentHealth, " +
+                                    "Chakra = @Chakra, " +
+                                    "CurrentChakra = @CurrentChakra, " +
+                                    "[Exp] = @Exp, " +
+                                    "Coin = @Coin, " +
+                                    "[Power] = @Power, " +
+                                    "Strength = @Strenth, " +
+                                    "CurrentStrength = @CurrentStrength, " +
+                                    "[TimeRespawn] = @TimeRespawn, " +
+                                    "[IsDead] = @IsDead " +
+                                    "where ID = @UserID";
                 cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
                 cmd.Parameters.AddWithValue("@Trophy", account_Entity.TrophyID);
                 cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
@@ -315,6 +330,8 @@ namespace Assets.Scripts.Database.DAO
                 cmd.Parameters.AddWithValue("@Power", account_Entity.Power);
                 cmd.Parameters.AddWithValue("@Strenth", account_Entity.Strength);
                 cmd.Parameters.AddWithValue("@CurrentStrength", account_Entity.CurrentStrength);
+                cmd.Parameters.AddWithValue("@IsDead", account_Entity.IsDead);
+                cmd.Parameters.AddWithValue("@TimeRespawn", account_Entity.TimeRespawn);
                 connection.Open();
                 cmd.ExecuteNonQuery();
                 connection.Close();
@@ -344,7 +361,7 @@ namespace Assets.Scripts.Database.DAO
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM [dbo].[Account]";
+                    cmd.CommandText = "SELECT * FROM [dbo].[Account] where power >0";
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
                     adapter.Fill(dataTable);
@@ -412,6 +429,46 @@ namespace Assets.Scripts.Database.DAO
                 cmd.ExecuteNonQuery();
                 connection.Close();
             }
+        }
+
+
+        public static List<Account_Entity> GetAllAccountForInvite()
+        {
+            var list = new List<Account_Entity>();
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "select * from Account where IsOnline = 1";
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    foreach (DataRow dr in dataTable.Rows)
+                    {
+                        var obj = new Account_Entity
+                        {
+                            ID = dr["ID"].ToString(),
+                            Name = dr["Name"].ToString(),
+                            TrophyID = dr["TrophyID"].ToString(),
+                            Level = Convert.ToInt32(dr["Level"]),
+                            Power = Convert.ToInt32(dr["Power"])
+                        };
+
+                        list.Add(obj);
+                    }
+                }
+
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+
+            return list;
         }
     }
 }

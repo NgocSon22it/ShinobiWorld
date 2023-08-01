@@ -34,6 +34,7 @@ public class Account_Entity
     public string HairID;
     public string MouthID;
     public string SkinID;
+    public int TimeRespawn;
 
     public List<CustomSetting_Entity> CustomSettings;
 

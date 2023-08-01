@@ -14,16 +14,21 @@ public class EquipmentBag : MonoBehaviour
     public string ID;
     public Image Image;
     public TMP_Text Name;
+    EquipmentDetail equipmentDetail;
 
     public void OnClick()
     {
-        EquipmentDetail.Instance.ShowDetail(BagEquipmentID, ID);
-        BagManager.Instance.ResetColor();
+        equipmentDetail.ShowDetail(BagEquipmentID, ID);
+        equipmentDetail.BagManagerInstance.ResetColor();
         GetComponent<Image>().color = References.ItemColorSelected;
     }
 
-    public void Setup(BagEquipment_Entity BagEquipment)
+    public void Setup(BagEquipment_Entity BagEquipment, EquipmentDetail detail, bool isFirst)
     {
+        GetComponent<Image>().color = References.ItemColorDefaul;
+
+        if (isFirst) GetComponent<Image>().color = References.ItemColorSelected;
+        equipmentDetail = detail;
         var equipment = References.listEquipment.Find(obj => obj.ID == BagEquipment.EquipmentID);
         BagEquipmentID = BagEquipment.ID;
         ID = equipment.ID;

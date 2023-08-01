@@ -4,6 +4,7 @@ using Assets.Scripts.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
@@ -16,10 +17,13 @@ namespace Assets.Scripts.Bag.Item
 {
     public class ItemDetail : MonoBehaviour
     {
+        public GameObject BagManagerObj;
+
         public Image Image;
         public TMP_Text Name, Own, Price, Description;
         public TMP_InputField Amount;
         public Button MinBtn, PlusBtn;
+        public GameObject UseBtn;
 
         public int price;
         public bool isUpdatePrice = true;
@@ -27,15 +31,15 @@ namespace Assets.Scripts.Bag.Item
         public Item_Entity item;
 
         public static ItemDetail Instance;
-
+        public BagManager BagManagerInstance;
         private void Awake()
         {
             Instance = this;
+            BagManagerInstance = BagManagerObj.GetComponent<BagManager>();
         }
 
         public void ShowDetail(string ID)
         {
-
             item = References.listItem.Find(obj => obj.ID == ID);
             var HasItem = References.listHasItem.Find(obj => obj.ItemID == ID);
 
@@ -48,8 +52,10 @@ namespace Assets.Scripts.Bag.Item
                 Price.text = price.ToString();
                 isUpdatePrice = true;
             }
-            if (!Amount.IsUnityNull())  Amount.text = "1";
+            if (!Amount.IsUnityNull()) Amount.text = "1";
             Description.text = item.Description;
+
+            if (!UseBtn.IsUnityNull() & item.ID == References.TeleTickerID) UseBtn.SetActive(!(HasItem.Amount > 0));
         }
 
         public void CheckAmount()
@@ -108,7 +114,7 @@ namespace Assets.Scripts.Bag.Item
 
             References.AddCoin(int.Parse(Price.text));
 
-            BagManager.Instance.ReloadItem(item.ID);
+            BagManagerInstance.ReloadItem(item.ID);
         }
 
         public void Use()
@@ -117,9 +123,22 @@ namespace Assets.Scripts.Bag.Item
 
             HasItem_DAO.UseItem(References.accountRefer.ID, item.ID);
 
+            var health = References.accountRefer.CurrentHealth + item.HealthBonus;
+            var chakra = References.accountRefer.CurrentChakra + item.ChakraBonus;
+            var strength = References.accountRefer.CurrentStrength + item.StrengthBonus;
+
+            References.accountRefer.CurrentHealth
+                = (health >= References.accountRefer.Health) ? References.accountRefer.Health : health;
+
+            References.accountRefer.CurrentChakra
+                = (chakra >= References.accountRefer.Chakra) ? References.accountRefer.Chakra : chakra;
+
+            References.accountRefer.CurrentStrength
+                = (strength >= References.accountRefer.Strength) ? References.accountRefer.Strength : strength;
+
             Game_Manager.Instance.ReloadPlayerProperties();
 
-            BagManager.Instance.ReloadItem(item.ID);
+            BagManagerInstance.ReloadItem(item.ID);
         }
     }
 }

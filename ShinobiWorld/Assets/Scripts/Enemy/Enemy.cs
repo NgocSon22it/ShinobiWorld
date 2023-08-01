@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 {
     // Entity
     public Enemy_Entity enemy_Entity = new Enemy_Entity();
-    public int boss_Health;
+    protected int boss_Health;
     public AreaEnemy_Entity AreaEnemy_Entity = new AreaEnemy_Entity();
 
     //Separate
@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public Vector3 TargetPosition;
 
     public bool playerInRange = false;
-    public float detectionRadius = 5f;
+    public float detectionRadius;
     public LayerMask AttackableLayer;
 
     public float LocalScaleX;
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public int CurrentHealth;
 
     // MainPoint
-    [SerializeField] Transform MainPoint;
+    [SerializeField] protected Transform MainPoint;
 
     //Health UI
     [SerializeField] Image CurrentHealth_UI;
@@ -78,7 +78,9 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     // Facing
     public bool FacingRight = false;
 
-
+    // Lag Reduce
+    protected Vector3 networkPosition;
+    protected float lerpFactor = 5f;
 
     public void SetUp(string EnemyID, string AreaID)
     {
@@ -95,8 +97,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
                 if (dateTime >= AreaEnemy_Entity.TimeSpawn && AreaEnemy_Entity.IsDead == false)
                 {
                     CurrentHealth = enemy_Entity.Health;
-                    gameObject.SetActive(true);
                     LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+                    gameObject.SetActive(true);
                 }
                 else
                 {
@@ -122,14 +124,11 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public void Start()
     {
         LocalScaleX = transform.localScale.x;
-        MovePosition = GetRandomPosition();
-        if (ObjectPool != null)
-        {
-            ObjectPool.transform.SetParent(null);
-        }
+        if (movementBounds != null) { MovePosition = GetRandomPosition(); }
+        if (ObjectPool != null) { ObjectPool.transform.SetParent(null); }
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
 
     }
@@ -159,7 +158,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     public void TakeDamage_Arena(int Damage)
     {
         CurrentHealth -= Damage;
-        LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+        LoadHealthUI(CurrentHealth, boss_Health);
+
         switch (gameObject.tag)
         {
             case "Enemy":
@@ -206,7 +206,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
             if (PhotonNetwork.IsConnected)
             {
-                // Notify all players that the enemy has been deactivated
                 object[] data = new object[] { photonView.ViewID };
                 PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, data, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
             }
@@ -235,8 +234,6 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         DeathEffect.transform.position = transform.position;
         DeathEffect.SetActive(true);
     }
-
-
 
     public Vector2 GetRandomPosition()
     {
@@ -329,6 +326,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
 
             stream.SendNext(CurrentHealth);
+            stream.SendNext(boss_Health);
+            stream.SendNext(enemy_Entity.Health);
             stream.SendNext(transform.position);
 
             stream.SendNext(playerInRange);
@@ -338,17 +337,13 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
             stream.SendNext(HealthChakraUI.GetComponent<RectTransform>().localScale);
 
-
-
-
         }
         else
         {
 
             CurrentHealth = (int)stream.ReceiveNext();
-
-            LoadHealthUI(CurrentHealth, enemy_Entity.Health);
-
+            boss_Health = (int)stream.ReceiveNext();
+            enemy_Entity.Health = (int)stream.ReceiveNext();
             MovePosition = (Vector3)stream.ReceiveNext();
 
             playerInRange = (bool)stream.ReceiveNext();
@@ -357,7 +352,14 @@ public class Enemy : MonoBehaviourPun, IPunObservable
             TargetPosition = (Vector3)stream.ReceiveNext();
 
             HealthChakraUI.GetComponent<RectTransform>().localScale = (Vector3)stream.ReceiveNext();
-
+            if (BossType == BossType.BossType_Normal)
+            {
+                LoadHealthUI(CurrentHealth, enemy_Entity.Health);
+            }
+            else
+            {
+                LoadHealthUI(CurrentHealth, boss_Health);
+            }
         }
     }
 

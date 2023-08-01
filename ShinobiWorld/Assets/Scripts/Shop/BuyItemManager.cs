@@ -33,9 +33,21 @@ namespace Assets.Scripts.Shop
         {
             Instance = this;
         }
+        private void Start()
+        {
+            References.listHasItem = HasItem_DAO.GetAllByUserID(References.accountRefer.ID);
+
+            if (References.accountRefer.ResetLimitDate.Date < DateTime.Now.Date)
+            {
+                HasItem_DAO.ResetLimitBuyItem(References.accountRefer.ID, References.listHasItem);
+                References.listHasItem = HasItem_DAO.GetAllByUserID(References.accountRefer.ID);
+
+            }
+        }
 
         public void Open()
         {
+            
             GetListItem();
             Game_Manager.Instance.IsBusy = true;
 
@@ -59,15 +71,12 @@ namespace Assets.Scripts.Shop
                 itemManager.Image.sprite = Resources.Load<Sprite>(item.Image);
                 itemManager.Cost.text = item.BuyCost.ToString();
                 itemManager.Name.text = item.Name;
+                itemManager.GetComponent<Image>().color = References.ItemColorDefaul;
+
                 Instantiate(ItemTemplate, Content);
             }
             
-            References.listHasItem = HasItem_DAO.GetAllByUserID(References.accountRefer.ID);
-            
-            if (References.accountRefer.ResetLimitDate.Date < DateTime.Now.Date)
-            {
-                HasItem_DAO.ResetLimitBuyItem(References.accountRefer.ID, References.listHasItem);
-            }
+           
             
         }
 

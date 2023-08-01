@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using WebSocketSharp;
+using static UnityEditor.Progress;
 
 public class MissionManager : MonoBehaviour
 {
@@ -27,17 +28,18 @@ public class MissionManager : MonoBehaviour
 
     [Header("Progress")]
     public GameObject ProgressPanel;
+    public GameObject Notify;
     public TMP_Text ContentTxt;
     public TMP_Text CurrentTxt;
     public Button ProgressBtn;
 
     [Header("Teleport")]
     public GameObject TeleportPanel;
-    public TMP_Text Teleport_ContentTxt;
-    public TMP_Text Teleport_CurrentTxt;
+    public TMP_Text TeleTicket_AmountTxt;
     public TMP_Dropdown Teleport_DropDown;
     public List<Area_Entity> listArea = new List<Area_Entity>();
     public Area_Entity SelectedArea;
+    public Button Telebtn;
 
     [Header("Bonus")]
     public GameObject BonusPanel;
@@ -57,6 +59,12 @@ public class MissionManager : MonoBehaviour
     {
         Instance = this;
     }
+    private void Start()
+    {
+        Notify.SetActive(false);
+
+        GetCurrentMission();
+    }
 
     public void GetCurrentMission()
     {
@@ -71,20 +79,22 @@ public class MissionManager : MonoBehaviour
             HavingMission = References.listMission.Find(obj => obj.ID == CurrentMission.MissionID);
             Player_AllUIManagement.Instance.ShowMission(HavingMission.Content);
         }
+
+        Notify.SetActive(filterlist.Any(obj => obj.Status == StatusMission.Claim));
     }
 
     public void ResetColorBtnTrophy()
     {
         foreach (ButtonTrophy button in BtnTrophy)
         {
-            button.Btn.GetComponent<Image>().color = new Color32(185, 183, 183, 255);
+            button.Btn.GetComponent<Image>().color = References.ButtonColorDefaul;
         }
     }
 
     public void SelectedColorBtnTrophy(ButtonTrophy button)
     {
         ResetColorBtnTrophy();
-        button.Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        button.Btn.GetComponent<Image>().color = References.ButtonColorSelected;
         TrophyID = button.ID;
         GetList(button.ID);
     }
@@ -108,7 +118,7 @@ public class MissionManager : MonoBehaviour
         ResetColorBtnTrophy();
 
         TrophyID = (TrophyID)Enum.Parse(typeof(TrophyID), References.accountRefer.TrophyID);
-        BtnTrophy[(int)TrophyID].Btn.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        BtnTrophy[(int)TrophyID].Btn.GetComponent<Image>().color = References.ButtonColorSelected;
         GetList(TrophyID);
 
         MissionPanel.SetActive(true);
@@ -149,7 +159,7 @@ public class MissionManager : MonoBehaviour
     {
         foreach (Transform child in Content)
         {
-            child.gameObject.GetComponent<Image>().color = new Color32(110, 80, 60, 255);
+            child.gameObject.GetComponent<Image>().color = References.ItemColorDefaul;
         }
     }
 
@@ -163,25 +173,20 @@ public class MissionManager : MonoBehaviour
     public void LoadProgress()
     {
         Game_Manager.Instance.IsBusy = true;
-        ProgressPanel.SetActive(true);
         if (HavingMission == null) GetCurrentMission();
 
         if (HavingMission != null)
         {
             ContentTxt.text = HavingMission.Content;
-
-            if (CurrentMission.Current == CurrentMission.Target)
-            {
-                CurrentTxt.text = Message.MissionFinish;
-                Player_AllUIManagement.Instance.CloseMission();
-            }
-            else CurrentTxt.text = string.Format(Message.MissionProgress, CurrentMission.Current, CurrentMission.Target);
+            CurrentTxt.text = string.Format(Message.MissionProgress, CurrentMission.Current, CurrentMission.Target);
         }
         else
         {
             CurrentTxt.text = "";
             ContentTxt.text = Message.MissionNone;
         }
+        ProgressPanel.SetActive(true);
+
     }
 
     public void InitDropdown()
@@ -216,6 +221,8 @@ public class MissionManager : MonoBehaviour
     {
         Game_Manager.Instance.IsBusy = false;
         References.PlayerSpawnPosition = new Vector3(SelectedArea.XPosition, SelectedArea.YPosition, 0);
+        HasItem_DAO.UseItem(References.accountRefer.ID, References.TeleTickerID);
+        PhotonNetwork.IsMessageQueueRunning = false;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(SelectedArea.MapID);
     }
@@ -223,26 +230,18 @@ public class MissionManager : MonoBehaviour
     public void LoadTeleportMission()
     {
         Game_Manager.Instance.IsBusy = true;
-        TeleportPanel.SetActive(true);
+        Telebtn.interactable = false;
         if (HavingMission == null) GetCurrentMission();
 
         if (HavingMission != null)
         {
             InitDropdown();
-            Teleport_ContentTxt.text = HavingMission.Content;
+            var amount = HasItem_DAO.GetTeleTicket(References.accountRefer.ID);
+            Telebtn.interactable = (amount > 0);
+            TeleTicket_AmountTxt.text = amount.ToString();
+        }
+        TeleportPanel.SetActive(true);
 
-            if (CurrentMission.Current == CurrentMission.Target)
-            {
-                Teleport_CurrentTxt.text = Message.MissionFinish;
-                Player_AllUIManagement.Instance.CloseMission();
-            }
-            else Teleport_CurrentTxt.text = string.Format(Message.MissionProgress, CurrentMission.Current, CurrentMission.Target);
-        }
-        else
-        {
-            Teleport_CurrentTxt.text = "";
-            Teleport_ContentTxt.text = Message.MissionNone;
-        }
     }
 
     public void CloseProgress()
@@ -306,7 +305,10 @@ public class MissionManager : MonoBehaviour
             {
                 HasMission_DAO.ChangeStatusMission(References.accountRefer.ID, HavingMission.ID,
                                                             StatusMission.Claim);
-                LoadProgress();
+
+                Notify.SetActive(true);
+                Player_AllUIManagement.Instance.CloseMission();
+
                 HavingMission = null;
                 CurrentMission = null;
             }

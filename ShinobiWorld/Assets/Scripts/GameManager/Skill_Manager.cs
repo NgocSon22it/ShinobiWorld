@@ -178,10 +178,11 @@ public class Skill_Manager : MonoBehaviour
         {
             Destroy(trans.gameObject);
         }
-
+        var isFirst = true;
         foreach (Skill_Entity Item in References.listSkill)
         {
-            Instantiate(Skill_Item, Skill_Content).GetComponent<Skill_Item>().SetUp(Item);
+            Instantiate(Skill_Item, Skill_Content).GetComponent<Skill_Item>().SetUp(Item, isFirst);
+            isFirst = false;
         }
     }
 
@@ -248,9 +249,7 @@ public class Skill_Manager : MonoBehaviour
         {
             LoadSkillList();
             SetUpSelectedSkill(References.listSkill[0]);
-            Skill_Content.GetChild(0).gameObject.GetComponent<Skill_Item>().
-                Background.color = new Color32(190, 140, 10, 255);
-
+           
             SkillPanel.SetActive(true);
             Game_Manager.Instance.IsBusy = true;
         }
@@ -284,8 +283,7 @@ public class Skill_Manager : MonoBehaviour
     {
         foreach (Transform trans in Skill_Content)
         {
-            trans.gameObject.GetComponent<Skill_Item>().
-                Background.color = new Color32(110, 80, 60, 255);
+            trans.gameObject.GetComponent<Image>().color = References.ItemColorDefaul;
         }
     }
 
