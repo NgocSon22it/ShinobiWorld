@@ -67,8 +67,6 @@ public static class References
 
     public static int ExpercienceToNextLevel;
 
-    public static bool IsDisconnect = false;
-
     public static string TrophyID_RemakeMission = TrophyID.Trophy_Jonin.ToString();
 
     public static string UISkillDefault = "Background/UI_OrangeFill";
@@ -76,16 +74,22 @@ public static class References
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
     
-    public static Color32 ItemColorSelected = new Color32(200, 145, 20, 255);
+    public static Color32 ItemColorSelected = new Color32(200, 120, 0, 255);
     public static Color32 ItemColorDefaul = new Color32(0, 0, 0, 100);
-    public static Color32 ButtonColorSelected = new Color32(255, 230, 230, 255);
-    public static Color32 ButtonColorDefaul = new Color32(150, 140, 140, 100);
+    public static Color32 ButtonColorSelected = new Color32(210, 195, 200, 255);
+    public static Color32 ButtonColorDefaul = new Color32(150, 140, 140, 255);
+    public static Color32 MailColorDefaul = new Color32(96, 38, 0, 255);
 
     public static string MailSystem = "System";
+    public static string TeleTickerID = "Item_Tele";
 
     public static bool IsDead;
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
+
+    public static string SceneNameInvite;
+    public static string RoomNameInvite;
+    public static bool IsInvite;
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
@@ -237,7 +241,7 @@ public enum CustomEventCode
 
 public enum AccountStatus
 {
-    Normal, Arena, PK
+    Normal, Arena, PK, WaitingRoom
 }
 
 public enum TypeSell

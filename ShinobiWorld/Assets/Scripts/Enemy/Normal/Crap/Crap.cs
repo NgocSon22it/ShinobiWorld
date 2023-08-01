@@ -15,10 +15,16 @@ public class Crap : Enemy
         base.Start();
     }
 
-    new void Update()
+    new void FixedUpdate()
     {
-        base.Update();
-        Move();
+        if (!photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * lerpFactor);
+        }
+        else
+        {
+            Move();
+        }
     }
 
     public void Move()

@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
+using Assets.Scripts.Hospital;
 using Photon.Pun.Demo.SlotRacer;
 using Photon.Realtime;
 using System.Collections;
@@ -17,7 +18,7 @@ public class Player_AllUIManagement : MonoBehaviour
     public static Player_AllUIManagement Instance;
 
     [Header("Player")]
-    [SerializeField] PlayerBase Player;
+    public PlayerBase Player;
 
     [Header("Level UI")]
     [SerializeField] TMP_Text CurrentLevel;
@@ -36,6 +37,9 @@ public class Player_AllUIManagement : MonoBehaviour
 
     [Header("Name")]
     [SerializeField] TMP_Text CoinTxt;
+
+    [Header("Avatar")]
+    [SerializeField] Image Avatar;
 
     [Header("Strength")]
     [SerializeField] TMP_Text StrengthTxt;
@@ -73,6 +77,9 @@ public class Player_AllUIManagement : MonoBehaviour
     public GameObject House_Message;
     [SerializeField] TMP_Text HouseTxt;
 
+    [Header("Full Map")]
+    [SerializeField] GameObject MapPanel;
+
     [Header("Custom Key")]
     [SerializeField] List<TMP_Text> ListSkillTxt;
 
@@ -80,23 +87,27 @@ public class Player_AllUIManagement : MonoBehaviour
 
     [SerializeField] TMP_Text CustomKeyMessage;
 
+    [Header("Separate Status")]
+    [SerializeField] List<GameObject> UI_Normal;
+    [SerializeField] List<GameObject> UI_ArenaPK;
+
+    [Header("Hospital")]
+    public GameObject HospitalPanel;
+
+    [Header("UpdateTrophy")]
+    public GameObject Ticket;
+
     int IndexKey;
     string KeyboardExtension = "/Keyboard/";
 
     private bool isWaitingForKeyPress = false;
-
-    public Button GotoMenuBtn;
+    [Header("Setup")]
     public GameObject BackgroundPanel;
     string image, skillValue;
 
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Start()
-    {
-        GotoMenuBtn.onClick.AddListener(() => Game_Manager.Instance.GoToMenu());
     }
 
     public void LoadPlayerKey()
@@ -109,17 +120,22 @@ public class Player_AllUIManagement : MonoBehaviour
         }
 
     }
+
+    public void ToggleFullMap(bool value)
+    {
+        Game_Manager.Instance.IsBusy = value;
+        MapPanel.SetActive(value);
+    }
+
     public void OpenCustomKeyPanel()
     {
         CustomKeyPanel.SetActive(true);
-        Game_Manager.Instance.IsBusy = true;
         LoadPlayerKey();
     }
     public void CloseCustomKeyPanel()
     {
         CustomKeyPanel.SetActive(false);
         isWaitingForKeyPress = false;
-        Game_Manager.Instance.IsBusy = false;
     }
 
     public void SelectKey(int Key)
@@ -227,7 +243,6 @@ public class Player_AllUIManagement : MonoBehaviour
     }
     public void SetUp_ChangeKey(string KeyName, string NewKey)
     {
-        Debug.Log(NewKey);
         Player.playerInput.actions[KeyName].ApplyBindingOverride(NewKey);
         Account_DAO.ChangeKey(Player.AccountEntity.ID, "Key_" + KeyName, NewKey);
     }
@@ -252,7 +267,6 @@ public class Player_AllUIManagement : MonoBehaviour
             skillcost.text = skill.Chakra.ToString();
 
             skillValue = Player.AccountEntity.CustomSettings.Find(obj => obj.SettingID == "Key_" + skillName).Value;
-
             skillkey.text = ShowKey(skillValue);
             Player.playerInput.actions[skillName].ApplyBindingOverride(skillValue);
         }
@@ -260,6 +274,17 @@ public class Player_AllUIManagement : MonoBehaviour
     public void SetUpPlayer(PlayerBase player)
     {
         Player = player;
+
+        switch (player.accountStatus)
+        {
+            case AccountStatus.Normal:
+                SetUp_UI(true, false);
+                break;
+            default:
+                SetUp_UI(false, true);
+                break;
+
+        }
         if (Player != null)
         {
             SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
@@ -267,6 +292,18 @@ public class Player_AllUIManagement : MonoBehaviour
             SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
         }
 
+    }
+
+    public void SetUp_UI(bool NormalUI, bool ArenaPkUI)
+    {
+        foreach(GameObject a in UI_Normal)
+        {
+            a.SetActive(NormalUI);
+        }
+        foreach (GameObject a in UI_ArenaPK)
+        {
+            a.SetActive(ArenaPkUI);
+        }
     }
 
     public void SetUpCoinUI(int Coin)
@@ -302,6 +339,11 @@ public class Player_AllUIManagement : MonoBehaviour
     public void LoadNameUI(string Name)
     {
         NickNameTxt.text = Name;
+    }
+
+    public void LoadAvatarUI(string avatarPath)
+    {
+        Avatar.sprite = Resources.Load<Sprite>("Player/Avatar/" + avatarPath);
     }
 
     public void LoadHealthUI(float TotalHealth, float CurrentHealth)
@@ -421,4 +463,8 @@ public class Player_AllUIManagement : MonoBehaviour
         }
     }
 
+    public void ShowDiePanel(int timeRespawn)
+    {
+        HospitalPanel.GetComponent<Hospital>().SetDuration(timeRespawn).Begin();
+    }
 }

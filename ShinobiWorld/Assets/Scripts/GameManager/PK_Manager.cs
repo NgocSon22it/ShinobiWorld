@@ -91,7 +91,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     // Function to raise the event to show the endgame panel for all players
     public void ShowEndgamePanel(string Winner, string Loser)
     {
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { WinnerTextPropKey, Winner }, { LoserTextPropKey, Loser } }); ;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { WinnerTextPropKey, Winner }, { LoserTextPropKey, Loser } });
 
         PhotonNetwork.RaiseEvent(ShowEndgamePanelEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
     }
@@ -145,7 +145,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnJoinedRoom()
     {
-        Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.Normal);
+        Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
     }
     private IEnumerator Battle_ProgressBar()
@@ -189,6 +189,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.InRoom)
         {
             Game_Manager.Instance.IsBusy = false;
+            PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(Scenes.Konoha);
         }
@@ -202,8 +203,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             RoomOptions roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = 2;
             roomOptions.BroadcastPropsChangeToAll = true;
-            //PhotonNetwork.JoinOrCreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
-            PhotonNetwork.JoinOrCreateRoom("0", roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
             Debug.Log(References.GenerateRandomString(10));
         }
     }
