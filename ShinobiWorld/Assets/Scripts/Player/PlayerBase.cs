@@ -353,21 +353,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
 
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.M))
             {
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("BossArena_Asuma");
-            }
-
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel("PK");
-            }
-
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().OpenCustomKeyPanel();
+                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ToggleFullMap(true);
             }
 
             if (!CanWalking)
@@ -433,7 +421,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             }
 
             if (AccountEntity.CurrentHealth <= 0) Dead(References.RespawnTime);
-   
+
             LoadPlayerHealthUI();
 
 

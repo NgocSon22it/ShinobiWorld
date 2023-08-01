@@ -82,11 +82,9 @@ public class FriendManager : MonoBehaviour
 
         GetList(References.listFriendInfo);
 
-        var image = FriendBtn.GetComponent<Image>().color;
-        FriendBtn.GetComponent<Image>().color = new Color(image.r, image.g, image.b, 1f);
+        FriendBtn.GetComponent<Image>().color = References.ButtonColorSelected;
 
-        image = RequestBtn.GetComponent<Image>().color;
-        RequestBtn.GetComponent<Image>().color = new Color(image.r, image.g, image.b, Mathf.InverseLerp(0, 255, 230));
+        RequestBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
     }
 
     public void OnRequestClick()
@@ -96,11 +94,9 @@ public class FriendManager : MonoBehaviour
 
         GetList(References.listRequestInfo);
 
-        var image = RequestBtn.GetComponent<Image>().color;
-        RequestBtn.GetComponent<Image>().color = new Color(image.r, image.g, image.b, 1f);
+        RequestBtn.GetComponent<Image>().color = References.ButtonColorSelected;
 
-        image = FriendBtn.GetComponent<Image>().color;
-        FriendBtn.GetComponent<Image>().color = new Color(image.r, image.g, image.b, Mathf.InverseLerp(0, 255, 230));
+        FriendBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
     }
 
     public void GetList(List<FriendInfo> list)
@@ -155,7 +151,7 @@ public class FriendManager : MonoBehaviour
     {
         foreach (Transform child in Content)
         {
-            child.gameObject.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
+            child.gameObject.GetComponent<Image>().color = References.ItemColorDefaul;
         }
     }
 

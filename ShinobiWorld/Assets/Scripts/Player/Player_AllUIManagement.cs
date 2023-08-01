@@ -18,7 +18,7 @@ public class Player_AllUIManagement : MonoBehaviour
     public static Player_AllUIManagement Instance;
 
     [Header("Player")]
-    [SerializeField] PlayerBase Player;
+    public PlayerBase Player;
 
     [Header("Level UI")]
     [SerializeField] TMP_Text CurrentLevel;
@@ -77,6 +77,9 @@ public class Player_AllUIManagement : MonoBehaviour
     public GameObject House_Message;
     [SerializeField] TMP_Text HouseTxt;
 
+    [Header("Full Map")]
+    [SerializeField] GameObject MapPanel;
+
     [Header("Custom Key")]
     [SerializeField] List<TMP_Text> ListSkillTxt;
 
@@ -85,28 +88,26 @@ public class Player_AllUIManagement : MonoBehaviour
     [SerializeField] TMP_Text CustomKeyMessage;
 
     [Header("Separate Status")]
-    [SerializeField] GameObject UI_Normal;
+    [SerializeField] List<GameObject> UI_Normal;
+    [SerializeField] List<GameObject> UI_ArenaPK;
 
     [Header("Hospital")]
     public GameObject HospitalPanel;
+
+    [Header("UpdateTrophy")]
+    public GameObject Ticket;
 
     int IndexKey;
     string KeyboardExtension = "/Keyboard/";
 
     private bool isWaitingForKeyPress = false;
     [Header("Setup")]
-    public Button GotoMenuBtn;
     public GameObject BackgroundPanel;
     string image, skillValue;
 
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Start()
-    {
-        GotoMenuBtn.onClick.AddListener(() => Game_Manager.Instance.GoToMenu());
     }
 
     public void LoadPlayerKey()
@@ -119,17 +120,22 @@ public class Player_AllUIManagement : MonoBehaviour
         }
 
     }
+
+    public void ToggleFullMap(bool value)
+    {
+        Game_Manager.Instance.IsBusy = value;
+        MapPanel.SetActive(value);
+    }
+
     public void OpenCustomKeyPanel()
     {
         CustomKeyPanel.SetActive(true);
-        Game_Manager.Instance.IsBusy = true;
         LoadPlayerKey();
     }
     public void CloseCustomKeyPanel()
     {
         CustomKeyPanel.SetActive(false);
         isWaitingForKeyPress = false;
-        Game_Manager.Instance.IsBusy = false;
     }
 
     public void SelectKey(int Key)
@@ -237,7 +243,6 @@ public class Player_AllUIManagement : MonoBehaviour
     }
     public void SetUp_ChangeKey(string KeyName, string NewKey)
     {
-        Debug.Log(NewKey);
         Player.playerInput.actions[KeyName].ApplyBindingOverride(NewKey);
         Account_DAO.ChangeKey(Player.AccountEntity.ID, "Key_" + KeyName, NewKey);
     }
@@ -261,7 +266,6 @@ public class Player_AllUIManagement : MonoBehaviour
             skillImage.sprite = Resources.Load<Sprite>(image);
             skillcost.text = skill.Chakra.ToString();
 
-            Debug.Log(skillName);
             skillValue = Player.AccountEntity.CustomSettings.Find(obj => obj.SettingID == "Key_" + skillName).Value;
             skillkey.text = ShowKey(skillValue);
             Player.playerInput.actions[skillName].ApplyBindingOverride(skillValue);
@@ -274,10 +278,10 @@ public class Player_AllUIManagement : MonoBehaviour
         switch (player.accountStatus)
         {
             case AccountStatus.Normal:
-                UI_Normal.SetActive(true);
+                SetUp_UI(true, false);
                 break;
             default:
-                UI_Normal.SetActive(false);
+                SetUp_UI(false, true);
                 break;
 
         }
@@ -288,6 +292,18 @@ public class Player_AllUIManagement : MonoBehaviour
             SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
         }
 
+    }
+
+    public void SetUp_UI(bool NormalUI, bool ArenaPkUI)
+    {
+        foreach(GameObject a in UI_Normal)
+        {
+            a.SetActive(NormalUI);
+        }
+        foreach (GameObject a in UI_ArenaPK)
+        {
+            a.SetActive(ArenaPkUI);
+        }
     }
 
     public void SetUpCoinUI(int Coin)
@@ -451,5 +467,4 @@ public class Player_AllUIManagement : MonoBehaviour
     {
         HospitalPanel.GetComponent<Hospital>().SetDuration(timeRespawn).Begin();
     }
-
 }

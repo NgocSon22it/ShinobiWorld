@@ -21,7 +21,7 @@ namespace Assets.Scripts.Friend
 
         private void Awake()
         {
-            GetComponent<Image>().color = new Color32(0, 0, 0, 0);
+            GetComponent<Image>().color = References.ItemColorDefaul;
 
             if(!UnFriendBtn.IsUnityNull())UnFriendBtn.onClick.AddListener(() => DeleteFriend());
             if(!AcceptBtn.IsUnityNull()) AcceptBtn.onClick.AddListener(() => Accept());

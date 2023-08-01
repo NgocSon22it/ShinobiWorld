@@ -4,6 +4,7 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -20,6 +21,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject GuideTxt;
 
     [SerializeField] PolygonCollider2D CameraBox;
+
+    [SerializeField] string SceneName;
 
     [Header("Battle Time")]
     float TotalTime = 180f;
@@ -56,6 +59,11 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     GameObject LoadingInstance;
 
+    [Header("JoinRoom Failed")]
+    [SerializeField] GameObject JoinRoomFailedPrefabs;
+    GameObject JoinRoomFailedInstance;
+
+
     public static BossArena_Manager Instance;
 
     private void Start()
@@ -63,21 +71,28 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         LoadingInstance = Instantiate(LoadingPrefabs);
         LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
         LoadingInstance.GetComponent<Loading>().Begin();
+        References.SceneNameInvite = SceneName;
     }
 
     private void Awake()
     {
         Instance = this;
     }
-    public void Battle_Start()
-    {
-
-    }
 
     public override void OnJoinedRoom()
     {
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.Arena);
         LoadingInstance.GetComponent<Loading>().End();
+        PhotonNetwork.IsMessageQueueRunning = true;
+    }
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -89,7 +104,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void CheckPlayerReady()
     {
         RequireNumber = PhotonNetwork.PlayerList.Length;
-        if (CurrentNumber == RequireNumber && BattleStart == false) 
+        if (CurrentNumber == RequireNumber && BattleStart == false)
         {
             ProgressRun = true;
             GuideTxt.SetActive(false);
@@ -117,12 +132,10 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             if (player.AccountEntity.CurrentHealth > 0)
             {
-                // At least one player is still alive, so return without taking further action.
                 return;
             }
         }
 
-        // If this point is reached, all players are defeated, so handle the "lose" condition here.
         Battle_End(false);
 
     }
@@ -131,10 +144,17 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnConnectedToMaster()
     {
         if (PhotonNetwork.IsConnectedAndReady)
-        {           
-            roomOptions.MaxPlayers = 5;
-            roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom("123", roomOptions, TypedLobby.Default);
+        {
+            if (References.IsInvite)
+            {
+                PhotonNetwork.JoinRoom(References.RoomNameInvite);
+            }
+            else
+            {
+                roomOptions.MaxPlayers = 5;
+                roomOptions.BroadcastPropsChangeToAll = true;
+                PhotonNetwork.JoinOrCreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
+            }
         }
     }
 
@@ -204,11 +224,14 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         BattleStart = true;
         ProgressBar.SetActive(false);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+        }
         StartCoroutine(Battle_StartCoroutine());
         Game_Manager.Instance.IsBusy = true;
         ReadyBase.SetActive(false);
         GuideTxt.SetActive(false);
-        roomOptions.IsOpen = false;
 
     }
 
@@ -231,6 +254,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PhotonNetwork.InRoom)
         {
             Game_Manager.Instance.IsBusy = false;
+            PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel(Scenes.Konoha);
         }
@@ -248,7 +272,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void ShowEndgamePanel(string Text)
     {
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { EndGamePro, Text } }) ;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { EndGamePro, Text } });
 
         PhotonNetwork.RaiseEvent(ShowEndgamePanelEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
     }
@@ -265,7 +289,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(EndGamePro, out object EndText) && EndText != null)
             {
                 string End = (string)EndText;
-                Battle_End_Text.text = End;              
+                Battle_End_Text.text = End;
             }
 
             BossPool.SetActive(false);

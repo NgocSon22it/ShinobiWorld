@@ -86,19 +86,25 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 Debug.Log($"{sender}: {message}");
                 var mess = message.ToString().Split(new char[] { ':' });
 
-                var type = (TypePriviteMessage)Enum.Parse(typeof(TypePriviteMessage), mess[0]);
+                var type = (TypePrivateMessage)Enum.Parse(typeof(TypePrivateMessage), mess[0]);
                 switch (type)
                 {
-                    case TypePriviteMessage.FriendRequest:
+                    case TypePrivateMessage.FriendRequest:
                         FriendManager.Instance.Notify.SetActive(true);
                         break;
-                    case TypePriviteMessage.PKRequest:
+                    case TypePrivateMessage.PKRequest:
 
                         //Get Pk room ID =  mess[1]
                         var PKRoomID = mess[1];
 
                         break;
-                    case TypePriviteMessage.Text:
+                    case TypePrivateMessage.Text:
+                        break;
+                    case TypePrivateMessage.Arena:
+                        var ArenaMessage = mess[1];
+                        var SceneName = mess[2];
+                        var RoomName = mess[3];
+                        InviteManager.Instance.OpenReceiveInvitePopup(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName);
                         break;
                 }
             }
@@ -171,7 +177,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && IsTypingChat == false)
+        if (Input.GetKeyDown(KeyCode.Return) && IsTypingChat == false && Game_Manager.Instance.IsBusy == false)
         {
             ToggleTyping(true);
             FocusTyping();

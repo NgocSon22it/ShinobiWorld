@@ -14354,7 +14354,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 131071
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -14374,7 +14374,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1260615824}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.94, y: -3.89, z: -10}
+  m_LocalPosition: {x: 0.7, y: 0.8, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16168,6 +16168,7 @@ MonoBehaviour:
   SpawnPoint: {fileID: 1716326488}
   GuideTxt: {fileID: 856794328}
   CameraBox: {fileID: 1553408873}
+  SceneName: BossArena_Asuma
   Battle_Fight_CountdownTxt: {fileID: 351601314}
   ReadyBase: {fileID: 657394597}
   ProgressBar: {fileID: 5983041001032183627}
@@ -16178,7 +16179,8 @@ MonoBehaviour:
   Battle_End_Panel: {fileID: 838514803}
   Battle_End_Text: {fileID: 1101488517}
   LoadingPrefabs: {fileID: 953051348179350516, guid: c81f60b01b19f384090fae2fc9b1096e, type: 3}
-  LoadingImage: {fileID: 21300000, guid: 810c7d79554596b4b81df5a96e5f300e, type: 3}
+  LoadingImage: {fileID: 21300000, guid: 91c81f1fc908be54fa105c0dc5fbaaf5, type: 3}
+  JoinRoomFailedPrefabs: {fileID: 953051348179350516, guid: 56ff80c74de7014498f68d6ad942dd3c, type: 3}
 --- !u!114 &1760949264
 MonoBehaviour:
   m_ObjectHideFlags: 0

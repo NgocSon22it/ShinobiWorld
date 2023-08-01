@@ -25,6 +25,8 @@ namespace Assets.Scripts.Shop
         public void OnClick()
         {
             BuyItemManager.Instance.ShowDetail(ID);
+            GetComponent<Image>().color = References.ItemColorSelected;
+
         }
     }
 }

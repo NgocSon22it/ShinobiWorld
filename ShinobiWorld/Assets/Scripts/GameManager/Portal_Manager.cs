@@ -65,6 +65,7 @@ public class Portal_Manager : MonoBehaviour
     {
         Game_Manager.Instance.IsBusy = false;    
         References.PlayerSpawnPosition = References.AreaAddress[SelectedArea.ToString()];
+        PhotonNetwork.IsMessageQueueRunning = false;
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel(SelectedArea);
     }
