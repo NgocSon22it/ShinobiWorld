@@ -210,7 +210,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
                 PlayerHealthChakraUI.SetActive(false);
-                PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat("123");
+                PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
                 CallInvoke();
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
