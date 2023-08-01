@@ -25,7 +25,9 @@ public class EquipmentBag : MonoBehaviour
 
     public void Setup(BagEquipment_Entity BagEquipment, EquipmentDetail detail, bool isFirst)
     {
-        if(isFirst) GetComponent<Image>().color = References.ItemColorSelected;
+        GetComponent<Image>().color = References.ItemColorDefaul;
+
+        if (isFirst) GetComponent<Image>().color = References.ItemColorSelected;
         equipmentDetail = detail;
         var equipment = References.listEquipment.Find(obj => obj.ID == BagEquipment.EquipmentID);
         BagEquipmentID = BagEquipment.ID;

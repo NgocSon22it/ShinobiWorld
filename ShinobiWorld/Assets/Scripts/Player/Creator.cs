@@ -82,9 +82,9 @@ public class Creator : MonoBehaviour
 
     public void ResetColorRole()
     {
-        MeleeBtn.GetComponent<Image>().color = Color.white;
-        RangeBtn.GetComponent<Image>().color = Color.white;
-        SupportBtn.GetComponent<Image>().color = Color.white;
+        MeleeBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
+        RangeBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
+        SupportBtn.GetComponent<Image>().color = References.ButtonColorDefaul;
         ResetColorLayout();
         ChangeBtn.SetActive(false);
     }
@@ -92,17 +92,17 @@ public class Creator : MonoBehaviour
     public void ResetColorLayout()
     {
         ChangeBtn.SetActive(true);
-        HairBtn.GetComponent<Image>().color = Color.white;
-        EyeBtn.GetComponent<Image>().color = Color.white;
-        MouthBtn.GetComponent<Image>().color = Color.white;
-        SkinBtn.GetComponent<Image>().color = Color.white;
+        HairBtn.GetComponent<Image>().color = References.ButtonColorSelected;
+        EyeBtn.GetComponent<Image>().color = References.ButtonColorSelected;
+        MouthBtn.GetComponent<Image>().color = References.ButtonColorSelected;
+        SkinBtn.GetComponent<Image>().color = References.ButtonColorSelected;
     }
     public void OnMeleeBtnClick()
     {
         IDRole = "Role_Melee";
         layout = "Role";
         ResetColorRole();
-        MeleeBtn.GetComponent<Image>().color = new Color32(0, 100, 255, 255);
+        MeleeBtn.GetComponent<Image>().color = References.ButtonColorSelected;
     }
 
     public void OnRangeBtnClick()
@@ -110,7 +110,7 @@ public class Creator : MonoBehaviour
         IDRole = "Role_Range";
         layout = "Role";
         ResetColorRole();
-        RangeBtn.GetComponent<Image>().color = new Color32(0, 100, 255, 255);
+        RangeBtn.GetComponent<Image>().color = References.ButtonColorSelected;
     }
 
     public void OnSupportBtnClick()
@@ -118,35 +118,35 @@ public class Creator : MonoBehaviour
         IDRole = "Role_Support";
         layout = "Role";
         ResetColorRole();
-        SupportBtn.GetComponent<Image>().color = new Color32(0, 100, 255, 255);
+        SupportBtn.GetComponent<Image>().color = References.ButtonColorSelected;
     }
 
     public void OnSkinBtnClick()
     {
         layout = "Skin";
         ResetColorLayout();
-        SkinBtn.GetComponent<Image>().color = new Color32(255, 190, 0, 255);
+        SkinBtn.GetComponent<Image>().color = Color.white;
     }
 
     public void OnHairBtnClick()
     {
         layout = "Hair";
         ResetColorLayout();
-        HairBtn.GetComponent<Image>().color = new Color32(255, 190, 0, 255);
+        HairBtn.GetComponent<Image>().color = Color.white;
     }
 
     public void OnEyeBtnClick()
     {
         layout = "Eye";
         ResetColorLayout();
-        EyeBtn.GetComponent<Image>().color = new Color32(255, 190, 0, 255);
+        EyeBtn.GetComponent<Image>().color = Color.white;
     }
 
     public void OnMouthBtnClick()
     {
         layout = "Mouth";
         ResetColorLayout();
-        MouthBtn.GetComponent<Image>().color = new Color32(255, 190, 0, 255);
+        MouthBtn.GetComponent<Image>().color = Color.white;
     }
 
     public void OnBackBtnClick()
@@ -246,8 +246,10 @@ public class Creator : MonoBehaviour
         var image = References.listRole.Find(obj => obj.ID == IDRole).Image;
         Weapon.sprite = Resources.Load<Sprite>(image);
 
-        MeleeBtn.GetComponent<Image>().color = new Color32(0, 100, 255, 255);
+        MeleeBtn.GetComponent<Image>().color = References.ButtonColorSelected;
         ChangeBtn.SetActive(false);
+
+        ResetColorRole();
     }
 
     void LayoutChoice()
@@ -317,8 +319,7 @@ public class Creator : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        Debug.Log("creator - quit");
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
     }
 }
 
