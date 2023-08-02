@@ -262,6 +262,37 @@ Transform:
   m_Father: {fileID: 6554196350056485849}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2459660995708750299
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1454856099822166034}
+  m_Layer: 3
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1454856099822166034
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2459660995708750299}
+  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.12, y: -0.87, z: 0.043749448}
+  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4509570501449471191}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2611361927756633972
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +321,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4509570501449471191
 Transform:
   m_ObjectHideFlags: 0
@@ -307,6 +338,7 @@ Transform:
   - {fileID: 7254851825206182785}
   - {fileID: 8747735363256768650}
   - {fileID: 3231805743456337551}
+  - {fileID: 1454856099822166034}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -408,8 +440,8 @@ MonoBehaviour:
   - {fileID: 9220136017019543914}
   - {fileID: 3650295290306563128}
   m_Bounds:
-    m_Center: {x: 0.2017039, y: 0.11693263, z: 0}
-    m_Extent: {x: 1.261635, y: 1.5042615, z: 0}
+    m_Center: {x: 0.390545, y: -0.054145575, z: 0}
+    m_Extent: {x: 1.3229547, y: 1.5954332, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -504,6 +536,7 @@ MonoBehaviour:
   BossType: 1
   CurrentHealth: 0
   MainPoint: {fileID: 7254851825206182785}
+  FirePoint: {fileID: 1454856099822166034}
   CurrentHealth_UI: {fileID: 2963177668361926834}
   HealthNumber: {fileID: 5452485520468400766}
   DeathEffect: {fileID: 0}
