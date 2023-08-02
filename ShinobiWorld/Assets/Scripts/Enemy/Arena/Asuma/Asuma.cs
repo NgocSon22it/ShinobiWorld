@@ -84,7 +84,7 @@ public class Asuma : Enemy
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 5);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
                 SetUpSkilling(3f);
             }
         }
@@ -177,7 +177,6 @@ public class Asuma : Enemy
         GameObject SkillTwo = boss_Pool.GetSkillTwoFromPool();
         if (SkillTwo != null)
         {
-
             SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(30);
             SkillTwo.transform.position = TargetPosition;
             SkillTwo.SetActive(true);
