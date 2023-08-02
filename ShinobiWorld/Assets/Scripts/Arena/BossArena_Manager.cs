@@ -71,8 +71,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         LoadingInstance = Instantiate(LoadingPrefabs);
         LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
-        LoadingInstance.GetComponent<Loading>().Begin();
-        References.SceneNameInvite = SceneName;
+        LoadingInstance.GetComponent<Loading>().Begin();      
     }
 
     private void Awake()
@@ -83,6 +82,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedRoom()
     {
         References.ChatServer = PhotonNetwork.CurrentRoom.Name;
+        References.SceneNameInvite = SceneName;
+        References.InviteType = AccountStatus.Arena;
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
@@ -102,6 +103,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Game_Manager.Instance.ReloadPlayerProperties();
         CheckPlayerReady();
     }
+
+    #region Check Player Status
 
     public void CheckPlayerReady()
     {
@@ -140,7 +143,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         Battle_End(false);
     }
-
+    #endregion
 
     public override void OnConnectedToMaster()
     {

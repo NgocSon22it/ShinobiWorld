@@ -87,6 +87,7 @@ public static class References
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
+    public static AccountStatus InviteType;
     public static string SceneNameInvite;
     public static string RoomNameInvite;
 

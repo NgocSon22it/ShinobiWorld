@@ -46,7 +46,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         Debug.Log("Kết nối đến chat thành công!");
         isConnected = true;
-        chatClient.Subscribe(new string[] { ServerName });      
+        chatClient.Subscribe(new string[] { ServerName });
     }
 
     public void OnDisconnected()
@@ -91,7 +91,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                     case TypePrivateMessage.FriendRequest:
                         FriendManager.Instance.Notify.SetActive(true);
                         break;
-                    case TypePrivateMessage.PKRequest:                      
+                    case TypePrivateMessage.PKRequest:
+                        var PKMessage = mess[1];
+                        var PKSceneName = mess[2];
+                        var PKRoomName = mess[3];
+                        InviteManager.Instance.OpenReceiveInvitePopup(TypePrivateMessage.PKRequest, sender + " " + PKMessage, PKSceneName, PKRoomName);
                         break;
                     case TypePrivateMessage.Text:
                         break;
@@ -137,7 +141,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         this.ServerName = ServerName;
         isConnected = true;
-        chatClient = new ChatClient(this);      
+        chatClient = new ChatClient(this);
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(References.accountRefer.Name));
         Debug.Log("Đang kết nối");
     }
@@ -171,7 +175,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     // Update is called once per frame
     void Update()
     {
-       
+
         if (isConnected)
         {
             chatClient.Service();
