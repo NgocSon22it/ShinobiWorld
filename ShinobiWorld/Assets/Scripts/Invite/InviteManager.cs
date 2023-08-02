@@ -76,7 +76,8 @@ public class InviteManager : MonoBehaviour
 
     public void OpenReceiveInvitePopup(TypePrivateMessage type, string Content, string SceneName, string RoomName)
     {
-        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal)
+        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal 
+            && !References.RoomNameInvite.Equals(RoomName))
         {
             this.type = type;
             References.SceneNameInvite = SceneName;

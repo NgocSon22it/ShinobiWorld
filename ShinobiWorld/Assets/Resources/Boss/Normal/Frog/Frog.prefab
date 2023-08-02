@@ -31,6 +31,37 @@ Transform:
   m_Father: {fileID: 2129092870006312189}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 176.667}
+--- !u!1 &1494301124192315245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1702453799861437942}
+  m_Layer: 3
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1702453799861437942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494301124192315245}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.006, y: 0.147, z: 0.066679634}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4330787393207985108}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1958181976376078678
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,6 +723,7 @@ Transform:
   - {fileID: 7028003565849629592}
   - {fileID: 6847762016226989821}
   - {fileID: 2181551948983560669}
+  - {fileID: 1702453799861437942}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -768,8 +800,8 @@ MonoBehaviour:
   - {fileID: 3702505393755655016}
   - {fileID: 7871714950451503795}
   m_Bounds:
-    m_Center: {x: 0.0017344952, y: -0.022286952, z: 0}
-    m_Extent: {x: 1.0452294, y: 0.92627823, z: 0}
+    m_Center: {x: 0.0012310743, y: -0.0029610395, z: 0}
+    m_Extent: {x: 1.114784, y: 0.92276895, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -941,7 +973,6 @@ MonoBehaviour:
     CoinBonus: 0
     ExpBonus: 0
     Delete: 0
-  boss_Health: 0
   AreaEnemy_Entity:
     ID: 
     AreaID: 
@@ -966,9 +997,10 @@ MonoBehaviour:
   BossType: 0
   CurrentHealth: 0
   MainPoint: {fileID: 6847762016226989821}
+  FirePoint: {fileID: 1702453799861437942}
   CurrentHealth_UI: {fileID: 3598689004523533216}
   HealthNumber: {fileID: 6000290347850486124}
-  DeathEffect: {fileID: 0}
+  DeathEffect: {fileID: 1360398062442509489}
   direction: {x: 0, y: 0}
   HealthChakraUI: {fileID: 1958181976376078678}
   spriteRenderer: {fileID: 4464417914646453615}
@@ -1405,6 +1437,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b482db22f3e02d847983890f7d967668, type: 3}
+--- !u!1 &1360398062442509489 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6273843248323650677, guid: b482db22f3e02d847983890f7d967668, type: 3}
+  m_PrefabInstance: {fileID: 5039582843480805572}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1360398062442539153 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6273843248324147285, guid: b482db22f3e02d847983890f7d967668, type: 3}

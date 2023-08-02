@@ -83,12 +83,12 @@ public class Kakashi : Enemy
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
 
-            direction = TargetPosition - transform.Find("MainPoint").position;
+            direction = TargetPosition - transform.Find("FirePoint").position;
             direction.Normalize();
 
             if (SkillOne != null)
             {
-                SkillOne.transform.position = transform.Find("MainPoint").position;
+                SkillOne.transform.position = transform.Find("FirePoint").position;
                 SkillOne.GetComponent<Kakashi_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Kakashi_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
