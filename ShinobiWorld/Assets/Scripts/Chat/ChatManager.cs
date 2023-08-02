@@ -68,9 +68,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             mess = string.Format("[{2}] {0}: {1}", senders[i], messages[i], currentTimeString);
 
             ChatDisPlay.text += "\n " + mess;
-
-            Debug.Log(mess);
         }
+        InviteManager.Instance.CloseReceiveInvitePopup();
 
     }
 
@@ -93,10 +92,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                         FriendManager.Instance.Notify.SetActive(true);
                         break;
                     case TypePrivateMessage.PKRequest:
-
-                        //Get Pk room ID =  mess[1]
-                        var PKRoomID = mess[1];
-
+                        var PKMessage = mess[1];
+                        var PKSceneName = mess[2];
+                        var PKRoomName = mess[3];
+                        InviteManager.Instance.OpenReceiveInvitePopup(TypePrivateMessage.PKRequest, sender + " " + PKMessage, PKSceneName, PKRoomName);
                         break;
                     case TypePrivateMessage.Text:
                         break;
@@ -150,7 +149,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void TypeChatOnValueChange(string value)
     {
         CurrentChat = value;
-        Debug.Log(CurrentChat);
     }
 
     public void SummitPublicChat()
@@ -177,22 +175,20 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && IsTypingChat == false && Game_Manager.Instance.IsBusy == false)
-        {
-            ToggleTyping(true);
-            FocusTyping();
-        }
-        else if (string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
-        {
-            ToggleTyping(false);
-        }
 
         if (isConnected)
         {
             chatClient.Service();
-
+            if (Input.GetKeyDown(KeyCode.Return) && IsTypingChat == false && Game_Manager.Instance.IsBusy == false)
+            {
+                ToggleTyping(true);
+                FocusTyping();
+            }
+            else if (string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
+            {
+                ToggleTyping(false);
+            }
         }
-
         if (!string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
         {
             SummitPublicChat();

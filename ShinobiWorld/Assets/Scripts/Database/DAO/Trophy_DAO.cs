@@ -22,7 +22,7 @@ namespace Assets.Scripts.Database.DAO
                 {
                     connection.Open();
                     SqlCommand cmd = connection.CreateCommand();
-                    cmd.CommandText = "SELECT *  FROM [dbo].[Trophy]";
+                    cmd.CommandText = "SELECT *  FROM [dbo].[Trophy] order by Health asc";
                     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dataTable = new DataTable();
                     adapter.Fill(dataTable);

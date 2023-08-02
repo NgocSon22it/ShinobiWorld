@@ -13,7 +13,6 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using WebSocketSharp;
-using static UnityEditor.Progress;
 
 public class MissionManager : MonoBehaviour
 {
