@@ -444,7 +444,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         CancelInvoke(nameof(RegenChakra));
         CancelInvoke(nameof(RegenHealth));
         CancelInvoke(nameof(RegenStrength));
-        photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.All);
+        photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
     }
 
 
