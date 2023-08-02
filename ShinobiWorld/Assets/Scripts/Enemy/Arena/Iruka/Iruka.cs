@@ -1,3 +1,5 @@
+using Pathfinding;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +10,11 @@ public class Iruka : Enemy
 
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
+    [SerializeField] AIPath aIPath;
+    [SerializeField] AIDestinationSetter destinationSetter;
+    public float attackRadius;
+    public bool CanAttackPlayer;
+    GameObject Target;
 
     //Skill Three
     public float dashSpeed;
@@ -23,26 +30,37 @@ public class Iruka : Enemy
     new void Start()
     {
         base.Start();
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Iruka")).Health;
+        CurrentHealth = boss_Health;
+        Target = FindClostestTargetToFollow(detectionRadius, "Player");
+        destinationSetter.target = Target.transform;
+        LoadHealthUI(CurrentHealth, boss_Health);
     }
 
     new void FixedUpdate()
     {
-        AttackAndMove();
+        if (!photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * lerpFactor);
+        }
+        else
+        {
+            AttackAndMove();
+        }
 
     }
 
     public void AttackAndMove()
     {
-
         if (isMoving)
         {
-            transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
-
-            if (transform.position == MovePosition)
+            MovePosition = aIPath.desiredVelocity;
+            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius, AttackableLayer);
+            if (CanAttackPlayer)
             {
+                aIPath.canMove = false;
                 isMoving = false;
             }
-
         }
         else
         {
@@ -60,17 +78,17 @@ public class Iruka : Enemy
         if (TargetPosition != Vector3.negativeInfinity)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
+
+            direction = TargetPosition - transform.Find("MainPoint").position;
+            direction.Normalize();
 
             if (SkillOne != null)
             {
                 SkillOne.transform.position = transform.Find("MainPoint").position;
-                SkillOne.transform.rotation = transform.rotation;
                 SkillOne.GetComponent<Iruka_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Iruka_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 5);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
                 SetUpSkilling(3f);
             }
         }
@@ -80,7 +98,7 @@ public class Iruka : Enemy
     {
         if (TargetPosition != Vector3.negativeInfinity)
         {
-            StartCoroutine(SkillTwo_Fire());
+            SkillTwo_Fire();
         }
     }
 
@@ -96,10 +114,10 @@ public class Iruka : Enemy
     public IEnumerator RandomAttack()
     {
         IsStartCoroutine = true;
+
         RandomState = Random.Range(1, 4);
 
-        TargetPosition = FindClostestTarget(100f, "Player");
-        animator.SetTrigger("Skill" + RandomState);
+        photonView.RPC(nameof(CallAnimation), RpcTarget.All, "Skill" + RandomState);
         IsSkilling = true;
 
         while (IsSkilling)
@@ -107,26 +125,64 @@ public class Iruka : Enemy
             yield return null;
         }
 
-        MovePosition = GetRandomPosition();
+        Target = FindClostestTargetToFollow(detectionRadius, "Player");
+        destinationSetter.target = Target.transform;
+        aIPath.canMove = true;
         isMoving = true;
         IsStartCoroutine = false;
+
     }
 
-    IEnumerator SkillTwo_Fire()
+    [PunRPC]
+    public void CallAnimation(string AnimationName)
     {
-        for (int i = 0; i < 10; i++)
+        animator.SetTrigger(AnimationName);
+    }
+    public void FollowPlayer()
+    {
+        if (MainPoint.position.x < Target.transform.position.x && !FacingRight)
         {
-            GameObject SkillOne = boss_Pool.GetSkillTwoFromPool();
-            if (SkillOne != null)
-            {
+            Flip();
+        }
+        else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
+        {
+            Flip();
+        }
+    }
 
-                SkillOne.transform.position = TargetPosition;
-                SkillOne.GetComponent<Iruka_SkillTwo>().SetUp(100);
-                SkillOne.SetActive(true);
-                yield return new WaitForSeconds(0.3f);
+    public GameObject FindClostestTargetToFollow(float Range, string TargetTag)
+    {
+        float distanceToClosestTarget = Mathf.Infinity;
+        GameObject closestTargetPosition = null;
+
+        GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
+
+        foreach (GameObject currentTarget in allTarget)
+        {
+            float distanceToTarget = (currentTarget.transform.position - this.transform.position).sqrMagnitude;
+            if (distanceToTarget < distanceToClosestTarget
+                && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range
+                && currentTarget.GetComponent<BoxCollider2D>().enabled)
+            {
+                distanceToClosestTarget = distanceToTarget;
+                closestTargetPosition = currentTarget;
+
             }
         }
 
+        return closestTargetPosition;
+    }
+
+    public void SkillTwo_Fire()
+    {
+        GameObject SkillOne = boss_Pool.GetSkillTwoFromPool();
+        if (SkillOne != null)
+        {
+            SkillOne.transform.position = TargetPosition;
+            SkillOne.GetComponent<Iruka_SkillTwo>().SetUp(100);
+            SkillOne.SetActive(true);
+
+        }
         SetUpSkilling(3f);
     }
 
@@ -146,7 +202,6 @@ public class Iruka : Enemy
         }
         isDashing = false;
 
-        TargetPosition = FindClostestTarget(100f, "Player");
         direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
 
         GameObject center = boss_Pool.GetSkillThreeFromPool();
@@ -189,7 +244,6 @@ public class Iruka : Enemy
     {
         StartCoroutine(WaitMomentForSkill(Seconds));
     }
-
     IEnumerator WaitMomentForSkill(float Seconds)
     {
         yield return new WaitForSeconds(Seconds);
