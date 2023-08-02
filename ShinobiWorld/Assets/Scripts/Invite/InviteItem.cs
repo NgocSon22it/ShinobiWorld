@@ -18,6 +18,6 @@ public class InviteItem : MonoBehaviour
 
     public void OnclickInvite()
     {
-        InviteManager.Instance.SendArenaMessage(account_Entity.Name);
+        InviteManager.Instance.SendInvite(account_Entity.Name);
     }
 }

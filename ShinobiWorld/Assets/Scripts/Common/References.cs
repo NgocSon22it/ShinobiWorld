@@ -87,9 +87,12 @@ public static class References
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
+    public static AccountStatus InviteType;
     public static string SceneNameInvite;
     public static string RoomNameInvite;
+
     public static bool IsInvite;
+    public static string ChatServer;
 
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {

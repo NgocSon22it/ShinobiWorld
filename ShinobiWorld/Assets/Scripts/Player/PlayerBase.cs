@@ -210,7 +210,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
                 PlayerHealthChakraUI.SetActive(false);
-                PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat("123");
+                PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
                 CallInvoke();
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
@@ -415,7 +415,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 case AccountStatus.PK:
                     if (AccountEntity.CurrentHealth <= 0)
                     {
-                        PK_Manager.Instance.Battle_End(AccountEntity.ID);
+                        PK_Manager.Instance.CheckPlayerDead();
                     }
                     break;
             }

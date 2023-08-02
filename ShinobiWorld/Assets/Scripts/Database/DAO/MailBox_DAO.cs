@@ -147,5 +147,29 @@ namespace Assets.Scripts.Database.DAO
                 connection.Close();
             }
         }
+
+        public static bool CheckSentMailRank(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM [dbo].[MailBox] WHERE AccountID = @UserID and AddDate = CAST( GETDATE() AS Date )";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    if (dataTable.Rows.Count > 0) return true; else return false;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+            }
+        }
     }
 }
