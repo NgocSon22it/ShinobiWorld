@@ -2,6 +2,7 @@
 using Assets.Scripts.Database.Entity;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,7 +44,7 @@ public class InviteManager : MonoBehaviour
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
                string.Format(Message.PrivateMessage, TypePrivateMessage.PKRequest.ToString(),
-               Message.PKMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name));
+               Message.PKMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name, References.PKBet));
 
                 break;
 
@@ -51,7 +52,7 @@ public class InviteManager : MonoBehaviour
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
                string.Format(Message.PrivateMessage, TypePrivateMessage.Arena.ToString(),
-               Message.BossAreaMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name));
+               Message.BossAreaMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name, References.BossNameInvite));
                 break;
         }
     }
@@ -74,7 +75,7 @@ public class InviteManager : MonoBehaviour
         }
     }
 
-    public void OpenReceiveInvitePopup(TypePrivateMessage type, string Content, string SceneName, string RoomName)
+    public void OpenReceiveInvitePopup_Arena(TypePrivateMessage type, string Content, string SceneName, string RoomName, string BossName)
     {
         if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal 
             && !References.RoomNameInvite.Equals(RoomName))
@@ -82,7 +83,22 @@ public class InviteManager : MonoBehaviour
             this.type = type;
             References.SceneNameInvite = SceneName;
             References.RoomNameInvite = RoomName;
-            InviteContent.text = Content;
+            InviteContent.text = Content + " " + BossName;
+            ReceivePanel.SetActive(true);
+            StartCoroutine(PopupInvite());
+        }
+    }
+
+    public void OpenReceiveInvitePopup_PK(TypePrivateMessage type, string Content, string SceneName, string RoomName, string Bet)
+    {
+        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal
+            && !References.RoomNameInvite.Equals(RoomName))
+        {
+            this.type = type;
+            References.SceneNameInvite = SceneName;
+            References.RoomNameInvite = RoomName;
+            References.PKBet = Convert.ToInt32(Bet);
+            InviteContent.text = Content + " " + Bet + " Vàng.";
             ReceivePanel.SetActive(true);
             StartCoroutine(PopupInvite());
         }

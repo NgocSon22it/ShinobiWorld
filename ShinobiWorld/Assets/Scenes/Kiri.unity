@@ -30546,6 +30546,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 942702785}
     - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: MinimapRaw
+      value: 
+      objectReference: {fileID: 8400000, guid: 2f324981f2337a2458ab455dac26f120, type: 2}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
       propertyPath: LoadingImage
       value: 
       objectReference: {fileID: 21300000, guid: 327b4720931d7e2498f0da82840cefbe, type: 3}
@@ -30553,6 +30557,14 @@ PrefabInstance:
       propertyPath: CurrentAreaName
       value: Kiri
       objectReference: {fileID: 0}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: currentAreaName
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: JoinRoomFailedPrefabs
+      value: 
+      objectReference: {fileID: 953051348179350516, guid: 56ff80c74de7014498f68d6ad942dd3c, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
 --- !u!114 &412045404
@@ -105873,7 +105885,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 178467679
   m_SortingLayer: 3
-  m_SortingOrder: 5
+  m_SortingOrder: 0
   m_Sprite: {fileID: 1788547001, guid: eb9659f626c2d374bbf0ec451577b542, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -107133,7 +107145,7 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.72, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
