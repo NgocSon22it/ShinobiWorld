@@ -184,6 +184,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &640108758574521365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1950678298166989658}
+  m_Layer: 3
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1950678298166989658
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640108758574521365}
+  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.82, y: 0.148, z: -0.061418105}
+  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1260718448975624749}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1220191371797995067
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,6 +591,7 @@ Transform:
   - {fileID: 4049962613944955524}
   - {fileID: 5464285246393086957}
   - {fileID: 2453422313339118709}
+  - {fileID: 1950678298166989658}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -730,20 +762,13 @@ MonoBehaviour:
     CoinBonus: 0
     ExpBonus: 0
     Delete: 0
-  boss_Entity:
-    ID: 
-    TrophyID: 
-    Name: 
-    Health: 0
-    Speed: 0
-    Delete: 0
   AreaEnemy_Entity:
     ID: 
     AreaID: 
     EnemyID: 
     IsDead: 0
     Delete: 0
-  AreaName: LL1_Magician1
+  AreaID: 
   EnemyID: Magician
   movementBounds: {fileID: 0}
   ObjectPool: {fileID: 2097149442355525517}
@@ -761,6 +786,7 @@ MonoBehaviour:
   BossType: 0
   CurrentHealth: 0
   MainPoint: {fileID: 5464285246393086957}
+  FirePoint: {fileID: 1950678298166989658}
   CurrentHealth_UI: {fileID: 7515728356421325500}
   HealthNumber: {fileID: 790794928572412016}
   DeathEffect: {fileID: 7157856422561376448}

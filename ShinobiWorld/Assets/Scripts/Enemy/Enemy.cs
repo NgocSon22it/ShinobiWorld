@@ -55,6 +55,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     // MainPoint
     [SerializeField] protected Transform MainPoint;
+    [SerializeField] protected Transform FirePoint;
 
     //Health UI
     [SerializeField] Image CurrentHealth_UI;

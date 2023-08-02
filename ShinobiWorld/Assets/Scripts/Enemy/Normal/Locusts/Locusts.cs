@@ -78,7 +78,7 @@ public class Locusts : Enemy
             {
                 SkillOne.transform.position = TargetPosition;
                 SkillOne.GetComponent<Locusts_Attack>().SetUp(100);
-                SkillOne.GetComponent<Locusts_Attack>().SetUpPoint(transform.position, TargetPosition);
+                SkillOne.GetComponent<Locusts_Attack>().SetUpPoint(FirePoint.position, TargetPosition);
                 SkillOne.SetActive(true);
             }
         }
