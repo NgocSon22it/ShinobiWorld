@@ -415,7 +415,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 case AccountStatus.PK:
                     if (AccountEntity.CurrentHealth <= 0)
                     {
-                        PK_Manager.Instance.Battle_End(AccountEntity.ID);
+                        PK_Manager.Instance.CheckPlayerDead();
                     }
                     break;
             }

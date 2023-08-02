@@ -13,31 +13,24 @@ using UnityEngine.UI;
 
 public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
+    [Header("Set Up")]
     [SerializeField] Canvas sortCanvas;
     [SerializeField] GameObject Boss;
     [SerializeField] GameObject BossPool;
-
     [SerializeField] Transform SpawnPoint;
-
-    [SerializeField] GameObject GuideTxt;
-
     [SerializeField] PolygonCollider2D CameraBox;
 
-    [SerializeField] string SceneName;
-
     [Header("Battle Time")]
-    float TotalTime = 180f;
-    float currentTime;
+    float TotalTime = 180f, currentTime;
     [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
-    [SerializeField] GameObject ReadyBase;
+    [SerializeField] GameObject ReadyBase, GuideTxt;
 
     [Header("Battle Start")]
-    float TotalProgress = 1f, CurrentProgress = 0f;
+    float TotalProgress = 1f, CurrentProgress = 0f, ReadyTime = 3f;
     bool BattleStart, ProgressRun;
     Coroutine ProgressBar_Coroutine;
     [SerializeField] GameObject ProgressBar;
     [SerializeField] Image CurrentProgressBar;
-    float ReadyTime = 3f;
     [SerializeField] TMP_Text Battle_Start_CountdownTxt;
     public int RequireNumber, CurrentNumber;
 
@@ -55,7 +48,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private const byte ActiveBossEventCode = 2;
 
     private const string EndGamePro = "EndGame";
-
+    [SerializeField] string SceneName;
     RoomOptions roomOptions = new RoomOptions();
 
     GameObject LoadingInstance;

@@ -873,7 +873,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &686772245
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16664,16 +16664,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Spawnpoint: {fileID: 1716326488}
   CameraBox: {fileID: 1553408873}
+  sortCanvas: {fileID: 1760949266}
   ProgressBar: {fileID: 5983041001032183627}
+  GuideTxt: {fileID: 856794328}
   CurrentProgressBar: {fileID: 5983041000426736579}
   Battle_Start_CountdownTxt: {fileID: 682694183}
-  GuideTxt: {fileID: 856794328}
   Battle_Fight_CountdownTxt: {fileID: 351601314}
   BattleEnd_Panel: {fileID: 838514803}
-  WinLose: {fileID: 0}
-  Draw: {fileID: 0}
-  PlayerWin_Nametxt: {fileID: 0}
-  PlayerLose_Nametxt: {fileID: 0}
+  WinLose_Panel: {fileID: 295161648}
+  Draw_Panel: {fileID: 686772244}
+  PlayerWin_Nametxt: {fileID: 1389588109}
+  PlayerLose_Nametxt: {fileID: 42274409}
   LoadingPrefabs: {fileID: 953051348179350516, guid: c81f60b01b19f384090fae2fc9b1096e, type: 3}
   LoadingImage: {fileID: 21300000, guid: 2ddd49e47ec90e44a9ecb647b83447d0, type: 3}
   JoinRoomFailedPrefabs: {fileID: 953051348179350516, guid: 56ff80c74de7014498f68d6ad942dd3c, type: 3}
@@ -17178,8 +17179,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BossArena_Manager, Assembly-CSharp
+      - m_Target: {fileID: 1760949268}
+        m_TargetAssemblyTypeName: PK_Manager, Assembly-CSharp
         m_MethodName: ReturnToKonoha
         m_Mode: 1
         m_Arguments:

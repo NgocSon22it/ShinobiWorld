@@ -97,13 +97,4 @@ public class ArenaManager : MonoBehaviour
             SelectedBoss = listBoss[index];
         }
     }
-
-    public void OpenPKRoom()
-    {
-        Close();
-        Debug.Log("PK Room Opened");
-
-    }
-
-
 }
