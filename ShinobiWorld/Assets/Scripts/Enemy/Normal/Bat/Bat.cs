@@ -33,7 +33,6 @@ public class Bat : Enemy
     {
         if (playerInRange)
         {
-            // Stop moving
             isMoving = false;
         }
         else
@@ -78,7 +77,7 @@ public class Bat : Enemy
             {
                 SkillOne.transform.position = TargetPosition;
                 SkillOne.GetComponent<Bat_Attack>().SetUp(100);
-                SkillOne.GetComponent<Bat_Attack>().SetUpPoint(transform.position, TargetPosition);
+                SkillOne.GetComponent<Bat_Attack>().SetUpPoint(FirePoint.position, TargetPosition);
                 SkillOne.SetActive(true);
             }
         }

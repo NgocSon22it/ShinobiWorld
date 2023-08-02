@@ -79,12 +79,12 @@ public class Iruka : Enemy
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
 
-            direction = TargetPosition - transform.Find("MainPoint").position;
+            direction = TargetPosition - transform.Find("FirePoint").position;
             direction.Normalize();
 
             if (SkillOne != null)
             {
-                SkillOne.transform.position = transform.Find("MainPoint").position;
+                SkillOne.transform.position = transform.Find("FirePoint").position;
                 SkillOne.GetComponent<Iruka_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Iruka_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
@@ -202,12 +202,12 @@ public class Iruka : Enemy
         }
         isDashing = false;
 
-        direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
+        direction = (TargetPosition - transform.Find("FirePoint").position).normalized;
 
         GameObject center = boss_Pool.GetSkillThreeFromPool();
         if (center != null)
         {
-            center.transform.position = transform.Find("MainPoint").position;
+            center.transform.position = transform.Find("FirePoint").position;
             center.transform.rotation = transform.rotation;
             center.GetComponent<Iruka_SkillThree>().SetUp(100);
             center.GetComponent<Iruka_SkillThree>().SetUpDirection(direction, -90);
@@ -218,7 +218,7 @@ public class Iruka : Enemy
         GameObject left = boss_Pool.GetSkillThreeFromPool();
         if (left != null)
         {
-            left.transform.position = transform.Find("MainPoint").position;
+            left.transform.position = transform.Find("FirePoint").position;
             left.transform.rotation = transform.rotation;
             left.GetComponent<Iruka_SkillThree>().SetUp(100);
             left.GetComponent<Iruka_SkillThree>().SetUpDirection(direction, -90 - Angle);
@@ -229,7 +229,7 @@ public class Iruka : Enemy
         GameObject right = boss_Pool.GetSkillThreeFromPool();
         if (right != null)
         {
-            right.transform.position = transform.Find("MainPoint").position;
+            right.transform.position = transform.Find("FirePoint").position;
             right.transform.rotation = transform.rotation;
             right.GetComponent<Iruka_SkillThree>().SetUp(100);
             right.GetComponent<Iruka_SkillThree>().SetUpDirection(direction, -90 + Angle);

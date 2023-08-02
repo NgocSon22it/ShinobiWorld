@@ -184,7 +184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9118393069250100339
 Transform:
   m_ObjectHideFlags: 0
@@ -200,6 +200,7 @@ Transform:
   - {fileID: 3382345059633435294}
   - {fileID: 1868474149522487640}
   - {fileID: 1731305888941784249}
+  - {fileID: 8227504592211632310}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -351,6 +352,7 @@ MonoBehaviour:
   BossType: 1
   CurrentHealth: 0
   MainPoint: {fileID: 1868474149522487640}
+  FirePoint: {fileID: 8227504592211632310}
   CurrentHealth_UI: {fileID: 5224093227169438849}
   HealthNumber: {fileID: 3083833034661346893}
   DeathEffect: {fileID: 0}
@@ -362,7 +364,6 @@ MonoBehaviour:
   boss_Pool: {fileID: 1395550231604775680}
   collider2d: {fileID: 1395550231604775682}
   FacingRight: 0
-  lerpFactor: 5
   List_SmokeSummon:
   - {fileID: 0}
   - {fileID: 0}
@@ -497,10 +498,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 5
-  radius: 0.5
+  radius: 1.2
   height: 2
   canMove: 1
-  maxSpeed: 3
+  maxSpeed: 5
   gravity: {x: 0, y: 0, z: 0}
   groundMask:
     serializedVersion: 2
@@ -981,6 +982,37 @@ Transform:
   m_Father: {fileID: 3382345059633435294}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -179.535}
+--- !u!1 &6143593022615548925
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8227504592211632310}
+  m_Layer: 3
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8227504592211632310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6143593022615548925}
+  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.691, y: -0.76, z: 0.043749448}
+  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9118393069250100339}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7107372527939755639
 GameObject:
   m_ObjectHideFlags: 0
