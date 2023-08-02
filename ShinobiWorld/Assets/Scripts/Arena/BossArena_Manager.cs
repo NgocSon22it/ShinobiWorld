@@ -48,7 +48,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private const byte ActiveBossEventCode = 2;
 
     private const string EndGamePro = "EndGame";
-    [SerializeField] string SceneName;
+    [SerializeField] SceneName SceneName;
+    [SerializeField] BossName BossName;
     RoomOptions roomOptions = new RoomOptions();
 
     GameObject LoadingInstance;
@@ -75,8 +76,9 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedRoom()
     {
         References.ChatServer = PhotonNetwork.CurrentRoom.Name;
-        References.SceneNameInvite = SceneName;
+        References.SceneNameInvite = SceneName.ToString();
         References.InviteType = AccountStatus.Arena;
+        References.BossNameInvite = BossName.ToString();
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
