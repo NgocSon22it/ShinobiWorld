@@ -1,6 +1,7 @@
-using Assets.Scripts.Database.DAO;
+﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.GameManager;
 using ExitGames.Client.Photon;
+using Pathfinding.Util;
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
 using Photon.Realtime;
@@ -12,40 +13,52 @@ using UnityEngine.UI;
 
 public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
+    [Header("Set Up")]
     [SerializeField] Transform Spawnpoint;
-
     [SerializeField] PolygonCollider2D CameraBox;
+    [SerializeField] Canvas sortCanvas;
 
     [Header("Battle Start")]
-    float ReadyTime = 3f;
-    float TotalProgress = 1f, CurrentProgress = 0f;
-
+    float ReadyTime = 3f, TotalProgress = 1f, CurrentProgress = 0f;
     bool BattleStart, ProgressRun;
     Coroutine ProgressBar_Coroutine;
-    [SerializeField] GameObject ProgressBar;
+    [SerializeField] GameObject ProgressBar, GuideTxt;
     [SerializeField] Image CurrentProgressBar;
     [SerializeField] TMP_Text Battle_Start_CountdownTxt;
 
+    [Header("Battle Time")]
+    float TotalTime = 180f, currentTime;
+    [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
+
     [Header("Battle End")]
-    [SerializeField] GameObject BattleEnd_Panel;
-    [SerializeField] TMP_Text PlayerWin_Nametxt;
-    [SerializeField] TMP_Text PlayerLose_Nametxt;
+    [SerializeField] GameObject BattleEnd_Panel, WinLose_Panel, Draw_Panel;
+    [SerializeField] TMP_Text PlayerWin_Nametxt, PlayerLose_Nametxt;
     string PlayerWin_Name, PlayerLose_Name;
+    bool BattleEnd;
 
     [Header("Player Instance")]
     [SerializeField] GameObject LoadingPrefabs;
+    [SerializeField] Sprite LoadingImage;
+    GameObject LoadingInstance;
 
-    public GameObject LoadingInstance;
+    [Header("JoinRoom Failed")]
+    [SerializeField] GameObject JoinRoomFailedPrefabs;
+    GameObject JoinRoomFailedInstance;
 
     [SerializeField] List<PK_ReadyBase> ListReady;
 
-    private const byte ShowEndgamePanelEventCode = 1;
-
+    [Header("Event Code")]
+    private const byte ShowEndgamePanel_WinLoseEventCode = 1;
+    private const byte ShowEndgamePanel_DrawEventCode = 2;
     private const string WinnerTextPropKey = "WinnerText";
     private const string LoserTextPropKey = "LoserText";
 
+
+    [SerializeField] string SceneName;
+    PlayerBase[] players;
     int PlayerCount;
-    string PlayerLoseID;
+
+    RoomOptions roomOptions = new RoomOptions();
 
     public static PK_Manager Instance;
 
@@ -56,8 +69,19 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private void Start()
     {
         LoadingInstance = Instantiate(LoadingPrefabs);
+        LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
         LoadingInstance.GetComponent<Loading>().Begin();
     }
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
+    }
+
 
     public void IsAllPlayerReady()
     {
@@ -74,6 +98,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (PlayerCount == 2 && BattleStart == false)
         {
             ProgressRun = true;
+            GuideTxt.SetActive(false);
             ProgressBar_Coroutine = StartCoroutine(Battle_ProgressBar());
         }
         else
@@ -82,25 +107,30 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 StopCoroutine(ProgressBar_Coroutine);
             }
+            GuideTxt.SetActive(true);
             ProgressBar.SetActive(false);
             ProgressRun = false;
             CurrentProgress = 0f;
         }
     }
 
-    // Function to raise the event to show the endgame panel for all players
-    public void ShowEndgamePanel(string Winner, string Loser)
+    public void ShowEndgamePanel_WinLose(string Winner, string Loser)
     {
         PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { WinnerTextPropKey, Winner }, { LoserTextPropKey, Loser } });
 
-        PhotonNetwork.RaiseEvent(ShowEndgamePanelEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent(ShowEndgamePanel_WinLoseEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
+
+    public void ShowEndgamePanel_Draw()
+    {
+
+        PhotonNetwork.RaiseEvent(ShowEndgamePanel_DrawEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
     }
 
 
-    // Handle the event when received
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == ShowEndgamePanelEventCode)
+        if (photonEvent.Code == ShowEndgamePanel_WinLoseEventCode)
         {
             if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(WinnerTextPropKey, out object winnerNameObj) && winnerNameObj != null)
             {
@@ -113,41 +143,104 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 string loserName = (string)loserNameObj;
                 PlayerLose_Nametxt.text = loserName;
             }
+            sortCanvas.sortingOrder = 31;
+            WinLose_Panel.SetActive(true);
+            Game_Manager.Instance.IsBusy = true;
+            BattleEnd_Panel.SetActive(true);
+        }
+        else if (photonEvent.Code == ShowEndgamePanel_DrawEventCode)
+        {
+            sortCanvas.sortingOrder = 31;
+            Draw_Panel.SetActive(true);
             Game_Manager.Instance.IsBusy = true;
             BattleEnd_Panel.SetActive(true);
         }
     }
 
-    public void Battle_End(string LoserID)
+    public void CheckPlayerDead()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        players = FindObjectsOfType<PlayerBase>();
 
-        foreach (GameObject player in players)
+        foreach (var player in players)
         {
-            BoxCollider2D boxCollider = player.GetComponent<BoxCollider2D>();
-            if (boxCollider != null)
+            if (player.AccountEntity.CurrentHealth <= 0)
             {
-                boxCollider.enabled = false;
-            }
-
-            if (player.GetComponent<PlayerBase>().AccountEntity.ID == LoserID)
-            {
-                PlayerLose_Name = player.GetComponent<PlayerBase>().AccountEntity.Name;
+                PlayerLose_Name = player.AccountEntity.Name;
+                BattleEnd = true;
             }
             else
             {
-                PlayerWin_Name = player.GetComponent<PlayerBase>().AccountEntity.Name;
+                PlayerWin_Name = player.AccountEntity.Name;
             }
         }
-        ShowEndgamePanel(PlayerWin_Name, PlayerLose_Name);
+    }
+
+    public bool IsGameDraw()
+    {
+        players = FindObjectsOfType<PlayerBase>();
+
+        if (players.Length == 1)
+        {
+            return false;
+        }
+        else
+        {
+            foreach (var player in players)
+            {
+                if (player.AccountEntity.CurrentHealth <= 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+    }
+
+    public void Battle_End()
+    {
+        if (IsGameDraw())
+        {
+            ShowEndgamePanel_Draw();
+        }
+        else
+        {
+            ShowEndgamePanel_WinLose(PlayerWin_Name, PlayerLose_Name);
+        }
     }
 
 
     public override void OnJoinedRoom()
     {
+        References.SceneNameInvite = SceneName;
+        References.InviteType = AccountStatus.PK;
         Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
+        PhotonNetwork.IsMessageQueueRunning = true;
     }
+
+    private IEnumerator Battle_FightCoroutine()
+    {
+        currentTime = TotalTime;
+        int minutes, seconds;
+        while (currentTime > 0 && !BattleEnd)
+        {
+            minutes = Mathf.FloorToInt(currentTime / 60);
+            seconds = Mathf.FloorToInt(currentTime % 60);
+
+            Battle_Fight_CountdownTxt.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            yield return new WaitForSeconds(1f);
+
+            currentTime--;
+        }
+
+        Battle_Fight_CountdownTxt.text = "00:00";
+        Battle_End();
+
+    }
+
     private IEnumerator Battle_ProgressBar()
     {
         ProgressBar.SetActive(true);
@@ -164,12 +257,18 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Game_Manager.Instance.AccountStatus = AccountStatus.PK;
         Game_Manager.Instance.ReloadPlayerProperties();
         Game_Manager.Instance.IsBusy = true;
+        foreach (var p in ListReady)
+        {
+            p.gameObject.SetActive(false);
+        }
+        GuideTxt.SetActive(false);
 
     }
 
     private IEnumerator Battle_StartCoroutine()
     {
         float currentTime = ReadyTime;
+        Battle_Start_CountdownTxt.gameObject.SetActive(true);
         while (currentTime > 0)
         {
             Battle_Start_CountdownTxt.text = string.Format("{0}", currentTime);
@@ -181,7 +280,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         Battle_Start_CountdownTxt.gameObject.SetActive(false);
         Game_Manager.Instance.IsBusy = false;
-
+        StartCoroutine(Battle_FightCoroutine());
     }
 
     public void ReturnToKonoha()
@@ -197,21 +296,36 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnConnectedToMaster()
     {
-       
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            RoomOptions roomOptions = new RoomOptions();
-            roomOptions.MaxPlayers = 2;
-            roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
-            Debug.Log(References.GenerateRandomString(10));
+            if (References.IsInvite)
+            {
+                PhotonNetwork.JoinRoom(References.RoomNameInvite);
+            }
+            else
+            {
+                roomOptions.MaxPlayers = 2;
+                roomOptions.BroadcastPropsChangeToAll = true;
+                PhotonNetwork.CreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
+            }
         }
     }
+
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Game_Manager.Instance.ReloadPlayerProperties();
-
     }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (BattleStart && !BattleEnd)
+        {
+            PlayerLose_Name = otherPlayer.NickName;
+            CheckPlayerDead();
+            BattleEnd = true;
+        }
+    }
+
     private void OnApplicationQuit()
     {
         if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)

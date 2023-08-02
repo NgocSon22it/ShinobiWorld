@@ -89,6 +89,7 @@ public class Player_AllUIManagement : MonoBehaviour
 
     [Header("Separate Status")]
     [SerializeField] List<GameObject> UI_Normal;
+    [SerializeField] List<GameObject> UI_WaitingRoom;
     [SerializeField] List<GameObject> UI_ArenaPK;
 
     [Header("Hospital")]
@@ -278,12 +279,17 @@ public class Player_AllUIManagement : MonoBehaviour
         switch (player.accountStatus)
         {
             case AccountStatus.Normal:
-                SetUp_UI(true, false);
+                SetUp_UI(true, false, false);
                 break;
-            default:
-                SetUp_UI(false, true);
+            case AccountStatus.WaitingRoom:
+                SetUp_UI(false, true, false);
                 break;
-
+            case AccountStatus.Arena:
+                SetUp_UI(false, false, true);
+                break;
+            case AccountStatus.PK:
+                SetUp_UI(false, false, true);
+                break;
         }
         if (Player != null)
         {
@@ -291,14 +297,17 @@ public class Player_AllUIManagement : MonoBehaviour
             SetUp_SetUpPlayer(player.SkillTwo_Entity, SkillTwo_Image, SkillTwo_CostChakra, SkillTwo_Keycode, "SkillTwo");
             SetUp_SetUpPlayer(player.SkillThree_Entity, SkillThree_Image, SkillThree_CostChakra, SkillThree_Keycode, "SkillThree");
         }
-
     }
 
-    public void SetUp_UI(bool NormalUI, bool ArenaPkUI)
+    public void SetUp_UI(bool NormalUI, bool WaitingRoomUI, bool ArenaPkUI)
     {
         foreach(GameObject a in UI_Normal)
         {
             a.SetActive(NormalUI);
+        }
+        foreach (GameObject a in UI_WaitingRoom)
+        {
+            a.SetActive(WaitingRoomUI);
         }
         foreach (GameObject a in UI_ArenaPK)
         {
