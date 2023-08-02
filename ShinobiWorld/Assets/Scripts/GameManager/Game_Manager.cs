@@ -84,7 +84,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         References.IsInvite = false;
-        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);    
+        References.ChatServer = "Shinobi";
+        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);          
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
     }
@@ -115,7 +116,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-
     public void ReloadPlayerProperties()
     {
         if(References.accountRefer.CurrentHealth <= 0) References.accountRefer.IsDead = true;
@@ -136,7 +136,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         PlayerProperties["HasSkillOne"] = HasSkillOneJson;
         PlayerProperties["HasSkillTwo"] = HasSkillTwoJson;
         PlayerProperties["HasSkillThree"] = HasSkillThreeJson;
-
         PhotonNetwork.LocalPlayer.SetCustomProperties(PlayerProperties);
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
