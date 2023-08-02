@@ -31,6 +31,7 @@ public class MissionManager : MonoBehaviour
     public TMP_Text ContentTxt;
     public TMP_Text CurrentTxt;
     public Button ProgressBtn;
+    public bool isShow = false;
 
     [Header("Teleport")]
     public GameObject TeleportPanel;

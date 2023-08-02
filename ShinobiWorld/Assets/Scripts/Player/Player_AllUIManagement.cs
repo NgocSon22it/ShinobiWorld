@@ -301,9 +301,11 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void SetUp_UI(bool NormalUI, bool WaitingRoomUI, bool ArenaPkUI)
     {
-        foreach(GameObject a in UI_Normal)
+        foreach (GameObject a in UI_Normal)
         {
             a.SetActive(NormalUI);
+
+            if (NormalUI) Mission.SetActive(MissionManager.Instance.isShow);
         }
         foreach (GameObject a in UI_WaitingRoom)
         {
@@ -374,13 +376,15 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void ShowMission(string content)
     {
-        Mission.SetActive(true);
+        MissionManager.Instance.isShow = true;
+        Mission.SetActive(MissionManager.Instance.isShow);
         MissionTxt.text = content;
     }
 
     public void CloseMission()
     {
-        Mission.SetActive(false);
+        MissionManager.Instance.isShow = false;
+        Mission.SetActive(MissionManager.Instance.isShow);
         MissionTxt.text = string.Empty;
     }
 
