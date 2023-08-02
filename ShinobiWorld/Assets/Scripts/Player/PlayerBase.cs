@@ -166,7 +166,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         PlayerNickName.text = photonView.Owner.NickName;
         LoadLayout();
         LoadAllAccountUI();
-        if (References.accountRefer.IsDead) Dead(References.accountRefer.TimeRespawn);
+        if (AccountEntity.IsDead)
+        {
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(AccountEntity.TimeRespawn);
+            Dead();
+        }
 
     }
 
@@ -401,6 +405,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             {
                 case AccountStatus.Normal:
                     Game_Manager.Instance.ReloadPlayerProperties();
+                    PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(References.RespawnTime);
                     break;
 
                 case AccountStatus.Arena:
@@ -420,7 +425,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                     break;
             }
 
-            if (AccountEntity.CurrentHealth <= 0) Dead(References.RespawnTime);
+            if (AccountEntity.CurrentHealth <= 0) Dead();
 
             LoadPlayerHealthUI();
 
@@ -430,13 +435,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    public void Dead(int timeRespawn)
+    public void Dead()
     {
-        if (accountStatus == AccountStatus.Normal)
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(timeRespawn);
-
         AccountEntity.CurrentHealth = 0;
         References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
+        References.accountRefer.IsDead = true;
+        References.accountRefer.TimeRespawn = References.RespawnTime;
         CancelInvoke(nameof(RegenChakra));
         CancelInvoke(nameof(RegenHealth));
         CancelInvoke(nameof(RegenStrength));
