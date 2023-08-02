@@ -268,6 +268,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private IEnumerator Battle_StartCoroutine()
     {
         float currentTime = ReadyTime;
+        Battle_Start_CountdownTxt.gameObject.SetActive(true);
         while (currentTime > 0)
         {
             Battle_Start_CountdownTxt.text = string.Format("{0}", currentTime);

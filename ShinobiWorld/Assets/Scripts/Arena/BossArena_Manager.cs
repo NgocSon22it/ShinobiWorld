@@ -101,7 +101,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void CheckPlayerReady()
     {
-        RequireNumber = PhotonNetwork.PlayerList.Length;
+        RequireNumber = FindObjectsOfType<PlayerBase>().Length;
         if (CurrentNumber == RequireNumber && BattleStart == false)
         {
             ProgressRun = true;
@@ -158,6 +158,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private IEnumerator Battle_StartCoroutine()
     {
         float currentTime = ReadyTime;
+        Battle_Start_CountdownTxt.gameObject.SetActive(true);
         while (currentTime > 0)
         {
             Battle_Start_CountdownTxt.text = string.Format("{0}", currentTime);
