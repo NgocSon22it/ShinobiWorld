@@ -1,4 +1,4 @@
-using Assets.Scripts.Database.DAO;
+﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.GameManager;
 using ExitGames.Client.Photon;
 using Photon.Pun;
@@ -32,6 +32,8 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     float TotalTime = 180f;
     float currentTime;
     [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
+
+    bool BattleEnd;
 
     [Header("Battle End")]
     [SerializeField] GameObject BattleEnd_Panel;
@@ -74,7 +76,6 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         LoadingInstance = Instantiate(LoadingPrefabs);
         LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
         LoadingInstance.GetComponent<Loading>().Begin();
-        References.SceneNameInvite = SceneName;
     }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
@@ -175,10 +176,39 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnJoinedRoom()
     {
+        References.SceneNameInvite = SceneName;
+        References.InviteType = AccountStatus.PK;
         Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
     }
+
+    private IEnumerator Battle_FightCoroutine()
+    {
+        currentTime = TotalTime;
+        int minutes, seconds;
+        while (currentTime > 0 && !BattleEnd)
+        {
+            minutes = Mathf.FloorToInt(currentTime / 60);
+            seconds = Mathf.FloorToInt(currentTime % 60);
+
+            Battle_Fight_CountdownTxt.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            yield return new WaitForSeconds(1f);
+
+            currentTime--;
+        }
+
+        Battle_Fight_CountdownTxt.text = "00:00";
+        Battle_End();
+
+    }
+
+    public void Battle_End()
+    {
+
+    }
+
     private IEnumerator Battle_ProgressBar()
     {
         ProgressBar.SetActive(true);
@@ -217,7 +247,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         Battle_Start_CountdownTxt.gameObject.SetActive(false);
         Game_Manager.Instance.IsBusy = false;
-
+        StartCoroutine(Battle_FightCoroutine());
     }
 
     public void ReturnToKonoha()

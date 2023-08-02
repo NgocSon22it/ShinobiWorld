@@ -33,14 +33,28 @@ public class InviteManager : MonoBehaviour
     {
         Instance = this;
     }
-    public void SendArenaMessage(string receiverName)
+
+    public void SendInvite(string receiverName)
     {
-        ChatManager.Instance.chatClient
+        switch (References.InviteType)
+        {
+            case AccountStatus.PK:
+
+                ChatManager.Instance.chatClient
+               .SendPrivateMessage(receiverName,
+               string.Format(Message.PrivateMessage, TypePrivateMessage.PKRequest.ToString(),
+               Message.PKMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name));
+
+                break;
+
+            case AccountStatus.Arena:
+                ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
                string.Format(Message.PrivateMessage, TypePrivateMessage.Arena.ToString(),
                Message.BossAreaMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name));
+                break;
+        }
     }
-
 
     public void LoadListInvite()
     {
@@ -97,6 +111,13 @@ public class InviteManager : MonoBehaviour
         switch (type)
         {
             case TypePrivateMessage.Arena:
+                References.IsInvite = true;
+                PhotonNetwork.IsMessageQueueRunning = false;
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel(References.SceneNameInvite);
+                break;
+
+            case TypePrivateMessage.PKRequest:
                 References.IsInvite = true;
                 PhotonNetwork.IsMessageQueueRunning = false;
                 PhotonNetwork.LeaveRoom();

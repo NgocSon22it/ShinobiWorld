@@ -53,8 +53,8 @@ public class Message
 
     public static string TrophyUpgradeError = "Bạn không đủ điều kiện để nâng cấp danh hiệu";
 
-    public static string PKMessage = "{0} muốn thách đấu với bạn?";
     public static string BossAreaMessage = "mời bạn cùng tham chiến với boss!";
+    public static string PKMessage = "muốn đấu tay đôi với bạn";
     public static string PrivateMessage = "{0}:{1}:{2}:{3}";
 }
 
