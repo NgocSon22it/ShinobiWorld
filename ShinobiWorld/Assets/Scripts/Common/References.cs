@@ -18,11 +18,11 @@ public static class References
     public static List<HasItem_Entity> listHasItem = new List<HasItem_Entity>();
     public static List<BagEquipment_Entity> listBagEquipment = new List<BagEquipment_Entity>();
 
-    public static List<HasSkill_Entity> listHasSkill = new List<HasSkill_Entity>();
+    //public static List<HasSkill_Entity> listHasSkill = new List<HasSkill_Entity>();
 
     public static HasWeapon_Entity hasWeapon = new HasWeapon_Entity();
 
-    public static Weapon_Entity weapon = new Weapon_Entity();
+    //public static Weapon_Entity weapon = new Weapon_Entity();
     public static List<HasMission_Entity> listHasMission = new List<HasMission_Entity>();
     public static List<MailBox_Entity> listMailBox = new List<MailBox_Entity>();
     public static List<Friend_Entity> listAllFriend = new List<Friend_Entity>();
