@@ -58,7 +58,7 @@ public static class References
     public static float Uppercent_Skill_Damage = 3f, Uppercent_Skill_Chakra = 1f, Uppercent_Skill_CoolDown = 1f;
     public static float Uppercent_Account = 5f;
     public static float Uppercent_Equipment = 5f;
-    public static int MaxUpgradeLevel = 30; 
+    public static int MaxUpgradeLevel = 30;
 
     public static int RespawnTime = 20;
     public static int RespawnCost = 1000;
@@ -73,7 +73,7 @@ public static class References
     public static string UIEquipmentDefault = "Background/UI_GreenFill";
     public static string UIEquipmentShow = "Background/UI_Green";
     public static string UIInfoSelected = "Background/UI_Blue";
-    
+
     public static Color32 ItemColorSelected = new Color32(200, 120, 0, 255);
     public static Color32 ItemColorDefaul = new Color32(0, 0, 0, 100);
     public static Color32 ButtonColorSelected = new Color32(210, 195, 200, 255);
@@ -89,7 +89,7 @@ public static class References
 
     public static AccountStatus InviteType;
     public static string SceneNameInvite;
-    public static string RoomNameInvite;
+    public static string RoomNameInvite = "1";
 
     public static bool IsInvite;
     public static string ChatServer;
@@ -183,7 +183,6 @@ public static class References
             hasSkillTwo = HasSkill_DAO.GetHasSkillByID(accountRefer.ID, "Skill_" + Role + "Two");
             hasSkillThree = HasSkill_DAO.GetHasSkillByID(accountRefer.ID, "Skill_" + Role + "Three");
         }
-
     }
 
     public static void AddExperience(int Amount)
