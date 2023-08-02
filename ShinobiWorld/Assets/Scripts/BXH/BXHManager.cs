@@ -28,12 +28,13 @@ public class BXHManager : MonoBehaviour
 
     private void Start()
     {
-        if (DateTime.Today.Day == 1)
+        if (DateTime.Today.Day == 1 )
         {
             SortRank();
             SendMailRank();
-            References.listMailBox = MailBox_DAO.GetAllByUserID(References.accountRefer.ID);
         }
+        References.listMailBox = MailBox_DAO.GetAllByUserID(References.accountRefer.ID);
+
     }
     public void Open()
     {
@@ -85,9 +86,9 @@ public class BXHManager : MonoBehaviour
 
     public void SendMailRank()
     {
-        for(var i = 0; i < 3; ++i)
+        for(var i = 0; i < 3 ; ++i)
         {
-            MailBox_DAO.AddMailbox(list[i].ID, References.listMail[i+1].ID, false);
+            if (!MailBox_DAO.CheckSentMailRank(list[i].ID)) MailBox_DAO.AddMailbox(list[i].ID, References.listMail[i+1].ID, false);
         }
     }
 
