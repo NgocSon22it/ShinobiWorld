@@ -90,6 +90,8 @@ public static class References
     public static AccountStatus InviteType;
     public static string SceneNameInvite;
     public static string RoomNameInvite = "1";
+    public static string BossNameInvite;
+    public static int PKBet;
 
     public static bool IsInvite;
     public static string ChatServer;
@@ -236,6 +238,20 @@ public static class References
         return sb.ToString();
     }
 }
+public enum SceneName
+{
+    BossArena_Iruka, BossArena_Asuma, BossArena_Kakashi, PK
+}
+public enum BossName
+{
+    Iruka, Asuma, Kakashi
+}
+
+public enum CurrentAreaName
+{
+    Konoha, Iwa, Kiri, Kumo, Suna
+}
+
 public enum CustomEventCode
 {
     EnemyDeactivate = 1, EnemyActive = 2
