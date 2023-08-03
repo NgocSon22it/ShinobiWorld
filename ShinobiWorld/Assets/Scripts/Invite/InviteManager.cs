@@ -43,18 +43,20 @@ public class InviteManager : MonoBehaviour
 
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
-               string.Format(Message.PrivateMessage, TypePrivateMessage.PK.ToString(),
-               Message.PKMessage, References.MapInviteInvite, References.RoomNameInvite, References.PKBet));
+               string.Format(Message.PK_Private, TypePrivateMessage.PK.ToString(),
+               Message.PKMessage, References.MapInvite, References.RoomNameInvite, References.PKBet));
 
                 break;
 
             case InviteType.Arena:
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
-               string.Format(Message.PrivateMessage, TypePrivateMessage.Arena.ToString(),
-               Message.BossAreaMessage, References.MapInviteInvite, References.RoomNameInvite, References.BossNameInvite));
+               string.Format(Message.Arena_Private, TypePrivateMessage.Arena.ToString(),
+               Message.BossAreaMessage, References.MapInvite, References.RoomNameInvite, References.BossNameInvite, References.bossArenaType));
                 break;
         }
+
+
     }
 
     public void LoadListInvite()
@@ -75,16 +77,25 @@ public class InviteManager : MonoBehaviour
         }
     }
 
-    public void OpenReceiveInvitePopup_Arena(TypePrivateMessage type, string Content, string SceneName, string RoomName, string BossName)
+    public void OpenReceiveInvitePopup_Arena(TypePrivateMessage type, string Content, string SceneName, string RoomName, string BossName, BossArenaType arenaType)
     {
         if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal
             && !References.RoomNameInvite.Equals(RoomName))
         {
             this.type = type;
 
-            References.MapInviteInvite = SceneName;
+            References.MapInvite = SceneName;
             References.RoomNameInvite = RoomName;
-            InviteContent.text = Content + " " + BossName;
+            switch (arenaType)
+            {
+                case BossArenaType.Official:
+                    InviteContent.text = Content + " " + BossName + " (Chính thức)";
+                    break;
+                case BossArenaType.Practice:
+                    InviteContent.text = Content + " " + BossName + " (Phòng tập)";
+                    break;
+            }
+
             ReceivePanel.SetActive(true);
             StartCoroutine(PopupInvite());
         }
@@ -96,7 +107,7 @@ public class InviteManager : MonoBehaviour
             && !References.RoomNameInvite.Equals(RoomName))
         {
             this.type = type;
-            References.MapInviteInvite = SceneName;
+            References.MapInvite = SceneName;
             References.RoomNameInvite = RoomName;
             References.PKBet = Convert.ToInt32(Bet);
             InviteContent.text = Content + " " + Bet + " Vàng.";
@@ -132,7 +143,7 @@ public class InviteManager : MonoBehaviour
                 References.IsInvite = true;
                 PhotonNetwork.IsMessageQueueRunning = false;
                 PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel(References.MapInviteInvite);
+                PhotonNetwork.LoadLevel(References.MapInvite);
                 break;
 
             case TypePrivateMessage.PK:
@@ -142,7 +153,7 @@ public class InviteManager : MonoBehaviour
                     References.IsInvite = true;
                     PhotonNetwork.IsMessageQueueRunning = false;
                     PhotonNetwork.LeaveRoom();
-                    PhotonNetwork.LoadLevel(References.MapInviteInvite);
+                    PhotonNetwork.LoadLevel(References.MapInvite);
                 }
                 break;
         }
