@@ -400,7 +400,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             {
                 case AccountStatus.Normal:
                     Game_Manager.Instance.ReloadPlayerProperties();
-                    PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(References.RespawnTime);
                     break;
 
                 case AccountStatus.Arena:
