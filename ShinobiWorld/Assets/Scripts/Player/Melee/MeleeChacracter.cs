@@ -105,7 +105,6 @@ public class MeleeChacracter : PlayerBase
     {
         if (Righteous != null)
         {
-            // If a color change coroutine is already running, stop it
             StopCoroutine(Righteous);
             SetUpRighteous(Color.black, 0f, -Righteous_BonusDamage);
             Righteous = null;

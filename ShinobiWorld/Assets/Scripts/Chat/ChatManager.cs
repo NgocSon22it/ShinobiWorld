@@ -91,14 +91,12 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                     case TypePrivateMessage.FriendRequest:
                         FriendManager.Instance.Notify.SetActive(true);
                         break;
-                    case TypePrivateMessage.PKRequest:
+                    case TypePrivateMessage.PK:
                         var PKMessage = mess[1];
                         var PKSceneName = mess[2];
                         var PKRoomName = mess[3];
                         var PKBet = mess[4];
-                        InviteManager.Instance.OpenReceiveInvitePopup_PK(TypePrivateMessage.PKRequest, sender + " " + PKMessage, PKSceneName, PKRoomName, PKBet);
-                        break;
-                    case TypePrivateMessage.Text:
+                        InviteManager.Instance.OpenReceiveInvitePopup_PK(TypePrivateMessage.PK, sender + " " + PKMessage, PKSceneName, PKRoomName, PKBet);
                         break;
                     case TypePrivateMessage.Arena:
                         var ArenaMessage = mess[1];

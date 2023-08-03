@@ -22,7 +22,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     float ReadyTime = 3f, TotalProgress = 1f, CurrentProgress = 0f;
     bool BattleStart, ProgressRun;
     Coroutine ProgressBar_Coroutine;
-    [SerializeField] GameObject ProgressBar, GuideTxt;
+    [SerializeField] GameObject ProgressBar;
     [SerializeField] Image CurrentProgressBar;
     [SerializeField] TMP_Text Battle_Start_CountdownTxt;
 
@@ -31,9 +31,8 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
 
     [Header("Battle End")]
-    [SerializeField] GameObject BattleEnd_Panel, WinLose_Panel, Draw_Panel;
-    [SerializeField] TMP_Text PlayerWin_Nametxt, PlayerLose_Nametxt;
-    string PlayerWin_Name, PlayerLose_Name;
+    [SerializeField] GameObject Win_Panel, Lose_Panel, Draw_Panel;
+    [SerializeField] TMP_Text CoinWin_txt, CoinLose_txt, CoinDraw_txt;
     bool BattleEnd;
 
     [Header("Player Instance")]
@@ -45,19 +44,16 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject JoinRoomFailedPrefabs;
     GameObject JoinRoomFailedInstance;
 
-    [SerializeField] List<PK_ReadyBase> ListReady;
-
     [Header("Event Code")]
-    private const byte ShowEndgamePanel_WinLoseEventCode = 1;
-    private const byte ShowEndgamePanel_DrawEventCode = 2;
-    private const string WinnerTextPropKey = "WinnerText";
-    private const string LoserTextPropKey = "LoserText";
+    private const byte BattleEnd_DrawEventCode = 1;
+    private const byte BattleEnd_WinLoseEventCode = 2;
+    private const byte BattleStart_CheckReadyEventCode = 3;
 
-
-    [SerializeField] SceneName SceneName;
+    [Header("Room Value")]
+    int CurrentBet, PlayerCount;
+    [SerializeField] MapType mapType;
+    [SerializeField] List<PK_ReadyBase> ListReady;
     PlayerBase[] players;
-    int PlayerCount;
-
     RoomOptions roomOptions = new RoomOptions();
 
     public static PK_Manager Instance;
@@ -66,12 +62,14 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         Instance = this;
     }
+
     private void Start()
     {
         LoadingInstance = Instantiate(LoadingPrefabs);
         LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
         LoadingInstance.GetComponent<Loading>().Begin();
     }
+
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
@@ -81,79 +79,92 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
     }
+    // Check 2 player is in ReadyBase
 
-
-    public void IsAllPlayerReady()
+    #region ProgressBar
+    public void BattleStart_ProgressBar_Run()
     {
-        PlayerCount = 0;
-
-        foreach (var p in ListReady)
+        ProgressRun = true;
+        if (ProgressBar_Coroutine == null)
         {
-            if (p.GetReady())
-            {
-                PlayerCount++;
-            }
-        }
-
-        if (PlayerCount == 2 && BattleStart == false)
-        {
-            ProgressRun = true;
-            GuideTxt.SetActive(false);
             ProgressBar_Coroutine = StartCoroutine(Battle_ProgressBar());
-        }
-        else
-        {
-            if (ProgressBar_Coroutine != null)
-            {
-                StopCoroutine(ProgressBar_Coroutine);
-            }
-            GuideTxt.SetActive(true);
-            ProgressBar.SetActive(false);
-            ProgressRun = false;
-            CurrentProgress = 0f;
         }
     }
 
-    public void ShowEndgamePanel_WinLose(string Winner, string Loser)
+    public void BattleStart_ProgressBar_Stop()
     {
-        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable { { WinnerTextPropKey, Winner }, { LoserTextPropKey, Loser } });
+        if (ProgressBar_Coroutine != null)
+        {
+            StopCoroutine(ProgressBar_Coroutine);
+            ProgressBar_Coroutine = null;
+        }
+        ProgressBar.SetActive(false);
+        ProgressRun = false;
+        CurrentProgress = 0f;
+    }
+    #endregion
 
-        PhotonNetwork.RaiseEvent(ShowEndgamePanel_WinLoseEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    public void CheckAllPlayerReady()
+    {
+        PhotonNetwork.RaiseEvent(BattleStart_CheckReadyEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);     
     }
 
     public void ShowEndgamePanel_Draw()
     {
-
-        PhotonNetwork.RaiseEvent(ShowEndgamePanel_DrawEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent(BattleEnd_DrawEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
     }
 
+    public void ShowEndgamePanel_WinLose()
+    {
+        PhotonNetwork.RaiseEvent(BattleEnd_WinLoseEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
 
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == ShowEndgamePanel_WinLoseEventCode)
-        {
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(WinnerTextPropKey, out object winnerNameObj) && winnerNameObj != null)
-            {
-                string winnerName = (string)winnerNameObj;
-                PlayerWin_Nametxt.text = winnerName;
-            }
-
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(LoserTextPropKey, out object loserNameObj) && loserNameObj != null)
-            {
-                string loserName = (string)loserNameObj;
-                PlayerLose_Nametxt.text = loserName;
-            }
-            sortCanvas.sortingOrder = 31;
-            WinLose_Panel.SetActive(true);
-            Game_Manager.Instance.IsBusy = true;
-            BattleEnd_Panel.SetActive(true);
-        }
-        else if (photonEvent.Code == ShowEndgamePanel_DrawEventCode)
+        if (photonEvent.Code == BattleEnd_DrawEventCode)
         {
             sortCanvas.sortingOrder = 31;
+            References.AddCoin(CurrentBet);
+            CoinDraw_txt.text = CurrentBet.ToString();
             Draw_Panel.SetActive(true);
             Game_Manager.Instance.IsBusy = true;
-            BattleEnd_Panel.SetActive(true);
+        }
+        else if (photonEvent.Code == BattleEnd_WinLoseEventCode)
+        {
+            sortCanvas.sortingOrder = 31;
+            if (References.accountRefer.CurrentHealth > 0)
+            {
+                References.AddCoin(CurrentBet + (CurrentBet * 80 / 100));
+                CoinWin_txt.text = (CurrentBet + (CurrentBet * 80 / 100)).ToString();
+                Win_Panel.SetActive(true);
+            }
+            else
+            {
+                CoinLose_txt.text = "-" + CurrentBet.ToString();
+                Lose_Panel.SetActive(true);
+            }
+            Game_Manager.Instance.IsBusy = true;
+        }
+        else if (photonEvent.Code == BattleStart_CheckReadyEventCode)
+        {
+            PlayerCount = 0;
+
+            foreach (var p in ListReady)
+            {
+                if (p.GetReady())
+                {
+                    PlayerCount++;
+                }
+            }
+
+            if (PlayerCount == 2 && BattleStart == false)
+            {
+                BattleStart_ProgressBar_Run();
+            }
+            else
+            {
+                BattleStart_ProgressBar_Stop();
+            }
         }
     }
 
@@ -165,12 +176,8 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             if (player.AccountEntity.CurrentHealth <= 0)
             {
-                PlayerLose_Name = player.AccountEntity.Name;
+                player.playerCollider.enabled = false;
                 BattleEnd = true;
-            }
-            else
-            {
-                PlayerWin_Name = player.AccountEntity.Name;
             }
         }
     }
@@ -206,7 +213,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         else
         {
-            ShowEndgamePanel_WinLose(PlayerWin_Name, PlayerLose_Name);
+            ShowEndgamePanel_WinLose();
         }
     }
 
@@ -214,8 +221,13 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedRoom()
     {
         References.ChatServer = PhotonNetwork.CurrentRoom.Name;
-        References.SceneNameInvite = SceneName.ToString();
-        References.InviteType = AccountStatus.PK;
+
+        References.inviteType = InviteType.PK;
+        References.MapInviteInvite = "PK_" + mapType.ToString();
+        References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
+
+        CurrentBet = References.PKBet;
+
         Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
@@ -247,7 +259,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         ProgressBar.SetActive(true);
         while (CurrentProgress < TotalProgress && ProgressRun)
         {
-            CurrentProgress += 0.01f;
+            CurrentProgress += 0.005f;
             CurrentProgressBar.fillAmount = CurrentProgress / TotalProgress;
             yield return new WaitForSeconds(0.01f);
         }
@@ -258,14 +270,12 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Game_Manager.Instance.AccountStatus = AccountStatus.PK;
         Game_Manager.Instance.ReloadPlayerProperties();
         Game_Manager.Instance.IsBusy = true;
-        foreach (var p in ListReady)
+        foreach (var readyBase in ListReady)
         {
-            p.gameObject.SetActive(false);
+            readyBase.gameObject.SetActive(false);
         }
-        GuideTxt.SetActive(false);
 
     }
-
     private IEnumerator Battle_StartCoroutine()
     {
         float currentTime = ReadyTime;
@@ -316,13 +326,10 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         Game_Manager.Instance.ReloadPlayerProperties();
     }
-
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         if (BattleStart && !BattleEnd)
         {
-            PlayerLose_Name = otherPlayer.NickName;
-            CheckPlayerDead();
             BattleEnd = true;
         }
     }

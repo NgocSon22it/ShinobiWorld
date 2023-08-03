@@ -23,7 +23,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [Header("Battle Time")]
     float TotalTime = 180f, currentTime;
     [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
-    [SerializeField] GameObject ReadyBase, GuideTxt;
+    [SerializeField] GameObject ReadyBase;
 
     [Header("Battle Start")]
     float TotalProgress = 1f, CurrentProgress = 0f, ReadyTime = 3f;
@@ -43,21 +43,23 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [Header("Player Instance")]
     [SerializeField] GameObject LoadingPrefabs;
     [SerializeField] Sprite LoadingImage;
+    GameObject LoadingInstance;
 
     private const byte ShowEndgamePanelEventCode = 1;
     private const byte ActiveBossEventCode = 2;
+    private const byte BattleStart_CheckReady = 3;
 
     private const string EndGamePro = "EndGame";
-    [SerializeField] SceneName SceneName;
-    [SerializeField] BossName BossName;
-    RoomOptions roomOptions = new RoomOptions();
 
-    GameObject LoadingInstance;
+    [Header("Room Value")]
+    [SerializeField] MapType mapType;
+    string BossName;
+    RoomOptions roomOptions = new RoomOptions();
+    PlayerBase[] players;
 
     [Header("JoinRoom Failed")]
     [SerializeField] GameObject JoinRoomFailedPrefabs;
     GameObject JoinRoomFailedInstance;
-
 
     public static BossArena_Manager Instance;
 
@@ -65,7 +67,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         LoadingInstance = Instantiate(LoadingPrefabs);
         LoadingInstance.GetComponent<Loading>().SetUpImage(LoadingImage);
-        LoadingInstance.GetComponent<Loading>().Begin();      
+        LoadingInstance.GetComponent<Loading>().Begin();
     }
 
     private void Awake()
@@ -76,9 +78,13 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedRoom()
     {
         References.ChatServer = PhotonNetwork.CurrentRoom.Name;
-        References.SceneNameInvite = SceneName.ToString();
-        References.InviteType = AccountStatus.Arena;
-        References.BossNameInvite = BossName.ToString();
+
+        References.inviteType = InviteType.Arena;
+        References.MapInviteInvite = "BossArena_" + mapType.ToString();
+        References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
+
+        BossName = References.BossNameInvite;
+
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
@@ -96,37 +102,42 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Game_Manager.Instance.ReloadPlayerProperties();
-        CheckPlayerReady();
+        CheckAllPlayerReady();
     }
+    public void CheckAllPlayerReady()
+    {
+        PhotonNetwork.RaiseEvent(BattleStart_CheckReady, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
+
+    #region ProgressBar
+    public void BattleStart_ProgressBar_Run()
+    {
+        ProgressRun = true;
+        if (ProgressBar_Coroutine == null)
+        {
+            ProgressBar_Coroutine = StartCoroutine(Battle_ProgressBar());
+        }
+    }
+
+    public void BattleStart_ProgressBar_Stop()
+    {
+        if (ProgressBar_Coroutine != null)
+        {
+            StopCoroutine(ProgressBar_Coroutine);
+            ProgressBar_Coroutine = null;
+        }
+
+        ProgressBar.SetActive(false);
+        ProgressRun = false;
+        CurrentProgress = 0f;
+    }
+    #endregion
 
     #region Check Player Status
 
-    public void CheckPlayerReady()
-    {
-        RequireNumber = FindObjectsOfType<PlayerBase>().Length;
-        if (CurrentNumber == RequireNumber && BattleStart == false)
-        {
-            ProgressRun = true;
-            GuideTxt.SetActive(false);
-            ProgressBar_Coroutine = StartCoroutine(Battle_ProgressBar());
-        }
-        else
-        {
-            if (ProgressBar_Coroutine != null)
-            {
-                StopCoroutine(ProgressBar_Coroutine);
-            }
-
-            ProgressBar.SetActive(false);
-            GuideTxt.SetActive(true);
-            ProgressRun = false;
-            CurrentProgress = 0f;
-        }
-    }
-
     public void CheckPlayerDead()
     {
-        PlayerBase[] players = FindObjectsOfType<PlayerBase>();
+        players = FindObjectsOfType<PlayerBase>();
 
         foreach (var player in players)
         {
@@ -179,7 +190,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 
     public void Battle_End(bool Win)
-    {       
+    {
         if (Win)
         {
             ShowEndgamePanel("Thắng");
@@ -233,7 +244,6 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Game_Manager.Instance.ReloadPlayerProperties();
         Game_Manager.Instance.IsBusy = true;
         ReadyBase.SetActive(false);
-        GuideTxt.SetActive(false);
 
     }
 
@@ -304,6 +314,18 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         else if (photonEvent.Code == ActiveBossEventCode)
         {
             Boss.SetActive(true);
+        }
+        else if (photonEvent.Code == BattleStart_CheckReady)
+        {
+            RequireNumber = FindObjectsOfType<PlayerBase>().Length;
+            if (CurrentNumber == RequireNumber && BattleStart == false)
+            {
+                BattleStart_ProgressBar_Run();
+            }
+            else
+            {
+                BattleStart_ProgressBar_Stop();
+            }
         }
     }
 }

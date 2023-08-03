@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,6 @@ using UnityEngine;
 public class PK_ReadyBase : MonoBehaviour
 {
     bool IsReady;
-
 
     public bool GetReady()
     {
@@ -17,7 +17,7 @@ public class PK_ReadyBase : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             IsReady = true;
-            PK_Manager.Instance.IsAllPlayerReady();
+            PK_Manager.Instance.CheckAllPlayerReady();
         }
     }
 
@@ -26,7 +26,8 @@ public class PK_ReadyBase : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             IsReady = false;
-            PK_Manager.Instance.IsAllPlayerReady();
+            PK_Manager.Instance.CheckAllPlayerReady();
         }
     }
+
 }

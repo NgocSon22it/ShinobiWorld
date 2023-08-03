@@ -16,8 +16,6 @@ public class ArenaManager : MonoBehaviour
     [Header("Practice Room")]
     [SerializeField] GameObject CreatePracticePanel;
     [SerializeField] TMP_Dropdown Boss_Dropdown;
-    public List<string> listBoss = new List<string>();
-    string SelectedBoss;
 
     [Header("PK Room")]
     [SerializeField] GameObject CreatePKPanel;
@@ -65,24 +63,12 @@ public class ArenaManager : MonoBehaviour
         {
             PhotonNetwork.LeaveRoom();
         }
+        References.IsInvite = false;
         PhotonNetwork.IsMessageQueueRunning = false;
-        PhotonNetwork.LoadLevel("BossArena_" + SelectedBoss);
+        PhotonNetwork.LoadLevel("BossArena_Forest");
     }
     public void Practice_InitDropdown()
     {
-        listBoss.Clear();
-        foreach (Trophy_Entity area in References.listTrophy)
-        {
-            if (!area.BossID.Equals("None"))
-            {
-                string boss = area.BossID.Replace("Boss_", "");
-                listBoss.Add(boss);
-            }
-        }
-
-        Boss_Dropdown.ClearOptions();
-        Boss_Dropdown.AddOptions(listBoss);
-
         if (Boss_Dropdown.options.Count > 0)
         {
             Practice_OnDropdownValueChanged(0);
@@ -92,10 +78,8 @@ public class ArenaManager : MonoBehaviour
 
     public void Practice_OnDropdownValueChanged(int index)
     {
-        if (index >= 0 && index < listBoss.Count)
-        {
-            SelectedBoss = listBoss[index];
-        }
+        string selectedOption = Bet_Dropdown.options[index].text;
+        References.BossNameInvite = selectedOption;
     }
     #endregion
 
@@ -122,8 +106,8 @@ public class ArenaManager : MonoBehaviour
 
     public void PK_OnDropdownValueChanged(int index)
     {
-        string selectedOptionText = Bet_Dropdown.options[index].text;
-        References.PKBet = Convert.ToInt32(selectedOptionText);
+        string selectedOption = Bet_Dropdown.options[index].text;
+        References.PKBet = Convert.ToInt32(selectedOption);
 
         if (References.accountRefer.Coin < References.PKBet)
         {
@@ -145,8 +129,9 @@ public class ArenaManager : MonoBehaviour
             {
                 PhotonNetwork.LeaveRoom();
             }
+            References.IsInvite = false;
             PhotonNetwork.IsMessageQueueRunning = false;
-            PhotonNetwork.LoadLevel(Scenes.PK);
+            PhotonNetwork.LoadLevel(References.MapInviteInvite);
         }
 
     }
@@ -211,6 +196,7 @@ public class ArenaManager : MonoBehaviour
             {
                 PhotonNetwork.LeaveRoom();
             }
+            References.IsInvite = false;
             PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LoadLevel("BossArena_" + boss);
         }
