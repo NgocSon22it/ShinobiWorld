@@ -37,22 +37,22 @@ public class InviteManager : MonoBehaviour
 
     public void SendInvite(string receiverName)
     {
-        switch (References.InviteType)
+        switch (References.inviteType)
         {
-            case AccountStatus.PK:
+            case InviteType.PK:
 
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
-               string.Format(Message.PrivateMessage, TypePrivateMessage.PKRequest.ToString(),
-               Message.PKMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name, References.PKBet));
+               string.Format(Message.PrivateMessage, TypePrivateMessage.PK.ToString(),
+               Message.PKMessage, References.MapInviteInvite, References.RoomNameInvite, References.PKBet));
 
                 break;
 
-            case AccountStatus.Arena:
+            case InviteType.Arena:
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
                string.Format(Message.PrivateMessage, TypePrivateMessage.Arena.ToString(),
-               Message.BossAreaMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name, References.BossNameInvite));
+               Message.BossAreaMessage, References.MapInviteInvite, References.RoomNameInvite, References.BossNameInvite));
                 break;
         }
     }
@@ -66,22 +66,23 @@ public class InviteManager : MonoBehaviour
             Destroy(trans.gameObject);
         }
 
-        foreach (Account_Entity a in ListInvite)
+        foreach (Account_Entity account in ListInvite)
         {
-            if (!a.ID.Equals(References.accountRefer.ID))
+            if (!account.ID.Equals(References.accountRefer.ID))
             {
-                Instantiate(Item, Content).GetComponent<InviteItem>().SetUp(a);
+                Instantiate(Item, Content).GetComponent<InviteItem>().SetUp(account);
             }
         }
     }
 
     public void OpenReceiveInvitePopup_Arena(TypePrivateMessage type, string Content, string SceneName, string RoomName, string BossName)
     {
-        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal 
+        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal
             && !References.RoomNameInvite.Equals(RoomName))
         {
             this.type = type;
-            References.SceneNameInvite = SceneName;
+
+            References.MapInviteInvite = SceneName;
             References.RoomNameInvite = RoomName;
             InviteContent.text = Content + " " + BossName;
             ReceivePanel.SetActive(true);
@@ -95,7 +96,7 @@ public class InviteManager : MonoBehaviour
             && !References.RoomNameInvite.Equals(RoomName))
         {
             this.type = type;
-            References.SceneNameInvite = SceneName;
+            References.MapInviteInvite = SceneName;
             References.RoomNameInvite = RoomName;
             References.PKBet = Convert.ToInt32(Bet);
             InviteContent.text = Content + " " + Bet + " Vàng.";
@@ -131,20 +132,22 @@ public class InviteManager : MonoBehaviour
                 References.IsInvite = true;
                 PhotonNetwork.IsMessageQueueRunning = false;
                 PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel(References.SceneNameInvite);
+                PhotonNetwork.LoadLevel(References.MapInviteInvite);
                 break;
 
-            case TypePrivateMessage.PKRequest:
-                References.IsInvite = true;
-                PhotonNetwork.IsMessageQueueRunning = false;
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel(References.SceneNameInvite);
+            case TypePrivateMessage.PK:
+                if (References.accountRefer.Coin >= References.PKBet)
+                {
+                    References.AddCoin(-References.PKBet);
+                    References.IsInvite = true;
+                    PhotonNetwork.IsMessageQueueRunning = false;
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LoadLevel(References.MapInviteInvite);
+                }
                 break;
         }
         CloseReceiveInvitePopup();
     }
-
-
 
     IEnumerator PopupInvite()
     {
