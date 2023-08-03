@@ -370,7 +370,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5803179343414238852
 Transform:
   m_ObjectHideFlags: 0
@@ -387,6 +387,7 @@ Transform:
   - {fileID: 4029637153990876079}
   - {fileID: 3892472900580843086}
   - {fileID: 7986361074261432719}
+  - {fileID: 4468267496290295448}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -467,8 +468,8 @@ MonoBehaviour:
   - {fileID: 5466077693204680955}
   - {fileID: 7189866974963181047}
   m_Bounds:
-    m_Center: {x: 0.41110814, y: 0.10350931, z: 0}
-    m_Extent: {x: 1.5305122, y: 1.5173166, z: 0}
+    m_Center: {x: 0.4111086, y: 0.103509545, z: 0}
+    m_Extent: {x: 1.5305127, y: 1.5173163, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -604,6 +605,7 @@ MonoBehaviour:
   BossType: 1
   CurrentHealth: 0
   MainPoint: {fileID: 4029637153990876079}
+  FirePoint: {fileID: 4468267496290295448}
   CurrentHealth_UI: {fileID: 7385261197692206710}
   HealthNumber: {fileID: 345083084850633914}
   DeathEffect: {fileID: 0}
@@ -1197,6 +1199,37 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &7242397121140320225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4468267496290295448}
+  m_Layer: 3
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4468267496290295448
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7242397121140320225}
+  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.07, y: -0.76, z: 0.043749448}
+  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5803179343414238852}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7744393451290499173
 GameObject:
   m_ObjectHideFlags: 0

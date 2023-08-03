@@ -45,7 +45,7 @@ public class Frog : Enemy
             {
                 SkillOne.transform.position = TargetPosition;
                 SkillOne.GetComponent<Frog_Attack>().SetUp(100);
-                SkillOne.GetComponent<Frog_Attack>().SetUpPoint(transform.position, TargetPosition);
+                SkillOne.GetComponent<Frog_Attack>().SetUpPoint(FirePoint.position, TargetPosition);
                 SkillOne.SetActive(true);
             }
         }
