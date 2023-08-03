@@ -60,5 +60,5 @@ public class Message
 
 public enum TypePrivateMessage
 {
-    FriendRequest, PKRequest, Arena, Text
+    FriendRequest, PK, Arena
 }
