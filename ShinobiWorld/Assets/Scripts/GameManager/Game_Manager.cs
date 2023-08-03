@@ -39,7 +39,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public AccountStatus AccountStatus;
 
-    public string CurrentAreaName;
+    public CurrentAreaName currentAreaName;
 
     RoomOptions roomOptions = new RoomOptions();
 
@@ -57,6 +57,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject JoinRoomFailedPrefabs;
     GameObject JoinRoomFailedInstance;
 
+    public RenderTexture MinimapRaw;
+
     private void Awake()
     {
         Instance = this;
@@ -73,10 +75,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            roomOptions.MaxPlayers = 0; // Maximum number of players allowed in the room
+            roomOptions.MaxPlayers = 0;
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(CurrentAreaName, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(currentAreaName.ToString(), roomOptions, TypedLobby.Default);
         }
     }
 
@@ -199,7 +201,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             roomOptions.MaxPlayers = 0;
             roomOptions.IsOpen = true;
             roomOptions.BroadcastPropsChangeToAll = true;
-            PhotonNetwork.JoinOrCreateRoom(CurrentAreaName, roomOptions, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(currentAreaName.ToString(), roomOptions, TypedLobby.Default);
         }
     }
 

@@ -357,11 +357,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
 
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ToggleFullMap(true);
-            }
-
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -405,7 +400,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             {
                 case AccountStatus.Normal:
                     Game_Manager.Instance.ReloadPlayerProperties();
-                    PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(References.RespawnTime);
                     break;
 
                 case AccountStatus.Arena:

@@ -19,7 +19,7 @@ namespace Assets.Scripts.BXH
         public GameObject BXH;
         public Image RankImg;
         public TMP_Text RankTxt, Name, Level, Trophy, Power;
-        public GameObject AddFriendBtn;
+        public GameObject AddFriendBtn, InfoBtn;
         public Account_Entity selectedAccount;
 
         public void Setup(int index, Account_Entity account)
@@ -44,6 +44,10 @@ namespace Assets.Scripts.BXH
             Power.text = account.Power.ToString();
 
             AddFriendBtn.GetComponent<Button>().onClick.AddListener(SendFriendRequest);
+            InfoBtn.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Player_Info.Instance.Open(selectedAccount.ID);
+            });
 
             AddFriendBtn.SetActive(
                 !References.listAllFriend
