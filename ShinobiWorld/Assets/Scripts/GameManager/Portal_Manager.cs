@@ -38,7 +38,7 @@ public class Portal_Manager : MonoBehaviour
         listArea.Clear();
         foreach (string area in References.AllScenes)
         {
-            if (!area.Equals(Game_Manager.Instance.CurrentAreaName))
+            if (!area.Equals(Game_Manager.Instance.currentAreaName.ToString()))
             {
                 listArea.Add(area);
             }

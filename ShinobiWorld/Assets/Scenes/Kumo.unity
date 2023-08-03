@@ -10591,6 +10591,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1812566146}
     - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: MinimapRaw
+      value: 
+      objectReference: {fileID: 8400000, guid: 53fa1dee11d0eb849a10e68ec195521d, type: 2}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
       propertyPath: LoadingImage
       value: 
       objectReference: {fileID: 21300000, guid: 51e63390fecb5f34a9112d0dd34ec36f, type: 3}
@@ -10598,6 +10602,14 @@ PrefabInstance:
       propertyPath: CurrentAreaName
       value: Kumo
       objectReference: {fileID: 0}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: currentAreaName
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: JoinRoomFailedPrefabs
+      value: 
+      objectReference: {fileID: 953051348179350516, guid: 56ff80c74de7014498f68d6ad942dd3c, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
 --- !u!1 &1037213454
@@ -72325,8 +72337,22 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 1.7605978, y: 0.83658314}
-      - {x: 1.3781106, y: 0.8468771}
-      - {x: 0.90359396, y: 0.82262516}
+      - {x: 1.6935819, y: 1.3059387}
+      - {x: 2.229779, y: 1.8715506}
+      - {x: 2.4996855, y: 2.2158985}
+      - {x: 2.6216226, y: 2.6585703}
+      - {x: 2.8657465, y: 3.1691961}
+      - {x: 2.7485495, y: 3.6129751}
+      - {x: 1.8939824, y: 3.9776726}
+      - {x: 1.0494426, y: 4.0020895}
+      - {x: 0.19658804, y: 3.8658495}
+      - {x: -0.33566332, y: 3.5007858}
+      - {x: -0.34880888, y: 3.0814657}
+      - {x: -0.1626339, y: 2.7623672}
+      - {x: 0.09204352, y: 2.5847569}
+      - {x: 0.28451622, y: 1.9558201}
+      - {x: 1.0210824, y: 1.4618568}
+      - {x: 1.1884394, y: 0.75689125}
       - {x: 0.27393097, y: 0.21331576}
       - {x: 0.2809462, y: -0.45320988}
       - {x: 0.49185473, y: -0.63226414}
@@ -72346,7 +72372,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2049101130}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1, y: 11.9, z: -2.2803595}
+  m_LocalPosition: {x: -1.63, y: 11.55, z: -2.2803595}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

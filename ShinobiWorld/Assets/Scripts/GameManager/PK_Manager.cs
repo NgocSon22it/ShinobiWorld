@@ -54,7 +54,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private const string LoserTextPropKey = "LoserText";
 
 
-    [SerializeField] string SceneName;
+    [SerializeField] SceneName SceneName;
     PlayerBase[] players;
     int PlayerCount;
 
@@ -213,7 +213,8 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnJoinedRoom()
     {
-        References.SceneNameInvite = SceneName;
+        References.ChatServer = PhotonNetwork.CurrentRoom.Name;
+        References.SceneNameInvite = SceneName.ToString();
         References.InviteType = AccountStatus.PK;
         Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();

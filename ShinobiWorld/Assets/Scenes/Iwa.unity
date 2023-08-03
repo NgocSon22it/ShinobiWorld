@@ -664,6 +664,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 616465982}
     - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: MinimapRaw
+      value: 
+      objectReference: {fileID: 8400000, guid: f86017e121f713e40b431db6282f5293, type: 2}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
       propertyPath: LoadingImage
       value: 
       objectReference: {fileID: 21300000, guid: 810c7d79554596b4b81df5a96e5f300e, type: 3}
@@ -671,6 +675,14 @@ PrefabInstance:
       propertyPath: CurrentAreaName
       value: Iwa
       objectReference: {fileID: 0}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: currentAreaName
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7535696550313318687, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
+      propertyPath: JoinRoomFailedPrefabs
+      value: 
+      objectReference: {fileID: 953051348179350516, guid: 56ff80c74de7014498f68d6ad942dd3c, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af15da88c20cf8a4e819e24249fc73fe, type: 3}
 --- !u!1 &576021969
@@ -95557,7 +95569,7 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.77, y: -0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -95569,15 +95581,19 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -1.8053507, y: 2.1743631}
+    - - {x: 0.403203, y: 3.512024}
+      - {x: -0.5373721, y: 3.5643406}
+      - {x: -1.2663548, y: 2.7946272}
+      - {x: -1.8053507, y: 2.1743631}
       - {x: -1.8816364, y: 1.3136063}
       - {x: -3.8989537, y: 1.2498348}
-      - {x: -3.9120097, y: -1.9379987}
-      - {x: 7.3727617, y: -1.842598}
+      - {x: -3.9120097, y: -1.9379988}
+      - {x: 7.3727612, y: -1.842598}
       - {x: 7.3930373, y: 1.2607834}
       - {x: 5.3529005, y: 1.1870346}
-      - {x: 5.086552, y: 2.0188456}
-      - {x: 1.4214655, y: 2.1906538}
+      - {x: 5.874587, y: 1.7411232}
+      - {x: 5.9370627, y: 3.453041}
+      - {x: 2.0385027, y: 3.4580822}
 --- !u!4 &1376913358
 Transform:
   m_ObjectHideFlags: 0
