@@ -13,7 +13,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
 {
     public static Player_Info Instance;
     public GameObject InfoPanel;
-    public string ID ;
+    public string ID;
 
     [Header("Preview")]
     public GameObject Preview;
@@ -37,12 +37,12 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     [Header("DetailPlayer")]
     public GameObject DetailPlayer;
-    public TMP_Text Name_Player, Level_Player, Health_Player, Chakra_Player, 
+    public TMP_Text Name_Player, Level_Player, Health_Player, Chakra_Player,
                     Strength_Player, Power_Player, Exp_Player, Coin_Player;
 
     [Header("DetailWeapon")]
     public GameObject DetailWeapon;
-    public TMP_Text Name_Weapon, Level_Weapon, Damage_Weapon;
+    public TMP_Text Name_Weapon, Damage_Weapon;
 
     [Header("DetailSkill")]
     public GameObject DetailSkill;
@@ -72,6 +72,13 @@ public class Player_Info : MonoBehaviourPunCallbacks
     public Camera mainCamera; // Reference to the main camera
     public Canvas canvas;
 
+    public List<HasSkill_Entity> listHasSkill = new List<HasSkill_Entity>();
+    public static HasWeapon_Entity hasWeapon = new HasWeapon_Entity();
+    public Weapon_Entity weapon = new Weapon_Entity();
+    public static List<BagEquipment_Entity> listBagEquipment = new List<BagEquipment_Entity>();
+
+    public Account_Entity account = new Account_Entity();
+
     private void Awake()
     {
         Instance = this;
@@ -88,24 +95,24 @@ public class Player_Info : MonoBehaviourPunCallbacks
     {
         DetailPlayer.SetActive(false);
         DetailWeapon.SetActive(false);
-        DetailSkill.SetActive(false); 
+        DetailSkill.SetActive(false);
         DetailEquipment.SetActive(false);
     }
 
-    public void Open()
+    public void Open(string AccountID)
     {
         Game_Manager.Instance.IsBusy = true;
-        Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().PlayerAllUIInstance.SetActive(false) ;
+        Game_Manager.Instance.PlayerManager.GetComponent<PlayerBase>().PlayerAllUIInstance.SetActive(false);
 
-        //References.accountRefer = Account_DAO.GetAccountByID("vRsLqEXrnhMpK48YRLlYMNBElTf1");
+        account = Account_DAO.GetAccountByID(AccountID);
 
-        References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
-        References.listHasSkill = HasSkill_DAO.GetAllSkillForAccount(References.accountRefer.ID);
-        References.hasWeapon = HasWeapon_DAO.GetHasWeaponByID(References.accountRefer.ID);
-        References.weapon = Weapon_DAO.GetWeaponByID(References.hasWeapon.WeaponID);
+        listBagEquipment = BagEquipment_DAO.GetAllByUserID(AccountID);
+        listHasSkill = HasSkill_DAO.GetAllSkillForAccount(AccountID);
+        hasWeapon = HasWeapon_DAO.GetHasWeaponByID(AccountID);
+        weapon = Weapon_DAO.GetWeaponByID(hasWeapon.WeaponID);
 
         InfoPanel.SetActive(true);
-        
+
         Preview.SetActive(true);
         SetupPreview();
 
@@ -125,10 +132,10 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void SetupPreview()
     {
-        Name_Preview.text = PhotonNetwork.NickName;
+        Name_Preview.text = account.Name;
         //Name_Preview.text = "Thien";
-        Role.text = References.listRole.Find(obj => obj.ID == References.accountRefer.RoleInGameID).Name;
-        Trophy.text = References.listTrophy.Find(obj => obj.ID == References.accountRefer.TrophyID).Name;
+        Role.text = References.listRole.Find(obj => obj.ID == account.RoleInGameID).Name;
+        Trophy.text = References.listTrophy.Find(obj => obj.ID == account.TrophyID).Name;
 
         LoadLayout();
         SetupPreviewBtn();
@@ -142,7 +149,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
     {
         SetupPreviewBtnImage();
         Skill_1Btn.interactable = false;
-        Skill_1Image.color = new Color32(255,255,255,100);
+        Skill_1Image.color = new Color32(255, 255, 255, 100);
 
         Skill_2Btn.interactable = false;
         Skill_2Image.color = new Color32(255, 255, 255, 100);
@@ -176,10 +183,11 @@ public class Player_Info : MonoBehaviourPunCallbacks
         }
         else Equip_HeadbandBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentDefault);
 
-        if(Equip_ShirtImage.gameObject.activeSelf)
+        if (Equip_ShirtImage.gameObject.activeSelf)
         {
             Equip_ShirtBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
-        } else Equip_ShirtBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentDefault);
+        }
+        else Equip_ShirtBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentDefault);
 
         if (Equip_WeaponImage.gameObject.activeSelf)
         {
@@ -196,8 +204,8 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void SetupPreviewSkillBtn()
     {
-        var role = References.accountRefer.RoleInGameID.Replace("Role_", "");
-        var list = References.listSkill.FindAll(obj => obj.RoleInGameID == References.accountRefer.RoleInGameID);
+        var role = account.RoleInGameID.Replace("Role_", "");
+        var list = References.listSkill.FindAll(obj => obj.RoleInGameID == account.RoleInGameID);
 
         foreach (var skill in list)
         {
@@ -216,7 +224,7 @@ public class Player_Info : MonoBehaviourPunCallbacks
             }
         }
 
-        foreach (var skill in References.listHasSkill)
+        foreach (var skill in listHasSkill)
         {
             var index = skill.SkillID.Replace("Skill_" + role, "");
 
@@ -256,22 +264,22 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void LoadLayout()
     {
-        string image = References.listEye.Find(obj => obj.ID == References.accountRefer.EyeID).Image;
+        string image = References.listEye.Find(obj => obj.ID == account.EyeID).Image;
         Eye.sprite = Resources.Load<Sprite>(image);
 
         //Hair
-        image = References.listHair.Find(obj => obj.ID == References.accountRefer.HairID).Image;
+        image = References.listHair.Find(obj => obj.ID == account.HairID).Image;
         Hair.sprite = Resources.Load<Sprite>(image);
 
         //Mouth
-        image = References.listMouth.Find(obj => obj.ID == References.accountRefer.MouthID).Image;
+        image = References.listMouth.Find(obj => obj.ID == account.MouthID).Image;
         Mouth.sprite = Resources.Load<Sprite>(image);
 
         //Weapon
-        Weapon.sprite = Resources.Load<Sprite>(References.weapon.Image);
+        Weapon.sprite = Resources.Load<Sprite>(weapon.Image);
 
         //Skin
-        image = References.listSkin.Find(obj => obj.ID == References.accountRefer.SkinID).Image;
+        image = References.listSkin.Find(obj => obj.ID == account.SkinID).Image;
 
         Shirt.sprite = Resources.Load<Sprite>(image + "_Shirt");
         LeftHand.sprite = Resources.Load<Sprite>(image + "_LeftHand");
@@ -282,18 +290,18 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
     public void SetupPreviewEquipmentBtn()
     {
-        var listUsing = References.listBagEquipment.FindAll(obj => obj.IsUse);
-        
+        var listUsing = listBagEquipment.FindAll(obj => obj.IsUse);
+
         foreach (var equip in listUsing)
         {
             var equipment = References.listEquipment.Find(obj => obj.ID == equip.EquipmentID);
 
-            switch(equipment.TypeEquipmentID)
+            switch (equipment.TypeEquipmentID)
             {
                 case "Headband":
                     Equip_HeadbandBtn.interactable = true;
                     Equip_HeadbandBtn.GetComponent<Image>().sprite = Resources.Load<Sprite>(References.UIEquipmentShow);
-                    Equip_HeadbandImage.gameObject.SetActive(true); 
+                    Equip_HeadbandImage.gameObject.SetActive(true);
                     Equip_HeadbandImage.sprite = Resources.Load<Sprite>(equipment.Image);
                     Equip_HeadbandTxt.gameObject.SetActive(false);
 
@@ -323,59 +331,59 @@ public class Player_Info : MonoBehaviourPunCallbacks
                     Equip_WeaponImage.sprite = Resources.Load<Sprite>(equipment.Image);
                     Equip_WeaponTxt.gameObject.SetActive(false);
 
-                    Equip_WeaponBtn.onClick.AddListener(() => 
-                        { 
+                    Equip_WeaponBtn.onClick.AddListener(() =>
+                        {
                             ShowDetailEquipment(equip);
                             SetupPreviewBtnSelected(Equip_WeaponBtn);
-                        } );
+                        });
                     break;
             }
-        } 
+        }
     }
-   
+
     public void ShowDetailPlayer()
     {
         Init();
 
         DetailPlayer.SetActive(true);
 
-        Name_Player.text = PhotonNetwork.NickName;
+        Name_Player.text = account.Name;
         //Name_Player.text = "Thien";
-        Level_Player.text = References.accountRefer.Level.ToString();
-        Health_Player.text = References.accountRefer.Health.ToString();
-        Chakra_Player.text = References.accountRefer.Chakra.ToString();
-        Strength_Player.text = References.accountRefer.Strength.ToString();
-        Power_Player.text = References.accountRefer.Power.ToString();
-        Exp_Player.text = References.accountRefer.Exp.ToString();
-        Coin_Player.text = References.accountRefer.Coin.ToString();
+        Level_Player.text = account.Level.ToString();
+        Health_Player.text = account.Health.ToString();
+        Chakra_Player.text = account.Chakra.ToString();
+        Strength_Player.text = account.Strength.ToString();
+        Power_Player.text = account.Power.ToString();
+        Exp_Player.text = account.Exp.ToString();
+        Coin_Player.text = account.Coin.ToString();
     }
 
     public void ShowDetailSkill(HasSkill_Entity skill)
     {
         //Name_Skill, Level_Skill, Damage_Skill, Chakra_Skill, Cooldown_Skill
         Init();
-        
+
         DetailSkill.SetActive(true);
 
         Name_Skill.text = References.listSkill.Find(obj => obj.ID == skill.SkillID).Name;
         Level_Skill.text = skill.Level.ToString();
         Damage_Skill.text = skill.Damage.ToString();
         Chakra_Skill.text = skill.Chakra.ToString();
-        Cooldown_Skill.text = skill.Cooldown.ToString();
+        Cooldown_Skill.text = skill.Cooldown.ToString("F1") + "s";
     }
 
     public void ShowDetailEquipment(BagEquipment_Entity equip)
     {
         //Name_Equipment, Level_Equipment, Damage_Equipment, Health_Equipment, Chakra_Equipment;
         Init();
-        
+
         DetailEquipment.SetActive(true);
 
         Name_Equipment.text = References.listEquipment.Find(obj => obj.ID == equip.EquipmentID).Name;
         Level_Equipment.text = equip.Level.ToString();
         Damage_Equipment.text = equip.Damage.ToString();
         Health_Equipment.text = equip.Health.ToString();
-        Chakra_Equipment.text = equip.Chakra.ToString(); 
+        Chakra_Equipment.text = equip.Chakra.ToString();
     }
 
     public void ShowDetailWeapon()
@@ -387,9 +395,8 @@ public class Player_Info : MonoBehaviourPunCallbacks
 
         DetailWeapon.SetActive(true);
 
-        Name_Weapon.text = References.weapon.Name;
-        Level_Weapon.text = References.hasWeapon.Level.ToString();
-        Damage_Weapon.text = References.hasWeapon.Damage.ToString();
+        Name_Weapon.text = weapon.Name;
+        Damage_Weapon.text = hasWeapon.Damage.ToString("F1");
     }
 
 
