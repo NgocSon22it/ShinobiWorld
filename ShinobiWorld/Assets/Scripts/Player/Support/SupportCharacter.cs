@@ -12,17 +12,17 @@ public class SupportCharacter : PlayerBase
     float SteelFist_Time = 5f;
     private Coroutine SteelFist;
     int SteelFist_DamageBonus = 60;
-
+    [SerializeField] GameObject SteelFistEffect;
     //Skill Two
     float Blessing_Time = 7f;
     private Coroutine Blessing;
-    int Blessing_SpeedBonus = 5;
+    int Blessing_SpeedBonus = 3;
     int Blessing_HealthBonus = 200;
+    [SerializeField] GameObject BlessingEffect;
 
     new void Start()
     {
         base.Start();
-
     }
 
     // Update is called once per frame
@@ -105,14 +105,12 @@ public class SupportCharacter : PlayerBase
 
     public void Animation_SkillOne()
     {
-
         if (SteelFist != null)
         {
             StopCoroutine(SteelFist);
             SetUpSteelFist(-SteelFist_DamageBonus);
             SteelFist = null;
         }
-
         SteelFist = StartCoroutine(IE_SteelFist());
 
     }
@@ -122,7 +120,7 @@ public class SupportCharacter : PlayerBase
         if (Blessing != null)
         {
             StopCoroutine(Blessing);
-            SetUpBlessing(Blessing_SpeedBonus, 0);
+            SetUpBlessing(-Blessing_SpeedBonus, 0);
             Blessing = null;
         }
 
@@ -143,7 +141,8 @@ public class SupportCharacter : PlayerBase
         {
             skillThree.transform.position = AttackPoint.position;
             skillThree.transform.rotation = AttackPoint.rotation;
-            skillThree.GetComponent<FierceFist>().SetUp(SkillOne_Entity.Damage + DamageBonus);          
+            skillThree.GetComponent<Support_SkillThree>().SetUp(SkillOne_Entity.Damage + DamageBonus);
+            skillThree.GetComponent<Support_SkillThree>().SetUpDirection(SkillDirection);
             skillThree.SetActive(true);
             skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
@@ -152,10 +151,12 @@ public class SupportCharacter : PlayerBase
 
     IEnumerator IE_Blessing()
     {
+        BlessingEffect.SetActive(true);
         SetUpBlessing(Blessing_SpeedBonus, Blessing_HealthBonus);
 
         yield return new WaitForSeconds(Blessing_Time);
 
+        BlessingEffect.SetActive(false);
         SetUpBlessing(-Blessing_SpeedBonus, 0);
 
         Blessing = null;
@@ -163,10 +164,12 @@ public class SupportCharacter : PlayerBase
 
     IEnumerator IE_SteelFist()
     {
+        SteelFistEffect.SetActive(true);
         SetUpSteelFist(SteelFist_DamageBonus);
 
         yield return new WaitForSeconds(SteelFist_Time);
 
+        SteelFistEffect.SetActive(false);
         SetUpSteelFist(-SteelFist_DamageBonus);
 
         SteelFist = null;
