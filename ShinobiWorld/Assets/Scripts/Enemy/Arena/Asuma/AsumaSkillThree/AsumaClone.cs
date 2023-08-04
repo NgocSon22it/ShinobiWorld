@@ -47,7 +47,7 @@ public class AsumaClone : Enemy
         if (isMoving)
         {
             MovePosition = aIPath.desiredVelocity;
-            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius, AttackableLayer);
+            CanAttackPlayer = Physics2D.OverlapCircle(transform.position, attackRadius, AttackableLayer);
             if (CanAttackPlayer)
             {
                 aIPath.canMove = false;
@@ -179,5 +179,10 @@ public class AsumaClone : Enemy
     {
         yield return new WaitForSeconds(Seconds);
         IsSkilling = false;
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 }

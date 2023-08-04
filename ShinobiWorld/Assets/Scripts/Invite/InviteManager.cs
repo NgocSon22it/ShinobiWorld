@@ -97,7 +97,6 @@ public class InviteManager : MonoBehaviour
             }
 
             ReceivePanel.SetActive(true);
-            Debug.Log(References.RoomNameInvite + "___" + RoomName);
             StartCoroutine(PopupInvite());
         }
     }
@@ -113,7 +112,6 @@ public class InviteManager : MonoBehaviour
             References.PKBet = Convert.ToInt32(Bet);
             InviteContent.text = Content + " " + Bet + " Vàng.";
             ReceivePanel.SetActive(true);
-            Debug.Log(References.RoomNameInvite + "___" + RoomName);
             StartCoroutine(PopupInvite());
         }
     }
@@ -151,7 +149,6 @@ public class InviteManager : MonoBehaviour
             case TypePrivateMessage.PK:
                 if (References.accountRefer.Coin >= References.PKBet)
                 {
-                    References.AddCoin(-References.PKBet);
                     References.IsInvite = true;
                     PhotonNetwork.IsMessageQueueRunning = false;
                     PhotonNetwork.LeaveRoom();
