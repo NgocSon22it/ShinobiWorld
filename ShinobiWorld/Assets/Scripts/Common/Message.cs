@@ -55,7 +55,10 @@ public class Message
 
     public static string BossAreaMessage = "mời bạn cùng tham chiến với boss";
     public static string PKMessage = "muốn đấu tay đôi với bạn với mức cược là";
-    public static string PrivateMessage = "{0}:{1}:{2}:{3}:{4}";
+
+    public static string Arena_Private = "{0}:{1}:{2}:{3}:{4}:{5}";
+    public static string PK_Private = "{0}:{1}:{2}:{3}:{4}";
+    public static string PrivateMessage = "{0}:{1}";
 }
 
 public enum TypePrivateMessage

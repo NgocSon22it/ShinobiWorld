@@ -89,12 +89,14 @@ public static class References
 
     //Invite
     public static InviteType inviteType;
-    public static string MapInviteInvite;
+    public static string MapInvite;
     public static string RoomNameInvite = "123";
+
     //PK
     public static int PKBet;
     //Arena
     public static string BossNameInvite;
+    public static BossArenaType bossArenaType;
 
     public static bool IsInvite;
     public static string ChatServer;
@@ -241,13 +243,23 @@ public static class References
         return sb.ToString();
     }
 }
+
+public enum BossArenaType
+{
+    Practice, Official
+}
 public enum InviteType
 {
     PK, Arena
 }
 public enum MapType
 {
-    Forest, Beach, Mountain
+    Forest, Beach, Delta
+}
+
+public enum SceneType
+{
+    BossArena_, PK_
 }
 
 public enum BossName

@@ -12,7 +12,6 @@ public class Kakashi : Enemy
     bool IsStartCoroutine;
 
     [SerializeField] List<GameObject> List_Electric = new List<GameObject>();
-    [SerializeField] List<GameObject> List_Fire = new List<GameObject>();
 
     [SerializeField] AIPath aIPath;
     [SerializeField] AIDestinationSetter destinationSetter;

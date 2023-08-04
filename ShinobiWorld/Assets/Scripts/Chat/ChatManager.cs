@@ -103,7 +103,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                         var SceneName = mess[2];
                         var RoomName = mess[3];
                         var BossName = mess[4];
-                        InviteManager.Instance.OpenReceiveInvitePopup_Arena(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName, BossName);
+                        InviteManager.Instance.OpenReceiveInvitePopup_Arena(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName, BossName, References.bossArenaType);
                         break;
                 }
             }

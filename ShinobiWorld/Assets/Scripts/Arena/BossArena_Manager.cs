@@ -15,10 +15,13 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     [Header("Set Up")]
     [SerializeField] Canvas sortCanvas;
+    [SerializeField] Transform SpawnPoint;
     [SerializeField] GameObject Boss;
     [SerializeField] GameObject BossPool;
-    [SerializeField] Transform SpawnPoint;
     [SerializeField] PolygonCollider2D CameraBox;
+
+    [SerializeField] List<GameObject> ListBoss = new List<GameObject>();
+    [SerializeField] List<GameObject> ListBossPool = new List<GameObject>();
 
     [Header("Battle Time")]
     float TotalTime = 180f, currentTime;
@@ -53,6 +56,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Room Value")]
     [SerializeField] MapType mapType;
+    BossArenaType arenaType;
     string BossName;
     RoomOptions roomOptions = new RoomOptions();
     PlayerBase[] players;
@@ -80,10 +84,14 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         References.ChatServer = PhotonNetwork.CurrentRoom.Name;
 
         References.inviteType = InviteType.Arena;
-        References.MapInviteInvite = "BossArena_" + mapType.ToString();
+        References.MapInvite = SceneType.BossArena_.ToString() + mapType.ToString();
         References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
 
         BossName = References.BossNameInvite;
+        arenaType = References.bossArenaType;
+
+        Boss = ListBoss.Find(obj => obj.gameObject.name.Equals(BossName)).gameObject;
+        BossPool = ListBossPool.Find(obj => obj.gameObject.name.Equals(BossName + "Pool")).gameObject;
 
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
@@ -313,6 +321,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         else if (photonEvent.Code == ActiveBossEventCode)
         {
+            Boss = ListBoss.Find(obj => obj.gameObject.name.Equals(BossName)).gameObject;
+            BossPool = ListBossPool.Find(obj => obj.gameObject.name.Equals(BossName + "Pool")).gameObject;
             Boss.SetActive(true);
         }
         else if (photonEvent.Code == BattleStart_CheckReady)
