@@ -51,6 +51,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private const byte ShowEndgamePanelEventCode = 1;
     private const byte ActiveBossEventCode = 2;
     private const byte BattleStart_CheckReady = 3;
+    private const byte BattleStart_InitBoss = 4;
 
     private const string EndGamePro = "EndGame";
 
@@ -87,11 +88,14 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         References.MapInvite = SceneType.BossArena_.ToString() + mapType.ToString();
         References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
 
-        BossName = References.BossNameInvite;
         arenaType = References.bossArenaType;
 
-        Boss = ListBoss.Find(obj => obj.gameObject.name.Equals(BossName)).gameObject;
-        BossPool = ListBossPool.Find(obj => obj.gameObject.name.Equals(BossName + "Pool")).gameObject;
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("Boss"))
+        {
+            BossName = PhotonNetwork.CurrentRoom.CustomProperties["Boss"].ToString();
+            Boss = ListBoss.Find(obj => obj.gameObject.name  == BossName);
+            BossPool = ListBossPool.Find(obj => obj.gameObject.name  == BossName + "Pool");
+        }
 
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
@@ -169,6 +173,9 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             else
             {
+                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+                roomOptions.CustomRoomPropertiesForLobby = new string[] { "Boss" };
+                roomOptions.CustomRoomProperties.Add("Boss", References.BossNameInvite);
                 roomOptions.MaxPlayers = 5;
                 roomOptions.BroadcastPropsChangeToAll = true;
                 PhotonNetwork.CreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
@@ -191,7 +198,6 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         Battle_Start_CountdownTxt.gameObject.SetActive(false);
         Game_Manager.Instance.IsBusy = false;
-        Boss.SetActive(true);
         ActiveBoss();
         StartCoroutine(Battle_FightCoroutine());
 
@@ -320,9 +326,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             Battle_End_Panel.SetActive(true);
         }
         else if (photonEvent.Code == ActiveBossEventCode)
-        {
-            Boss = ListBoss.Find(obj => obj.gameObject.name.Equals(BossName)).gameObject;
-            BossPool = ListBossPool.Find(obj => obj.gameObject.name.Equals(BossName + "Pool")).gameObject;
+        {           
             Boss.SetActive(true);
         }
         else if (photonEvent.Code == BattleStart_CheckReady)
@@ -335,7 +339,9 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             else
             {
                 BattleStart_ProgressBar_Stop();
+
             }
         }
+
     }
 }
