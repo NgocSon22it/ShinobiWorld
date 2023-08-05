@@ -97,6 +97,7 @@ public static class References
     //Arena
     public static string BossNameInvite;
     public static BossArenaType bossArenaType;
+    public static TrophyID TrophyRegister;
 
     public static bool IsInvite;
     public static string ChatServer;
