@@ -9,7 +9,7 @@ public class Arena_ReadyBase : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             BossArena_Manager.Instance.CurrentNumber++;
-            BossArena_Manager.Instance.CheckPlayerReady();
+            BossArena_Manager.Instance.CheckAllPlayerReady();
         }
     }
 
@@ -18,7 +18,7 @@ public class Arena_ReadyBase : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             BossArena_Manager.Instance.CurrentNumber--;
-            BossArena_Manager.Instance.CheckPlayerReady();
+            BossArena_Manager.Instance.CheckAllPlayerReady();
 
         }
     }

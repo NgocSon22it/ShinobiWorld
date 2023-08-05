@@ -166,7 +166,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         PlayerNickName.text = photonView.Owner.NickName;
         LoadLayout();
         LoadAllAccountUI();
-        if (AccountEntity.IsDead)
+        if (AccountEntity.IsDead && photonView.IsMine)
         {
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(AccountEntity.TimeRespawn);
             Dead();
@@ -224,12 +224,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerHealthChakraUI.SetActive(true);
         }
     }
-
-    public void LastHitRewards()
-    {
-
-    }
-
 
     public void LoadAllAccountUI()
     {
@@ -400,7 +394,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             {
                 case AccountStatus.Normal:
                     Game_Manager.Instance.ReloadPlayerProperties();
-                    PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(References.RespawnTime);
                     break;
 
                 case AccountStatus.Arena:

@@ -12,17 +12,17 @@ public class SupportCharacter : PlayerBase
     float SteelFist_Time = 5f;
     private Coroutine SteelFist;
     int SteelFist_DamageBonus = 60;
-
+    [SerializeField] GameObject SteelFistEffect;
     //Skill Two
     float Blessing_Time = 7f;
     private Coroutine Blessing;
-    int Blessing_SpeedBonus = 5;
+    int Blessing_SpeedBonus = 3;
     int Blessing_HealthBonus = 200;
+    [SerializeField] GameObject BlessingEffect;
 
     new void Start()
     {
         base.Start();
-
     }
 
     // Update is called once per frame
@@ -79,52 +79,52 @@ public class SupportCharacter : PlayerBase
 
     public void NormalAttackDamage()
     {
-        if (photonView.IsMine)
-        {
-            RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
 
-            if (HitEnemy != null)
+        RaycastHit2D[] HitEnemy = Physics2D.BoxCastAll(AttackPoint.position, DetectGroundVector, 0, -AttackPoint.up, 0, AttackableLayer);
+
+        if (HitEnemy != null)
+        {
+            foreach (RaycastHit2D Enemy in HitEnemy)
             {
-                foreach (RaycastHit2D Enemy in HitEnemy)
+
+                if (Enemy.transform.CompareTag("Enemy") || Enemy.transform.CompareTag("Clone"))
                 {
-                    if (Enemy.transform.CompareTag("Enemy"))
-                    {
-                        Enemy.transform.GetComponent<Enemy>().TakeDamage(photonView.ViewID, Weapon_Entity.Damage);
-                    }
+                    Enemy.transform.GetComponent<Enemy>().TakeDamage(photonView.ViewID, Weapon_Entity.Damage + DamageBonus);
+                }
+                if (Enemy.transform.gameObject.CompareTag("Player")
+                    && Enemy.transform.gameObject.GetComponent<PhotonView>() != photonView
+                    && Enemy.transform.gameObject.GetComponent<PlayerBase>().accountStatus == AccountStatus.PK
+                    )
+                {
+                    Enemy.transform.GetComponent<PlayerBase>().TakeDamage(Weapon_Entity.Damage + DamageBonus);
                 }
             }
         }
+
     }
 
     public void Animation_SkillOne()
     {
-        if (photonView.IsMine)
+        if (SteelFist != null)
         {
-            if (SteelFist != null)
-            {
-                StopCoroutine(SteelFist);
-                SetUpSteelFist(-SteelFist_DamageBonus);
-                SteelFist = null;
-            }
-
-            SteelFist = StartCoroutine(IE_SteelFist());
+            StopCoroutine(SteelFist);
+            SetUpSteelFist(-SteelFist_DamageBonus);
+            SteelFist = null;
         }
+        SteelFist = StartCoroutine(IE_SteelFist());
+
     }
 
     public void Animation_SkillTwo()
     {
-        if (photonView.IsMine)
+        if (Blessing != null)
         {
-            if (Blessing != null)
-            {
-                // If a color change coroutine is already running, stop it
-                StopCoroutine(Blessing);
-                SetUpBlessing(Blessing_SpeedBonus, 0);
-                Blessing = null;
-            }
-
-            Blessing = StartCoroutine(IE_Blessing());
+            StopCoroutine(Blessing);
+            SetUpBlessing(-Blessing_SpeedBonus, 0);
+            Blessing = null;
         }
+
+        Blessing = StartCoroutine(IE_Blessing());
     }
 
     public void Animation_SkillThree()
@@ -141,10 +141,8 @@ public class SupportCharacter : PlayerBase
         {
             skillThree.transform.position = AttackPoint.position;
             skillThree.transform.rotation = AttackPoint.rotation;
-            if (photonView.IsMine)
-            {
-                skillThree.GetComponent<FierceFist>().SetUp(SkillOne_Entity.Damage + DamageBonus);
-            }
+            skillThree.GetComponent<Support_SkillThree>().SetUp(SkillOne_Entity.Damage + DamageBonus);
+            skillThree.GetComponent<Support_SkillThree>().SetUpDirection(SkillDirection);
             skillThree.SetActive(true);
             skillThree.GetComponent<Rigidbody2D>().velocity = (SkillDirection * 10);
         }
@@ -153,10 +151,12 @@ public class SupportCharacter : PlayerBase
 
     IEnumerator IE_Blessing()
     {
+        BlessingEffect.SetActive(true);
         SetUpBlessing(Blessing_SpeedBonus, Blessing_HealthBonus);
 
         yield return new WaitForSeconds(Blessing_Time);
 
+        BlessingEffect.SetActive(false);
         SetUpBlessing(-Blessing_SpeedBonus, 0);
 
         Blessing = null;
@@ -164,10 +164,12 @@ public class SupportCharacter : PlayerBase
 
     IEnumerator IE_SteelFist()
     {
+        SteelFistEffect.SetActive(true);
         SetUpSteelFist(SteelFist_DamageBonus);
 
         yield return new WaitForSeconds(SteelFist_Time);
 
+        SteelFistEffect.SetActive(false);
         SetUpSteelFist(-SteelFist_DamageBonus);
 
         SteelFist = null;
@@ -178,7 +180,6 @@ public class SupportCharacter : PlayerBase
     {
 
         DamageBonus += Damage;
-        Debug.Log(DamageBonus);
 
     }
 
@@ -186,7 +187,6 @@ public class SupportCharacter : PlayerBase
     {
         SpeedBonus += Speed;
         HealAmountOfHealth(Health);
-        Debug.Log(DamageBonus);
     }
 
     private void OnDrawGizmos()
