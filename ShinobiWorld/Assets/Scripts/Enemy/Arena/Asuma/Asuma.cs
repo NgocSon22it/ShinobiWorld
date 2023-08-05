@@ -51,7 +51,7 @@ public class Asuma : Enemy
         if (isMoving)
         {
             MovePosition = aIPath.desiredVelocity;
-            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius, AttackableLayer);
+            CanAttackPlayer = Physics2D.OverlapCircle(transform.position, attackRadius, AttackableLayer);
             if (CanAttackPlayer)
             {
                 aIPath.canMove = false;
@@ -234,6 +234,6 @@ public class Asuma : Enemy
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(MainPoint.position, attackRadius);
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 }

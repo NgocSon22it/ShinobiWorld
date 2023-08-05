@@ -12,7 +12,6 @@ public class Kakashi : Enemy
     bool IsStartCoroutine;
 
     [SerializeField] List<GameObject> List_Electric = new List<GameObject>();
-    [SerializeField] List<GameObject> List_Fire = new List<GameObject>();
 
     [SerializeField] AIPath aIPath;
     [SerializeField] AIDestinationSetter destinationSetter;
@@ -58,7 +57,7 @@ public class Kakashi : Enemy
         if (isMoving)
         {
             MovePosition = aIPath.desiredVelocity;
-            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius, AttackableLayer);
+            CanAttackPlayer = Physics2D.OverlapCircle(transform.position, attackRadius, AttackableLayer);
             if (CanAttackPlayer)
             {
                 aIPath.canMove = false;
@@ -238,6 +237,6 @@ public class Kakashi : Enemy
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(MainPoint.position, attackRadius);
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 }
