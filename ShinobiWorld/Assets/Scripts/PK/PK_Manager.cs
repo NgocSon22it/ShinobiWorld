@@ -205,6 +205,14 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     }
 
+    public void SetUp_PKBet()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("PKBet"))
+        {
+            CurrentBet = (int) PhotonNetwork.CurrentRoom.CustomProperties["PKBet"];
+        }
+    }
+
     public void Battle_End()
     {
         if (IsGameDraw())
@@ -226,7 +234,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         References.MapInvite = SceneType.PK_.ToString() + mapType.ToString();
         References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
 
-        CurrentBet = References.PKBet;
+        SetUp_PKBet();
 
         Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
@@ -316,6 +324,9 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             else
             {
+                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+                roomOptions.CustomRoomPropertiesForLobby = new string[] { "PKBet"};
+                roomOptions.CustomRoomProperties.Add("PKBet", References.PKBet);
                 roomOptions.MaxPlayers = 2;
                 roomOptions.BroadcastPropsChangeToAll = true;
                 PhotonNetwork.CreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);

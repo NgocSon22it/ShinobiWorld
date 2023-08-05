@@ -184,13 +184,9 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        if (cause != DisconnectCause.DisconnectByClientLogic)
+        if (cause == DisconnectCause.ClientTimeout)
         {
-            Debug.Log(Message.LostWifi);
-            if (!PhotonNetwork.IsConnected)
-            {
-                
-            }
+
         }
     }
 
