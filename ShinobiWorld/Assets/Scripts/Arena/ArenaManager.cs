@@ -28,7 +28,7 @@ public class ArenaManager : MonoBehaviour
 
     [Header("Arena Room")]
     [SerializeField] GameObject CreateArenaPanel, CanPanel, CanNotPanel;
-    [SerializeField] TMP_Text ArenaMessage, BossTxt, CurrentTrophy, MapNameTxt;
+    [SerializeField] TMP_Text ArenaMessage, BossTxt, CurrentTrophy, NextTrophy, MapNameTxt;
     string boss, map;
 
     public static ArenaManager Instance;
@@ -52,7 +52,7 @@ public class ArenaManager : MonoBehaviour
     #region Practice
     public void Open_CreatePracticePanel()
     {
-        Practice_InitValue();
+        Practice_InitValue();      
         CreatePracticePanel.SetActive(true);
     }
 
@@ -88,7 +88,6 @@ public class ArenaManager : MonoBehaviour
     public void Practice_InitValue()
     {
         SelectedSquare(ListMap_Practice[0], SceneType.BossArena_);
-
         if (Boss_Dropdown.options.Count > 0)
         {
             Practice_OnDropdownValueChanged(0);
@@ -190,24 +189,30 @@ public class ArenaManager : MonoBehaviour
             case "Trophy_None":
                 CanPanel.SetActive(true);
                 CurrentTrophy.text = "Tập sự";
+                NextTrophy.text = "Hạ đẳng";
                 boss = BossName.Iruka.ToString();
                 map = MapType.Forest.ToString();
+                References.TrophyRegister = TrophyID.Trophy_Genin;
                 BossTxt.text = boss;
                 MapNameTxt.text = map;
                 break;
             case "Trophy_Genin":
                 CanPanel.SetActive(true);
                 CurrentTrophy.text = "Hạ đẳng";
+                NextTrophy.text = "Trung đẳng";
                 boss = BossName.Asuma.ToString();
                 map = MapType.Beach.ToString();
+                References.TrophyRegister = TrophyID.Trophy_Chunin;
                 BossTxt.text = boss;
                 MapNameTxt.text = map;
                 break;
             case "Trophy_Chunin":
                 CanPanel.SetActive(true);
                 CurrentTrophy.text = "Trung đẳng";
+                NextTrophy.text = "Thượng đẳng";
                 boss = BossName.Kakashi.ToString();
                 map = MapType.Delta.ToString();
+                References.TrophyRegister = TrophyID.Trophy_Jonin;
                 BossTxt.text = boss;
                 MapNameTxt.text = map;
                 break;
@@ -225,6 +230,7 @@ public class ArenaManager : MonoBehaviour
             References.MapInvite = SceneType.BossArena_.ToString() + map;
             ArenaMessage.text = "";
         }
+        
 
     }
 

@@ -24,7 +24,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] List<GameObject> ListBossPool = new List<GameObject>();
 
     [Header("Battle Time")]
-    float TotalTime = 180f, currentTime;
+    float TotalTime = 10f, currentTime;
     [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
     [SerializeField] GameObject ReadyBase;
 
@@ -38,8 +38,8 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public int RequireNumber, CurrentNumber;
 
     [Header("Battle End")]
-    [SerializeField] GameObject Battle_End_Panel;
-    [SerializeField] TMP_Text Battle_End_Text;
+    [SerializeField] GameObject Battle_End_Panel, Prize_Panel, NotPrize_Panel, NormalPrize_Panel, UpTrophy_Panel;
+    [SerializeField] TMP_Text Battle_End_Text, Prize_CoinTxt, Prize_ExperienceTxt, Prize_TrophyTxt;
 
     bool BattleEnd;
 
@@ -51,7 +51,6 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private const byte ShowEndgamePanelEventCode = 1;
     private const byte ActiveBossEventCode = 2;
     private const byte BattleStart_CheckReady = 3;
-    private const byte BattleStart_InitBoss = 4;
 
     private const string EndGamePro = "EndGame";
 
@@ -89,17 +88,38 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
 
         arenaType = References.bossArenaType;
-
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("Boss"))
-        {
-            BossName = PhotonNetwork.CurrentRoom.CustomProperties["Boss"].ToString();
-            Boss = ListBoss.Find(obj => obj.gameObject.name  == BossName);
-            BossPool = ListBossPool.Find(obj => obj.gameObject.name  == BossName + "Pool");
-        }
+        SetUp_BossName();
+        SetUp_ArenaType();
 
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
+    }
+
+    public void SetUp_BossName()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("Boss"))
+        {
+            BossName = PhotonNetwork.CurrentRoom.CustomProperties["Boss"].ToString();
+            Boss = ListBoss.Find(obj => obj.gameObject.name == BossName);
+            BossPool = ListBossPool.Find(obj => obj.gameObject.name == BossName + "Pool");
+        }
+    }
+    public void SetUp_ArenaType()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("IsOfficial"))
+        {
+            bool IsOfficial = (bool) PhotonNetwork.CurrentRoom.CustomProperties["IsOfficial"];
+            if (IsOfficial)
+            {
+                arenaType = BossArenaType.Official;
+            }
+            else
+            {
+                arenaType = BossArenaType.Practice;
+            }
+            
+        }
     }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
@@ -174,8 +194,18 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             else
             {
                 roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
-                roomOptions.CustomRoomPropertiesForLobby = new string[] { "Boss" };
+                roomOptions.CustomRoomPropertiesForLobby = new string[] { "Boss", "IsOfficial", "WhoRegister", "TrophyRegister" };
                 roomOptions.CustomRoomProperties.Add("Boss", References.BossNameInvite);
+                if (References.bossArenaType == BossArenaType.Official)
+                {
+                    roomOptions.CustomRoomProperties.Add("IsOfficial", true);
+                    roomOptions.CustomRoomProperties.Add("WhoRegister", References.accountRefer.ID);
+                    roomOptions.CustomRoomProperties.Add("TrophyRegister", References.TrophyRegister);
+                }
+                else if (References.bossArenaType == BossArenaType.Practice)
+                {
+                    roomOptions.CustomRoomProperties.Add("IsOfficial", false);
+                }
                 roomOptions.MaxPlayers = 5;
                 roomOptions.BroadcastPropsChangeToAll = true;
                 PhotonNetwork.CreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
@@ -308,6 +338,58 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.RaiseEvent(ActiveBossEventCode, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
     }
 
+    public void CheckOfficial_Practice()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("IsOfficial"))
+        {
+            bool isOfficial = (bool)PhotonNetwork.CurrentRoom.CustomProperties["IsOfficial"];
+            if (isOfficial)
+            {
+                Prize_Panel.SetActive(true);
+
+                if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("WhoRegister"))
+                {
+                    string Register = (string)PhotonNetwork.CurrentRoom.CustomProperties["WhoRegister"];
+
+                    if (References.accountRefer.ID.Equals(Register))
+                    {
+                        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("TrophyRegister"))
+                        {
+                            UpTrophy_Panel.SetActive(true);
+                            TrophyID Trophy = (TrophyID)PhotonNetwork.CurrentRoom.CustomProperties["TrophyRegister"];
+                            References.accountRefer.TrophyID = Trophy.ToString();
+                            switch (Trophy)
+                            {
+                                case TrophyID.Trophy_Genin:
+                                    Prize_TrophyTxt.text = "Hạ đẳng";
+                                    break;
+                                case TrophyID.Trophy_Chunin:
+                                    Prize_TrophyTxt.text = "Trung đẳng";
+                                    break;
+                                case TrophyID.Trophy_Jonin:
+                                    Prize_TrophyTxt.text = "Thượng đẳng";
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        NormalPrize_Panel.SetActive(true);
+                        Prize_CoinTxt.text = "1000";
+                        Prize_ExperienceTxt.text = "1000";
+                        References.AddCoin(1000);
+                        References.AddExperience(1000);
+                    }
+                }
+
+            }
+            else
+            {
+                NotPrize_Panel.SetActive(true);
+            }
+        }
+    }
+
     public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code == ShowEndgamePanelEventCode)
@@ -317,16 +399,18 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 string End = (string)EndText;
                 Battle_End_Text.text = End;
             }
+
             sortCanvas.sortingOrder = 31;
             BossPool.SetActive(false);
             Boss.SetActive(false);
             BattleEnd = true;
             StopAllCoroutines();
+            CheckOfficial_Practice();
             Game_Manager.Instance.IsBusy = true;
             Battle_End_Panel.SetActive(true);
         }
         else if (photonEvent.Code == ActiveBossEventCode)
-        {           
+        {
             Boss.SetActive(true);
         }
         else if (photonEvent.Code == BattleStart_CheckReady)
@@ -339,7 +423,6 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             else
             {
                 BattleStart_ProgressBar_Stop();
-
             }
         }
 
