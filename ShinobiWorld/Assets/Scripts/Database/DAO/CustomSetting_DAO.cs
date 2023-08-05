@@ -41,6 +41,10 @@ namespace Assets.Scripts.Database.DAO
                         return obj;
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -79,7 +83,10 @@ namespace Assets.Scripts.Database.DAO
                         list.Add(obj);
                     }
                 }
-
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();

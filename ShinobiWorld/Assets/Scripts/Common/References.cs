@@ -87,11 +87,17 @@ public static class References
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
-    public static AccountStatus InviteType;
-    public static string SceneNameInvite;
-    public static string RoomNameInvite = "1";
-    public static string BossNameInvite;
+    //Invite
+    public static InviteType inviteType;
+    public static string MapInvite;
+    public static string RoomNameInvite = "123";
+
+    //PK
     public static int PKBet;
+    //Arena
+    public static string BossNameInvite;
+    public static BossArenaType bossArenaType;
+    public static TrophyID TrophyRegister;
 
     public static bool IsInvite;
     public static string ChatServer;
@@ -238,15 +244,29 @@ public static class References
         return sb.ToString();
     }
 }
-public enum SceneName
+
+public enum BossArenaType
 {
-    BossArena_Iruka, BossArena_Asuma, BossArena_Kakashi, PK
+    Practice, Official
 }
+public enum InviteType
+{
+    PK, Arena
+}
+public enum MapType
+{
+    Forest, Beach, Delta
+}
+
+public enum SceneType
+{
+    BossArena_, PK_
+}
+
 public enum BossName
 {
     Iruka, Asuma, Kakashi
 }
-
 public enum CurrentAreaName
 {
     Konoha, Iwa, Kiri, Kumo, Suna

@@ -8,6 +8,7 @@ using UnityEngine;
 public class InviteItem : MonoBehaviour
 {
     [SerializeField] TMP_Text NameTxt;
+    [SerializeField] GameObject InviteBtn;
     Account_Entity account_Entity;
 
     public void SetUp(Account_Entity account_Entity)
@@ -19,5 +20,6 @@ public class InviteItem : MonoBehaviour
     public void OnclickInvite()
     {
         InviteManager.Instance.SendInvite(account_Entity.Name);
+        InviteBtn.SetActive(false);
     }
 }

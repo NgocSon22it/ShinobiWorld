@@ -37,24 +37,24 @@ public class InviteManager : MonoBehaviour
 
     public void SendInvite(string receiverName)
     {
-        switch (References.InviteType)
+        switch (References.inviteType)
         {
-            case AccountStatus.PK:
+            case InviteType.PK:
 
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
-               string.Format(Message.PrivateMessage, TypePrivateMessage.PKRequest.ToString(),
-               Message.PKMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name, References.PKBet));
-
+               string.Format(Message.PK_Private, TypePrivateMessage.PK.ToString(),
+               Message.PKMessage, References.MapInvite, References.RoomNameInvite, References.PKBet));
                 break;
-
-            case AccountStatus.Arena:
+            case InviteType.Arena:
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
-               string.Format(Message.PrivateMessage, TypePrivateMessage.Arena.ToString(),
-               Message.BossAreaMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name, References.BossNameInvite));
+               string.Format(Message.Arena_Private, TypePrivateMessage.Arena.ToString(),
+               Message.BossAreaMessage, References.MapInvite, References.RoomNameInvite, References.BossNameInvite, References.bossArenaType));
                 break;
         }
+
+
     }
 
     public void LoadListInvite()
@@ -66,24 +66,35 @@ public class InviteManager : MonoBehaviour
             Destroy(trans.gameObject);
         }
 
-        foreach (Account_Entity a in ListInvite)
+        foreach (Account_Entity account in ListInvite)
         {
-            if (!a.ID.Equals(References.accountRefer.ID))
+            if (!account.ID.Equals(References.accountRefer.ID))
             {
-                Instantiate(Item, Content).GetComponent<InviteItem>().SetUp(a);
+                Instantiate(Item, Content).GetComponent<InviteItem>().SetUp(account);
             }
         }
     }
 
-    public void OpenReceiveInvitePopup_Arena(TypePrivateMessage type, string Content, string SceneName, string RoomName, string BossName)
+    public void OpenReceiveInvitePopup_Arena(TypePrivateMessage type, string Content, string SceneName, string RoomName, string BossName, BossArenaType arenaType)
     {
-        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal 
+        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal
             && !References.RoomNameInvite.Equals(RoomName))
         {
             this.type = type;
-            References.SceneNameInvite = SceneName;
+
+            References.MapInvite = SceneName;
             References.RoomNameInvite = RoomName;
-            InviteContent.text = Content + " " + BossName;
+            References.bossArenaType = arenaType;
+            switch (References.bossArenaType)
+            {
+                case BossArenaType.Official:
+                    InviteContent.text = Content + " " + BossName + " (Chính thức)";
+                    break;
+                case BossArenaType.Practice:
+                    InviteContent.text = Content + " " + BossName + " (Phòng tập)";
+                    break;
+            }
+            
             ReceivePanel.SetActive(true);
             StartCoroutine(PopupInvite());
         }
@@ -95,7 +106,7 @@ public class InviteManager : MonoBehaviour
             && !References.RoomNameInvite.Equals(RoomName))
         {
             this.type = type;
-            References.SceneNameInvite = SceneName;
+            References.MapInvite = SceneName;
             References.RoomNameInvite = RoomName;
             References.PKBet = Convert.ToInt32(Bet);
             InviteContent.text = Content + " " + Bet + " Vàng.";
@@ -131,20 +142,21 @@ public class InviteManager : MonoBehaviour
                 References.IsInvite = true;
                 PhotonNetwork.IsMessageQueueRunning = false;
                 PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel(References.SceneNameInvite);
+                PhotonNetwork.LoadLevel(References.MapInvite);
                 break;
 
-            case TypePrivateMessage.PKRequest:
-                References.IsInvite = true;
-                PhotonNetwork.IsMessageQueueRunning = false;
-                PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel(References.SceneNameInvite);
+            case TypePrivateMessage.PK:
+                if (References.accountRefer.Coin >= References.PKBet)
+                {
+                    References.IsInvite = true;
+                    PhotonNetwork.IsMessageQueueRunning = false;
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LoadLevel(References.MapInvite);
+                }
                 break;
         }
         CloseReceiveInvitePopup();
     }
-
-
 
     IEnumerator PopupInvite()
     {

@@ -50,7 +50,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogError("Could not resolve all firebase dependencies: " + dependencyStatus);
+            Debug.Log("Could not resolve all firebase dependencies: " + dependencyStatus);
         }
     }
 
@@ -154,12 +154,12 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (email == "")
         {
-            Debug.LogError("ShinobiWorld " + Message.EmailEmpty);
+            Debug.Log("ShinobiWorld " + Message.EmailEmpty);
             UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
         }
         else if (password == "")
         {
-            Debug.LogError("ShinobiWorld " + Message.PasswordEmpty);
+            Debug.Log("ShinobiWorld " + Message.PasswordEmpty);
             UIManager.Instance.OpenPopupPanel(Message.PasswordEmpty);
 
         }
@@ -171,7 +171,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
             if (loginTask.Exception != null)
             {
-                Debug.LogError("ShinobiWorld " + loginTask.Exception);
+                Debug.Log("ShinobiWorld " + loginTask.Exception);
 
                 FirebaseException firebaseException = loginTask.Exception.GetBaseException() as FirebaseException;
                 AuthError authError = (AuthError)firebaseException.ErrorCode;
@@ -255,30 +255,30 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (email == "")
         {
-            Debug.LogError("ShinobiWorld " + Message.EmailEmpty);
+            Debug.Log("ShinobiWorld " + Message.EmailEmpty);
             UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
 
         }
         else if (password == "")
         {
-            Debug.LogError("ShinobiWorld " + Message.PasswordEmpty);
+            Debug.Log("ShinobiWorld " + Message.PasswordEmpty);
             UIManager.Instance.OpenPopupPanel(Message.PasswordEmpty);
 
         }
         else if (password.Length < 6)
         {
-            Debug.LogError("ShinobiWorld " + "Password must be at least 8 characters");
+            Debug.Log("ShinobiWorld " + "Password must be at least 8 characters");
             UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
 
         }
         //else if (password.Contains(" "))
         //{
-        //    Debug.LogError("ShinobiWorld " + "Password mustn't be space");
+        //    Debug.Log("ShinobiWorld " + "Password mustn't be space");
         //    UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
         //}
         else if (password != confirmPassword)
         {
-            Debug.LogError("ShinobiWorld " + Message.PasswordNotMatch);
+            Debug.Log("ShinobiWorld " + Message.PasswordNotMatch);
             UIManager.Instance.OpenPopupPanel(Message.PasswordNotMatch);
         }
         else
@@ -289,7 +289,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
             if (registerTask.Exception != null)
             {
-                Debug.LogError("ShinobiWorld " + registerTask.Exception);
+                Debug.Log("ShinobiWorld " + registerTask.Exception);
 
                 FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
                 AuthError authError = (AuthError)firebaseException.ErrorCode;
@@ -463,7 +463,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (email == "")
         {
-            Debug.LogError("ShinobiWorld " + Message.EmailEmpty);
+            Debug.Log("ShinobiWorld " + Message.EmailEmpty);
             UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
 
         }
@@ -475,7 +475,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
             if (resetTask.Exception != null)
             {
-                Debug.LogError("ShinobiWorld " + resetTask.Exception);
+                Debug.Log("ShinobiWorld " + resetTask.Exception);
 
                 FirebaseException firebaseException = resetTask.Exception.GetBaseException() as FirebaseException;
                 AuthError authError = (AuthError)firebaseException.ErrorCode;

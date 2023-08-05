@@ -46,6 +46,10 @@ namespace Assets.Scripts.Database.DAO
                         list.Add(obj);
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -59,15 +63,31 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[SellEquipment] @ID,@UserID,@EquipmentID,@price";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
-                cmd.Parameters.AddWithValue("@price", price);
-                cmd.Parameters.AddWithValue("@ID", ID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "EXECUTE [dbo].[SellEquipment] @ID,@UserID,@EquipmentID,@price";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                    cmd.Parameters.AddWithValue("@price", price);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -75,14 +95,30 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[UseEquipment]  @ID, @UserID ,@EquipmentID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
-                cmd.Parameters.AddWithValue("@ID", ID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "EXECUTE [dbo].[UseEquipment]  @ID, @UserID ,@EquipmentID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -90,14 +126,30 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[RemoveEquipment]  @ID ,@UserID ,@EquipmentID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
-                cmd.Parameters.AddWithValue("@ID", ID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "EXECUTE [dbo].[RemoveEquipment]  @ID ,@UserID ,@EquipmentID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -106,21 +158,37 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update BagEquipment " +
-                                    "set [Level] += 1, Damage += @Damage, Health += @Health, Chakra += @Chakra " +
-                                    "where AccountID = @UserID " +
-                                    "and EquipmentID = @EquipmentID " +
-                                    "and ID = @ID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@Damage", Damage);
-                cmd.Parameters.AddWithValue("@Health", Health);
-                cmd.Parameters.AddWithValue("@Chakra", Chakra);
-                cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
-                cmd.Parameters.AddWithValue("@ID", ID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update BagEquipment " +
+                                        "set [Level] += 1, Damage += @Damage, Health += @Health, Chakra += @Chakra " +
+                                        "where AccountID = @UserID " +
+                                        "and EquipmentID = @EquipmentID " +
+                                        "and ID = @ID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@Damage", Damage);
+                    cmd.Parameters.AddWithValue("@Health", Health);
+                    cmd.Parameters.AddWithValue("@Chakra", Chakra);
+                    cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -129,21 +197,37 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update BagEquipment " +
-                                    "set [Level] = 1, Damage = @Damage, Health = @Health, Chakra = @Chakra " +
-                                    "where AccountID = @UserID " +
-                                    "and EquipmentID = @EquipmentID " +
-                                    "and ID = @ID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@Damage", Damage);
-                cmd.Parameters.AddWithValue("@Health", Health);
-                cmd.Parameters.AddWithValue("@Chakra", Chakra);
-                cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
-                cmd.Parameters.AddWithValue("@ID", ID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update BagEquipment " +
+                                        "set [Level] = 1, Damage = @Damage, Health = @Health, Chakra = @Chakra " +
+                                        "where AccountID = @UserID " +
+                                        "and EquipmentID = @EquipmentID " +
+                                        "and ID = @ID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@Damage", Damage);
+                    cmd.Parameters.AddWithValue("@Health", Health);
+                    cmd.Parameters.AddWithValue("@Chakra", Chakra);
+                    cmd.Parameters.AddWithValue("@EquipmentID", EquipmentID);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
     }

@@ -43,6 +43,10 @@ namespace Assets.Scripts.Database.DAO
                         list.Add(obj);
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -57,15 +61,32 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[BuyItem] @UserID,@ItemID,@amount,@cost";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@ItemID", ItemID);
-                cmd.Parameters.AddWithValue("@amount", amount);
-                cmd.Parameters.AddWithValue("@cost", cost);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "EXECUTE [dbo].[BuyItem] @UserID,@ItemID,@amount,@cost";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@ItemID", ItemID);
+                    cmd.Parameters.AddWithValue("@amount", amount);
+                    cmd.Parameters.AddWithValue("@cost", cost);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+                
             }
         }
 
@@ -73,15 +94,31 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[SellItem] @UserID,@ItemID,@amount,@price";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@ItemID", ItemID);
-                cmd.Parameters.AddWithValue("@amount", amount);
-                cmd.Parameters.AddWithValue("@price", price);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "EXECUTE [dbo].[SellItem] @UserID,@ItemID,@amount,@price";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@ItemID", ItemID);
+                    cmd.Parameters.AddWithValue("@amount", amount);
+                    cmd.Parameters.AddWithValue("@price", price);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -89,13 +126,29 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[HasItem] SET [Amount] -= 1 WHERE AccountID = @AccountID and ItemID = @ItemID";
-                cmd.Parameters.AddWithValue("@AccountID", UserID);
-                cmd.Parameters.AddWithValue("@ItemID", ItemID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE [dbo].[HasItem] SET [Amount] -= 1 WHERE AccountID = @AccountID and ItemID = @ItemID";
+                    cmd.Parameters.AddWithValue("@AccountID", UserID);
+                    cmd.Parameters.AddWithValue("@ItemID", ItemID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -127,6 +180,10 @@ namespace Assets.Scripts.Database.DAO
                     cmd.CommandText = "UPDATE [dbo].Account SET ResetLimitDate = GETDATE() WHERE ID = @UserID";
                     cmd.ExecuteNonQuery();
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
 
@@ -155,6 +212,10 @@ namespace Assets.Scripts.Database.DAO
                     {
                         amount = (dr["Amount"] != DBNull.Value )? Convert.ToInt32(dr["Amount"]) : 0;
                     }
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
                 }
                 finally
                 {

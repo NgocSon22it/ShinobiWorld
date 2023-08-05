@@ -46,6 +46,10 @@ namespace Assets.Scripts.Database.DAO
                         list.Add(obj);
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -60,14 +64,30 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[MailBox] SET IsRead = 1 WHERE  AccountID = @UserID and MailID = @MailID and ID = @ID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@MailID", MailID);
-                cmd.Parameters.AddWithValue("@ID", ID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE [dbo].[MailBox] SET IsRead = 1 WHERE  AccountID = @UserID and MailID = @MailID and ID = @ID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@MailID", MailID);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -75,14 +95,30 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[MailBox] SET [Delete] = 1 WHERE  AccountID = @UserID and MailID = @MailID and ID = @ID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@MailID", MailID);
-                cmd.Parameters.AddWithValue("@ID", ID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE [dbo].[MailBox] SET [Delete] = 1 WHERE  AccountID = @UserID and MailID = @MailID and ID = @ID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@MailID", MailID);
+                    cmd.Parameters.AddWithValue("@ID", ID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -90,12 +126,29 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[MailBox] SET [Delete] = 1 WHERE AccountID = @UserID and IsRead = 1";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE [dbo].[MailBox] SET [Delete] = 1 WHERE AccountID = @UserID and IsRead = 1";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+
+                
             }
         }
 
@@ -103,12 +156,28 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[MailBox] SET [Delete] = 1 WHERE AccountID = @UserID and IsRead = 1 and IsClaim = 1";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE [dbo].[MailBox] SET [Delete] = 1 WHERE AccountID = @UserID and IsRead = 1 and IsClaim = 1";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -116,20 +185,36 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[TakeBonus]  @AccountID, @MissionID, @Status, " +
-                                                                "@EquipmentID1, @EquipmentID2," +
-                                                                "@MailBoxID, @MailID";
-                cmd.Parameters.AddWithValue("@AccountID", UserID);
-                cmd.Parameters.AddWithValue("@MissionID", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Status", DBNull.Value);
-                cmd.Parameters.AddWithValue("@EquipmentID1", EquipmentID1);
-                cmd.Parameters.AddWithValue("@EquipmentID2", (string.IsNullOrEmpty(EquipmentID2)? DBNull.Value: EquipmentID2));
-                cmd.Parameters.AddWithValue("@MailBoxID", MailBoxID);
-                cmd.Parameters.AddWithValue("@MailID", MailID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "EXECUTE [dbo].[TakeBonus]  @AccountID, @MissionID, @Status, " +
+                                                                    "@EquipmentID1, @EquipmentID2," +
+                                                                    "@MailBoxID, @MailID";
+                    cmd.Parameters.AddWithValue("@AccountID", UserID);
+                    cmd.Parameters.AddWithValue("@MissionID", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Status", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@EquipmentID1", EquipmentID1);
+                    cmd.Parameters.AddWithValue("@EquipmentID2", (string.IsNullOrEmpty(EquipmentID2) ? DBNull.Value : EquipmentID2));
+                    cmd.Parameters.AddWithValue("@MailBoxID", MailBoxID);
+                    cmd.Parameters.AddWithValue("@MailID", MailID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -137,14 +222,30 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO [dbo].[MailBox]  ([AccountID] ,[MailID], [IsClaim]) VALUES (@UserID ,@MailID, @IsClaim)";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@MailID", MailID);
-                cmd.Parameters.AddWithValue("@IsClaim", IsClaim);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "INSERT INTO [dbo].[MailBox]  ([AccountID] ,[MailID], [IsClaim]) VALUES (@UserID ,@MailID, @IsClaim)";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@MailID", MailID);
+                    cmd.Parameters.AddWithValue("@IsClaim", IsClaim);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
