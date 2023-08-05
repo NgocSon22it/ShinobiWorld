@@ -57,6 +57,10 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject JoinRoomFailedPrefabs;
     GameObject JoinRoomFailedInstance;
 
+    [Header("LostConnect")]
+    [SerializeField] GameObject LostConnectPrefabs;
+    GameObject LostConnectInstance;
+
     public RenderTexture MinimapRaw;
 
     private void Awake()
@@ -87,7 +91,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonPeer.RegisterType(typeof(Account_Entity), (byte)'A', Account_Entity.Serialize, Account_Entity.Deserialize);
         References.IsInvite = false;
         References.ChatServer = "Shinobi";
-        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);          
+        SetupPlayer(References.PlayerSpawnPosition, CameraBox, AccountStatus.Normal);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
     }
@@ -120,7 +124,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void ReloadPlayerProperties()
     {
-        if(References.accountRefer.CurrentHealth <= 0) References.accountRefer.IsDead = true;
+        if (References.accountRefer.CurrentHealth <= 0) References.accountRefer.IsDead = true;
         References.UpdateAccountToDB();
         References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
@@ -186,7 +190,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (cause == DisconnectCause.ClientTimeout)
         {
-
+            CallOnquit();
+            LostConnectInstance = Instantiate(LostConnectPrefabs);
         }
     }
 
@@ -205,12 +210,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     private void OnApplicationQuit()
     {
         Debug.Log("OnApplicationQuit GameManager");
-        if (References.accountRefer != null)
-        {
-            References.UpdateAccountToDB();
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        }
-
+        CallOnquit();
     }
 
     public void SpawnEnemyAfterDie(string AreaID, string EnemyID, int ViewID, Coroutine SpawnEnemyCoroutine)
@@ -233,7 +233,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
         AreaEnemy_DAO.SetAreaEnemyAlive(AreaID, EnemyID);
 
-        if(SpawnEnemyCoroutine != null)
+        if (SpawnEnemyCoroutine != null)
         {
             StopCoroutine(SpawnEnemyCoroutine);
         }
@@ -242,6 +242,15 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void ShowEndgamePanel()
     {
         PhotonNetwork.RaiseEvent((byte)CustomEventCode.EnemyDeactivate, null, new RaiseEventOptions { Receivers = ReceiverGroup.All }, SendOptions.SendReliable);
+    }
+
+    public void CallOnquit()
+    {
+        if (References.accountRefer != null)
+        {
+            References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
     }
 
     public void OnEvent(EventData photonEvent)

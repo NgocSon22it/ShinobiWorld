@@ -56,6 +56,10 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     PlayerBase[] players;
     RoomOptions roomOptions = new RoomOptions();
 
+    [Header("LostConnect")]
+    [SerializeField] GameObject LostConnectPrefabs;
+    GameObject LostConnectInstance;
+
     public static PK_Manager Instance;
 
     private void Awake()
@@ -79,6 +83,15 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
     }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        if (cause == DisconnectCause.ClientTimeout)
+        {
+            CallOnquit();
+            LostConnectInstance = Instantiate(LostConnectPrefabs);
+        }
+    }
+
     // Check 2 player is in ReadyBase
 
     #region ProgressBar
@@ -334,6 +347,15 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    public void CallOnquit()
+    {
+        if (References.accountRefer != null)
+        {
+            References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
+    }
+
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Game_Manager.Instance.ReloadPlayerProperties();
@@ -348,11 +370,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
-        {
-            References.UpdateAccountToDB();
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        }
+        CallOnquit();
 
     }
 }

@@ -25,7 +25,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] List<GameObject> ListBossPool = new List<GameObject>();
 
     [Header("Battle Time")]
-    float TotalTime = 10f, currentTime;
+    float TotalTime = 180f, currentTime;
     [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
     [SerializeField] GameObject ReadyBase;
 
@@ -66,6 +66,10 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject JoinRoomFailedPrefabs;
     GameObject JoinRoomFailedInstance;
 
+    [Header("LostConnect")]
+    [SerializeField] GameObject LostConnectPrefabs;
+    GameObject LostConnectInstance;
+
     public static BossArena_Manager Instance;
 
     private void Start()
@@ -94,6 +98,15 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        if (cause == DisconnectCause.ClientTimeout)
+        {
+            CallOnquit();
+            LostConnectInstance = Instantiate(LostConnectPrefabs);
+        }
     }
 
     public void SetUp_BossName()
@@ -319,12 +332,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
-        {
-            References.UpdateAccountToDB();
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        }
-
+        CallOnquit();
     }
 
     public void ShowEndgamePanel(bool Win)
@@ -425,9 +433,14 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
             }
         }
-
-
-
+    }
+    public void CallOnquit()
+    {
+        if (References.accountRefer != null)
+        {
+            References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
     }
 
     public void OnEvent(EventData photonEvent)
