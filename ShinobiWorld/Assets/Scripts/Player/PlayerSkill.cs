@@ -7,7 +7,7 @@ public class PlayerSkill : MonoBehaviour
 {
     protected List<string> AttackAble_Tag = new List<string>()
     {
-        "Enemy", "Ground", "Clone"
+        "Enemy", "Ground", "Clone", "BossObstacle"
     };
 
     [SerializeField] protected PhotonView PV;

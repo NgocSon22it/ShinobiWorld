@@ -69,7 +69,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
             ChatDisPlay.text += "\n " + mess;
         }
-        InviteManager.Instance.CloseReceiveInvitePopup();
 
     }
 
@@ -82,7 +81,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
             if (!sender.Equals(senderName, StringComparison.OrdinalIgnoreCase))
             {
-                Debug.Log($"{sender}: {message}");
                 var mess = message.ToString().Split(new char[] { ':' });
 
                 var type = (TypePrivateMessage)Enum.Parse(typeof(TypePrivateMessage), mess[0]);
@@ -103,7 +101,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                         var SceneName = mess[2];
                         var RoomName = mess[3];
                         var BossName = mess[4];
-                        InviteManager.Instance.OpenReceiveInvitePopup_Arena(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName, BossName, References.bossArenaType);
+                        var ArenaType = (BossArenaType)Enum.Parse(typeof(BossArenaType), mess[5]);
+                        InviteManager.Instance.OpenReceiveInvitePopup_Arena(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName, BossName, ArenaType);
                         break;
                 }
             }
@@ -153,7 +152,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void SummitPublicChat()
     {
-        chatClient.PublishMessage(ServerName, CurrentChat);
+        chatClient.PublishMessage(ServerName, CurrentChat + " ServerName " + ServerName);
         ChatField.text = "";
         CurrentChat = "";
     }

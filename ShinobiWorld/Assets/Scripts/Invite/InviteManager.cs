@@ -45,9 +45,7 @@ public class InviteManager : MonoBehaviour
                .SendPrivateMessage(receiverName,
                string.Format(Message.PK_Private, TypePrivateMessage.PK.ToString(),
                Message.PKMessage, References.MapInvite, References.RoomNameInvite, References.PKBet));
-
                 break;
-
             case InviteType.Arena:
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
@@ -86,7 +84,8 @@ public class InviteManager : MonoBehaviour
 
             References.MapInvite = SceneName;
             References.RoomNameInvite = RoomName;
-            switch (arenaType)
+            References.bossArenaType = arenaType;
+            switch (References.bossArenaType)
             {
                 case BossArenaType.Official:
                     InviteContent.text = Content + " " + BossName + " (Chính thức)";
@@ -95,7 +94,7 @@ public class InviteManager : MonoBehaviour
                     InviteContent.text = Content + " " + BossName + " (Phòng tập)";
                     break;
             }
-
+            
             ReceivePanel.SetActive(true);
             StartCoroutine(PopupInvite());
         }
@@ -149,7 +148,6 @@ public class InviteManager : MonoBehaviour
             case TypePrivateMessage.PK:
                 if (References.accountRefer.Coin >= References.PKBet)
                 {
-                    References.AddCoin(-References.PKBet);
                     References.IsInvite = true;
                     PhotonNetwork.IsMessageQueueRunning = false;
                     PhotonNetwork.LeaveRoom();

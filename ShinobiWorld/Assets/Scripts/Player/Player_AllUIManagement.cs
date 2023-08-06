@@ -287,7 +287,7 @@ public class Player_AllUIManagement : MonoBehaviour
                 break;
         }
         MinimapRaw.texture = Game_Manager.Instance.MinimapRaw;
-
+        Ticket.SetActive(References.accountRefer.HasTicket);
         if (Player != null)
         {
             SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
