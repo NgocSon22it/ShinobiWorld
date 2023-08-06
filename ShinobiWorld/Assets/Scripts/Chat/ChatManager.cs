@@ -152,7 +152,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void SummitPublicChat()
     {
-        chatClient.PublishMessage(ServerName, CurrentChat + " ServerName " + ServerName);
+        chatClient.PublishMessage(ServerName, CurrentChat);
         ChatField.text = "";
         CurrentChat = "";
     }
