@@ -54,7 +54,7 @@ public class ArenaManager : MonoBehaviour
     #region Practice
     public void Open_CreatePracticePanel()
     {
-        Practice_InitValue();      
+        Practice_InitValue();
         CreatePracticePanel.SetActive(true);
     }
 
@@ -235,7 +235,7 @@ public class ArenaManager : MonoBehaviour
             References.MapInvite = SceneType.BossArena_.ToString() + map;
             ArenaMessage.text = "";
         }
-        
+
 
     }
 
@@ -268,6 +268,14 @@ public class ArenaManager : MonoBehaviour
         References.MapInvite = sceneType.ToString() + MapTypeSelected;
 
     }
-
-
+    public void BackToArena()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+        References.PlayerSpawnPosition = new Vector3(-43, -27, 0);
+        PhotonNetwork.IsMessageQueueRunning = false;
+        PhotonNetwork.LoadLevel(Scenes.Konoha);
+    }
 }

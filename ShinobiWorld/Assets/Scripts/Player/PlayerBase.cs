@@ -97,7 +97,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     Vector3 Movement;
     bool FacingRight = true;
 
-
     [Header("Player Layout")]
     [Header("Skin")]
     public SpriteRenderer Shirt;
@@ -159,6 +158,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         InvokeRepeating(nameof(RegenHealth), 1f, 1f);
         InvokeRepeating(nameof(RegenChakra), 1f, 1f);
+        Debug.Log("On Invoke");
+
+    }
+
+    public void OffInvoke()
+    {
+        CancelInvoke(nameof(RegenChakra));
+        CancelInvoke(nameof(RegenHealth));
+        Debug.Log("Off Invike");
     }
 
     public void SetUpAccountData()
@@ -171,7 +179,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(AccountEntity.TimeRespawn);
             Dead();
         }
-
     }
 
     public void LoadLayout()
@@ -215,7 +222,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
                 PlayerHealthChakraUI.SetActive(false);
                 PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
-                CallInvoke();
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
@@ -433,8 +439,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
         References.accountRefer.IsDead = true;
         References.accountRefer.TimeRespawn = References.RespawnTime;
-        CancelInvoke(nameof(RegenChakra));
-        CancelInvoke(nameof(RegenHealth));
+        OffInvoke();
         CancelInvoke(nameof(RegenStrength));
         photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
     }

@@ -117,6 +117,17 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             PlayerManager.GetComponent<PlayerBase>().CameraBox = CameraBox;
             AccountStatus = accountStatus;
+            switch (AccountStatus)
+            {
+                case AccountStatus.Normal:
+                    References.SetUp_Normal();
+                    PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+                    break;
+                case AccountStatus.WaitingRoom:
+                    References.SetUp_WaitingRoom();
+                    PlayerManager.GetComponent<PlayerBase>().OffInvoke();
+                    break;
+            }
             ReloadPlayerProperties();
             Debug.Log("Successfully joined room S1!");
         }

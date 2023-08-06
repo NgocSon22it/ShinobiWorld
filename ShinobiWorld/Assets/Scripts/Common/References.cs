@@ -102,6 +102,29 @@ public static class References
     public static bool IsInvite;
     public static string ChatServer;
 
+    public static int SaveCurrentHealth;
+    public static int SaveCurrentChakra;
+
+
+    public static void InitSaveValue()
+    {
+        SaveCurrentHealth = accountRefer.CurrentHealth;
+        SaveCurrentChakra = accountRefer.CurrentChakra;
+    }
+    public static void SetUp_WaitingRoom()
+    {
+        SaveCurrentHealth = accountRefer.CurrentHealth;
+        SaveCurrentChakra = accountRefer.CurrentChakra;
+        accountRefer.CurrentHealth = accountRefer.Health;
+        accountRefer.CurrentChakra = accountRefer.Chakra;
+    }
+
+    public static void SetUp_Normal()
+    {
+        accountRefer.CurrentHealth = SaveCurrentHealth;
+        accountRefer.CurrentChakra = SaveCurrentChakra;
+    }
+
     public static IDictionary<string, Vector3> HouseAddress = new Dictionary<string, Vector3>()
                                                         {
                                                             {"Hokage", new(0, 0, 0)},
