@@ -215,5 +215,13 @@ namespace Assets.Scripts.Shop
             Game_Manager.Instance.IsBusy = false;
 
         }
+
+        public void ResetColor()
+        {
+            foreach (Transform child in Content)
+            {
+                child.gameObject.GetComponent<Image>().color = References.ItemColorDefaul;
+            }
+        }
     }
 }
