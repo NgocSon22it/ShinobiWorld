@@ -6,7 +6,6 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static UnityEditor.Progress;
 using static UnityEngine.TouchScreenKeyboard;
 
 namespace Assets.Scripts.Database.DAO
