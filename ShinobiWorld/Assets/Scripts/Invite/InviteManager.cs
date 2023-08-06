@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 public class InviteManager : MonoBehaviour
 {
-    public GameObject ReceivePanel, SendPanel, ListInvitePanel;
+    public GameObject ReceivePanel, SendPanel, ListInvitePanel, NotEnoughMoneyPanel;
 
     public TMP_Text InviteContent, CountDownPopup;
 
@@ -45,9 +45,7 @@ public class InviteManager : MonoBehaviour
                .SendPrivateMessage(receiverName,
                string.Format(Message.PK_Private, TypePrivateMessage.PK.ToString(),
                Message.PKMessage, References.MapInvite, References.RoomNameInvite, References.PKBet));
-
                 break;
-
             case InviteType.Arena:
                 ChatManager.Instance.chatClient
                .SendPrivateMessage(receiverName,
@@ -86,7 +84,8 @@ public class InviteManager : MonoBehaviour
 
             References.MapInvite = SceneName;
             References.RoomNameInvite = RoomName;
-            switch (arenaType)
+            References.bossArenaType = arenaType;
+            switch (References.bossArenaType)
             {
                 case BossArenaType.Official:
                     InviteContent.text = Content + " " + BossName + " (Chính thức)";
@@ -95,7 +94,7 @@ public class InviteManager : MonoBehaviour
                     InviteContent.text = Content + " " + BossName + " (Phòng tập)";
                     break;
             }
-
+            
             ReceivePanel.SetActive(true);
             StartCoroutine(PopupInvite());
         }
@@ -135,6 +134,18 @@ public class InviteManager : MonoBehaviour
         ListInvitePanel.SetActive(false);
     }
 
+    public void OpenNoMoneyPanel()
+    {
+        Game_Manager.Instance.IsBusy = true;
+        NotEnoughMoneyPanel.SetActive(true);
+    }
+
+    public void CloseNoMoneyPanel()
+    {
+        Game_Manager.Instance.IsBusy = false;
+        NotEnoughMoneyPanel.SetActive(false);
+    }
+
     public void AccpectInvite()
     {
         switch (type)
@@ -153,6 +164,10 @@ public class InviteManager : MonoBehaviour
                     PhotonNetwork.IsMessageQueueRunning = false;
                     PhotonNetwork.LeaveRoom();
                     PhotonNetwork.LoadLevel(References.MapInvite);
+                }
+                else
+                {
+                    OpenNoMoneyPanel();
                 }
                 break;
         }

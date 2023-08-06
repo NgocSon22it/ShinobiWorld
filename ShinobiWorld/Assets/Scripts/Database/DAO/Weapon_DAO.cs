@@ -41,6 +41,10 @@ public static class Weapon_DAO
                     return obj;
                 }
             }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
+            }
             finally
             {
                 connection.Close();

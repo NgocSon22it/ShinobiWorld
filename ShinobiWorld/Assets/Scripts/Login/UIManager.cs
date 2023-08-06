@@ -45,10 +45,27 @@ public class UIManager : MonoBehaviour
     public TMP_InputField emailResetField;
     public GameObject resetPanel;
 
+    [Space]
+    [Header("Wifi")]
+    public GameObject LostWifiPanel;
+
     private void Awake()
     {
         CreateInstance();
         Canvas.SetActive(true);
+    }
+
+    public bool IsWiFiConnected()
+    {
+        if (Application.internetReachability != NetworkReachability.NotReachable)
+        {
+            if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
+            {
+                return true; 
+            }
+        }
+
+        return false; 
     }
 
     private void CreateInstance()
@@ -57,6 +74,15 @@ public class UIManager : MonoBehaviour
         {
             Instance = this;
         }
+    }
+    public void OpenLostWifiPanel()
+    {
+        LostWifiPanel.SetActive(true);
+    }
+
+    public void CloseLostWifiPanel()
+    {
+        LostWifiPanel.SetActive(false);
     }
 
     public void OpenLoginPanel()
@@ -92,6 +118,11 @@ public class UIManager : MonoBehaviour
     {
         ClearUI();
         resetPanel.SetActive(true);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     void ClearUI()

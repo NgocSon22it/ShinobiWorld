@@ -95,15 +95,14 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                         var PKRoomName = mess[3];
                         var PKBet = mess[4];
                         InviteManager.Instance.OpenReceiveInvitePopup_PK(TypePrivateMessage.PK, sender + " " + PKMessage, PKSceneName, PKRoomName, PKBet);
-                        Debug.Log("Room PK la " + PKRoomName);
                         break;
                     case TypePrivateMessage.Arena:
                         var ArenaMessage = mess[1];
                         var SceneName = mess[2];
                         var RoomName = mess[3];
                         var BossName = mess[4];
-                        InviteManager.Instance.OpenReceiveInvitePopup_Arena(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName, BossName, References.bossArenaType);
-                        Debug.Log("Room Arena la " + RoomName);
+                        var ArenaType = (BossArenaType)Enum.Parse(typeof(BossArenaType), mess[5]);
+                        InviteManager.Instance.OpenReceiveInvitePopup_Arena(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName, BossName, ArenaType);
                         break;
                 }
             }

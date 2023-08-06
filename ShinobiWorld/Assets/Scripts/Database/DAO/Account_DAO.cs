@@ -18,12 +18,27 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID]) VALUES (@UserID)";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "INSERT INTO [dbo].[Account] ([ID]) VALUES (@UserID)";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
@@ -31,27 +46,28 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set HasTicket = @status where ID = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@status", status);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
-            }
-        }
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update Account set HasTicket = @status where ID = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@status", status);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
 
-
-        public static void UpdateAccountCoin(string UserID)
-        {
-            using (SqlConnection connection = new SqlConnection(ConnectionStr))
-            {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set Coin = Coin + 100 where ID = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }        
             }
         }
 
@@ -109,6 +125,10 @@ namespace Assets.Scripts.Database.DAO
                     }
 
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -137,6 +157,10 @@ namespace Assets.Scripts.Database.DAO
                         connection.Close();
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -146,32 +170,48 @@ namespace Assets.Scripts.Database.DAO
             return isOnline;
         }
 
-        public static void SaveLayout(string UserID, string Name, string RoleInGameID, string EyeID, string HairID, 
+        public static void SaveLayout(string UserID, string Name, string RoleInGameID, string EyeID, string HairID,
             string MouthID, string SkinID)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[Account]   " +
-                                    "SET [RoleInGameID] = @RoleInGameID," +
-                                    "[EyeID]   = @EyeID," +
-                                    "[HairID]  = @HairID," +
-                                    "[MouthID] = @MouthID," +
-                                    "[SkinID]  = @SkinID, " +
-                                    "[Name]  = @Name, " +
-                                    "[IsFirst] = 0 " +
-                                    "WHERE ID  = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@Name", Name);
-                cmd.Parameters.AddWithValue("@RoleInGameID", RoleInGameID);
-                cmd.Parameters.AddWithValue("@EyeID", EyeID);
-                cmd.Parameters.AddWithValue("@HairID", HairID);
-                cmd.Parameters.AddWithValue("@MouthID", MouthID);
-                cmd.Parameters.AddWithValue("@SkinID", SkinID);
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE [dbo].[Account]   " +
+                                        "SET [RoleInGameID] = @RoleInGameID," +
+                                        "[EyeID]   = @EyeID," +
+                                        "[HairID]  = @HairID," +
+                                        "[MouthID] = @MouthID," +
+                                        "[SkinID]  = @SkinID, " +
+                                        "[Name]  = @Name, " +
+                                        "[IsFirst] = 0 " +
+                                        "WHERE ID  = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@Name", Name);
+                    cmd.Parameters.AddWithValue("@RoleInGameID", RoleInGameID);
+                    cmd.Parameters.AddWithValue("@EyeID", EyeID);
+                    cmd.Parameters.AddWithValue("@HairID", HairID);
+                    cmd.Parameters.AddWithValue("@MouthID", MouthID);
+                    cmd.Parameters.AddWithValue("@SkinID", SkinID);
 
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -219,13 +259,17 @@ namespace Assets.Scripts.Database.DAO
                             IsHokage = Convert.ToBoolean(dr["IsHokage"]),
                             WinTimes = Convert.ToInt32(dr["WinTimes"]),
                             IsUpgradeTrophy = Convert.ToBoolean(dr["IsUpgradeTrophy"]),
-                            ResetLimitDate = Convert.ToDateTime(dr["ResetLimitDate"]),                           
+                            ResetLimitDate = Convert.ToDateTime(dr["ResetLimitDate"]),
                             CustomSettings = CustomSetting_DAO.GetAllAccountCustomSetting(dr["ID"].ToString()),
                             TimeRespawn = Convert.ToInt32(dr["TimeRespawn"])
                         };
                         connection.Close();
                         return obj;
                     }
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
                 }
                 finally
                 {
@@ -260,6 +304,10 @@ namespace Assets.Scripts.Database.DAO
                         }
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -290,6 +338,10 @@ namespace Assets.Scripts.Database.DAO
                         connection.Close();
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -302,39 +354,57 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account " +
-                                    "set TrophyID = @Trophy, " +
-                                    "[Level] = @Level, " +
-                                    "Health = @Health, " +
-                                    "CurrentHealth = @CurrentHealth, " +
-                                    "Chakra = @Chakra, " +
-                                    "CurrentChakra = @CurrentChakra, " +
-                                    "[Exp] = @Exp, " +
-                                    "Coin = @Coin, " +
-                                    "[Power] = @Power, " +
-                                    "Strength = @Strenth, " +
-                                    "CurrentStrength = @CurrentStrength, " +
-                                    "[TimeRespawn] = @TimeRespawn, " +
-                                    "[IsDead] = @IsDead " +
-                                    "where ID = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
-                cmd.Parameters.AddWithValue("@Trophy", account_Entity.TrophyID);
-                cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
-                cmd.Parameters.AddWithValue("@Health", account_Entity.Health);
-                cmd.Parameters.AddWithValue("@CurrentHealth", account_Entity.CurrentHealth);
-                cmd.Parameters.AddWithValue("@Chakra", account_Entity.Chakra);
-                cmd.Parameters.AddWithValue("@CurrentChakra", account_Entity.CurrentChakra);
-                cmd.Parameters.AddWithValue("@Exp", account_Entity.Exp);
-                cmd.Parameters.AddWithValue("@Coin", account_Entity.Coin);
-                cmd.Parameters.AddWithValue("@Power", account_Entity.Power);
-                cmd.Parameters.AddWithValue("@Strenth", account_Entity.Strength);
-                cmd.Parameters.AddWithValue("@CurrentStrength", account_Entity.CurrentStrength);
-                cmd.Parameters.AddWithValue("@IsDead", account_Entity.IsDead);
-                cmd.Parameters.AddWithValue("@TimeRespawn", account_Entity.TimeRespawn);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update Account " +
+                                        "set TrophyID = @Trophy, " +
+                                        "[Level] = @Level, " +
+                                        "Health = @Health, " +
+                                        "CurrentHealth = @CurrentHealth, " +
+                                        "Chakra = @Chakra, " +
+                                        "CurrentChakra = @CurrentChakra, " +
+                                        "HasTicket = @HasTicket, " +
+                                        "[Exp] = @Exp, " +
+                                        "Coin = @Coin, " +
+                                        "[Power] = @Power, " +
+                                        "Strength = @Strenth, " +
+                                        "CurrentStrength = @CurrentStrength, " +
+                                        "[TimeRespawn] = @TimeRespawn, " +
+                                        "[IsDead] = @IsDead " +
+                                        "where ID = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", account_Entity.ID);
+                    cmd.Parameters.AddWithValue("@Trophy", account_Entity.TrophyID);
+                    cmd.Parameters.AddWithValue("@Level", account_Entity.Level);
+                    cmd.Parameters.AddWithValue("@Health", account_Entity.Health);
+                    cmd.Parameters.AddWithValue("@CurrentHealth", account_Entity.CurrentHealth);
+                    cmd.Parameters.AddWithValue("@Chakra", account_Entity.Chakra);
+                    cmd.Parameters.AddWithValue("@CurrentChakra", account_Entity.CurrentChakra);
+                    cmd.Parameters.AddWithValue("@HasTicket", account_Entity.HasTicket);
+                    cmd.Parameters.AddWithValue("@Exp", account_Entity.Exp);
+                    cmd.Parameters.AddWithValue("@Coin", account_Entity.Coin);
+                    cmd.Parameters.AddWithValue("@Power", account_Entity.Power);
+                    cmd.Parameters.AddWithValue("@Strenth", account_Entity.Strength);
+                    cmd.Parameters.AddWithValue("@CurrentStrength", account_Entity.CurrentStrength);
+                    cmd.Parameters.AddWithValue("@IsDead", account_Entity.IsDead);
+                    cmd.Parameters.AddWithValue("@TimeRespawn", account_Entity.TimeRespawn);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -342,13 +412,56 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Account set TrophyID = @TrophyID, IsUpgradeTrophy = 0 where ID = @UserID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@TrophyID", TrophyID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update Account set TrophyID = @TrophyID, IsUpgradeTrophy = 0 where ID = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@TrophyID", TrophyID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public static void IncreaseWinTime(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update Account set WinTimes += 1 where ID = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
@@ -380,6 +493,10 @@ namespace Assets.Scripts.Database.DAO
                         list.Add(obj);
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
 
                 finally
                 {
@@ -408,6 +525,10 @@ namespace Assets.Scripts.Database.DAO
 
                     isExist = (dataTable.Rows.Count > 0);
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -420,14 +541,30 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update CustomSetting set [Value] = @Newkey where AccountID = @UserID and SettingID = @SettingID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@SettingID", SettingID);
-                cmd.Parameters.AddWithValue("@Newkey", NewKey);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update CustomSetting set [Value] = @Newkey where AccountID = @UserID and SettingID = @SettingID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@SettingID", SettingID);
+                    cmd.Parameters.AddWithValue("@Newkey", NewKey);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -460,7 +597,10 @@ namespace Assets.Scripts.Database.DAO
                         list.Add(obj);
                     }
                 }
-
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
