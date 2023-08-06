@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Assets.Scripts.Database.Entity;
-using static UnityEngine.InputManagerEntry;
 
 namespace Assets.Scripts.Database.DAO
 {
@@ -419,6 +418,34 @@ namespace Assets.Scripts.Database.DAO
                     cmd.CommandText = "Update Account set TrophyID = @TrophyID, IsUpgradeTrophy = 0 where ID = @UserID";
                     cmd.Parameters.AddWithValue("@UserID", UserID);
                     cmd.Parameters.AddWithValue("@TrophyID", TrophyID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public static void IncreaseWinTime(string UserID)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionStr))
+            {
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update Account set WinTimes += 1 where ID = @UserID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
                     connection.Open();
                     cmd.ExecuteNonQuery();
                 }

@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 public class InviteManager : MonoBehaviour
 {
-    public GameObject ReceivePanel, SendPanel, ListInvitePanel;
+    public GameObject ReceivePanel, SendPanel, ListInvitePanel, NotEnoughMoneyPanel;
 
     public TMP_Text InviteContent, CountDownPopup;
 
@@ -134,6 +134,18 @@ public class InviteManager : MonoBehaviour
         ListInvitePanel.SetActive(false);
     }
 
+    public void OpenNoMoneyPanel()
+    {
+        Game_Manager.Instance.IsBusy = true;
+        NotEnoughMoneyPanel.SetActive(true);
+    }
+
+    public void CloseNoMoneyPanel()
+    {
+        Game_Manager.Instance.IsBusy = false;
+        NotEnoughMoneyPanel.SetActive(false);
+    }
+
     public void AccpectInvite()
     {
         switch (type)
@@ -152,6 +164,10 @@ public class InviteManager : MonoBehaviour
                     PhotonNetwork.IsMessageQueueRunning = false;
                     PhotonNetwork.LeaveRoom();
                     PhotonNetwork.LoadLevel(References.MapInvite);
+                }
+                else
+                {
+                    OpenNoMoneyPanel();
                 }
                 break;
         }
