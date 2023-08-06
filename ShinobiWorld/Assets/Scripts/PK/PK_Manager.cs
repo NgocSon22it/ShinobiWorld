@@ -56,6 +56,10 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     PlayerBase[] players;
     RoomOptions roomOptions = new RoomOptions();
 
+    [Header("LostConnect")]
+    [SerializeField] GameObject LostConnectPrefabs;
+    GameObject LostConnectInstance;
+
     public static PK_Manager Instance;
 
     private void Awake()
@@ -79,6 +83,15 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
     }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        if (cause == DisconnectCause.ClientTimeout)
+        {
+            CallOnquit();
+            LostConnectInstance = Instantiate(LostConnectPrefabs);
+        }
+    }
+
     // Check 2 player is in ReadyBase
 
     #region ProgressBar
@@ -205,6 +218,14 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     }
 
+    public void SetUp_PKBet()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("PKBet"))
+        {
+            CurrentBet = (int) PhotonNetwork.CurrentRoom.CustomProperties["PKBet"];
+        }
+    }
+
     public void Battle_End()
     {
         if (IsGameDraw())
@@ -226,7 +247,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         References.MapInvite = SceneType.PK_.ToString() + mapType.ToString();
         References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
 
-        CurrentBet = References.PKBet;
+        SetUp_PKBet();
 
         Game_Manager.Instance.SetupPlayer(Spawnpoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
@@ -316,10 +337,22 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             else
             {
+                roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+                roomOptions.CustomRoomPropertiesForLobby = new string[] { "PKBet"};
+                roomOptions.CustomRoomProperties.Add("PKBet", References.PKBet);
                 roomOptions.MaxPlayers = 2;
                 roomOptions.BroadcastPropsChangeToAll = true;
                 PhotonNetwork.CreateRoom(References.accountRefer.ID + References.GenerateRandomString(10), roomOptions, TypedLobby.Default);
             }
+        }
+    }
+
+    public void CallOnquit()
+    {
+        if (References.accountRefer != null)
+        {
+            References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
         }
     }
 
@@ -337,11 +370,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
-        {
-            References.UpdateAccountToDB();
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        }
+        CallOnquit();
 
     }
 }

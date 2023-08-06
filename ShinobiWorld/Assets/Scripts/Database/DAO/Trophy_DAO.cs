@@ -44,6 +44,10 @@ namespace Assets.Scripts.Database.DAO
                         References.BtnTrophy.Add(obj.ID, obj.Name);
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();

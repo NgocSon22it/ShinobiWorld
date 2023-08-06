@@ -85,8 +85,7 @@ public class InviteManager : MonoBehaviour
             References.MapInvite = SceneName;
             References.RoomNameInvite = RoomName;
             References.bossArenaType = arenaType;
-            InviteContent.text = Content + " " + BossName + arenaType.ToString();
-            /*switch (References.bossArenaType)
+            switch (References.bossArenaType)
             {
                 case BossArenaType.Official:
                     InviteContent.text = Content + " " + BossName + " (Chính thức)";
@@ -94,7 +93,7 @@ public class InviteManager : MonoBehaviour
                 case BossArenaType.Practice:
                     InviteContent.text = Content + " " + BossName + " (Phòng tập)";
                     break;
-            }*/
+            }
             
             ReceivePanel.SetActive(true);
             StartCoroutine(PopupInvite());

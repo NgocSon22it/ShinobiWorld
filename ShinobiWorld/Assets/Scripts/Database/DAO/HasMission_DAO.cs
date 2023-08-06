@@ -6,6 +6,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static UnityEditor.Progress;
+using static UnityEngine.TouchScreenKeyboard;
 
 namespace Assets.Scripts.Database.DAO
 {
@@ -41,6 +43,10 @@ namespace Assets.Scripts.Database.DAO
                         list.Add(obj);
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -54,14 +60,30 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[HasMission] SET [Status] = @status WHERE AccountID = @UserID and MissionID = @MissionID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@MissionID", MissionID);
-                cmd.Parameters.AddWithValue("@status", status);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE [dbo].[HasMission] SET [Status] = @status WHERE AccountID = @UserID and MissionID = @MissionID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@MissionID", MissionID);
+                    cmd.Parameters.AddWithValue("@status", status);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -69,20 +91,36 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "EXECUTE [dbo].[TakeBonus]  @AccountID, @MissionID, @Status, " +
-                                                                "@EquipmentID1, @EquipmentID2," +
-                                                                "@ID_AccountMailBox, @MailBoxID";
-                cmd.Parameters.AddWithValue("@AccountID", UserID);
-                cmd.Parameters.AddWithValue("@MissionID", MissionID);
-                cmd.Parameters.AddWithValue("@Status", Status);
-                cmd.Parameters.AddWithValue("@EquipmentID1", EquipmentID1);
-                cmd.Parameters.AddWithValue("@EquipmentID2", DBNull.Value);
-                cmd.Parameters.AddWithValue("@ID_AccountMailBox", DBNull.Value);
-                cmd.Parameters.AddWithValue("@MailBoxID", DBNull.Value);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "EXECUTE [dbo].[TakeBonus]  @AccountID, @MissionID, @Status, " +
+                                                                    "@EquipmentID1, @EquipmentID2," +
+                                                                    "@ID_AccountMailBox, @MailBoxID";
+                    cmd.Parameters.AddWithValue("@AccountID", UserID);
+                    cmd.Parameters.AddWithValue("@MissionID", MissionID);
+                    cmd.Parameters.AddWithValue("@Status", Status);
+                    cmd.Parameters.AddWithValue("@EquipmentID1", EquipmentID1);
+                    cmd.Parameters.AddWithValue("@EquipmentID2", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ID_AccountMailBox", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@MailBoxID", DBNull.Value);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -90,14 +128,30 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "UPDATE [dbo].[HasMission] SET [Current] = @Current WHERE AccountID = @UserID and MissionID = @MissionID";
-                cmd.Parameters.AddWithValue("@UserID", UserID);
-                cmd.Parameters.AddWithValue("@MissionID", MissionID);
-                cmd.Parameters.AddWithValue("@Current", Current);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "UPDATE [dbo].[HasMission] SET [Current] = @Current WHERE AccountID = @UserID and MissionID = @MissionID";
+                    cmd.Parameters.AddWithValue("@UserID", UserID);
+                    cmd.Parameters.AddWithValue("@MissionID", MissionID);
+                    cmd.Parameters.AddWithValue("@Current", Current);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+               
             }
         }
     }

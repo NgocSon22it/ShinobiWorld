@@ -33,6 +33,10 @@ public static class Eye_DAO
                     return obj;
                 }
             }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
+            }
             finally
             {
                 connection.Close();
@@ -67,6 +71,10 @@ public static class Eye_DAO
                     };
                     list.Add(obj);
                 }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
             }
             finally
             {
