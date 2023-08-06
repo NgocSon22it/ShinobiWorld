@@ -89,6 +89,7 @@ public class SupportCharacter : PlayerBase
 
                 if (Enemy.transform.CompareTag("Enemy") || Enemy.transform.CompareTag("Clone"))
                 {
+                    PlaySound_NormalAttack_Hit();
                     Enemy.transform.GetComponent<Enemy>().TakeDamage(photonView.ViewID, Weapon_Entity.Damage + DamageBonus);
                 }
                 if (Enemy.transform.gameObject.CompareTag("Player")
@@ -96,6 +97,7 @@ public class SupportCharacter : PlayerBase
                     && Enemy.transform.gameObject.GetComponent<PlayerBase>().accountStatus == AccountStatus.PK
                     )
                 {
+                    PlaySound_NormalAttack_Hit();
                     Enemy.transform.GetComponent<PlayerBase>().TakeDamage(Weapon_Entity.Damage + DamageBonus);
                 }
             }
