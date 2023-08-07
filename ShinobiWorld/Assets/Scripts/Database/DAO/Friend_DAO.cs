@@ -41,6 +41,10 @@ namespace Assets.Scripts.Database.DAO
                         list.Add(obj);
                     }
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -86,6 +90,10 @@ namespace Assets.Scripts.Database.DAO
 
 
                 }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
                 finally
                 {
                     connection.Close();
@@ -100,13 +108,29 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Friend set IsFriend = 1  where MyAccountID = @UserID and FriendAccountID =  @FriendAccountID";
-                cmd.Parameters.AddWithValue("@UserID", MyAccountID);
-                cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update Friend set IsFriend = 1  where MyAccountID = @UserID and FriendAccountID =  @FriendAccountID";
+                    cmd.Parameters.AddWithValue("@UserID", MyAccountID);
+                    cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -114,15 +138,31 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "DELETE FROM [dbo].[Friend] " +
-                    "WHERE (MyAccountID = @UserID and FriendAccountID = @FriendAccountID) " +
-                    "or (MyAccountID = @FriendAccountID and FriendAccountID = @UserID)";
-                cmd.Parameters.AddWithValue("@UserID", MyAccountID);
-                cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "DELETE FROM [dbo].[Friend] " +
+                        "WHERE (MyAccountID = @UserID and FriendAccountID = @FriendAccountID) " +
+                        "or (MyAccountID = @FriendAccountID and FriendAccountID = @UserID)";
+                    cmd.Parameters.AddWithValue("@UserID", MyAccountID);
+                    cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -130,13 +170,29 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO [dbo].[Friend] ([MyAccountID],[FriendAccountID]) VALUES (@FriendAccountID ,@UserID)";
-                cmd.Parameters.AddWithValue("@UserID", MyAccountID);
-                cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "INSERT INTO [dbo].[Friend] ([MyAccountID],[FriendAccountID]) VALUES (@FriendAccountID ,@UserID)";
+                    cmd.Parameters.AddWithValue("@UserID", MyAccountID);
+                    cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 
@@ -144,15 +200,31 @@ namespace Assets.Scripts.Database.DAO
         {
             using (SqlConnection connection = new SqlConnection(ConnectionStr))
             {
-                SqlCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "Update Friend set [Delete] = 0, IsFriend = 0  " +
-                                    "where (MyAccountID = @UserID and FriendAccountID =  @FriendAccountID) " +
-                                    "or (MyAccountID = @FriendAccountID and FriendAccountID =  @UserID)";
-                cmd.Parameters.AddWithValue("@UserID", MyAccountID);
-                cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
-                connection.Open();
-                cmd.ExecuteNonQuery();
-                connection.Close();
+                try
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "Update Friend set [Delete] = 0, IsFriend = 0  " +
+                                        "where (MyAccountID = @UserID and FriendAccountID =  @FriendAccountID) " +
+                                        "or (MyAccountID = @FriendAccountID and FriendAccountID =  @UserID)";
+                    cmd.Parameters.AddWithValue("@UserID", MyAccountID);
+                    cmd.Parameters.AddWithValue("@FriendAccountID", FriendAccountID);
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+
+                    Console.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+                
             }
         }
 

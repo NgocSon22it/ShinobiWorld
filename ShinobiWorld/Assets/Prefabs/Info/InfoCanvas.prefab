@@ -147,7 +147,6 @@ MonoBehaviour:
   Coin_Player: {fileID: 3015428461497297131}
   DetailWeapon: {fileID: 3015428462240483059}
   Name_Weapon: {fileID: 3015428462206501856}
-  Level_Weapon: {fileID: 3015428463267448305}
   Damage_Weapon: {fileID: 3015428461178615207}
   DetailSkill: {fileID: 3015428461300100918}
   Name_Skill: {fileID: 3015428463148944739}
@@ -172,6 +171,36 @@ MonoBehaviour:
   Weapon: {fileID: 6239689424696098449}
   mainCamera: {fileID: 0}
   canvas: {fileID: 3015428462686566135}
+  listHasSkill: []
+  account:
+    ID: 
+    Name: 
+    RoleInGameID: 
+    TrophyID: 
+    IsHokage: 0
+    Coin: 0
+    Exp: 0
+    Level: 0
+    Health: 0
+    CurrentHealth: 0
+    Chakra: 0
+    CurrentChakra: 0
+    Strength: 0
+    CurrentStrength: 0
+    Speed: 0
+    Power: 0
+    IsFirst: 0
+    IsOnline: 0
+    HasTicket: 0
+    IsUpgradeTrophy: 0
+    IsDead: 0
+    WinTimes: 0
+    EyeID: 
+    HairID: 
+    MouthID: 
+    SkinID: 
+    TimeRespawn: 0
+    CustomSettings: []
 --- !u!1001 &2247244633937131428
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -712,6 +741,10 @@ PrefabInstance:
       value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 5312001730995453569, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b74b8170dc9719f42b8cb6b132b175c6, type: 2}
+    - target: {fileID: 5312001730995453569, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
@@ -759,6 +792,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 5312001732148726068, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312001732148726068, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312001732148726069, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 72246d8a2ef5404478be4b7f49b28de2, type: 3}
     - target: {fileID: 5312001732148726069, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_SortingLayer
       value: 0
@@ -777,19 +822,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5312001732329681953, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: 0.94498336
+      value: 0.9449835
       objectReference: {fileID: 0}
     - target: {fileID: 5312001732329681953, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: 0.06587255
+      value: 0.06587267
       objectReference: {fileID: 0}
     - target: {fileID: 5312001732329681953, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_Bounds.m_Extent.x
-      value: 1.337
+      value: 1.3369999
       objectReference: {fileID: 0}
     - target: {fileID: 5312001732329681953, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 1.83256
+      value: 1.8325598
       objectReference: {fileID: 0}
     - target: {fileID: 5312001732329681955, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_Layer
@@ -810,6 +855,14 @@ PrefabInstance:
     - target: {fileID: 5312001732529083965, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421196451161816642, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -357
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421196451161816642, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 6675287747234085139, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
       propertyPath: m_Color.a
@@ -1232,17 +1285,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3015428463267448305 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3960675231421510229, guid: 47b97f7ee8fd10c4faa95da64dae1e91, type: 3}
-  m_PrefabInstance: {fileID: 2247244633937131428}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4656575717550325871 stripped

@@ -77,9 +77,6 @@ public class Player_AllUIManagement : MonoBehaviour
     public GameObject House_Message;
     [SerializeField] TMP_Text HouseTxt;
 
-    [Header("Full Map")]
-    [SerializeField] GameObject MapPanel;
-
     [Header("Custom Key")]
     [SerializeField] List<TMP_Text> ListSkillTxt;
 
@@ -94,6 +91,12 @@ public class Player_AllUIManagement : MonoBehaviour
 
     [Header("Hospital")]
     public GameObject HospitalPanel;
+
+    [Header("Minimap")]
+    [SerializeField] RawImage MinimapRaw;
+
+    [Header("Sound")]
+    [SerializeField] AudioSource ClickSound;
 
     [Header("UpdateTrophy")]
     public GameObject Ticket;
@@ -122,10 +125,9 @@ public class Player_AllUIManagement : MonoBehaviour
 
     }
 
-    public void ToggleFullMap(bool value)
+    public void PlaySound()
     {
-        Game_Manager.Instance.IsBusy = value;
-        MapPanel.SetActive(value);
+        ClickSound.Play();
     }
 
     public void OpenCustomKeyPanel()
@@ -291,6 +293,9 @@ public class Player_AllUIManagement : MonoBehaviour
                 SetUp_UI(false, false, true);
                 break;
         }
+        MinimapRaw.texture = Game_Manager.Instance.MinimapRaw;
+        Ticket.SetActive(References.accountRefer.HasTicket);
+        AudioManager.Instance.LoadCustomSound();
         if (Player != null)
         {
             SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");
@@ -301,9 +306,11 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void SetUp_UI(bool NormalUI, bool WaitingRoomUI, bool ArenaPkUI)
     {
-        foreach(GameObject a in UI_Normal)
+        foreach (GameObject a in UI_Normal)
         {
             a.SetActive(NormalUI);
+
+            if (NormalUI) Mission.SetActive(MissionManager.Instance.isShow);
         }
         foreach (GameObject a in UI_WaitingRoom)
         {
@@ -369,18 +376,20 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void ShowDetailInfo()
     {
-        Player_Info.Instance.Open();
+        Player_Info.Instance.Open(References.accountRefer.ID);
     }
 
     public void ShowMission(string content)
     {
-        Mission.SetActive(true);
+        MissionManager.Instance.isShow = true;
+        Mission.SetActive(MissionManager.Instance.isShow);
         MissionTxt.text = content;
     }
 
     public void CloseMission()
     {
-        Mission.SetActive(false);
+        MissionManager.Instance.isShow = false;
+        Mission.SetActive(MissionManager.Instance.isShow);
         MissionTxt.text = string.Empty;
     }
 

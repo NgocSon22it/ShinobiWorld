@@ -7,6 +7,7 @@ public class Range_NormalAttack_Hit : PlayerSkill
     new void OnEnable()
     {
         LifeTime = 1f;
+        player_Pool.gameObject.GetComponent<PlayerBase>().PlaySound_NormalAttack_Hit();
         base.OnEnable();
     }
 

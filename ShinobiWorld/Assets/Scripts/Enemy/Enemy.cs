@@ -55,6 +55,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     // MainPoint
     [SerializeField] protected Transform MainPoint;
+    [SerializeField] protected Transform FirePoint;
 
     //Health UI
     [SerializeField] Image CurrentHealth_UI;
@@ -80,7 +81,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     // Lag Reduce
     protected Vector3 networkPosition;
-    protected float lerpFactor = 5f;
+    protected float lerpFactor = 3f;
 
     public void SetUp(string EnemyID, string AreaID)
     {

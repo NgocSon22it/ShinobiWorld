@@ -68,7 +68,7 @@ namespace Assets.Scripts.Friend
        
         public void ViewFriendInfo()
         {
-
+            Player_Info.Instance.Open(selectedfriend.ID);
         }
     }
 }

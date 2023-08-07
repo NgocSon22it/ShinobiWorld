@@ -37,6 +37,10 @@ public static class HasWeapon_DAO
                     return obj;
                 }
             }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
+            }
             finally
             {
                 connection.Close();
@@ -49,13 +53,29 @@ public static class HasWeapon_DAO
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "UPDATE [dbo].[HasWeapon] SET Damage += @damage WHERE AccountID = @AccountID ";
-            cmd.Parameters.AddWithValue("@AccountID", UserID);
-            cmd.Parameters.AddWithValue("@damage", damage);
-            connection.Open();
-            cmd.ExecuteNonQuery();
-            connection.Close();
+            try
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE [dbo].[HasWeapon] SET Damage += @damage WHERE AccountID = @AccountID ";
+                cmd.Parameters.AddWithValue("@AccountID", UserID);
+                cmd.Parameters.AddWithValue("@damage", damage);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+
+                Console.WriteLine("SQL Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            
         }
         return null;
     }

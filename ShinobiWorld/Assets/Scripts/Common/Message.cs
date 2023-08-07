@@ -53,12 +53,16 @@ public class Message
 
     public static string TrophyUpgradeError = "Bạn không đủ điều kiện để nâng cấp danh hiệu";
 
-    public static string PKMessage = "{0} muốn thách đấu với bạn?";
-    public static string BossAreaMessage = "mời bạn cùng tham chiến với boss!";
-    public static string PrivateMessage = "{0}:{1}:{2}:{3}";
+    public static string BossAreaMessage = "mời bạn cùng tham chiến với boss";
+    public static string PKMessage = "muốn đấu tay đôi với bạn với mức cược là";
+
+    public static string Arena_Private = "{0}:{1}:{2}:{3}:{4}:{5}";
+    public static string PK_Private = "{0}:{1}:{2}:{3}:{4}";
+    public static string PrivateMessage = "{0}:{1}";
+    public static string PublicMessage = "{0}:{1}";
 }
 
 public enum TypePrivateMessage
 {
-    FriendRequest, PKRequest, Arena, Text
+    FriendRequest, PK, Arena
 }

@@ -97,6 +97,18 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     Vector3 Movement;
     bool FacingRight = true;
 
+    [Header("Player Audio Source")]
+    [SerializeField] protected AudioSource Sound_NormalAttack;
+    [SerializeField] protected AudioSource Sound_NormalAttack_Hit;
+
+    [SerializeField] protected AudioSource Sound_SkillOne;
+    [SerializeField] protected AudioSource Sound_SkillOne_Hit;
+
+    [SerializeField] protected AudioSource Sound_SkillTwo;
+    [SerializeField] protected AudioSource Sound_SkillTwo_Hit;
+
+    [SerializeField] protected AudioSource Sound_SkillThree;
+    [SerializeField] protected AudioSource Sound_SkillThree_Hit;
 
     [Header("Player Layout")]
     [Header("Skin")]
@@ -155,10 +167,65 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public void PlaySound_NormalAttack()
+    {
+        Sound_NormalAttack.Play();
+    }
+    public void PlaySound_NormalAttack_Hit()
+    {
+        Sound_NormalAttack_Hit.Play();
+    }
+    public void PlaySound_SkillOne()
+    {
+        Sound_SkillOne.Play();
+    }
+    public void PlaySound_SkillOne_Hit()
+    {
+        Sound_SkillOne_Hit.Play();
+    }
+    public void PlaySound_SkillTwo()
+    {
+        Sound_SkillTwo.Play();
+    }
+    public void PlaySound_SkillTwo_Hit()
+    {
+        Sound_SkillTwo_Hit.Play();
+
+    }
+    public void PlaySound_SkillThree()
+    {
+        Sound_SkillThree.Play();
+
+    }
+    public void PlaySound_SkillThree_Hit()
+    {
+        Sound_SkillThree_Hit.Play();
+    }
+
+    public void StopSound_NormalAttack()
+    {
+        Sound_NormalAttack.Stop();
+    }
+    public void StopSound_SkillOne()
+    {
+        Sound_SkillOne.Stop();
+    }
+
+    public void StopSound_SkillTwo()
+    {
+        Sound_SkillTwo.Stop();
+    }
+
     public void CallInvoke()
     {
         InvokeRepeating(nameof(RegenHealth), 1f, 1f);
         InvokeRepeating(nameof(RegenChakra), 1f, 1f);
+    }
+
+    public void OffInvoke()
+    {
+        CancelInvoke(nameof(RegenChakra));
+        CancelInvoke(nameof(RegenHealth));
     }
 
     public void SetUpAccountData()
@@ -166,8 +233,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         PlayerNickName.text = photonView.Owner.NickName;
         LoadLayout();
         LoadAllAccountUI();
-        if (References.accountRefer.IsDead) Dead(References.accountRefer.TimeRespawn);
-
+        if (AccountEntity.IsDead && photonView.IsMine)
+        {
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(AccountEntity.TimeRespawn);
+            Dead();
+        }
     }
 
     public void LoadLayout()
@@ -210,8 +280,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
                 PlayerHealthChakraUI.SetActive(false);
+                ChatManager.Instance.ConnectToChat(References.ChatServer);
+                PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
                 PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
-                CallInvoke();
+                
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
@@ -220,12 +292,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerHealthChakraUI.SetActive(true);
         }
     }
-
-    public void LastHitRewards()
-    {
-
-    }
-
 
     public void LoadAllAccountUI()
     {
@@ -353,9 +419,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
 
-            if (Input.GetKeyDown(KeyCode.M))
+            if (Input.GetKeyDown(KeyCode.Y))
             {
-                PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ToggleFullMap(true);
+                PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
+
             }
 
             if (!CanWalking)
@@ -415,12 +482,12 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 case AccountStatus.PK:
                     if (AccountEntity.CurrentHealth <= 0)
                     {
-                        PK_Manager.Instance.Battle_End(AccountEntity.ID);
+                        PK_Manager.Instance.CheckPlayerDead();
                     }
                     break;
             }
 
-            if (AccountEntity.CurrentHealth <= 0) Dead(References.RespawnTime);
+            if (AccountEntity.CurrentHealth <= 0) Dead();
 
             LoadPlayerHealthUI();
 
@@ -430,17 +497,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     }
 
-    public void Dead(int timeRespawn)
+    public void Dead()
     {
-        if (accountStatus == AccountStatus.Normal)
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(timeRespawn);
-
         AccountEntity.CurrentHealth = 0;
         References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
-        CancelInvoke(nameof(RegenChakra));
-        CancelInvoke(nameof(RegenHealth));
+        References.accountRefer.IsDead = true;
+        References.accountRefer.TimeRespawn = References.RespawnTime;
+        OffInvoke();
         CancelInvoke(nameof(RegenStrength));
-        photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.All);
+        photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
     }
 
 
@@ -708,6 +773,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Destroy(ObjectPool_Runtime);
         }
+        
+
     }
 
     [PunRPC]

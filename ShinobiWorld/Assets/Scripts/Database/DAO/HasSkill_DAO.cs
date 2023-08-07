@@ -40,6 +40,10 @@ public static class HasSkill_DAO
                     return obj;
                 }
             }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
+            }
             finally
             {
                 connection.Close();
@@ -77,6 +81,10 @@ public static class HasSkill_DAO
                     list.Add(obj);
                 };
 
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
             }
             finally
             {
