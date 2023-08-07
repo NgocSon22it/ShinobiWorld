@@ -55,11 +55,7 @@ namespace Assets.Scripts.Bag.Item
             if (!Amount.IsUnityNull()) Amount.text = "1";
             Description.text = item.Description;
 
-            if (!UseBtn.IsUnityNull())
-            {
-                UseBtn.SetActive(true);
-                if (item.ID == References.TeleTickerID) UseBtn.SetActive(false);
-            }
+            if (!UseBtn.IsUnityNull() & item.ID == References.TeleTickerID) UseBtn.SetActive(!(HasItem.Amount > 0));
         }
 
         public void CheckAmount()

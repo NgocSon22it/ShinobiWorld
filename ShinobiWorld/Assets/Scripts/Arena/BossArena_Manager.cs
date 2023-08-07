@@ -57,6 +57,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Room Value")]
     [SerializeField] MapType mapType;
+    BossArenaType arenaType;
     string BossName;
     RoomOptions roomOptions = new RoomOptions();
     PlayerBase[] players;
@@ -92,6 +93,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
 
         SetUp_BossName();
+        SetUp_ArenaType();
 
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
@@ -116,7 +118,22 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             BossPool = ListBossPool.Find(obj => obj.gameObject.name == BossName + "Pool");
         }
     }
+    public void SetUp_ArenaType()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("IsOfficial"))
+        {
+            bool IsOfficial = (bool)PhotonNetwork.CurrentRoom.CustomProperties["IsOfficial"];
+            if (IsOfficial)
+            {
+                arenaType = BossArenaType.Official;
+            }
+            else
+            {
+                arenaType = BossArenaType.Practice;
+            }
 
+        }
+    }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
