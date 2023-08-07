@@ -8,7 +8,6 @@ public class Melee_SkillThreeExplosion : PlayerSkill
     new void OnEnable()
     {
         LifeTime = 0.8f;
-        player_Pool.gameObject.GetComponent<PlayerBase>().PlaySound_SkillThree_Hit();
         base.OnEnable();
     }
 
