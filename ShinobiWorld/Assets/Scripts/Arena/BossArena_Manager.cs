@@ -83,6 +83,13 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Instance = this;
     }
 
+    public int GetNumberPlayer()
+    {
+        players = FindObjectsOfType<PlayerBase>();
+        return players.Length;
+    }
+    
+
     public override void OnJoinedRoom()
     {
         References.ChatServer = PhotonNetwork.CurrentRoom.Name;

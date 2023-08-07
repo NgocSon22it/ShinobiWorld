@@ -26,11 +26,16 @@ public class Asuma : Enemy
     new void Start()
     {
         base.Start();
-        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health;
-        CurrentHealth = boss_Health;
+        SetUpHealth();
         Target = FindClostestTargetToFollow(detectionRadius, "Player");      
         destinationSetter.target = Target.transform;
         LoadHealthUI(CurrentHealth, boss_Health);
+    }
+
+    public void SetUpHealth()
+    {
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health * BossArena_Manager.Instance.GetNumberPlayer();
+        CurrentHealth = boss_Health;
     }
 
     new void FixedUpdate()
