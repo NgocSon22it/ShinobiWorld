@@ -446,6 +446,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &3501052285076779923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8454749758579958780}
+  m_Layer: 3
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8454749758579958780
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3501052285076779923}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.839, y: 0.682, z: 0.043749448}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8196887473816555352}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4103129862039537325
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,6 +1011,7 @@ Transform:
   - {fileID: 392039541036645424}
   - {fileID: 1205865764116863696}
   - {fileID: 563538631498505256}
+  - {fileID: 8454749758579958780}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1034,7 +1066,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &2838064213285511342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1065,8 +1097,8 @@ MonoBehaviour:
   - {fileID: 7753229345362000118}
   - {fileID: 4699571380832549204}
   m_Bounds:
-    m_Center: {x: 0.18247628, y: 0.80422884, z: 0}
-    m_Extent: {x: 1.2444329, y: 0.9657897, z: 0}
+    m_Center: {x: 0.09190452, y: 0.80266505, z: 0}
+    m_Extent: {x: 1.2324665, y: 0.9642259, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -1122,7 +1154,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.009799987, y: 0.7231765}
@@ -1158,7 +1190,6 @@ MonoBehaviour:
     CoinBonus: 0
     ExpBonus: 0
     Delete: 0
-  boss_Health: 0
   AreaEnemy_Entity:
     ID: 
     AreaID: 
@@ -1183,6 +1214,7 @@ MonoBehaviour:
   BossType: 0
   CurrentHealth: 0
   MainPoint: {fileID: 392039541036645424}
+  FirePoint: {fileID: 8454749758579958780}
   CurrentHealth_UI: {fileID: 4667268611468065512}
   HealthNumber: {fileID: 2481822869408815140}
   DeathEffect: {fileID: 5936279578344127770}

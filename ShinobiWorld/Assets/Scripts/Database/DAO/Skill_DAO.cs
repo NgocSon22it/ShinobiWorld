@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Data;
 using UnityEngine;
 using Assets.Scripts.Database.Entity;
+using System.Security.Claims;
 
 public static class Skill_DAO
 {
@@ -44,6 +45,10 @@ public static class Skill_DAO
                     connection.Close();
                     return obj;
                 }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
             }
             finally
             {
@@ -87,6 +92,10 @@ public static class Skill_DAO
                     list.Add(obj);
                 }
             }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Exception: " + ex.Message);
+            }
             finally
             {
                 connection.Close();
@@ -100,17 +109,33 @@ public static class Skill_DAO
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Insert Into HasSkill  ([AccountID] ,[SkillID] ,[Level] ,[Cooldown] ,[Damage] ,[Chakra]) values(@UserID, @SkillID, @Level, @Cooldown, @Damage, @Chakra)";
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@SkillID", skill_Entity.ID);
-            cmd.Parameters.AddWithValue("@Level", 1);
-            cmd.Parameters.AddWithValue("@Cooldown", skill_Entity.Cooldown);
-            cmd.Parameters.AddWithValue("@Damage", skill_Entity.Damage);
-            cmd.Parameters.AddWithValue("@Chakra", skill_Entity.Chakra);
-            connection.Open();
-            cmd.ExecuteNonQuery();
-            connection.Close();
+            try
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Insert Into HasSkill  ([AccountID] ,[SkillID] ,[Level] ,[Cooldown] ,[Damage] ,[Chakra]) values(@UserID, @SkillID, @Level, @Cooldown, @Damage, @Chakra)";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@SkillID", skill_Entity.ID);
+                cmd.Parameters.AddWithValue("@Level", 1);
+                cmd.Parameters.AddWithValue("@Cooldown", skill_Entity.Cooldown);
+                cmd.Parameters.AddWithValue("@Damage", skill_Entity.Damage);
+                cmd.Parameters.AddWithValue("@Chakra", skill_Entity.Chakra);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+
+                Console.WriteLine("SQL Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            
         }
     }
 
@@ -118,16 +143,32 @@ public static class Skill_DAO
     {
         using (SqlConnection connection = new SqlConnection(ConnectionStr))
         {
-            SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "Update HasSkill set [Level] += 1, Damage = @Damage, Cooldown = @Cooldown, Chakra = @Chakra where AccountID = @UserID and SkillID = @SkillID";
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@Damage", Damage);
-            cmd.Parameters.AddWithValue("@Cooldown", Cooldown);
-            cmd.Parameters.AddWithValue("@Chakra", Chakra);
-            cmd.Parameters.AddWithValue("@SkillID", SkillID);
-            connection.Open();
-            cmd.ExecuteNonQuery();
-            connection.Close();
+            try
+            {
+                SqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "Update HasSkill set [Level] += 1, Damage = @Damage, Cooldown = @Cooldown, Chakra = @Chakra where AccountID = @UserID and SkillID = @SkillID";
+                cmd.Parameters.AddWithValue("@UserID", UserID);
+                cmd.Parameters.AddWithValue("@Damage", Damage);
+                cmd.Parameters.AddWithValue("@Cooldown", Cooldown);
+                cmd.Parameters.AddWithValue("@Chakra", Chakra);
+                cmd.Parameters.AddWithValue("@SkillID", SkillID);
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+
+                Console.WriteLine("SQL Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            
         }
     }
 

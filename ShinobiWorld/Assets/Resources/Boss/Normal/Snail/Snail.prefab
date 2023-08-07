@@ -294,6 +294,7 @@ Transform:
   - {fileID: 2529887319658115422}
   - {fileID: 1799692599489281907}
   - {fileID: 2529887320297365018}
+  - {fileID: 3737425584760554936}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -482,7 +483,6 @@ MonoBehaviour:
     CoinBonus: 0
     ExpBonus: 0
     Delete: 0
-  boss_Health: 0
   AreaEnemy_Entity:
     ID: 
     AreaID: 
@@ -507,6 +507,7 @@ MonoBehaviour:
   BossType: 0
   CurrentHealth: 0
   MainPoint: {fileID: 2529887319658115422}
+  FirePoint: {fileID: 3737425584760554936}
   CurrentHealth_UI: {fileID: 5224362994693758795}
   HealthNumber: {fileID: 3041309241689587079}
   DeathEffect: {fileID: 8252625921249901161}
@@ -985,6 +986,37 @@ Transform:
   - {fileID: 1932115579898592638}
   m_Father: {fileID: 526923689503358742}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8747941771544928583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3737425584760554936}
+  m_Layer: 3
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3737425584760554936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8747941771544928583}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.77, y: 1.12, z: 0.043749448}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7937180216921698544}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9117201205156602378
 GameObject:

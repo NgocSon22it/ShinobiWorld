@@ -34,6 +34,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         Instance = this;
     }
 
+    /*private void Start()
+    {
+        ConnectToChat(ServerName);
+    }*/
+
     public void DebugReturn(DebugLevel level, string message)
     {
     }
@@ -46,17 +51,27 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         Debug.Log("Kết nối đến chat thành công!");
         isConnected = true;
-        chatClient.Subscribe(new string[] { ServerName });      
+        chatClient.Subscribe(new string[] { ServerName });
     }
 
     public void OnDisconnected()
     {
+        isConnected = false;
+        ChatRoom.SetActive(false);
+        Debug.Log("Roi chat");
+    }
 
+    public void DisconnectFromChat()
+    {
+        if (chatClient != null && chatClient.CanChat)
+        {
+            chatClient.Disconnect();
+        }
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        string mess = "";
+        string disPlayer;
         // Get the current time
         DateTime currentTime = DateTime.Now;
 
@@ -65,11 +80,20 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         for (int i = 0; i < senders.Length; i++)
         {
-            mess = string.Format("[{2}] {0}: {1}", senders[i], messages[i], currentTimeString);
+            var message = messages[i].ToString().Split(new char[] { ':' });
 
-            ChatDisPlay.text += "\n " + mess;
+            var type = message[0];
+            var content = message[1];
+
+            if (type.Equals(References.ChatServer))
+            {
+                disPlayer = string.Format("[{2}] {0}: {1}", senders[i], content, currentTimeString);
+
+                ChatDisPlay.text += "\n " + disPlayer;
+            }
+
+
         }
-        InviteManager.Instance.CloseReceiveInvitePopup();
 
     }
 
@@ -82,7 +106,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
             if (!sender.Equals(senderName, StringComparison.OrdinalIgnoreCase))
             {
-                Debug.Log($"{sender}: {message}");
                 var mess = message.ToString().Split(new char[] { ':' });
 
                 var type = (TypePrivateMessage)Enum.Parse(typeof(TypePrivateMessage), mess[0]);
@@ -91,15 +114,20 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                     case TypePrivateMessage.FriendRequest:
                         FriendManager.Instance.Notify.SetActive(true);
                         break;
-                    case TypePrivateMessage.PKRequest:                      
-                        break;
-                    case TypePrivateMessage.Text:
+                    case TypePrivateMessage.PK:
+                        var PKMessage = mess[1];
+                        var PKSceneName = mess[2];
+                        var PKRoomName = mess[3];
+                        var PKBet = mess[4];
+                        InviteManager.Instance.OpenReceiveInvitePopup_PK(TypePrivateMessage.PK, sender + " " + PKMessage, PKSceneName, PKRoomName, PKBet);
                         break;
                     case TypePrivateMessage.Arena:
                         var ArenaMessage = mess[1];
                         var SceneName = mess[2];
                         var RoomName = mess[3];
-                        InviteManager.Instance.OpenReceiveInvitePopup(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName);
+                        var BossName = mess[4];
+                        var ArenaType = (BossArenaType)Enum.Parse(typeof(BossArenaType), mess[5]);
+                        InviteManager.Instance.OpenReceiveInvitePopup_Arena(TypePrivateMessage.Arena, sender + " " + ArenaMessage, SceneName, RoomName, BossName, ArenaType);
                         break;
                 }
             }
@@ -137,7 +165,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         this.ServerName = ServerName;
         isConnected = true;
-        chatClient = new ChatClient(this);      
+        chatClient = new ChatClient(this);
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(References.accountRefer.Name));
         Debug.Log("Đang kết nối");
     }
@@ -149,7 +177,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void SummitPublicChat()
     {
-        chatClient.PublishMessage(ServerName, CurrentChat);
+        chatClient.PublishMessage(ServerName, string.Format(Message.PublicMessage, ServerName, CurrentChat));
         ChatField.text = "";
         CurrentChat = "";
     }
@@ -171,7 +199,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     // Update is called once per frame
     void Update()
     {
-       
+
         if (isConnected)
         {
             chatClient.Service();
@@ -185,6 +213,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 ToggleTyping(false);
             }
         }
+
         if (!string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
         {
             SummitPublicChat();

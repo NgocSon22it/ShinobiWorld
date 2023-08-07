@@ -76,7 +76,7 @@ public class Octopus : Enemy
             {
                 SkillOne.transform.position = TargetPosition;
                 SkillOne.GetComponent<Octopus_Attack>().SetUp(100);
-                SkillOne.GetComponent<Octopus_Attack>().SetUpPoint(transform.position, TargetPosition);
+                SkillOne.GetComponent<Octopus_Attack>().SetUpPoint(FirePoint.position, TargetPosition);
                 SkillOne.SetActive(true);
             }
         }

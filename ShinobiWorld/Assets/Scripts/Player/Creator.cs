@@ -246,10 +246,11 @@ public class Creator : MonoBehaviour
         var image = References.listRole.Find(obj => obj.ID == IDRole).Image;
         Weapon.sprite = Resources.Load<Sprite>(image);
 
-        MeleeBtn.GetComponent<Image>().color = References.ButtonColorSelected;
         ChangeBtn.SetActive(false);
 
         ResetColorRole();
+        MeleeBtn.GetComponent<Image>().color = References.ButtonColorSelected;
+
     }
 
     void LayoutChoice()

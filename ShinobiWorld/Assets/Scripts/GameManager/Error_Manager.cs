@@ -14,4 +14,14 @@ public class Error_Manager : MonoBehaviour
         PhotonNetwork.IsMessageQueueRunning = false;
         PhotonNetwork.LoadLevel(Scenes.Konoha);
     }
+
+    public void BackToMenu()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+        PhotonNetwork.IsMessageQueueRunning = false;
+        PhotonNetwork.LoadLevel(Scenes.Login);
+    }
 }

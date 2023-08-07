@@ -75,7 +75,7 @@ public class Snail : Enemy
             {
                 SkillOne.transform.position = TargetPosition;
                 SkillOne.GetComponent<Snail_Attack>().SetUp(100);
-                SkillOne.GetComponent<Snail_Attack>().SetUpPoint(transform.position, TargetPosition);
+                SkillOne.GetComponent<Snail_Attack>().SetUpPoint(FirePoint.position, TargetPosition);
                 SkillOne.SetActive(true);
             }
         }

@@ -1,3 +1,4 @@
+using Pathfinding;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,8 +12,12 @@ public class Kakashi : Enemy
     bool IsStartCoroutine;
 
     [SerializeField] List<GameObject> List_Electric = new List<GameObject>();
-    [SerializeField] List<GameObject> List_Fire = new List<GameObject>();
 
+    [SerializeField] AIPath aIPath;
+    [SerializeField] AIDestinationSetter destinationSetter;
+    public float attackRadius;
+    public bool CanAttackPlayer;
+    GameObject Target;
     //Skill Three
     public GameObject ChidoriPrefabs;
     public float dashSpeed;
@@ -28,26 +33,36 @@ public class Kakashi : Enemy
     new void Start()
     {
         base.Start();
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Kakashi")).Health;
+        CurrentHealth = boss_Health;
+        Target = FindClostestTargetToFollow(detectionRadius, "Player");
+        destinationSetter.target = Target.transform;
+        LoadHealthUI(CurrentHealth, boss_Health);
     }
 
     new void FixedUpdate()
     {
-        AttackAndMove();
-
+        if (!photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * 1f);
+        }
+        else
+        {
+            AttackAndMove();
+        }
     }
 
     public void AttackAndMove()
     {
-
         if (isMoving)
         {
-            transform.position = Vector3.MoveTowards(transform.position, MovePosition, 3f * Time.deltaTime);
-
-            if (transform.position == MovePosition)
+            MovePosition = aIPath.desiredVelocity;
+            CanAttackPlayer = Physics2D.OverlapCircle(transform.position, attackRadius, AttackableLayer);
+            if (CanAttackPlayer)
             {
+                aIPath.canMove = false;
                 isMoving = false;
             }
-
         }
         else
         {
@@ -66,17 +81,17 @@ public class Kakashi : Enemy
         if (TargetPosition != Vector3.negativeInfinity)
         {
             GameObject SkillOne = boss_Pool.GetSkillOneFromPool();
-            FlipToTarget();
-            direction = (TargetPosition - transform.Find("MainPoint").position).normalized;
+
+            direction = TargetPosition - transform.Find("FirePoint").position;
+            direction.Normalize();
 
             if (SkillOne != null)
             {
-                SkillOne.transform.position = transform.Find("MainPoint").position;
-                SkillOne.transform.rotation = transform.rotation;
+                SkillOne.transform.position = transform.Find("FirePoint").position;
                 SkillOne.GetComponent<Kakashi_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Kakashi_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 8);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
                 SetUpSkilling(3f);
             }
         }
@@ -86,15 +101,7 @@ public class Kakashi : Enemy
     {
         if (TargetPosition != Vector3.negativeInfinity)
         {
-            int random = Random.Range(0, 2);
-            if (random == 0)
-            {
-                SkillTwo_Fire();
-            }
-            else
-            {
-                SkillTwo_Electric();
-            }
+            SkillTwo_Electric();
         }
     }
 
@@ -111,9 +118,7 @@ public class Kakashi : Enemy
     {
         IsStartCoroutine = true;
         RandomState = Random.Range(1, 4);
-
-        TargetPosition = FindClostestTarget(100f, "Player");
-        animator.SetTrigger("Skill" + RandomState);
+        photonView.RPC(nameof(CallAnimation), RpcTarget.All, "Skill" + RandomState);
         IsSkilling = true;
 
         while (IsSkilling)
@@ -121,9 +126,17 @@ public class Kakashi : Enemy
             yield return null;
         }
 
-        MovePosition = GetRandomPosition();
+        Target = FindClostestTargetToFollow(detectionRadius, "Player");
+        destinationSetter.target = Target.transform;
+        aIPath.canMove = true;
         isMoving = true;
         IsStartCoroutine = false;
+    }
+
+    [PunRPC]
+    public void CallAnimation(string AnimationName)
+    {
+        animator.SetTrigger(AnimationName);
     }
 
     IEnumerator Chidori()
@@ -154,30 +167,50 @@ public class Kakashi : Enemy
 
     public void SkillTwo_Electric()
     {
-        GameObject SkillOne = GetElectric();
-        if (SkillOne != null)
+        GameObject SkillTwo = GetElectric();
+        if (SkillTwo != null)
         {
-            SkillOne.GetComponent<Kakashi_SkillTwo_Electric>().SetUp(100);
-            SkillOne.transform.position = TargetPosition;
-            SkillOne.SetActive(true);
+            SkillTwo.GetComponent<Kakashi_SkillTwo_Electric>().SetUp(100);
+            SkillTwo.transform.position = TargetPosition;
+            SkillTwo.SetActive(true);
         }
 
         SetUpSkilling(3f);
-
     }
-    public void SkillTwo_Fire()
-    {
 
-        GameObject SkillOne = GetFire();
-        if (SkillOne != null)
+    public void FollowPlayer()
+    {
+        if (MainPoint.position.x < Target.transform.position.x && !FacingRight)
         {
-            SkillOne.transform.position = TargetPosition;
-            SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUpPoint(TargetPosition);
-            SkillOne.GetComponent<Kakashi_SkillTwo_Fire>().SetUp(100);
-            SkillOne.SetActive(true);
+            Flip();
+        }
+        else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
+        {
+            Flip();
+        }
+    }
+
+    public GameObject FindClostestTargetToFollow(float Range, string TargetTag)
+    {
+        float distanceToClosestTarget = Mathf.Infinity;
+        GameObject closestTargetPosition = null;
+
+        GameObject[] allTarget = GameObject.FindGameObjectsWithTag(TargetTag);
+
+        foreach (GameObject currentTarget in allTarget)
+        {
+            float distanceToTarget = (currentTarget.transform.position - this.transform.position).sqrMagnitude;
+            if (distanceToTarget < distanceToClosestTarget
+                && Vector2.Distance(currentTarget.transform.position, transform.position) <= Range
+                && currentTarget.GetComponent<BoxCollider2D>().enabled)
+            {
+                distanceToClosestTarget = distanceToTarget;
+                closestTargetPosition = currentTarget;
+
+            }
         }
 
-        SetUpSkilling(3f);
+        return closestTargetPosition;
     }
     public GameObject GetElectric()
     {
@@ -186,17 +219,6 @@ public class Kakashi : Enemy
             if (!List_Electric[i].activeInHierarchy)
             {
                 return List_Electric[i];
-            }
-        }
-        return null;
-    }
-    public GameObject GetFire()
-    {
-        for (int i = 0; i < List_Fire.Count; i++)
-        {
-            if (!List_Fire[i].activeInHierarchy)
-            {
-                return List_Fire[i];
             }
         }
         return null;
@@ -212,5 +234,9 @@ public class Kakashi : Enemy
         yield return new WaitForSeconds(Seconds);
         IsSkilling = false;
     }
-
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
+    }
 }

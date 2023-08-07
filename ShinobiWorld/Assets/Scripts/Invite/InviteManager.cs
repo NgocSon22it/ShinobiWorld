@@ -2,6 +2,7 @@
 using Assets.Scripts.Database.Entity;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +12,7 @@ using UnityEngine.UI;
 
 public class InviteManager : MonoBehaviour
 {
-    public GameObject ReceivePanel, SendPanel, ListInvitePanel;
+    public GameObject ReceivePanel, SendPanel, ListInvitePanel, NotEnoughMoneyPanel;
 
     public TMP_Text InviteContent, CountDownPopup;
 
@@ -33,14 +34,28 @@ public class InviteManager : MonoBehaviour
     {
         Instance = this;
     }
-    public void SendArenaMessage(string receiverName)
-    {
-        ChatManager.Instance.chatClient
-               .SendPrivateMessage(receiverName,
-               string.Format(Message.PrivateMessage, TypePrivateMessage.Arena.ToString(),
-               Message.BossAreaMessage, References.SceneNameInvite, PhotonNetwork.CurrentRoom.Name));
-    }
 
+    public void SendInvite(string receiverName)
+    {
+        switch (References.inviteType)
+        {
+            case InviteType.PK:
+
+                ChatManager.Instance.chatClient
+               .SendPrivateMessage(receiverName,
+               string.Format(Message.PK_Private, TypePrivateMessage.PK.ToString(),
+               Message.PKMessage, References.MapInvite, References.RoomNameInvite, References.PKBet));
+                break;
+            case InviteType.Arena:
+                ChatManager.Instance.chatClient
+               .SendPrivateMessage(receiverName,
+               string.Format(Message.Arena_Private, TypePrivateMessage.Arena.ToString(),
+               Message.BossAreaMessage, References.MapInvite, References.RoomNameInvite, References.BossNameInvite, References.bossArenaType));
+                break;
+        }
+
+
+    }
 
     public void LoadListInvite()
     {
@@ -51,23 +66,64 @@ public class InviteManager : MonoBehaviour
             Destroy(trans.gameObject);
         }
 
-        foreach (Account_Entity a in ListInvite)
+        foreach (Account_Entity account in ListInvite)
         {
-            if (!a.ID.Equals(References.accountRefer.ID))
+            if (!account.ID.Equals(References.accountRefer.ID))
             {
-                Instantiate(Item, Content).GetComponent<InviteItem>().SetUp(a);
+                Instantiate(Item, Content).GetComponent<InviteItem>().SetUp(account);
             }
         }
     }
 
-    public void OpenReceiveInvitePopup(TypePrivateMessage type, string Content, string SceneName, string RoomName)
+    public void OpenReceiveInvitePopup_Arena(TypePrivateMessage type, string Content, string SceneName, string RoomName, string BossName, BossArenaType arenaType)
     {
-        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal)
+        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal
+            && !IsMessageIsReceive(RoomName))
         {
             this.type = type;
-            References.SceneNameInvite = SceneName;
+
+            References.MapInvite = SceneName;
             References.RoomNameInvite = RoomName;
-            InviteContent.text = Content;
+            References.bossArenaType = arenaType;
+            switch (References.bossArenaType)
+            {
+                case BossArenaType.Official:
+                    InviteContent.text = Content + " " + BossName + " (Chính thức)";
+                    break;
+                case BossArenaType.Practice:
+                    InviteContent.text = Content + " " + BossName + " (Phòng tập)";
+                    break;
+            }
+            
+            ReceivePanel.SetActive(true);
+            StartCoroutine(PopupInvite());
+        }
+    }
+
+    public bool IsMessageIsReceive(string RoomName)
+    {
+        foreach(string message in References.ListPrivateMessage)
+        {
+            if (RoomName.Equals(message))
+            {
+                return true;
+            }
+        }
+
+        References.ListPrivateMessage.Add(RoomName);
+        return false;
+    }
+
+    public void OpenReceiveInvitePopup_PK(TypePrivateMessage type, string Content, string SceneName, string RoomName, string Bet)
+    {
+        if (!ReceivePanel.activeInHierarchy && Player_AllUIManagement.Instance.Player.accountStatus == AccountStatus.Normal
+            && !References.RoomNameInvite.Equals(RoomName))
+        {
+            this.type = type;
+            References.MapInvite = SceneName;
+            References.RoomNameInvite = RoomName;
+            References.PKBet = Convert.ToInt32(Bet);
+            InviteContent.text = Content + " " + Bet + " Vàng.";
             ReceivePanel.SetActive(true);
             StartCoroutine(PopupInvite());
         }
@@ -92,6 +148,18 @@ public class InviteManager : MonoBehaviour
         ListInvitePanel.SetActive(false);
     }
 
+    public void OpenNoMoneyPanel()
+    {
+        Game_Manager.Instance.IsBusy = true;
+        NotEnoughMoneyPanel.SetActive(true);
+    }
+
+    public void CloseNoMoneyPanel()
+    {
+        Game_Manager.Instance.IsBusy = false;
+        NotEnoughMoneyPanel.SetActive(false);
+    }
+
     public void AccpectInvite()
     {
         switch (type)
@@ -100,13 +168,25 @@ public class InviteManager : MonoBehaviour
                 References.IsInvite = true;
                 PhotonNetwork.IsMessageQueueRunning = false;
                 PhotonNetwork.LeaveRoom();
-                PhotonNetwork.LoadLevel(References.SceneNameInvite);
+                PhotonNetwork.LoadLevel(References.MapInvite);
+                break;
+
+            case TypePrivateMessage.PK:
+                if (References.accountRefer.Coin >= References.PKBet)
+                {
+                    References.IsInvite = true;
+                    PhotonNetwork.IsMessageQueueRunning = false;
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LoadLevel(References.MapInvite);
+                }
+                else
+                {
+                    OpenNoMoneyPanel();
+                }
                 break;
         }
         CloseReceiveInvitePopup();
     }
-
-
 
     IEnumerator PopupInvite()
     {

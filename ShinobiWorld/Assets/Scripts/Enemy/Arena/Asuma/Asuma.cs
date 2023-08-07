@@ -37,7 +37,7 @@ public class Asuma : Enemy
     {
         if (!photonView.IsMine)
         {
-            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * lerpFactor);
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * 1f);
         }
         else
         {
@@ -51,7 +51,7 @@ public class Asuma : Enemy
         if (isMoving)
         {
             MovePosition = aIPath.desiredVelocity;
-            CanAttackPlayer = Physics2D.OverlapCircle(MainPoint.position, attackRadius, AttackableLayer);
+            CanAttackPlayer = Physics2D.OverlapCircle(transform.position, attackRadius, AttackableLayer);
             if (CanAttackPlayer)
             {
                 aIPath.canMove = false;
@@ -84,7 +84,7 @@ public class Asuma : Enemy
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 5);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
                 SetUpSkilling(3f);
             }
         }
@@ -177,7 +177,6 @@ public class Asuma : Enemy
         GameObject SkillTwo = boss_Pool.GetSkillTwoFromPool();
         if (SkillTwo != null)
         {
-
             SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(30);
             SkillTwo.transform.position = TargetPosition;
             SkillTwo.SetActive(true);
@@ -235,6 +234,6 @@ public class Asuma : Enemy
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(MainPoint.position, attackRadius);
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 }
