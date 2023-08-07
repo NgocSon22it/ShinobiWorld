@@ -32,6 +32,7 @@ public class Melee_SkillTwo : PlayerSkill
     {
         base.OnDisable();
         StopCoroutine(FlyCoroutine);
+        player_Pool.gameObject.GetComponent<PlayerBase>().StopSound_SkillTwo();
     }
 
     private IEnumerator LogTriggeredObjects()

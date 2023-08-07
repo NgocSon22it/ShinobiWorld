@@ -137,22 +137,27 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (photonEvent.Code == BattleEnd_DrawEventCode)
         {
             sortCanvas.sortingOrder = 31;
-            References.AddCoin(CurrentBet);
+            References.AddCoin(CurrentBet + (CurrentBet * 80 / 100));
             CoinDraw_txt.text = CurrentBet.ToString();
+            Battle_Fight_CountdownTxt.text = "00:00";
             Draw_Panel.SetActive(true);
             Game_Manager.Instance.IsBusy = true;
         }
         else if (photonEvent.Code == BattleEnd_WinLoseEventCode)
         {
             sortCanvas.sortingOrder = 31;
+            Battle_Fight_CountdownTxt.text = "00:00";
             if (References.accountRefer.CurrentHealth > 0)
             {
                 References.AddCoin(CurrentBet + (CurrentBet * 80 / 100));
                 CoinWin_txt.text = (CurrentBet + (CurrentBet * 80 / 100)).ToString();
+                Account_DAO.IncreaseWinTime(References.accountRefer.ID);
                 Win_Panel.SetActive(true);
             }
             else
             {
+                References.SaveCurrentHealth = 0;
+                References.SaveCurrentChakra = 0;
                 CoinLose_txt.text = "-" + CurrentBet.ToString();
                 Lose_Panel.SetActive(true);
             }
@@ -320,6 +325,14 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (PhotonNetwork.InRoom)
         {
+            if (References.accountRefer.CurrentHealth > 0)
+            {
+                References.PlayerSpawnPosition = new Vector3(-43, -27, 0);
+            }
+            else
+            {
+                References.PlayerSpawnPosition = new Vector3(17, -27, 0);
+            }         
             Game_Manager.Instance.IsBusy = false;
             PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LeaveRoom();
@@ -351,6 +364,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (References.accountRefer != null)
         {
+            References.SetUp_Normal();
             References.UpdateAccountToDB();
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
         }
