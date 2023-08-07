@@ -41,7 +41,7 @@ public class Iruka : Enemy
     {
         if (!photonView.IsMine)
         {
-            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * lerpFactor);
+            transform.position = Vector3.Lerp(transform.position, MovePosition, Time.deltaTime * 1f);
         }
         else
         {

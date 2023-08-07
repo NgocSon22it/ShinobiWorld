@@ -323,6 +323,14 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (PhotonNetwork.InRoom)
         {
+            if (References.accountRefer.CurrentHealth > 0)
+            {
+                References.PlayerSpawnPosition = new Vector3(-43, -27, 0);
+            }
+            else
+            {
+                References.PlayerSpawnPosition = new Vector3(17, -27, 0);
+            }
             Game_Manager.Instance.IsBusy = false;
             PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LeaveRoom();
@@ -438,6 +446,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (References.accountRefer != null)
         {
+            References.SetUp_Normal();
             References.UpdateAccountToDB();
             Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
         }
@@ -460,6 +469,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 CheckOfficial_Practice(IsWin);
             }
+            Battle_Fight_CountdownTxt.text = "00:00";
             sortCanvas.sortingOrder = 31;
             BossPool.SetActive(false);
             Boss.SetActive(false);

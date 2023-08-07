@@ -15,7 +15,7 @@ public class MeleeChacracter : PlayerBase
     private Coroutine Righteous;
     int Righteous_BonusDamage = 50;
 
-
+   
     // Start is called before the first frame update
     new void Start()
     {
@@ -86,6 +86,7 @@ public class MeleeChacracter : PlayerBase
             {
                 if (Enemy.gameObject.CompareTag("Enemy") || Enemy.gameObject.CompareTag("Clone"))
                 {
+                    PlaySound_NormalAttack_Hit();
                     Enemy.GetComponent<Enemy>().TakeDamage(photonView.ViewID, Weapon_Entity.Damage + DamageBonus);
                 }
                 if (Enemy.gameObject.CompareTag("Player")
@@ -93,9 +94,8 @@ public class MeleeChacracter : PlayerBase
                     && Enemy.gameObject.GetComponent<PlayerBase>().accountStatus == AccountStatus.PK
                     )
                 {
+                    PlaySound_NormalAttack_Hit();
                     Enemy.GetComponent<PlayerBase>().TakeDamage(Weapon_Entity.Damage + DamageBonus);
-
-
                 }
             }
         }
