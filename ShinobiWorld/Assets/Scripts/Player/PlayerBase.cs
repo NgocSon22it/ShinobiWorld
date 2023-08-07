@@ -280,7 +280,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
                 PlayerHealthChakraUI.SetActive(false);
+                ChatManager.Instance.ConnectToChat(References.ChatServer);
+                PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
                 PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
+                
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
@@ -418,8 +421,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (Input.GetKeyDown(KeyCode.Y))
             {
-                Debug.Log(References.bossArenaType);
+                PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
+
             }
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -768,6 +773,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Destroy(ObjectPool_Runtime);
         }
+        
+
     }
 
     [PunRPC]

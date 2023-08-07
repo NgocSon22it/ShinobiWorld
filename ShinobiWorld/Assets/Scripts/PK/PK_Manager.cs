@@ -332,7 +332,8 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             else
             {
                 References.PlayerSpawnPosition = new Vector3(17, -27, 0);
-            }         
+            }    
+            ChatManager.Instance.DisconnectFromChat();
             Game_Manager.Instance.IsBusy = false;
             PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LeaveRoom();
