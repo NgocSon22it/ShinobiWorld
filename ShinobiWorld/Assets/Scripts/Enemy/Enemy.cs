@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     // Lag Reduce
     protected Vector3 networkPosition;
-    protected float lerpFactor = 1f;
+    protected float lerpFactor = 3f;
 
     public void SetUp(string EnemyID, string AreaID)
     {

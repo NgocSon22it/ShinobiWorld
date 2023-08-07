@@ -34,6 +34,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         Instance = this;
     }
 
+    /*private void Start()
+    {
+        ConnectToChat(ServerName);
+    }*/
+
     public void DebugReturn(DebugLevel level, string message)
     {
     }
@@ -51,12 +56,22 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnDisconnected()
     {
+        isConnected = false;
+        ChatRoom.SetActive(false);
+        Debug.Log("Roi chat");
+    }
 
+    public void DisconnectFromChat()
+    {
+        if (chatClient != null && chatClient.CanChat)
+        {
+            chatClient.Disconnect();
+        }
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        string mess = "";
+        string disPlayer;
         // Get the current time
         DateTime currentTime = DateTime.Now;
 
@@ -65,9 +80,19 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         for (int i = 0; i < senders.Length; i++)
         {
-            mess = string.Format("[{2}] {0}: {1}", senders[i], messages[i], currentTimeString);
+            var message = messages[i].ToString().Split(new char[] { ':' });
 
-            ChatDisPlay.text += "\n " + mess;
+            var type = message[0];
+            var content = message[1];
+
+            if (type.Equals(References.ChatServer))
+            {
+                disPlayer = string.Format("[{2}] {0}: {1}", senders[i], content, currentTimeString);
+
+                ChatDisPlay.text += "\n " + disPlayer;
+            }
+
+
         }
 
     }
@@ -152,7 +177,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void SummitPublicChat()
     {
-        chatClient.PublishMessage(ServerName, CurrentChat + " ServerName " + ServerName);
+        chatClient.PublishMessage(ServerName, string.Format(Message.PublicMessage, ServerName, CurrentChat));
         ChatField.text = "";
         CurrentChat = "";
     }
@@ -188,6 +213,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 ToggleTyping(false);
             }
         }
+
         if (!string.IsNullOrEmpty(CurrentChat) && Input.GetKeyDown(KeyCode.Return) && IsTypingChat == true)
         {
             SummitPublicChat();

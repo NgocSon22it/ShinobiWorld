@@ -25,7 +25,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] List<GameObject> ListBossPool = new List<GameObject>();
 
     [Header("Battle Time")]
-    float TotalTime = 10f, currentTime;
+    float TotalTime = 180f, currentTime;
     [SerializeField] TMP_Text Battle_Fight_CountdownTxt;
     [SerializeField] GameObject ReadyBase;
 
@@ -66,6 +66,10 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject JoinRoomFailedPrefabs;
     GameObject JoinRoomFailedInstance;
 
+    [Header("LostConnect")]
+    [SerializeField] GameObject LostConnectPrefabs;
+    GameObject LostConnectInstance;
+
     public static BossArena_Manager Instance;
 
     private void Start()
@@ -94,6 +98,15 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
         PhotonNetwork.IsMessageQueueRunning = true;
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        if (cause == DisconnectCause.ClientTimeout)
+        {
+            CallOnquit();
+            LostConnectInstance = Instantiate(LostConnectPrefabs);
+        }
     }
 
     public void SetUp_BossName()
@@ -310,6 +323,14 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (PhotonNetwork.InRoom)
         {
+            if (References.accountRefer.CurrentHealth > 0)
+            {
+                References.PlayerSpawnPosition = new Vector3(-43, -27, 0);
+            }
+            else
+            {
+                References.PlayerSpawnPosition = new Vector3(17, -27, 0);
+            }
             Game_Manager.Instance.IsBusy = false;
             PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LeaveRoom();
@@ -319,12 +340,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnApplicationQuit()
     {
-        if (References.accountRefer != null && PhotonNetwork.IsConnectedAndReady)
-        {
-            References.UpdateAccountToDB();
-            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
-        }
-
+        CallOnquit();
     }
 
     public void ShowEndgamePanel(bool Win)
@@ -425,9 +441,15 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
             }
         }
-
-
-
+    }
+    public void CallOnquit()
+    {
+        if (References.accountRefer != null)
+        {
+            References.SetUp_Normal();
+            References.UpdateAccountToDB();
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
     }
 
     public void OnEvent(EventData photonEvent)
@@ -447,6 +469,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 }
                 CheckOfficial_Practice(IsWin);
             }
+            Battle_Fight_CountdownTxt.text = "00:00";
             sortCanvas.sortingOrder = 31;
             BossPool.SetActive(false);
             Boss.SetActive(false);

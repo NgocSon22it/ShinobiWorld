@@ -22,12 +22,19 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     public FirebaseAuth auth;
     public FirebaseUser user;
 
-
     private int playerCount;
+
 
     private void Start()
     {
-        StartCoroutine(CheckAndFixDependenciesAsync());
+        if (UIManager.Instance.IsWiFiConnected())
+        {
+            StartCoroutine(CheckAndFixDependenciesAsync());
+        }
+        else
+        {
+            UIManager.Instance.OpenLostWifiPanel();
+        }
     }
 
 
@@ -99,7 +106,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 {
                     Account_DAO.ChangeStateOnline(user.UserId, true);
                     References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
-
+                    References.InitSaveValue();
                     if (!PhotonNetwork.IsConnected)
                     {
                         PhotonNetwork.ConnectUsingSettings();
@@ -145,9 +152,16 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public void Login()
     {
-        var email = UIManager.Instance.emailLoginField.text;
-        var password = UIManager.Instance.passwordLoginField.text;
-        StartCoroutine(LoginAsync(email, password));
+        if (UIManager.Instance.IsWiFiConnected())
+        {
+            var email = UIManager.Instance.emailLoginField.text;
+            var password = UIManager.Instance.passwordLoginField.text;
+            StartCoroutine(LoginAsync(email, password));
+        }
+        else
+        {
+            UIManager.Instance.OpenLostWifiPanel();
+        }
     }
 
     private IEnumerator LoginAsync(string email, string password)
@@ -226,7 +240,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
-
+                        References.InitSaveValue();
                         if (!PhotonNetwork.IsConnected)
                         {
                             PhotonNetwork.ConnectUsingSettings();
@@ -244,11 +258,18 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public void Register()
     {
-        var email = UIManager.Instance.emailRegisterField.text;
-        var password = UIManager.Instance.passwordRegisterField.text;
-        var confirmPassword = UIManager.Instance.confirmPasswordRegisterField.text;
+        if (UIManager.Instance.IsWiFiConnected())
+        {
+            var email = UIManager.Instance.emailRegisterField.text;
+            var password = UIManager.Instance.passwordRegisterField.text;
+            var confirmPassword = UIManager.Instance.confirmPasswordRegisterField.text;
 
-        StartCoroutine(RegisterAsync(email, password, confirmPassword));
+            StartCoroutine(RegisterAsync(email, password, confirmPassword));
+        }
+        else
+        {
+            UIManager.Instance.OpenLostWifiPanel();
+        }
     }
 
     private IEnumerator RegisterAsync(string email, string password, string confirmPassword)
@@ -385,7 +406,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         playerCount = PhotonNetwork.CountOfPlayers;
-        Debug.Log("Number of players on master server: " + playerCount);
         UIManager.Instance.OpenGamePanel();
 
     }
@@ -393,23 +413,32 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public void OpenGameScene()
     {
-        if (playerCount >= 0 && playerCount < References.Maxserver)
+        if (UIManager.Instance.IsWiFiConnected())
         {
-            References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
-            if (Account_DAO.IsFirstLogin(user.UserId))
+            if (playerCount >= 0 && playerCount < References.Maxserver)
             {
-                PhotonNetwork.LoadLevel(Scenes.Creator);
+                References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
+                if (Account_DAO.IsFirstLogin(user.UserId))
+                {
+                    PhotonNetwork.LoadLevel(Scenes.Creator);
+                }
+                else
+                {
+                    PhotonNetwork.LoadLevel(Scenes.Konoha);
+                }
+
             }
             else
             {
-                PhotonNetwork.LoadLevel(Scenes.Konoha);
+                UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
             }
-
         }
         else
         {
-            UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
+            UIManager.Instance.OpenLostWifiPanel();
         }
+
+
     }
 
     private void OnApplicationQuit()
@@ -423,10 +452,9 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        // Handle the disconnect cause
         if (cause == DisconnectCause.MaxCcuReached)
         {
-            Debug.Log("Failed to connect to Photon: Full");
+            UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
         }
         else if (cause == DisconnectCause.ExceptionOnConnect)
         {
@@ -441,21 +469,36 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     public void Logout()
     {
-        if (auth != null && user != null)
+        if (UIManager.Instance.IsWiFiConnected())
         {
-            References.UpdateAccountToDB();
-            Account_DAO.ChangeStateOnline(user.UserId, false);
-            auth.SignOut();
-            PhotonNetwork.Disconnect();
+            if (auth != null && user != null)
+            {
+                References.UpdateAccountToDB();
+                Account_DAO.ChangeStateOnline(user.UserId, false);
+                auth.SignOut();
+                PhotonNetwork.Disconnect();
+            }
         }
+        else
+        {
+            UIManager.Instance.OpenLostWifiPanel();
+        }      
     }
 
 
     public void ResetPassword()
     {
-        var email = UIManager.Instance.emailResetField.text;
-       
-        StartCoroutine(ResetPassword(email));
+        if (UIManager.Instance.IsWiFiConnected())
+        {
+            var email = UIManager.Instance.emailResetField.text;
+
+            StartCoroutine(ResetPassword(email));
+        }
+        else
+        {
+            UIManager.Instance.OpenLostWifiPanel();
+        }
+
     }
 
 
