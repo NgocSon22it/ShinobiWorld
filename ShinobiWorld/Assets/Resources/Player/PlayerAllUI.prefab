@@ -1674,9 +1674,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BXHManager, Assembly-CSharp
-        m_MethodName: Close
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1807,7 +1807,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8324047105494245288}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &304656440086971754
 GameObject:
   m_ObjectHideFlags: 0
@@ -1968,7 +1980,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5400262793289573066}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &342672115873217822
 GameObject:
   m_ObjectHideFlags: 0
@@ -2239,6 +2263,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8521485298459290274}
         m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
         m_MethodName: Close_CreateArenaPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3856,6 +3892,7 @@ GameObject:
   - component: {fileID: 6708314916481795531}
   - component: {fileID: 5811268248369501811}
   - component: {fileID: 3374496010614518386}
+  - component: {fileID: 519455143272373520}
   m_Layer: 5
   m_Name: Btn
   m_TagString: Untagged
@@ -3922,6 +3959,74 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &519455143272373520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585972684821037249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 3374496010614518386}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &616038565918177798
 GameObject:
   m_ObjectHideFlags: 0
@@ -4516,6 +4621,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: SettingManager, Assembly-CSharp
         m_MethodName: ToggleSettingPanel
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6122,6 +6239,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &922983256490017209
 GameObject:
   m_ObjectHideFlags: 0
@@ -6575,6 +6704,18 @@ MonoBehaviour:
       - m_Target: {fileID: 4938345095694088107}
         m_TargetAssemblyTypeName: MissionManager, Assembly-CSharp
         m_MethodName: TeleportToSelectArea
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7810,6 +7951,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1101595790269606920
 GameObject:
   m_ObjectHideFlags: 0
@@ -8058,6 +8211,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
           m_MethodName: SelectedMap_PK
           m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8901750920649650262}
+          m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+          m_MethodName: PlaySound
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8461,6 +8626,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8033490392318627814}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
         m_MethodName: CloseShopPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9370,6 +9547,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1330248254926395092
 GameObject:
   m_ObjectHideFlags: 0
@@ -9895,7 +10084,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7874710513883218200}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1382278043498744021
 GameObject:
   m_ObjectHideFlags: 0
@@ -11176,7 +11377,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4369187454764602821}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1575477154662744518
 GameObject:
   m_ObjectHideFlags: 0
@@ -12879,6 +13092,18 @@ MonoBehaviour:
           m_StringArgument: 1
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1852142344254873075
 GameObject:
   m_ObjectHideFlags: 0
@@ -13138,6 +13363,18 @@ MonoBehaviour:
       - m_Target: {fileID: 5369651662851577991}
         m_TargetAssemblyTypeName: InviteManager, Assembly-CSharp
         m_MethodName: CloseReceiveInvitePopup
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13507,6 +13744,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2411423870538041752}
         m_TargetAssemblyTypeName: Portal_Manager, Assembly-CSharp
         m_MethodName: Close
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14063,6 +14312,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8033490392318627814}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
         m_MethodName: CloseConfirmPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14857,6 +15118,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2181352946776345908
 GameObject:
   m_ObjectHideFlags: 0
@@ -15288,9 +15561,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MailBoxManager, Assembly-CSharp
-        m_MethodName: CloseConfirmDelete
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15503,7 +15776,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5559791330101428290}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2245504463598297506
 GameObject:
   m_ObjectHideFlags: 0
@@ -16840,6 +17125,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8521485298459290274}
         m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
         m_MethodName: Close
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19635,6 +19932,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &2919619998247675373
 GameObject:
   m_ObjectHideFlags: 0
@@ -20631,6 +20940,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3021354075197889368
 GameObject:
   m_ObjectHideFlags: 0
@@ -21315,7 +21636,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -329.89, y: 278.49997}
-  m_SizeDelta: {x: 660, y: 0}
+  m_SizeDelta: {x: 660, y: 5}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &3021354075604076789
 MonoBehaviour:
@@ -22459,6 +22780,18 @@ MonoBehaviour:
       - m_Target: {fileID: 7037331079934424108}
         m_TargetAssemblyTypeName: Assets.Scripts.Shop.BuyItemManager, Assembly-CSharp
         m_MethodName: Close
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -24336,9 +24669,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MailBoxManager, Assembly-CSharp
-        m_MethodName: DeleteReadAndReceivedBonus
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -29072,6 +29405,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3289833370005952312
 GameObject:
   m_ObjectHideFlags: 0
@@ -29193,7 +29538,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6444690998042634788}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3320418437639722784
 GameObject:
   m_ObjectHideFlags: 0
@@ -30043,9 +30400,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MailBoxManager, Assembly-CSharp
-        m_MethodName: ConfirmDelete
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -32084,7 +32441,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -329.89, y: 278.49994}
-  m_SizeDelta: {x: 660, y: 0}
+  m_SizeDelta: {x: 660, y: 5}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &3185700917578417600
 MonoBehaviour:
@@ -32941,6 +33298,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8521485298459290274}
         m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
         m_MethodName: Close_CreatePracticePanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -34405,6 +34774,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4063521191087642936
 GameObject:
   m_ObjectHideFlags: 0
@@ -34530,6 +34911,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8033490392318627814}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
         m_MethodName: OnConfirmSellBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -35020,6 +35413,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8033490392318627814}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
         m_MethodName: CloseConfirmPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -35564,9 +35969,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MailBoxManager, Assembly-CSharp
-        m_MethodName: DeleteReadAll
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -36096,7 +36501,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8886000291347396689}
   m_HandleRect: {fileID: 2065770091664326579}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -36357,9 +36762,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MailBoxManager, Assembly-CSharp
-        m_MethodName: CloseConfirmDelete
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -36647,7 +37052,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7833250754814758598
 RectTransform:
   m_ObjectHideFlags: 0
@@ -37182,6 +37587,18 @@ MonoBehaviour:
           m_StringArgument: 1
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4583495012656153080
 GameObject:
   m_ObjectHideFlags: 0
@@ -37306,6 +37723,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8901750920649650262}
         m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
         m_MethodName: ShowDetailInfo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -37718,6 +38147,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &4652519896659046435
 GameObject:
   m_ObjectHideFlags: 0
@@ -37902,6 +38343,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4669089993957946152
 GameObject:
   m_ObjectHideFlags: 0
@@ -38027,6 +38480,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1231440378412086177}
         m_TargetAssemblyTypeName: SettingManager, Assembly-CSharp
         m_MethodName: BackToMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -39235,9 +39700,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FriendManager, Assembly-CSharp
-        m_MethodName: OnRequestClick
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -39623,9 +40088,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Assets.Scripts.Hospital.Hospital, Assembly-CSharp
-        m_MethodName: OnRespawnClick
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -39709,9 +40174,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &4938345095014660195
 CanvasRenderer:
@@ -40697,8 +41162,8 @@ RectTransform:
   m_Father: {fileID: 4938345095955202785}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.49014276}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -40862,9 +41327,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TrophyManager, Assembly-CSharp
-        m_MethodName: GetNewTrophy
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -41434,9 +41899,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TrophyManager, Assembly-CSharp
-        m_MethodName: Close
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -42940,9 +43405,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: FriendManager, Assembly-CSharp
-        m_MethodName: OnFriendClick
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -44252,9 +44717,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TrophyManager, Assembly-CSharp
-        m_MethodName: RegisterUpgradeTrophy
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -44436,7 +44901,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 17, y: -0.000061035156}
-  m_SizeDelta: {x: -24.1864, y: 0}
+  m_SizeDelta: {x: -24.1864, y: 144.20001}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &4938345096901985339
 CanvasRenderer:
@@ -44667,6 +45132,18 @@ MonoBehaviour:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 1
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8901750920649650262}
+          m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+          m_MethodName: PlaySound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
@@ -45853,7 +46330,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 499005453755134346}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5162680614785831001
 GameObject:
   m_ObjectHideFlags: 0
@@ -46199,6 +46688,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5226410679114201688
 GameObject:
   m_ObjectHideFlags: 0
@@ -46331,6 +46832,18 @@ MonoBehaviour:
           m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 1
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &5259520488824233327
@@ -46935,6 +47448,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 8901750920649650262}
+          m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+          m_MethodName: PlaySound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &5318850487184330325
 GameObject:
   m_ObjectHideFlags: 0
@@ -47145,7 +47670,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291087564
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -48246,6 +48771,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5488012128472861820
 GameObject:
   m_ObjectHideFlags: 0
@@ -48884,6 +49421,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5515978688621526413
 GameObject:
   m_ObjectHideFlags: 0
@@ -49144,6 +49693,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8521485298459290274}
         m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
         m_MethodName: Open_CreatePKPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -49678,7 +50239,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 981438655168030321}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5546276279327789224
 GameObject:
   m_ObjectHideFlags: 0
@@ -50404,6 +50977,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5649005975616381334
 GameObject:
   m_ObjectHideFlags: 0
@@ -50609,6 +51194,18 @@ MonoBehaviour:
       - m_Target: {fileID: 4938345095694088107}
         m_TargetAssemblyTypeName: MissionManager, Assembly-CSharp
         m_MethodName: CloseTeleportMission
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -50887,6 +51484,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5711114114381667052
 GameObject:
   m_ObjectHideFlags: 0
@@ -51012,6 +51621,18 @@ MonoBehaviour:
       - m_Target: {fileID: 6253731874471573219}
         m_TargetAssemblyTypeName: Assets.Scripts.School.SchoolManager, Assembly-CSharp
         m_MethodName: OpenTrophyPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -51406,6 +52027,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &5884413499295315928
 GameObject:
@@ -51667,6 +52300,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1231440378412086177}
         m_TargetAssemblyTypeName: SettingManager, Assembly-CSharp
         m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -51987,6 +52632,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -53979,6 +54636,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6149338271127724897
 GameObject:
   m_ObjectHideFlags: 0
@@ -54183,6 +54852,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8033490392318627814}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
         m_MethodName: OnBuyBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -54699,6 +55380,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8521485298459290274}
         m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
         m_MethodName: Open_CreateArenaPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -55478,6 +56171,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6312083400741335267
 GameObject:
   m_ObjectHideFlags: 0
@@ -55592,6 +56297,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
           m_MethodName: SelectedMap_Practice
           m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8901750920649650262}
+          m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+          m_MethodName: PlaySound
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -56825,6 +57542,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6466900616179234476
 GameObject:
   m_ObjectHideFlags: 0
@@ -57618,6 +58347,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6630346382773329251
 GameObject:
   m_ObjectHideFlags: 0
@@ -57827,6 +58568,18 @@ MonoBehaviour:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 2
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8901750920649650262}
+          m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+          m_MethodName: PlaySound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
@@ -62750,6 +63503,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1978983749230606619}
         m_TargetAssemblyTypeName: Assets.Scripts.Shop.BagManager, Assembly-CSharp
         m_MethodName: OnBagBtnClick
@@ -62887,6 +63652,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1978983749230606619}
         m_TargetAssemblyTypeName: Assets.Scripts.Shop.BagManager, Assembly-CSharp
         m_MethodName: OnEquipmentBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -63532,6 +64309,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6915522494684185973
 GameObject:
   m_ObjectHideFlags: 0
@@ -63938,6 +64727,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1978983749230606619}
         m_TargetAssemblyTypeName: Assets.Scripts.Shop.BagManager, Assembly-CSharp
         m_MethodName: OnCloseBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -65067,7 +65868,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3014240298872690538}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6985572146607737728
 GameObject:
   m_ObjectHideFlags: 0
@@ -65551,6 +66364,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: SkillThree
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &7026956546643246641
@@ -67522,7 +68347,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0.5, y: -0.00030517578}
-  m_SizeDelta: {x: 891, y: 0}
+  m_SizeDelta: {x: 891, y: -450}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8853637347253624341
 MonoBehaviour:
@@ -67687,6 +68512,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8521485298459290274}
         m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
         m_MethodName: Enter_PKRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -68212,7 +69049,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7399486620069558251
 RectTransform:
   m_ObjectHideFlags: 0
@@ -69935,6 +70772,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7566832863280807110
 GameObject:
   m_ObjectHideFlags: 0
@@ -70336,6 +71185,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &7606515687959486331
 GameObject:
@@ -70675,6 +71536,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MailBoxManager, Assembly-CSharp
         m_MethodName: Open
@@ -71428,7 +72301,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 815637426837731869}
   m_HandleRect: {fileID: 2256542305285048701}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -71697,6 +72570,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 4938345095694088107}
         m_TargetAssemblyTypeName: MissionManager, Assembly-CSharp
         m_MethodName: LoadProgress
@@ -72457,6 +73342,7 @@ GameObject:
   - component: {fileID: 7778674357601463526}
   - component: {fileID: 8901750920649650262}
   - component: {fileID: 5915097342866184746}
+  - component: {fileID: 6231670898906479631}
   m_Layer: 5
   m_Name: PlayerAllUI
   m_TagString: Untagged
@@ -72629,6 +73515,7 @@ MonoBehaviour:
   UI_ArenaPK: []
   HospitalPanel: {fileID: 4535465306815551369}
   MinimapRaw: {fileID: 544615788122320906}
+  ClickSound: {fileID: 6231670898906479631}
   Ticket: {fileID: 5505086014052434768}
   BackgroundPanel: {fileID: 6853124261614967803}
 --- !u!114 &5915097342866184746
@@ -72651,6 +73538,102 @@ MonoBehaviour:
   ServerName: 
   IsTypingChat: 0
   userID: 
+--- !u!82 &6231670898906479631
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7778674357601463521}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 817e1ab8eeac06f48a3db964e8b2d340, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 4b6a78e0ab3c8af4d905f0ba547046a7, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7778674357646084342
 GameObject:
   m_ObjectHideFlags: 0
@@ -73201,6 +74184,18 @@ MonoBehaviour:
       - m_Target: {fileID: 6253731874471573219}
         m_TargetAssemblyTypeName: Assets.Scripts.School.SchoolManager, Assembly-CSharp
         m_MethodName: Close
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -73913,7 +74908,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.00024414062}
-  m_SizeDelta: {x: 918, y: 0}
+  m_SizeDelta: {x: 918, y: -465}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8191035978400467438
 MonoBehaviour:
@@ -75731,6 +76726,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8330112418360426379
 GameObject:
   m_ObjectHideFlags: 0
@@ -76972,7 +77979,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -318.79, y: 278.5}
-  m_SizeDelta: {x: 637.58, y: 0}
+  m_SizeDelta: {x: 637.58, y: 5}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8330112419795887052
 MonoBehaviour:
@@ -78102,6 +79109,18 @@ MonoBehaviour:
       - m_Target: {fileID: 5369651662851577991}
         m_TargetAssemblyTypeName: InviteManager, Assembly-CSharp
         m_MethodName: CloseReceiveInvitePopup
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -79242,6 +80261,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 4938345095694088107}
         m_TargetAssemblyTypeName: MissionManager, Assembly-CSharp
         m_MethodName: Close
@@ -81130,6 +82161,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 8901750920649650262}
+          m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+          m_MethodName: PlaySound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8896690991117874731
 GameObject:
   m_ObjectHideFlags: 0
@@ -81819,6 +82862,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8974079776615041493
 GameObject:
   m_ObjectHideFlags: 0
@@ -82344,7 +83399,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 928330254160114641}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &9101890495205784629
 GameObject:
   m_ObjectHideFlags: 0
@@ -82685,7 +83752,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2751191749919711048}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &9119577038438423887
 GameObject:
   m_ObjectHideFlags: 0
@@ -83294,6 +84373,18 @@ MonoBehaviour:
       - m_Target: {fileID: 8521485298459290274}
         m_TargetAssemblyTypeName: ArenaManager, Assembly-CSharp
         m_MethodName: Close_CreatePKPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8901750920649650262}
+        m_TargetAssemblyTypeName: Player_AllUIManagement, Assembly-CSharp
+        m_MethodName: PlaySound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
