@@ -288,6 +288,7 @@ public class Player_AllUIManagement : MonoBehaviour
         }
         MinimapRaw.texture = Game_Manager.Instance.MinimapRaw;
         Ticket.SetActive(References.accountRefer.HasTicket);
+        AudioManager.Instance.LoadCustomSound();
         if (Player != null)
         {
             SetUp_SetUpPlayer(player.SkillOne_Entity, SkillOne_Image, SkillOne_CostChakra, SkillOne_KeyCode, "SkillOne");

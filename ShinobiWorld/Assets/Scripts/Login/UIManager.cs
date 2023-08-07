@@ -49,6 +49,14 @@ public class UIManager : MonoBehaviour
     [Header("Wifi")]
     public GameObject LostWifiPanel;
 
+
+    public AudioSource audioSource;
+
+    public void PlaySound()
+    {
+        audioSource.Play();
+    }
+
     private void Awake()
     {
         CreateInstance();
