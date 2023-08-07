@@ -61,6 +61,8 @@ public class AudioManager : MonoBehaviour
         MusicValue = CustomSetting_DAO.GetAccountCustomSettingBySettingID(References.accountRefer.ID, "Music_Background").Value;
         SoundValue = CustomSetting_DAO.GetAccountCustomSettingBySettingID(References.accountRefer.ID, "Music_Effects").Value;
 
+        MusicStatus = MusicValue == "1" ? true : false;
+        SoundStatus = SoundValue == "1" ? true : false;
         MusicCheckBox.isOn = MusicValue == "1" ? true : false;
         SoundCheckBox.isOn = SoundValue == "1" ? true : false;
     }

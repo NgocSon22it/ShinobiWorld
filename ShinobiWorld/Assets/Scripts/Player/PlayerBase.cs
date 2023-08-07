@@ -102,13 +102,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] protected AudioSource Sound_NormalAttack_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillOne;
-    [SerializeField] protected AudioSource Sound_SkillOne_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillTwo;
-    [SerializeField] protected AudioSource Sound_SkillTwo_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillThree;
-    [SerializeField] protected AudioSource Sound_SkillThree_Hit;
 
     [Header("Player Layout")]
     [Header("Skin")]
@@ -179,43 +176,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         Sound_SkillOne.Play();
     }
-    public void PlaySound_SkillOne_Hit()
-    {
-        Sound_SkillOne_Hit.Play();
-    }
     public void PlaySound_SkillTwo()
     {
         Sound_SkillTwo.Play();
-    }
-    public void PlaySound_SkillTwo_Hit()
-    {
-        Sound_SkillTwo_Hit.Play();
-
     }
     public void PlaySound_SkillThree()
     {
         Sound_SkillThree.Play();
 
     }
-    public void PlaySound_SkillThree_Hit()
-    {
-        Sound_SkillThree_Hit.Play();
-    }
-
-    public void StopSound_NormalAttack()
-    {
-        Sound_NormalAttack.Stop();
-    }
-    public void StopSound_SkillOne()
-    {
-        Sound_SkillOne.Stop();
-    }
-
-    public void StopSound_SkillTwo()
-    {
-        Sound_SkillTwo.Stop();
-    }
-
     public void CallInvoke()
     {
         InvokeRepeating(nameof(RegenHealth), 1f, 1f);

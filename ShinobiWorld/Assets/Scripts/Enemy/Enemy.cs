@@ -63,6 +63,8 @@ public class Enemy : MonoBehaviourPun, IPunObservable
 
     [SerializeField] GameObject DeathEffect;
 
+    [SerializeField] protected AudioSource NormalAttack;
+
     // Skill Direction
     public Vector2 direction;
 
@@ -82,6 +84,11 @@ public class Enemy : MonoBehaviourPun, IPunObservable
     // Lag Reduce
     protected Vector3 networkPosition;
     protected float lerpFactor = 3f;
+
+    public void PlayerSoundNormalAttack()
+    {
+        NormalAttack.Play();
+    }
 
     public void SetUp(string EnemyID, string AreaID)
     {
