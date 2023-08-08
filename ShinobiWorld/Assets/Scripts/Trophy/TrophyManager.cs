@@ -70,17 +70,26 @@ public class TrophyManager : MonoBehaviourPunCallbacks
             MessageTxt.text = Message.TrophyUpgradeError.ToString();
         }
 
-        RegisterUpgradeBtn.interactable = check;
+        if (References.accountRefer.HasTicket)
+        {
+            check = false;
+            MessageTxt.text = Message.TrophyUpgradeAlready.ToString();
+        }
 
+        RegisterUpgradeBtn.interactable = check;
+        
     }
 
     public void RegisterUpgradeTrophy()
     {
-        References.AddCoin((-1)* NextTrophy.Cost);
-        Account_DAO.UpgradeTrophyRegister(References.accountRefer.ID, true);
-        References.LoadAccount();
-        Player_AllUIManagement.Instance.Ticket.SetActive(References.accountRefer.HasTicket);
-        Close();
+        if (References.accountRefer.HasTicket == false)
+        {
+            References.AddCoin((-1) * NextTrophy.Cost);
+            Account_DAO.UpgradeTrophyRegister(References.accountRefer.ID, true);
+            References.LoadAccount();
+            Player_AllUIManagement.Instance.Ticket.SetActive(References.accountRefer.HasTicket);
+            Close();
+        }
     }
 
     public void GetNewTrophy()
