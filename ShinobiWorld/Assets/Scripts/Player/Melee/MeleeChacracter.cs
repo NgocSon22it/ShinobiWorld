@@ -20,7 +20,7 @@ public class MeleeChacracter : PlayerBase
     new void Start()
     {
         base.Start();
-
+        SpeedFix = 1;
     }
 
     // Update is called once per frame

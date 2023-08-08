@@ -105,6 +105,8 @@ public static class References
     public static int SaveCurrentHealth;
     public static int SaveCurrentChakra;
 
+    //Invite
+    public static List<string> ListPrivateMessage = new List<string>();
 
     public static void InitSaveValue()
     {

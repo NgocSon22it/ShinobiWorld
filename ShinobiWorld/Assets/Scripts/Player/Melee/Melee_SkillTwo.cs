@@ -11,13 +11,13 @@ public class Melee_SkillTwo : PlayerSkill
     [SerializeField] Collider2D collider2;
     [SerializeField] Transform PlayerTransform;
 
-    float DamageSeconds = 0.2f;
+    float DamageSeconds = 0.5f;
     Coroutine FlyCoroutine;
 
 
     new void OnEnable()
     {
-        LifeTime = 5f;
+        LifeTime = 3f;
         FlyCoroutine = StartCoroutine(LogTriggeredObjects());
         base.OnEnable();
     }
@@ -32,7 +32,6 @@ public class Melee_SkillTwo : PlayerSkill
     {
         base.OnDisable();
         StopCoroutine(FlyCoroutine);
-        player_Pool.gameObject.GetComponent<PlayerBase>().StopSound_SkillTwo();
     }
 
     private IEnumerator LogTriggeredObjects()
@@ -49,7 +48,7 @@ public class Melee_SkillTwo : PlayerSkill
                 {
                     if (collider.CompareTag("Enemy") || collider.gameObject.tag == "Clone")
                     {
-                        collider.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage * 10);
+                        collider.GetComponent<Enemy>().TakeDamage(PV.ViewID, Damage);
                     }                 
                 }
                 if (collider.CompareTag("Player")

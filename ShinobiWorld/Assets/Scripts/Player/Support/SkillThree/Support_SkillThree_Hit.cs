@@ -7,7 +7,6 @@ public class Support_SkillThree_Hit : PlayerSkill
     new void OnEnable()
     {
         LifeTime = 1f;
-        player_Pool.gameObject.GetComponent<PlayerBase>().PlaySound_SkillThree_Hit();
         base.OnEnable();
     }
 

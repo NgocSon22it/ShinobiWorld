@@ -96,19 +96,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
     bool FacingRight = true;
+    public int SpeedFix;
 
     [Header("Player Audio Source")]
     [SerializeField] protected AudioSource Sound_NormalAttack;
     [SerializeField] protected AudioSource Sound_NormalAttack_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillOne;
-    [SerializeField] protected AudioSource Sound_SkillOne_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillTwo;
-    [SerializeField] protected AudioSource Sound_SkillTwo_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillThree;
-    [SerializeField] protected AudioSource Sound_SkillThree_Hit;
 
     [Header("Player Layout")]
     [Header("Skin")]
@@ -179,43 +177,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         Sound_SkillOne.Play();
     }
-    public void PlaySound_SkillOne_Hit()
-    {
-        Sound_SkillOne_Hit.Play();
-    }
     public void PlaySound_SkillTwo()
     {
         Sound_SkillTwo.Play();
-    }
-    public void PlaySound_SkillTwo_Hit()
-    {
-        Sound_SkillTwo_Hit.Play();
-
     }
     public void PlaySound_SkillThree()
     {
         Sound_SkillThree.Play();
 
     }
-    public void PlaySound_SkillThree_Hit()
-    {
-        Sound_SkillThree_Hit.Play();
-    }
-
-    public void StopSound_NormalAttack()
-    {
-        Sound_NormalAttack.Stop();
-    }
-    public void StopSound_SkillOne()
-    {
-        Sound_SkillOne.Stop();
-    }
-
-    public void StopSound_SkillTwo()
-    {
-        Sound_SkillTwo.Stop();
-    }
-
     public void CallInvoke()
     {
         InvokeRepeating(nameof(RegenHealth), 1f, 1f);
@@ -280,7 +250,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance = Instantiate(PlayerAllUIPrefabs);
 
                 PlayerHealthChakraUI.SetActive(false);
+                ChatManager.Instance.ConnectToChat(References.ChatServer);
+                PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
                 PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
+                
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
@@ -418,8 +391,10 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             if (Input.GetKeyDown(KeyCode.Y))
             {
-                Debug.Log(References.bossArenaType);
+                PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
+
             }
+
             if (!CanWalking)
             {
                 MoveDirection = Vector2.zero;
@@ -507,7 +482,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Walk()
     {
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
-        transform.Translate(Movement * (AccountEntity.Speed + SpeedBonus) * Time.fixedDeltaTime);
+        transform.Translate(Movement * (AccountEntity.Speed + SpeedBonus + SpeedFix) * Time.fixedDeltaTime);
 
         if (Movement.x > 0 && !FacingRight)
         {
@@ -768,6 +743,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Destroy(ObjectPool_Runtime);
         }
+        
+
     }
 
     [PunRPC]

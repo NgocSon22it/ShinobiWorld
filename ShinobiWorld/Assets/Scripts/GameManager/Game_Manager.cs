@@ -235,7 +235,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     IEnumerator SpawnEnemy(string AreaID, string EnemyID, int ViewID, Coroutine SpawnEnemyCoroutine)
     {
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(60f);
         gameObject.SetActive(true);
         if (PhotonNetwork.IsConnected)
         {

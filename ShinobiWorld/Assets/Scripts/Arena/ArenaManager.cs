@@ -161,6 +161,7 @@ public class ArenaManager : MonoBehaviour
             {
                 PhotonNetwork.LeaveRoom();
             }
+            ChatManager.Instance.DisconnectFromChat();
             References.IsInvite = false;
             PhotonNetwork.IsMessageQueueRunning = false;
             PhotonNetwork.LoadLevel(References.MapInvite);
