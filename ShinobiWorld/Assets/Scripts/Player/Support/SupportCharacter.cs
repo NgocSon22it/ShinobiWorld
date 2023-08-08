@@ -16,13 +16,14 @@ public class SupportCharacter : PlayerBase
     //Skill Two
     float Blessing_Time = 7f;
     private Coroutine Blessing;
-    int Blessing_SpeedBonus = 3;
+    int Blessing_SpeedBonus = 1;
     int Blessing_HealthBonus = 200;
     [SerializeField] GameObject BlessingEffect;
 
     new void Start()
     {
         base.Start();
+        SpeedFix = 1;
     }
 
     // Update is called once per frame
