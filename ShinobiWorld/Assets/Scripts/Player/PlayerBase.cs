@@ -200,7 +200,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void SetUpAccountData()
     {
-        PlayerNickName.text = photonView.Owner.NickName;
+        PlayerNickName.text = AccountEntity.Name;
         LoadLayout();
         LoadAllAccountUI();
         if (AccountEntity.IsDead && photonView.IsMine)
