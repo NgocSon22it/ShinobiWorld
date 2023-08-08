@@ -1,10 +1,11 @@
-using Assets.Scripts.Database.DAO;
+﻿using Assets.Scripts.Database.DAO;
 using Assets.Scripts.Database.Entity;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Portal_Manager : MonoBehaviour
 {
@@ -12,8 +13,8 @@ public class Portal_Manager : MonoBehaviour
 
     public TMP_Dropdown Teleport_DropDown;
     public string SelectedArea;
-    public List<string> listArea = new List<string>();
     public static Portal_Manager Instance;
+    public List<string>  ListArea = new List<string>();
 
     private void Awake()
     {
@@ -35,17 +36,18 @@ public class Portal_Manager : MonoBehaviour
 
     public void InitDropdown()
     {
-        listArea.Clear();
-        foreach (string area in References.AllScenes)
+        ListArea.Clear();
+        
+        foreach (string area in References.ListAllArea.Keys)
         {
-            if (!area.Equals(Game_Manager.Instance.currentAreaName.ToString()))
+            if (!References.ListAllArea[area].Equals(Game_Manager.Instance.currentAreaName))
             {
-                listArea.Add(area);
+                ListArea.Add(area);
             }
         }
 
         Teleport_DropDown.ClearOptions();
-        Teleport_DropDown.AddOptions(listArea);
+        Teleport_DropDown.AddOptions(ListArea);
 
         if (Teleport_DropDown.options.Count > 0)
         {
@@ -55,10 +57,10 @@ public class Portal_Manager : MonoBehaviour
     }
     public void OnDropdownValueChanged(int index)
     {
-        if (index >= 0 && index < listArea.Count)
-        {
-            SelectedArea = listArea[index];
-        }
+        string selectedAreaName = Teleport_DropDown.options[index].text;
+        CurrentAreaName selectedAreaValue = References.ListAllArea[selectedAreaName];
+
+        SelectedArea = selectedAreaValue.ToString();
     }
 
     public void TeleportToSelectArea()
