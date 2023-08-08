@@ -141,8 +141,8 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (photonEvent.Code == BattleEnd_DrawEventCode)
         {
             sortCanvas.sortingOrder = 31;
-            References.AddCoin(CurrentBet + (CurrentBet * 80 / 100));
-            CoinDraw_txt.text = CurrentBet.ToString();
+            References.AddCoin(CurrentBet - (CurrentBet * 20 / 100));
+            CoinDraw_txt.text = (CurrentBet - (CurrentBet * 20 / 100)).ToString();
             Battle_Fight_CountdownTxt.text = "00:00";
             WinSound.Play();
             Draw_Panel.SetActive(true);
