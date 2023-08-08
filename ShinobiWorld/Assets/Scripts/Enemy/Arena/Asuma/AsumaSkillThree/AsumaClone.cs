@@ -80,7 +80,7 @@ public class AsumaClone : Enemy
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUp(100);
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
-                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 5);
+                SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
                 SetUpSkilling(3f);
             }
         }
