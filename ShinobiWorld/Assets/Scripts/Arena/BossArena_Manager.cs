@@ -69,6 +69,10 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject LostConnectPrefabs;
     GameObject LostConnectInstance;
 
+    [Header("Sound")]
+    [SerializeField] AudioSource WinSound;
+    [SerializeField] AudioSource LoseSound;
+
     public static BossArena_Manager Instance;
 
     private void Start()
@@ -451,10 +455,12 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 bool IsWin = (bool)Win;
                 if (IsWin)
                 {
+                    WinSound.Play();
                     Battle_End_Text.text = "Thắng";
                 }
                 else
                 {
+                    LoseSound.Play();
                     Battle_End_Text.text = "Thua";
                 }
                 CheckOfficial_Practice(IsWin);
