@@ -96,6 +96,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
     bool FacingRight = true;
+    public int SpeedFix;
 
     [Header("Player Audio Source")]
     [SerializeField] protected AudioSource Sound_NormalAttack;
@@ -199,7 +200,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void SetUpAccountData()
     {
-        PlayerNickName.text = photonView.Owner.NickName;
+        PlayerNickName.text = AccountEntity.Name;
         LoadLayout();
         LoadAllAccountUI();
         if (AccountEntity.IsDead && photonView.IsMine)
@@ -481,7 +482,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Walk()
     {
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
-        transform.Translate(Movement * (AccountEntity.Speed + SpeedBonus) * Time.fixedDeltaTime);
+        transform.Translate(Movement * (AccountEntity.Speed + SpeedBonus + SpeedFix) * Time.fixedDeltaTime);
 
         if (Movement.x > 0 && !FacingRight)
         {

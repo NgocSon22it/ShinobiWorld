@@ -7,7 +7,6 @@ using UnityEngine.LowLevel;
 
 public class Iruka : Enemy
 {
-
     Coroutine AttackCoroutine;
     bool IsStartCoroutine;
     [SerializeField] AIPath aIPath;
@@ -30,13 +29,16 @@ public class Iruka : Enemy
     new void Start()
     {
         base.Start();
-        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Iruka")).Health;
-        CurrentHealth = boss_Health;
+        SetUpHealth();
         Target = FindClostestTargetToFollow(detectionRadius, "Player");
         destinationSetter.target = Target.transform;
         LoadHealthUI(CurrentHealth, boss_Health);
     }
-
+    public void SetUpHealth()
+    {
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Iruka")).Health * BossArena_Manager.Instance.GetNumberPlayer();
+        CurrentHealth = boss_Health;
+    }
     new void FixedUpdate()
     {
         if (!photonView.IsMine)
