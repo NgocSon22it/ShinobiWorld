@@ -95,9 +95,6 @@ public class Player_AllUIManagement : MonoBehaviour
     [Header("Minimap")]
     [SerializeField] RawImage MinimapRaw;
 
-    [Header("Sound")]
-    [SerializeField] AudioSource ClickSound;
-
     [Header("UpdateTrophy")]
     public GameObject Ticket;
 
@@ -123,11 +120,6 @@ public class Player_AllUIManagement : MonoBehaviour
             SetUp_LoadKey(2, "SkillThree");
         }
 
-    }
-
-    public void PlaySound()
-    {
-        ClickSound.Play();
     }
 
     public void OpenCustomKeyPanel()

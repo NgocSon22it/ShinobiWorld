@@ -52,7 +52,7 @@ public class Message
     public static string OpenHouse = "Bấm phím O để mở ";
 
     public static string TrophyUpgradeError = "Bạn không đủ điều kiện để nâng cấp danh hiệu";
-    public static string TrophyUpgradeAlready = "Bạn đã đăng kí rồi";
+    public static string TrophyUpgradeAlready = "Bạn đã đăng ký nâng cấp danh hiệu";
 
     public static string BossAreaMessage = "mời bạn cùng tham chiến với boss";
     public static string PKMessage = "muốn đấu tay đôi với bạn với mức cược là";
