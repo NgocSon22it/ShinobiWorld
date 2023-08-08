@@ -142,7 +142,7 @@ public class Skill_Manager : MonoBehaviour
 
             DamageBonus = Convert.ToInt32(HasSkill.Damage * (1 + References.Uppercent_Skill_Damage / 100f));
             CooldownBonus = (HasSkill.Cooldown * (1 - References.Uppercent_Skill_CoolDown / 100f));
-            ChakraBonus = Convert.ToInt32((HasSkill.Chakra * (1 - References.Uppercent_Skill_Chakra / 100f)));
+            ChakraBonus = Convert.ToInt32((HasSkill.Chakra * (1 + References.Uppercent_Skill_Chakra / 100f)));
             
             Upgrade_NextDamageTxt.text = DamageBonus.ToString("F2");
             Upgrade_NextCooldownTxt.text = CooldownBonus.ToString("F2");
