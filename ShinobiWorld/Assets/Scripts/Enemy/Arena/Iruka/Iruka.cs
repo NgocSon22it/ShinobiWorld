@@ -87,7 +87,7 @@ public class Iruka : Enemy
             if (SkillOne != null)
             {
                 SkillOne.transform.position = transform.Find("FirePoint").position;
-                SkillOne.GetComponent<Iruka_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Iruka_SkillOne>().SetUp(196);
                 SkillOne.GetComponent<Iruka_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
@@ -181,7 +181,7 @@ public class Iruka : Enemy
         if (SkillOne != null)
         {
             SkillOne.transform.position = TargetPosition;
-            SkillOne.GetComponent<Iruka_SkillTwo>().SetUp(100);
+            SkillOne.GetComponent<Iruka_SkillTwo>().SetUp(215);
             SkillOne.SetActive(true);
 
         }
@@ -211,7 +211,7 @@ public class Iruka : Enemy
         {
             center.transform.position = transform.Find("FirePoint").position;
             center.transform.rotation = transform.rotation;
-            center.GetComponent<Iruka_SkillThree>().SetUp(100);
+            center.GetComponent<Iruka_SkillThree>().SetUp(155);
             center.GetComponent<Iruka_SkillThree>().SetUpDirection(direction, -90);
             center.SetActive(true);
             center.GetComponent<Rigidbody2D>().velocity = direction * 10;
@@ -222,7 +222,7 @@ public class Iruka : Enemy
         {
             left.transform.position = transform.Find("FirePoint").position;
             left.transform.rotation = transform.rotation;
-            left.GetComponent<Iruka_SkillThree>().SetUp(100);
+            left.GetComponent<Iruka_SkillThree>().SetUp(155);
             left.GetComponent<Iruka_SkillThree>().SetUpDirection(direction, -90 - Angle);
             left.SetActive(true);
             left.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(-Angle, Vector3.forward) * center.GetComponent<Rigidbody2D>().velocity;
@@ -233,7 +233,7 @@ public class Iruka : Enemy
         {
             right.transform.position = transform.Find("FirePoint").position;
             right.transform.rotation = transform.rotation;
-            right.GetComponent<Iruka_SkillThree>().SetUp(100);
+            right.GetComponent<Iruka_SkillThree>().SetUp(155);
             right.GetComponent<Iruka_SkillThree>().SetUpDirection(direction, -90 + Angle);
             right.SetActive(true);
             right.GetComponent<Rigidbody2D>().velocity = Quaternion.AngleAxis(Angle, Vector3.forward) * center.GetComponent<Rigidbody2D>().velocity;

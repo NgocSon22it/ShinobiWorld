@@ -77,7 +77,7 @@ public class AsumaClone : Enemy
             if (SkillOne != null)
             {
                 SkillOne.transform.position = transform.Find("MainPoint").position;
-                SkillOne.GetComponent<Asuma_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Asuma_SkillOne>().SetUp(350);
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
@@ -128,7 +128,7 @@ public class AsumaClone : Enemy
         if (SkillTwo != null)
         {
 
-            SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(30);
+            SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(300);
             SkillTwo.transform.position = TargetPosition;
             SkillTwo.SetActive(true);
         }
