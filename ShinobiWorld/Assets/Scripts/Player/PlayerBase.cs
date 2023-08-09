@@ -479,7 +479,9 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     public void Dead()
-    {      
+    {
+        AccountEntity.IsDead = true;
+        References.accountRefer.IsDead = true;
         OffInvoke();
         CancelInvoke(nameof(RegenStrength));
         photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
