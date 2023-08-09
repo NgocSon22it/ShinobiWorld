@@ -57,7 +57,6 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [Header("Room Value")]
     [SerializeField] MapType mapType;
-    BossArenaType arenaType;
     string BossName;
     RoomOptions roomOptions = new RoomOptions();
     PlayerBase[] players;
@@ -69,6 +68,10 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [Header("LostConnect")]
     [SerializeField] GameObject LostConnectPrefabs;
     GameObject LostConnectInstance;
+
+    [Header("Sound")]
+    [SerializeField] AudioSource WinSound;
+    [SerializeField] AudioSource LoseSound;
 
     public static BossArena_Manager Instance;
 
@@ -84,6 +87,13 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         Instance = this;
     }
 
+    public int GetNumberPlayer()
+    {
+        players = FindObjectsOfType<PlayerBase>();
+        return players.Length;
+    }
+    
+
     public override void OnJoinedRoom()
     {
         References.ChatServer = PhotonNetwork.CurrentRoom.Name;
@@ -93,7 +103,6 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         References.RoomNameInvite = PhotonNetwork.CurrentRoom.Name;
 
         SetUp_BossName();
-        SetUp_ArenaType();
 
         Game_Manager.Instance.SetupPlayer(SpawnPoint.position, CameraBox, AccountStatus.WaitingRoom);
         LoadingInstance.GetComponent<Loading>().End();
@@ -118,22 +127,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
             BossPool = ListBossPool.Find(obj => obj.gameObject.name == BossName + "Pool");
         }
     }
-    public void SetUp_ArenaType()
-    {
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("IsOfficial"))
-        {
-            bool IsOfficial = (bool)PhotonNetwork.CurrentRoom.CustomProperties["IsOfficial"];
-            if (IsOfficial)
-            {
-                arenaType = BossArenaType.Official;
-            }
-            else
-            {
-                arenaType = BossArenaType.Practice;
-            }
 
-        }
-    }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         JoinRoomFailedInstance = Instantiate(JoinRoomFailedPrefabs);
@@ -461,10 +455,12 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 bool IsWin = (bool)Win;
                 if (IsWin)
                 {
+                    WinSound.Play();
                     Battle_End_Text.text = "Thắng";
                 }
                 else
                 {
+                    LoseSound.Play();
                     Battle_End_Text.text = "Thua";
                 }
                 CheckOfficial_Practice(IsWin);

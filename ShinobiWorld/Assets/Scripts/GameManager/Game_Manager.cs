@@ -136,7 +136,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void ReloadPlayerProperties()
     {
         if (References.accountRefer.CurrentHealth <= 0) References.accountRefer.IsDead = true;
-        References.UpdateAccountToDB();
+        if (!References.IsFirstLogin) References.UpdateAccountToDB();
         References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
 
@@ -235,7 +235,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     IEnumerator SpawnEnemy(string AreaID, string EnemyID, int ViewID, Coroutine SpawnEnemyCoroutine)
     {
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(60f);
         gameObject.SetActive(true);
         if (PhotonNetwork.IsConnected)
         {

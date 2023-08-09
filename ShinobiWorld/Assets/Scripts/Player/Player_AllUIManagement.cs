@@ -95,7 +95,6 @@ public class Player_AllUIManagement : MonoBehaviour
     [Header("Minimap")]
     [SerializeField] RawImage MinimapRaw;
 
-
     [Header("UpdateTrophy")]
     public GameObject Ticket;
 

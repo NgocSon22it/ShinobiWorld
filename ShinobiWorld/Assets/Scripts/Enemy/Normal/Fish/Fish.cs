@@ -78,7 +78,7 @@ public class Fish : Enemy
             if (SkillOne != null)
             {
                 SkillOne.transform.position = TargetPosition;
-                SkillOne.GetComponent<Fish_Attack>().SetUp(100);
+                SkillOne.GetComponent<Fish_Attack>().SetUp(300);
                 SkillOne.GetComponent<Fish_Attack>().SetUpPoint(FirePoint.position, TargetPosition);
                 SkillOne.SetActive(true);
             }

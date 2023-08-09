@@ -33,13 +33,16 @@ public class Kakashi : Enemy
     new void Start()
     {
         base.Start();
-        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Kakashi")).Health;
-        CurrentHealth = boss_Health;
+        SetUpHealth();
         Target = FindClostestTargetToFollow(detectionRadius, "Player");
         destinationSetter.target = Target.transform;
         LoadHealthUI(CurrentHealth, boss_Health);
     }
-
+    public void SetUpHealth()
+    {
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Kakashi")).Health * BossArena_Manager.Instance.GetNumberPlayer();
+        CurrentHealth = boss_Health;
+    }
     new void FixedUpdate()
     {
         if (!photonView.IsMine)
@@ -88,7 +91,7 @@ public class Kakashi : Enemy
             if (SkillOne != null)
             {
                 SkillOne.transform.position = transform.Find("FirePoint").position;
-                SkillOne.GetComponent<Kakashi_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Kakashi_SkillOne>().SetUp(550);
                 SkillOne.GetComponent<Kakashi_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
@@ -142,7 +145,7 @@ public class Kakashi : Enemy
     IEnumerator Chidori()
     {
         isDashing = true;
-        ChidoriPrefabs.GetComponent<Kakashi_SkillThree>().SetUp(100);
+        ChidoriPrefabs.GetComponent<Kakashi_SkillThree>().SetUp(500);
         ChidoriPrefabs.SetActive(true);
         dashTimer = 0f;
 
@@ -170,7 +173,7 @@ public class Kakashi : Enemy
         GameObject SkillTwo = GetElectric();
         if (SkillTwo != null)
         {
-            SkillTwo.GetComponent<Kakashi_SkillTwo_Electric>().SetUp(100);
+            SkillTwo.GetComponent<Kakashi_SkillTwo_Electric>().SetUp(500);
             SkillTwo.transform.position = TargetPosition;
             SkillTwo.SetActive(true);
         }

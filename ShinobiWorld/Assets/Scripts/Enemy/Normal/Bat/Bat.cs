@@ -76,7 +76,7 @@ public class Bat : Enemy
             if (SkillOne != null)
             {
                 SkillOne.transform.position = TargetPosition;
-                SkillOne.GetComponent<Bat_Attack>().SetUp(100);
+                SkillOne.GetComponent<Bat_Attack>().SetUp(300);
                 SkillOne.GetComponent<Bat_Attack>().SetUpPoint(FirePoint.position, TargetPosition);
                 SkillOne.SetActive(true);
             }

@@ -96,19 +96,17 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] Vector2 MoveDirection;
     Vector3 Movement;
     bool FacingRight = true;
+    public int SpeedFix;
 
     [Header("Player Audio Source")]
     [SerializeField] protected AudioSource Sound_NormalAttack;
     [SerializeField] protected AudioSource Sound_NormalAttack_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillOne;
-    [SerializeField] protected AudioSource Sound_SkillOne_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillTwo;
-    [SerializeField] protected AudioSource Sound_SkillTwo_Hit;
 
     [SerializeField] protected AudioSource Sound_SkillThree;
-    [SerializeField] protected AudioSource Sound_SkillThree_Hit;
 
     [Header("Player Layout")]
     [Header("Skin")]
@@ -179,43 +177,15 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         Sound_SkillOne.Play();
     }
-    public void PlaySound_SkillOne_Hit()
-    {
-        Sound_SkillOne_Hit.Play();
-    }
     public void PlaySound_SkillTwo()
     {
         Sound_SkillTwo.Play();
-    }
-    public void PlaySound_SkillTwo_Hit()
-    {
-        Sound_SkillTwo_Hit.Play();
-
     }
     public void PlaySound_SkillThree()
     {
         Sound_SkillThree.Play();
 
     }
-    public void PlaySound_SkillThree_Hit()
-    {
-        Sound_SkillThree_Hit.Play();
-    }
-
-    public void StopSound_NormalAttack()
-    {
-        Sound_NormalAttack.Stop();
-    }
-    public void StopSound_SkillOne()
-    {
-        Sound_SkillOne.Stop();
-    }
-
-    public void StopSound_SkillTwo()
-    {
-        Sound_SkillTwo.Stop();
-    }
-
     public void CallInvoke()
     {
         InvokeRepeating(nameof(RegenHealth), 1f, 1f);
@@ -230,13 +200,13 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void SetUpAccountData()
     {
-        PlayerNickName.text = photonView.Owner.NickName;
+        PlayerNickName.text = AccountEntity.Name;
         LoadLayout();
         LoadAllAccountUI();
         if (AccountEntity.IsDead && photonView.IsMine)
         {
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(AccountEntity.TimeRespawn);
             Dead();
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(AccountEntity.TimeRespawn);
         }
     }
 
@@ -283,7 +253,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 ChatManager.Instance.ConnectToChat(References.ChatServer);
                 PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
                 PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
-                
+
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
@@ -418,7 +388,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
-
+            if (AccountEntity.IsDead == true) return;
             if (Input.GetKeyDown(KeyCode.Y))
             {
                 PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
@@ -443,6 +413,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
+            if (AccountEntity.IsDead == true) return;
             Walk();
         }
         else
@@ -464,17 +435,27 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             AccountEntity.CurrentHealth -= Damage;
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
 
+            if (AccountEntity.CurrentHealth < 0)
+            {
+                AccountEntity.CurrentHealth = 0;
+                References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
+            }
             switch (accountStatus)
             {
                 case AccountStatus.Normal:
+                    if (AccountEntity.CurrentHealth <= 0)
+                    {
+                        References.accountRefer.TimeRespawn = References.RespawnTime;
+                        References.accountRefer.IsDead = true;
+                    }
                     Game_Manager.Instance.ReloadPlayerProperties();
                     break;
-
                 case AccountStatus.Arena:
 
                     if (AccountEntity.CurrentHealth <= 0)
                     {
                         BossArena_Manager.Instance.CheckPlayerDead();
+                        Dead();
                     }
 
                     break;
@@ -483,11 +464,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                     if (AccountEntity.CurrentHealth <= 0)
                     {
                         PK_Manager.Instance.CheckPlayerDead();
+                        Dead();
                     }
                     break;
             }
 
-            if (AccountEntity.CurrentHealth <= 0) Dead();
 
             LoadPlayerHealthUI();
 
@@ -498,11 +479,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     public void Dead()
-    {
-        AccountEntity.CurrentHealth = 0;
-        References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
-        References.accountRefer.IsDead = true;
-        References.accountRefer.TimeRespawn = References.RespawnTime;
+    {      
         OffInvoke();
         CancelInvoke(nameof(RegenStrength));
         photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
@@ -512,7 +489,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     public void Walk()
     {
         Movement = new Vector3(MoveDirection.x, MoveDirection.y, 0f);
-        transform.Translate(Movement * (AccountEntity.Speed + SpeedBonus) * Time.fixedDeltaTime);
+        transform.Translate(Movement * (AccountEntity.Speed + SpeedBonus + SpeedFix) * Time.fixedDeltaTime);
 
         if (Movement.x > 0 && !FacingRight)
         {
@@ -773,7 +750,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Destroy(ObjectPool_Runtime);
         }
-        
+
 
     }
 
@@ -782,7 +759,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Die");
         playerCollider.enabled = false;
-        this.enabled = false;
+        //this.enabled = false;
     }
 
     [PunRPC]
@@ -790,7 +767,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Live");
         playerCollider.enabled = true;
-        this.enabled = true;
+        //this.enabled = true;
     }
 
     public void CallRpcPlayerLive()

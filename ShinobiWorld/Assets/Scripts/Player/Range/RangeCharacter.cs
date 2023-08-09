@@ -21,12 +21,12 @@ public class RangeCharacter : PlayerBase
     float Hunter_Time = 10f;
     private Coroutine Hunter;
     int Hunter_DamageBonus = 70;
-    int Hunter_SpeedBonus = 5;
+    int Hunter_SpeedBonus = 4;
 
 
     new void Start()
     {
-        base.Start();
+        base.Start(); 
     }
 
     // Update is called once per frame

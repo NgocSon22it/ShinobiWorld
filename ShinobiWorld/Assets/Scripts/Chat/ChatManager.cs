@@ -91,8 +91,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
                 ChatDisPlay.text += "\n " + disPlayer;
             }
-
-
         }
 
     }

@@ -26,11 +26,16 @@ public class Asuma : Enemy
     new void Start()
     {
         base.Start();
-        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health;
-        CurrentHealth = boss_Health;
+        SetUpHealth();
         Target = FindClostestTargetToFollow(detectionRadius, "Player");      
         destinationSetter.target = Target.transform;
         LoadHealthUI(CurrentHealth, boss_Health);
+    }
+
+    public void SetUpHealth()
+    {
+        boss_Health = References.listTrophy.Find(obj => obj.BossID.Equals("Boss_Asuma")).Health * BossArena_Manager.Instance.GetNumberPlayer();
+        CurrentHealth = boss_Health;
     }
 
     new void FixedUpdate()
@@ -81,7 +86,7 @@ public class Asuma : Enemy
             if (SkillOne != null)
             {
                 SkillOne.transform.position = transform.Find("MainPoint").position;
-                SkillOne.GetComponent<Asuma_SkillOne>().SetUp(100);
+                SkillOne.GetComponent<Asuma_SkillOne>().SetUp(350);
                 SkillOne.GetComponent<Asuma_SkillOne>().SetUpDirection(direction);
                 SkillOne.SetActive(true);
                 SkillOne.GetComponent<Rigidbody2D>().velocity = (direction * 10);
@@ -177,7 +182,7 @@ public class Asuma : Enemy
         GameObject SkillTwo = boss_Pool.GetSkillTwoFromPool();
         if (SkillTwo != null)
         {
-            SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(30);
+            SkillTwo.GetComponent<Asuma_SkillTwo>().SetUp(300);
             SkillTwo.transform.position = TargetPosition;
             SkillTwo.SetActive(true);
         }

@@ -84,6 +84,7 @@ public static class References
     public static string TeleTickerID = "Item_Tele";
 
     public static bool IsDead;
+    public static bool IsFirstLogin;
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 
@@ -155,16 +156,24 @@ public static class References
                                                             {"Background/TopNone", new Color32(190, 160, 120, 255)},
                                                          };
 
-    public static List<string> AllScenes = new List<string>() { "Iwa", "Kiri", "Konoha", "Kumo", "Suna" };
 
     public static IDictionary<string, Vector3> AreaAddress = new Dictionary<string, Vector3>()
                                                         {
                                                             {"Iwa", new(-8, 10, 0)},
                                                             {"Kiri", new(13, 8, 0)},
-                                                            {"Konoha", new(6, -1, 0)},
+                                                            {"Konoha", new(1, -64, 0)},
                                                             {"Kumo", new(-8, 10, 0)},
                                                             {"Suna", new(20, 0, 0)},
                                                          };
+
+    public static IDictionary<string, CurrentAreaName> ListAllArea = new Dictionary<string, CurrentAreaName>()
+                                                        {
+                                                            {"Làng Lá", CurrentAreaName.Konoha},
+                                                            {"Làng Đá", CurrentAreaName.Iwa},
+                                                            {"Làng Sương Mù", CurrentAreaName.Kiri},
+                                                            {"Làng Mây", CurrentAreaName.Kumo},
+                                                            {"Làng Cát", CurrentAreaName.Suna},
+                                                        };
     public static void UpdateAccountToDB()
     {
         if (accountRefer != null)
@@ -184,8 +193,6 @@ public static class References
             ChakraBonus = Convert.ToInt32(accountRefer.Chakra * (Uppercent_Account / 100f));
             StrengthBonus = 1;
 
-            Debug.Log(HealthBonus + " " + ChakraBonus + " " + StrengthBonus);
-
             accountRefer.Health += HealthBonus;
             accountRefer.Chakra += ChakraBonus;
 
@@ -194,8 +201,6 @@ public static class References
 
             accountRefer.Strength += StrengthBonus;
             accountRefer.CurrentStrength += StrengthBonus;
-
-            accountRefer.Level += 1;
         }
     }
 

@@ -94,7 +94,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             if (user.IsEmailVerified)
             {
                 References.accountRefer.ID = user.UserId;
-                PhotonNetwork.NickName = user.DisplayName;
+                
 
                 var isOnline = Account_DAO.StateOnline(user.UserId);
 
@@ -106,6 +106,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 {
                     Account_DAO.ChangeStateOnline(user.UserId, true);
                     References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
+                    PhotonNetwork.NickName = References.accountRefer.Name;
                     References.InitSaveValue();
                     if (!PhotonNetwork.IsConnected)
                     {
@@ -113,7 +114,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     }
                 }
 
-                Debug.LogFormat("{0} Successfully Auto Logged In", user.DisplayName);
+                Debug.LogFormat("{0} Successfully Auto Logged In", PhotonNetwork.NickName);
                 Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
             }
             else
@@ -223,13 +224,10 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             {
                 user = loginTask.Result;
 
-                Debug.LogFormat("{0} You Are Successfully Logged In", user.DisplayName);
 
                 if (user.IsEmailVerified)
                 {
                     References.accountRefer.ID = user.UserId;
-
-                    PhotonNetwork.NickName = user.DisplayName; //Set name user
                     var isOnline = Account_DAO.StateOnline(user.UserId);
 
                     if (isOnline)
@@ -240,12 +238,15 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     {
                         Account_DAO.ChangeStateOnline(user.UserId, true);
                         References.accountRefer = Account_DAO.GetAccountByID(References.accountRefer.ID);
+                        PhotonNetwork.NickName = References.accountRefer.Name;
                         References.InitSaveValue();
                         if (!PhotonNetwork.IsConnected)
                         {
                             PhotonNetwork.ConnectUsingSettings();
                         }
                     }
+                    Debug.LogFormat("{0} You Are Successfully Logged In", PhotonNetwork.NickName);
+
                 }
                 else
                 {
@@ -418,7 +419,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             if (playerCount >= 0 && playerCount < References.Maxserver)
             {
                 References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
-                if (Account_DAO.IsFirstLogin(user.UserId))
+                References.IsFirstLogin = Account_DAO.IsFirstLogin(user.UserId);
+                if (References.IsFirstLogin)
                 {
                     PhotonNetwork.LoadLevel(Scenes.Creator);
                 }

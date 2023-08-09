@@ -60,6 +60,10 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] GameObject LostConnectPrefabs;
     GameObject LostConnectInstance;
 
+    [Header("Sound")]
+    [SerializeField] AudioSource WinSound;
+    [SerializeField] AudioSource LoseSound;
+
     public static PK_Manager Instance;
 
     private void Awake()
@@ -137,9 +141,10 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (photonEvent.Code == BattleEnd_DrawEventCode)
         {
             sortCanvas.sortingOrder = 31;
-            References.AddCoin(CurrentBet + (CurrentBet * 80 / 100));
-            CoinDraw_txt.text = CurrentBet.ToString();
+            References.AddCoin(CurrentBet - (CurrentBet * 20 / 100));
+            CoinDraw_txt.text = (CurrentBet - (CurrentBet * 20 / 100)).ToString();
             Battle_Fight_CountdownTxt.text = "00:00";
+            WinSound.Play();
             Draw_Panel.SetActive(true);
             Game_Manager.Instance.IsBusy = true;
         }
@@ -152,6 +157,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 References.AddCoin(CurrentBet + (CurrentBet * 80 / 100));
                 CoinWin_txt.text = (CurrentBet + (CurrentBet * 80 / 100)).ToString();
                 Account_DAO.IncreaseWinTime(References.accountRefer.ID);
+                WinSound.Play();
                 Win_Panel.SetActive(true);
             }
             else
@@ -159,6 +165,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                 References.SaveCurrentHealth = 0;
                 References.SaveCurrentChakra = 0;
                 CoinLose_txt.text = "-" + CurrentBet.ToString();
+                LoseSound.Play();
                 Lose_Panel.SetActive(true);
             }
             Game_Manager.Instance.IsBusy = true;
