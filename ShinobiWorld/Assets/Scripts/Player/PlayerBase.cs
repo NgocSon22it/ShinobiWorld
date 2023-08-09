@@ -205,8 +205,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         LoadAllAccountUI();
         if (AccountEntity.IsDead && photonView.IsMine)
         {
-            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(AccountEntity.TimeRespawn);
             Dead();
+            PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().ShowDiePanel(AccountEntity.TimeRespawn);
         }
     }
 
@@ -253,7 +253,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 ChatManager.Instance.ConnectToChat(References.ChatServer);
                 PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
                 PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
-                
+
                 InvokeRepeating(nameof(RegenStrength), 1f, 360f);
             }
         }
@@ -388,7 +388,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
-
+            if (AccountEntity.IsDead == true) return;
             if (Input.GetKeyDown(KeyCode.Y))
             {
                 PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
@@ -413,6 +413,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             PlayerAllUIInstance.GetComponent<Player_AllUIManagement>().BackgroundPanel.SetActive(Game_Manager.Instance.IsBusy);
             if (Game_Manager.Instance.IsBusy == true) return;
+            if (AccountEntity.IsDead == true) return;
             Walk();
         }
         else
@@ -434,17 +435,27 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             AccountEntity.CurrentHealth -= Damage;
             References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
 
+            if (AccountEntity.CurrentHealth < 0)
+            {
+                AccountEntity.CurrentHealth = 0;
+                References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
+            }
             switch (accountStatus)
             {
                 case AccountStatus.Normal:
+                    if (AccountEntity.CurrentHealth <= 0)
+                    {
+                        References.accountRefer.TimeRespawn = References.RespawnTime;
+                        References.accountRefer.IsDead = true;
+                    }
                     Game_Manager.Instance.ReloadPlayerProperties();
                     break;
-
                 case AccountStatus.Arena:
 
                     if (AccountEntity.CurrentHealth <= 0)
                     {
                         BossArena_Manager.Instance.CheckPlayerDead();
+                        Dead();
                     }
 
                     break;
@@ -453,11 +464,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                     if (AccountEntity.CurrentHealth <= 0)
                     {
                         PK_Manager.Instance.CheckPlayerDead();
+                        Dead();
                     }
                     break;
             }
 
-            if (AccountEntity.CurrentHealth <= 0) Dead();
 
             LoadPlayerHealthUI();
 
@@ -469,10 +480,8 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Dead()
     {
-        AccountEntity.CurrentHealth = 0;
-        References.accountRefer.CurrentHealth = AccountEntity.CurrentHealth;
+        AccountEntity.IsDead = true;
         References.accountRefer.IsDead = true;
-        References.accountRefer.TimeRespawn = References.RespawnTime;
         OffInvoke();
         CancelInvoke(nameof(RegenStrength));
         photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
@@ -743,7 +752,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         {
             Destroy(ObjectPool_Runtime);
         }
-        
+
 
     }
 
@@ -752,7 +761,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Die");
         playerCollider.enabled = false;
-        this.enabled = false;
+        //this.enabled = false;
     }
 
     [PunRPC]
@@ -760,7 +769,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Live");
         playerCollider.enabled = true;
-        this.enabled = true;
+        //this.enabled = true;
     }
 
     public void CallRpcPlayerLive()

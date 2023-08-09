@@ -80,8 +80,23 @@ namespace Assets.Scripts.Hospital
             References.accountRefer.TimeRespawn = 0;
             References.accountRefer.CurrentHealth = References.accountRefer.Health;
             References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
-            //Game_Manager.Instance.ReloadPlayerProperties();
-            Game_Manager.Instance.GoingOutHospital();
+
+            if (Game_Manager.Instance.currentAreaName == CurrentAreaName.Konoha)
+            {              
+                Game_Manager.Instance.GoingOutHospital();
+            }
+            else
+            {
+                if (PhotonNetwork.InRoom)
+                {
+                    References.PlayerSpawnPosition = new Vector3(17, -27, 0);
+                    ChatManager.Instance.DisconnectFromChat();
+                    Game_Manager.Instance.IsBusy = false;
+                    PhotonNetwork.IsMessageQueueRunning = false;
+                    PhotonNetwork.LeaveRoom();
+                    PhotonNetwork.LoadLevel(Scenes.Konoha);
+                }
+            }
         }
 
         public void OnRespawnClick()

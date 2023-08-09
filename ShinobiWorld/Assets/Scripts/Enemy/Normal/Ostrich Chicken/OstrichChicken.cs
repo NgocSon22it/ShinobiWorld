@@ -74,7 +74,7 @@ public class OstrichChicken : Enemy
             if (SkillOne != null)
             {
                 SkillOne.transform.position = TargetPosition;
-                SkillOne.GetComponent<Chicken_Attack>().SetUp(100);
+                SkillOne.GetComponent<Chicken_Attack>().SetUp(300);
                 SkillOne.GetComponent<Chicken_Attack>().SetUpPoint(FirePoint.position, TargetPosition);
                 SkillOne.SetActive(true);
             }

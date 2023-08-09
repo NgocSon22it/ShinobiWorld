@@ -131,6 +131,7 @@ public class FriendManager : MonoBehaviour
 
     public void Reload()
     {
+        Init();
         if (isFriend) FriendMessage.SetActive((References.listFriendInfo.Count <= 0));
         else
         {

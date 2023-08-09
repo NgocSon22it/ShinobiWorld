@@ -33,7 +33,6 @@ public class MailBoxManager : MonoBehaviour
     public TMP_Text ConfirmDeleteMessage;
     public Button CancelBtn, CloseConfirmBtn, DeleteReceivedBtn, DeleteReadAllBtn;
 
-
     private void Awake()
     {
         Instance = this;
@@ -59,7 +58,6 @@ public class MailBoxManager : MonoBehaviour
     public void CheckNotify()
     {
         Notify.SetActive(References.listMailBox.Any(obj => obj.IsRead == false));
-
     }
 
     public void Open()
@@ -83,7 +81,7 @@ public class MailBoxManager : MonoBehaviour
 
     public void GetList(int ID)
     {
-        var list = References.listMailBox;
+        var list = MailBox_DAO.GetAllByUserID(References.accountRefer.ID); ;
 
         for (var i = 0; i < list.Count; ++i)
         {
