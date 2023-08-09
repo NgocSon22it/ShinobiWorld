@@ -232,6 +232,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
             case BossType.BossType_Normal:
                 CurrentHealth = enemy_Entity.Health;
                 AreaEnemy_DAO.SetAreaEnemyDie(AreaID, EnemyID);
+                SpawnEnemyCoroutine = null;
                 Game_Manager.Instance.SpawnEnemyAfterDie(AreaID, EnemyID, photonView.ViewID, SpawnEnemyCoroutine);
                 break;
 

@@ -160,7 +160,7 @@ public static class References
                                                         {
                                                             {"Iwa", new(-8, 10, 0)},
                                                             {"Kiri", new(13, 8, 0)},
-                                                            {"Konoha", new(6, -1, 0)},
+                                                            {"Konoha", new(1, -64, 0)},
                                                             {"Kumo", new(-8, 10, 0)},
                                                             {"Suna", new(20, 0, 0)},
                                                          };
@@ -192,8 +192,6 @@ public static class References
             ChakraBonus = Convert.ToInt32(accountRefer.Chakra * (Uppercent_Account / 100f));
             StrengthBonus = 1;
 
-            Debug.Log(HealthBonus + " " + ChakraBonus + " " + StrengthBonus);
-
             accountRefer.Health += HealthBonus;
             accountRefer.Chakra += ChakraBonus;
 
@@ -202,8 +200,6 @@ public static class References
 
             accountRefer.Strength += StrengthBonus;
             accountRefer.CurrentStrength += StrengthBonus;
-
-            accountRefer.Level += 1;
         }
     }
 
