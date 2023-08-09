@@ -90,6 +90,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private void AutoLogin()
     {
+        if (auth == null) auth = FirebaseAuth.DefaultInstance;
         if (user != null)
         {
             if (user.IsEmailVerified)
@@ -157,6 +158,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (UIManager.Instance.IsWiFiConnected())
         {
+            if (auth == null) auth = FirebaseAuth.DefaultInstance;
             var email = UIManager.Instance.emailLoginField.text;
             var password = UIManager.Instance.passwordLoginField.text;
             StartCoroutine(LoginAsync(email, password));
