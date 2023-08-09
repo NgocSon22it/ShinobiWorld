@@ -84,6 +84,7 @@ public static class References
     public static string TeleTickerID = "Item_Tele";
 
     public static bool IsDead;
+    public static bool IsFirstLogin;
 
     public static Vector3 PlayerSpawnPosition = Vector3.zero;
 

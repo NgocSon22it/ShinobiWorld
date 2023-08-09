@@ -419,7 +419,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             if (playerCount >= 0 && playerCount < References.Maxserver)
             {
                 References.PlayerSpawnPosition = References.HouseAddress[House.Hokage.ToString()];
-                if (Account_DAO.IsFirstLogin(user.UserId))
+                References.IsFirstLogin = Account_DAO.IsFirstLogin(user.UserId);
+                if (References.IsFirstLogin)
                 {
                     PhotonNetwork.LoadLevel(Scenes.Creator);
                 }
