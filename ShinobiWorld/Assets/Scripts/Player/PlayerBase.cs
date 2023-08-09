@@ -284,7 +284,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             LoadPlayerChakraUI();
             LoadPlayerStrengthUI();
         }
-
     }
 
 
