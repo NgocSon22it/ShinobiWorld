@@ -13,6 +13,7 @@ using Unity.VisualScripting;
 using System;
 using UnityEngine.UIElements;
 using UnityEngine.Tilemaps;
+using Assets.Scripts.GameManager;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -100,7 +101,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                 if (isOnline)
                 {
-                    UIManager.Instance.OpenPopupPanel(Message.Logined);
+                    if( Disconnect.Instance.ReadFile() ) AutoLogin();
+                    else UIManager.Instance.OpenPopupPanel(Message.Logined);
                 }
                 else
                 {
@@ -232,7 +234,12 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                     if (isOnline)
                     {
-                        UIManager.Instance.OpenPopupPanel(Message.Logined);
+                        if (Disconnect.Instance.ReadFile())
+                        {
+                            StopAllCoroutines();
+                            Login();
+                        }
+                        else UIManager.Instance.OpenPopupPanel(Message.Logined);
                     }
                     else
                     {

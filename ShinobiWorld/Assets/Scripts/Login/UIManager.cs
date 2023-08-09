@@ -1,4 +1,5 @@
 using Assets.Scripts.Database.DAO;
+using Assets.Scripts.GameManager;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -69,11 +70,16 @@ public class UIManager : MonoBehaviour
         {
             if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
             {
-                return true; 
+                return true;
             }
+
         }
 
-        return false; 
+
+        Debug.Log("Write file");
+        Disconnect.Instance.WriteFile();
+
+        return false;
     }
 
     private void CreateInstance()
@@ -91,6 +97,8 @@ public class UIManager : MonoBehaviour
     public void CloseLostWifiPanel()
     {
         LostWifiPanel.SetActive(false);
+        ClearUI();
+        OpenLoginPanel();
     }
 
     public void OpenLoginPanel()
