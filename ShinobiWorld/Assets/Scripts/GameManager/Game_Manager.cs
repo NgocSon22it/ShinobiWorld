@@ -136,7 +136,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void ReloadPlayerProperties()
     {
         if (References.accountRefer.CurrentHealth <= 0) References.accountRefer.IsDead = true;
-        References.UpdateAccountToDB();
+        if (!References.IsFirstLogin) References.UpdateAccountToDB();
         References.LoadHasWeaponNSkill(Role);
         References.LoadAccount();
 
