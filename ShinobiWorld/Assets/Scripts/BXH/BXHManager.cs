@@ -5,19 +5,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BXHManager : MonoBehaviour
 {
-    public GameObject BXHPanel, BXHItemPrefab, BXHMessage;
+    public GameObject BXHPanel, BXHItemPrefab, BXHItemFriendPrefab, BXHItemRequestPrefab, BXHItemSendRequestPrefab, BXHMessage;
     public Transform Content;
 
     public Button OpenBtn, CloseBtn;
     public static BXHManager Instance;
 
     List<Account_Entity> list = new List<Account_Entity> ();
-
+    List<string> listFriend, listRequest, listSendRequest;
     private void Awake()
     {
         Instance = this;
@@ -63,11 +64,54 @@ public class BXHManager : MonoBehaviour
         else
         {
             BXHMessage.SetActive(false);
+            InitFriendList();
             for (var i = 0; i < list.Count;  ++i)
             {
-                Instantiate(BXHItemPrefab, Content).GetComponent<BXHItem>().Setup(i+1, list[i]);
+                if (listFriend.Contains(list[i].ID))
+                    Instantiate(BXHItemFriendPrefab, Content).GetComponent<BXHItem>().Setup(i+1, list[i]);
+                else if (listRequest.Contains(list[i].ID))
+                    Instantiate(BXHItemRequestPrefab, Content).GetComponent<BXHItem>().Setup(i + 1, list[i]);
+                else if (listSendRequest.Contains(list[i].ID))
+                    Instantiate(BXHItemSendRequestPrefab, Content).GetComponent<BXHItem>().Setup(i + 1, list[i]);
+                else 
+                    Instantiate(BXHItemPrefab, Content).GetComponent<BXHItem>().Setup(i + 1, list[i]);
             }
         }
+
+    }
+
+    public void InitFriendList()
+    {
+        var list = References.listAllFriend = Friend_DAO.GetAll(References.accountRefer.ID);
+        listFriend = new List<string>();
+        listRequest = new List<string>();
+        listSendRequest = new List<string>();
+
+        var MyID = References.accountRefer.ID;
+        foreach (var friend in list)
+        {
+            if (friend.IsFriend)
+            {
+                var FriendAccountID = (friend.FriendAccountID + friend.MyAccountID).Replace(MyID, "");
+                if (!listFriend.Contains(FriendAccountID)) listFriend.Add(FriendAccountID);
+            }
+            else
+            {
+                if (friend.MyAccountID == MyID)
+                {
+                    if (!listRequest.Contains(friend.FriendAccountID))
+                    listRequest.Add(friend.FriendAccountID);
+                }
+                else if (friend.FriendAccountID == MyID)
+                {
+                    if (!listSendRequest.Contains(friend.MyAccountID))
+                        listSendRequest.Add(friend.MyAccountID);
+                }
+            }      
+        }
+
+        //References.listFriendInfo = Friend_DAO.GetAllFriendInfo(listFriend);
+        //References.listRequestInfo = Friend_DAO.GetAllFriendInfo(listRequest);
 
     }
 

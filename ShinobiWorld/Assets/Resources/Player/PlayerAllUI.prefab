@@ -43061,7 +43061,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BXHPanel: {fileID: 7661458277339287015}
-  BXHItemPrefab: {fileID: 5466914894711578426, guid: 9f45b215c2374164c921863b608f6c87, type: 3}
+  BXHItemPrefab: {fileID: 564575988567705401, guid: 9f45b215c2374164c921863b608f6c87, type: 3}
+  BXHItemFriendPrefab: {fileID: 2853183354412945309, guid: f95b3ebf6ceb705449bbe0e6a939e816, type: 3}
+  BXHItemRequestPrefab: {fileID: 695828526675344739, guid: e3e5ae716125ac5448f4f22cdab22a3e, type: 3}
+  BXHItemSendRequestPrefab: {fileID: 2595008746095776756, guid: 8acec77fb8101b24d919afdd9876f421, type: 3}
   BXHMessage: {fileID: 3368246792368152899}
   Content: {fileID: 1602487982810109487}
   OpenBtn: {fileID: 3965480389477057244}
@@ -47255,7 +47258,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291087564
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -68387,7 +68390,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0.5, y: -0.00030517578}
-  m_SizeDelta: {x: 891, y: 0}
+  m_SizeDelta: {x: 891, y: -450}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8853637347253624341
 MonoBehaviour:
@@ -81363,9 +81366,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -27.2823, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8784827318367750709
 CanvasRenderer:
