@@ -75,7 +75,7 @@ public class Magician : Enemy
             {
                 SkillOne.transform.position = TargetPosition;
                 SkillOne.GetComponent<Magician_Attack>().SetUpPoint(TargetPosition);
-                SkillOne.GetComponent<Magician_Attack>().SetUp(100);
+                SkillOne.GetComponent<Magician_Attack>().SetUp(300);
                 SkillOne.SetActive(true);
             }
         }       

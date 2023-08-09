@@ -49,6 +49,7 @@ namespace Assets.Scripts.BXH
                 Player_Info.Instance.Open(selectedAccount.ID);
             });
 
+            References.listAllFriend = Friend_DAO.GetAll(References.accountRefer.ID);
             AddFriendBtn.SetActive(
                 !References.listAllFriend
                     .Any(obj => (obj.MyAccountID + obj.FriendAccountID).Contains(References.accountRefer.ID) 
