@@ -17,7 +17,7 @@ public class Message
     public static string EmailResetPassMessage = "Email thay đổi mật khẩu đã được gửi đến {0}";
 
     public static string PasswordEmpty = "Mật khẩu trống";
-    public static string PasswordInvalid = "Mật khẩu phải có ít nhất 8 ký tự và không được có khoảng trắng";
+    public static string PasswordInvalid = "Mật khẩu phải có ít nhất 6 ký tự và không được có khoảng trắng";
     public static string PasswordNotMatch = "Mật khẩu không khớp";
 
     public static string PasswordWrong = "Sai mật khẩu";

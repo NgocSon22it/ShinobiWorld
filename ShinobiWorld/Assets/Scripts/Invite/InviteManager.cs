@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 public class InviteManager : MonoBehaviour
 {
-    public GameObject ReceivePanel, SendPanel, ListInvitePanel, NotEnoughMoneyPanel;
+    public GameObject ReceivePanel, SendPanel, ListInvitePanel, NotEnoughMoneyPanel, NoPlayerPanel;
 
     public TMP_Text InviteContent, CountDownPopup;
 
@@ -59,6 +59,7 @@ public class InviteManager : MonoBehaviour
 
     public void LoadListInvite()
     {
+        ListInvite.Clear();
         ListInvite = Account_DAO.GetAllAccountForInvite();
 
         foreach (Transform trans in Content)
@@ -66,13 +67,23 @@ public class InviteManager : MonoBehaviour
             Destroy(trans.gameObject);
         }
 
-        foreach (Account_Entity account in ListInvite)
+        if (ListInvite.Count > 1)
         {
-            if (!account.ID.Equals(References.accountRefer.ID))
+            NoPlayerPanel.SetActive(false);
+
+            foreach (Account_Entity account in ListInvite)
             {
-                Instantiate(Item, Content).GetComponent<InviteItem>().SetUp(account);
+                if (!account.ID.Equals(References.accountRefer.ID))
+                {
+                    Instantiate(Item, Content).GetComponent<InviteItem>().SetUp(account);
+                }
             }
         }
+        else
+        {
+            NoPlayerPanel.SetActive(true);
+        }
+
     }
 
     public void OpenReceiveInvitePopup_Arena(TypePrivateMessage type, string Content, string SceneName, string RoomName, string BossName, BossArenaType arenaType)
@@ -94,7 +105,7 @@ public class InviteManager : MonoBehaviour
                     InviteContent.text = Content + " " + BossName + " (Phòng tập)";
                     break;
             }
-            
+
             ReceivePanel.SetActive(true);
             StartCoroutine(PopupInvite());
         }
@@ -102,7 +113,7 @@ public class InviteManager : MonoBehaviour
 
     public bool IsMessageIsReceive(string RoomName)
     {
-        foreach(string message in References.ListPrivateMessage)
+        foreach (string message in References.ListPrivateMessage)
         {
             if (RoomName.Equals(message))
             {
