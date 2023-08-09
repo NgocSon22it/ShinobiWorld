@@ -26,7 +26,7 @@ public class RangeCharacter : PlayerBase
 
     new void Start()
     {
-        base.Start();
+        base.Start(); 
     }
 
     // Update is called once per frame
