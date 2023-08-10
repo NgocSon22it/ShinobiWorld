@@ -198,13 +198,16 @@ public class Asuma : Enemy
 
     public void FollowPlayer()
     {
-        if (MainPoint.position.x < Target.transform.position.x && !FacingRight)
+        if (Target != null)
         {
-            Flip();
-        }
-        else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
-        {
-            Flip();
+            if (MainPoint.position.x < Target.transform.position.x && !FacingRight)
+            {
+                Flip();
+            }
+            else if (MainPoint.position.x > Target.transform.position.x && FacingRight)
+            {
+                Flip();
+            }
         }
     }
 
