@@ -390,7 +390,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                             {
                                 UpTrophy_Panel.SetActive(true);
                                 TrophyID Trophy = (TrophyID)PhotonNetwork.CurrentRoom.CustomProperties["TrophyRegister"];
-                                References.accountRefer.TrophyID = Trophy.ToString();
+                                References.accountRefer.IsUpgradeTrophy = true;
                                 switch (Trophy)
                                 {
                                     case TrophyID.Trophy_Genin:
