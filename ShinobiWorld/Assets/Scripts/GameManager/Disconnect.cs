@@ -52,7 +52,7 @@ namespace Assets.Scripts.GameManager
             else
             {
 
-                Debug.LogError("File not found: " + filePath);
+                Debug.Log("File not found: " + filePath);
                 return false;
 
             }
