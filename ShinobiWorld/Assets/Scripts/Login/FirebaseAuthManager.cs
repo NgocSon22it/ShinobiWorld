@@ -13,6 +13,7 @@ using Unity.VisualScripting;
 using System;
 using UnityEngine.UIElements;
 using UnityEngine.Tilemaps;
+using Assets.Scripts.GameManager;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -89,6 +90,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private void AutoLogin()
     {
+        if (auth == null) auth = FirebaseAuth.DefaultInstance;
         if (user != null)
         {
             if (user.IsEmailVerified)
@@ -100,7 +102,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                 if (isOnline)
                 {
-                    UIManager.Instance.OpenPopupPanel(Message.Logined);
+                    if( Disconnect.Instance.ReadFile() ) AutoLogin();
+                    else UIManager.Instance.OpenPopupPanel(Message.Logined);
                 }
                 else
                 {
@@ -155,6 +158,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (UIManager.Instance.IsWiFiConnected())
         {
+            if (auth == null) auth = FirebaseAuth.DefaultInstance;
             var email = UIManager.Instance.emailLoginField.text;
             var password = UIManager.Instance.passwordLoginField.text;
             StartCoroutine(LoginAsync(email, password));
@@ -232,7 +236,12 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                     if (isOnline)
                     {
-                        UIManager.Instance.OpenPopupPanel(Message.Logined);
+                        if (Disconnect.Instance.ReadFile())
+                        {
+                            StopAllCoroutines();
+                            Login();
+                        }
+                        else UIManager.Instance.OpenPopupPanel(Message.Logined);
                     }
                     else
                     {

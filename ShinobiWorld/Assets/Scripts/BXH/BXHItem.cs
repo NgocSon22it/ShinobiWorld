@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.Jobs.LowLevel.Unsafe;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,7 @@ namespace Assets.Scripts.BXH
     public class BXHItem : MonoBehaviour
     {
         public GameObject BXH;
-        public Image RankImg;
+        public Image RankImg, SendRequestIcon;
         public TMP_Text RankTxt, Name, Level, Trophy, Power;
         public GameObject AddFriendBtn, InfoBtn;
         public Account_Entity selectedAccount;
@@ -43,24 +44,28 @@ namespace Assets.Scripts.BXH
             Trophy.text = References.listTrophy.Find(obj => obj.ID == account.TrophyID).Name;
             Power.text = account.Power.ToString();
 
-            AddFriendBtn.GetComponent<Button>().onClick.AddListener(SendFriendRequest);
+           
             InfoBtn.GetComponent<Button>().onClick.AddListener(() =>
             {
                 Player_Info.Instance.Open(selectedAccount.ID);
             });
 
-            References.listAllFriend = Friend_DAO.GetAll(References.accountRefer.ID);
-            AddFriendBtn.SetActive(
-                !References.listAllFriend
-                    .Any(obj => (obj.MyAccountID + obj.FriendAccountID).Contains(References.accountRefer.ID) 
-                                 && (obj.MyAccountID + obj.FriendAccountID).Contains(selectedAccount.ID)));
+            if (!SendRequestIcon.IsUnityNull()) SendRequestIcon.gameObject.SetActive(false);
+
+            if (!AddFriendBtn.IsUnityNull())
+            {
+                
+                AddFriendBtn.GetComponent<Button>().onClick.AddListener(SendFriendRequest);
+                AddFriendBtn.SetActive((account.ID != References.accountRefer.ID));
+            }
         }
 
         public void SendFriendRequest()
         {
             Friend_DAO.AddFriend(References.accountRefer.ID, selectedAccount.ID);
 
-            AddFriendBtn.SetActive(false);
+            if (!AddFriendBtn.IsUnityNull()) AddFriendBtn.SetActive(false);
+            if (!SendRequestIcon.IsUnityNull()) SendRequestIcon.gameObject.SetActive(true);
 
             if (Account_DAO.StateOnline(selectedAccount.ID))
             {

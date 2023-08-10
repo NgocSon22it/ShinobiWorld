@@ -91,7 +91,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (cause == DisconnectCause.ClientTimeout)
         {
-            CallOnquit();
+            Disconnect.Instance.WriteFile();
             LostConnectInstance = Instantiate(LostConnectPrefabs);
         }
     }
