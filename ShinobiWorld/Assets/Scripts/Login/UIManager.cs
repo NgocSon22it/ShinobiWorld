@@ -77,7 +77,7 @@ public class UIManager : MonoBehaviour
 
 
         Debug.Log("Write file");
-        Disconnect.Instance.WriteFile();
+        Disconnect.WriteFile();
 
         return false;
     }

@@ -219,6 +219,7 @@ public class MissionManager : MonoBehaviour
     }
     public void TeleportToSelectArea()
     {
+        References.InitSaveValue();
         Game_Manager.Instance.IsBusy = false;
         References.PlayerSpawnPosition = new Vector3(SelectedArea.XPosition, SelectedArea.YPosition, 0);
         HasItem_DAO.UseItem(References.accountRefer.ID, References.TeleTickerID);

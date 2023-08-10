@@ -201,7 +201,7 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (cause == DisconnectCause.ClientTimeout)
         {
-            Disconnect.Instance.WriteFile();
+            Disconnect.WriteFile();
             LostConnectInstance = Instantiate(LostConnectPrefabs);
         }
     }
