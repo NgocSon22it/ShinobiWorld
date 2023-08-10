@@ -481,6 +481,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         AccountEntity.IsDead = true;
         References.accountRefer.IsDead = true;
+        References.accountRefer.TimeRespawn = References.RespawnTime;
         OffInvoke();
         CancelInvoke(nameof(RegenStrength));
         photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
@@ -760,7 +761,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Die");
         playerCollider.enabled = false;
-        //this.enabled = false;
     }
 
     [PunRPC]
@@ -768,7 +768,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Live");
         playerCollider.enabled = true;
-        //this.enabled = true;
     }
 
     public void CallRpcPlayerLive()
