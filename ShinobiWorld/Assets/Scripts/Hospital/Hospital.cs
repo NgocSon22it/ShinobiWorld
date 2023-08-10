@@ -82,7 +82,7 @@ namespace Assets.Scripts.Hospital
             References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
 
             if (Game_Manager.Instance.currentAreaName == CurrentAreaName.Konoha)
-            {              
+            {
                 Game_Manager.Instance.GoingOutHospital();
             }
             else
@@ -101,8 +101,11 @@ namespace Assets.Scripts.Hospital
 
         public void OnRespawnClick()
         {
-            References.accountRefer.Coin -= References.RespawnCost;
-            End();
+            if (References.accountRefer.Coin >= References.RespawnCost)
+            {
+                References.accountRefer.Coin -= References.RespawnCost;
+                End();
+            }
         }
     }
 }
