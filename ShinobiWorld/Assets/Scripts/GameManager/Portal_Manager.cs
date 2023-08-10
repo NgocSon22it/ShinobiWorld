@@ -65,6 +65,7 @@ public class Portal_Manager : MonoBehaviour
 
     public void TeleportToSelectArea()
     {
+        References.InitSaveValue();
         Game_Manager.Instance.IsBusy = false;    
         References.PlayerSpawnPosition = References.AreaAddress[SelectedArea.ToString()];
         PhotonNetwork.IsMessageQueueRunning = false;

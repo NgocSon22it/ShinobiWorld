@@ -102,7 +102,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                 if (isOnline)
                 {
-                    if( Disconnect.Instance.ReadFile() ) AutoLogin();
+                    if( Disconnect.ReadFile() ) AutoLogin();
                     else UIManager.Instance.OpenPopupPanel(Message.Logined);
                 }
                 else
@@ -236,7 +236,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                     if (isOnline)
                     {
-                        if (Disconnect.Instance.ReadFile())
+                        if (Disconnect.ReadFile())
                         {
                             StopAllCoroutines();
                             Login();

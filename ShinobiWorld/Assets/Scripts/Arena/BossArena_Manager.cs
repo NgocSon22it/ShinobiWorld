@@ -92,7 +92,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         players = FindObjectsOfType<PlayerBase>();
         return players.Length;
     }
-    
+
 
     public override void OnJoinedRoom()
     {
@@ -113,7 +113,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (cause == DisconnectCause.ClientTimeout)
         {
-            Disconnect.Instance.WriteFile();
+            Disconnect.WriteFile();
             LostConnectInstance = Instantiate(LostConnectPrefabs);
         }
     }
@@ -177,11 +177,13 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void CheckPlayerDead()
     {
         players = FindObjectsOfType<PlayerBase>();
+        Debug.Log(players.Length);
 
         foreach (var player in players)
         {
             if (player.AccountEntity.CurrentHealth > 0)
             {
+                Debug.Log("Mau" + player.AccountEntity.CurrentHealth);
                 return;
             }
         }
@@ -242,15 +244,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void Battle_End(bool Win)
     {
-        if (Win)
-        {
-            ShowEndgamePanel(Win);
-        }
-        else
-        {
-            ShowEndgamePanel(Win);
-        }
-
+        ShowEndgamePanel(Win);
     }
 
     private IEnumerator Battle_FightCoroutine()
@@ -299,6 +293,11 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     }
 
+    private IEnumerator CallWhenOtherQuit()
+    {
+        yield return new WaitForSeconds(3f);
+        CheckPlayerDead();
+    }
     public override void OnLeftRoom()
     {
         if (Game_Manager.Instance.PlayerManager != null && PhotonNetwork.IsConnectedAndReady)
@@ -310,7 +309,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        CheckPlayerDead();
+        StartCoroutine(CallWhenOtherQuit());
     }
 
     public void ReturnToKonoha()
@@ -464,6 +463,11 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                     Battle_End_Text.text = "Thua";
                 }
                 CheckOfficial_Practice(IsWin);
+            }
+            if (References.accountRefer.CurrentHealth <= 0)
+            {
+                References.SaveCurrentHealth = 0;
+                References.SaveCurrentChakra = 0;
             }
             Battle_Fight_CountdownTxt.text = "00:00";
             sortCanvas.sortingOrder = 31;

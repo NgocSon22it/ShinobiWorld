@@ -35,7 +35,10 @@ public class Kakashi : Enemy
         base.Start();
         SetUpHealth();
         Target = FindClostestTargetToFollow(detectionRadius, "Player");
-        destinationSetter.target = Target.transform;
+        if (Target != null)
+        {
+            destinationSetter.target = Target.transform;
+        }
         LoadHealthUI(CurrentHealth, boss_Health);
     }
     public void SetUpHealth()
@@ -130,7 +133,10 @@ public class Kakashi : Enemy
         }
 
         Target = FindClostestTargetToFollow(detectionRadius, "Player");
-        destinationSetter.target = Target.transform;
+        if (Target != null)
+        {
+            destinationSetter.target = Target.transform;
+        }
         aIPath.canMove = true;
         isMoving = true;
         IsStartCoroutine = false;
