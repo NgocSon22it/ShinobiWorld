@@ -365,6 +365,7 @@ namespace Assets.Scripts.Database.DAO
                                         "Chakra = @Chakra, " +
                                         "CurrentChakra = @CurrentChakra, " +
                                         "HasTicket = @HasTicket, " +
+                                        "IsUpgradeTrophy = @IsUpgradeTrophy, " +
                                         "[Exp] = @Exp, " +
                                         "Coin = @Coin, " +
                                         "[Power] = @Power, " +
@@ -381,6 +382,7 @@ namespace Assets.Scripts.Database.DAO
                     cmd.Parameters.AddWithValue("@Chakra", account_Entity.Chakra);
                     cmd.Parameters.AddWithValue("@CurrentChakra", account_Entity.CurrentChakra);
                     cmd.Parameters.AddWithValue("@HasTicket", account_Entity.HasTicket);
+                    cmd.Parameters.AddWithValue("@IsUpgradeTrophy", account_Entity.IsUpgradeTrophy);
                     cmd.Parameters.AddWithValue("@Exp", account_Entity.Exp);
                     cmd.Parameters.AddWithValue("@Coin", account_Entity.Coin);
                     cmd.Parameters.AddWithValue("@Power", account_Entity.Power);

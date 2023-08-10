@@ -273,7 +273,6 @@ public class Creator : MonoBehaviour
         }
         else
         {
-            Debug.Log("Disconnect");
         }
 
     }

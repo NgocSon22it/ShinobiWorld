@@ -177,13 +177,11 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void CheckPlayerDead()
     {
         players = FindObjectsOfType<PlayerBase>();
-        Debug.Log(players.Length);
 
         foreach (var player in players)
         {
             if (player.AccountEntity.CurrentHealth > 0)
             {
-                Debug.Log("Mau" + player.AccountEntity.CurrentHealth);
                 return;
             }
         }
@@ -392,7 +390,7 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                             {
                                 UpTrophy_Panel.SetActive(true);
                                 TrophyID Trophy = (TrophyID)PhotonNetwork.CurrentRoom.CustomProperties["TrophyRegister"];
-                                References.accountRefer.TrophyID = Trophy.ToString();
+                                References.accountRefer.IsUpgradeTrophy = true;
                                 switch (Trophy)
                                 {
                                     case TrophyID.Trophy_Genin:

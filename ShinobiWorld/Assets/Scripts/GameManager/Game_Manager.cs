@@ -129,7 +129,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                     break;
             }
             ReloadPlayerProperties();
-            Debug.Log("Successfully joined room S1!");
         }
     }
 
@@ -192,6 +191,8 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void GoingOutHospital()
     {
         PlayerManager.GetComponent<PlayerBase>().CallInvoke();
+        References.accountRefer.CurrentHealth = References.accountRefer.Health;
+        References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
         ReloadPlayerProperties();
         PlayerManager.GetComponent<PlayerBase>().CallRpcPlayerLive();
         PlayerManager.transform.position = References.HouseAddress[House.Hospital.ToString()];
@@ -220,7 +221,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnApplicationQuit()
     {
-        Debug.Log("OnApplicationQuit GameManager");
         CallOnquit();
     }
 
