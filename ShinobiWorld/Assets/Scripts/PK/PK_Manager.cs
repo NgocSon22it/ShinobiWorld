@@ -17,6 +17,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] Transform Spawnpoint;
     [SerializeField] PolygonCollider2D CameraBox;
     [SerializeField] Canvas sortCanvas;
+    [SerializeField] GameObject Blur;
 
     [Header("Battle Start")]
     float ReadyTime = 3f, TotalProgress = 1f, CurrentProgress = 0f;
@@ -91,7 +92,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (cause == DisconnectCause.ClientTimeout)
         {
-            Disconnect.Instance.WriteFile();
+            Disconnect.WriteFile();
             LostConnectInstance = Instantiate(LostConnectPrefabs);
         }
     }
@@ -141,6 +142,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (photonEvent.Code == BattleEnd_DrawEventCode)
         {
             sortCanvas.sortingOrder = 31;
+            Blur.SetActive(true);
             References.AddCoin(CurrentBet - (CurrentBet * 20 / 100));
             CoinDraw_txt.text = (CurrentBet - (CurrentBet * 20 / 100)).ToString();
             Battle_Fight_CountdownTxt.text = "00:00";
@@ -151,6 +153,7 @@ public class PK_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
         else if (photonEvent.Code == BattleEnd_WinLoseEventCode)
         {
             sortCanvas.sortingOrder = 31;
+            Blur.SetActive(true);
             Battle_Fight_CountdownTxt.text = "00:00";
             if (References.accountRefer.CurrentHealth > 0)
             {

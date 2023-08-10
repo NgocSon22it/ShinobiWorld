@@ -9,15 +9,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameManager
 {
-    public class Disconnect : MonoBehaviour
+    public static class Disconnect
     {
-        public static Disconnect Instance;
-
-        private void Awake()
-        {
-            Instance = this;
-        }
-        public void WriteFile()
+        public static void WriteFile()
         {
             string filePath = Path.Combine(Application.dataPath, "CheckConnect.txt");
 
@@ -30,11 +24,9 @@ namespace Assets.Scripts.GameManager
             {
                 writer.Write(textToWrite);
             }
-            Debug.Log(Application.dataPath);
-            Debug.Log("Text file written successfully.");
         }
 
-        public bool ReadFile()
+        public static bool ReadFile()
         {
             // Path to the file you want to read
             string filePath = Path.Combine(Application.dataPath, "CheckConnect.txt");
@@ -52,7 +44,6 @@ namespace Assets.Scripts.GameManager
             else
             {
 
-                Debug.LogError("File not found: " + filePath);
                 return false;
 
             }

@@ -159,7 +159,6 @@ public class MeleeChacracter : PlayerBase
 
         Sword.material.SetColor("_GlowColor", color * Intensity);
 
-        Debug.Log(DamageBonus);
 
     }
 
