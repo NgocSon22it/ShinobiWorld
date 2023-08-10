@@ -14,16 +14,12 @@ public class CustomCharacterManager : MonoBehaviour
             switch (Toggle.gameObject.name)
             {
                 case "Melee":
-                    Debug.Log("Player selected Melee");
                     break;
                 case "Range":
-                    Debug.Log("Player selected Range");
                     break;
                 case "Support":
-                    Debug.Log("Player selected Support");
                     break;
                 default:
-                    Debug.Log("Somethings Wrong!");
                     break;
             }
         }

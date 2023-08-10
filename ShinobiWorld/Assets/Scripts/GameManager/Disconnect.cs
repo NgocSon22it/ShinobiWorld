@@ -24,8 +24,6 @@ namespace Assets.Scripts.GameManager
             {
                 writer.Write(textToWrite);
             }
-            Debug.Log(Application.dataPath);
-            Debug.Log("Text file written successfully.");
         }
 
         public static bool ReadFile()
@@ -46,7 +44,6 @@ namespace Assets.Scripts.GameManager
             else
             {
 
-                Debug.Log("File not found: " + filePath);
                 return false;
 
             }

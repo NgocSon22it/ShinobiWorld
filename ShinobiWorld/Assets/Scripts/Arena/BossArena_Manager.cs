@@ -177,13 +177,11 @@ public class BossArena_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void CheckPlayerDead()
     {
         players = FindObjectsOfType<PlayerBase>();
-        Debug.Log(players.Length);
 
         foreach (var player in players)
         {
             if (player.AccountEntity.CurrentHealth > 0)
             {
-                Debug.Log("Mau" + player.AccountEntity.CurrentHealth);
                 return;
             }
         }

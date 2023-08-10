@@ -129,7 +129,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
                     break;
             }
             ReloadPlayerProperties();
-            Debug.Log("Successfully joined room S1!");
         }
     }
 
@@ -220,7 +219,6 @@ public class Game_Manager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnApplicationQuit()
     {
-        Debug.Log("OnApplicationQuit GameManager");
         CallOnquit();
     }
 
