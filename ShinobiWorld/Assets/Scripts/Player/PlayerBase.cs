@@ -254,7 +254,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
                 PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
 
-                InvokeRepeating(nameof(RegenStrength), 1f, 360f);
+                InvokeRepeating(nameof(RegenStrength), 360f, 360f);
             }
         }
         else
@@ -483,7 +483,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
         References.accountRefer.IsDead = true;
         References.accountRefer.TimeRespawn = References.RespawnTime;
         OffInvoke();
-        CancelInvoke(nameof(RegenStrength));
         photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
     }
 

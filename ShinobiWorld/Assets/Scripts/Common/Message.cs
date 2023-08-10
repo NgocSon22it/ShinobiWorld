@@ -25,7 +25,7 @@ public class Message
     public static string VerifyEmailCanceled = "Xác minh email đã bị hủy";
     public static string VerifyEmailTooManyRequests = "Quá nhiều yêu cầu";
 
-    public static string ErrorSystem = "Lỗi hệ thống";
+    public static string ErrorSystem = "Email không hợp lệ";
     public static string Maxplayer = "Server quá tải!";
     public static string Logined= "Tài khoản đang được đăng nhập trên thiết bị khác";
 
