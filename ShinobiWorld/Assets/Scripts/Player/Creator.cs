@@ -155,6 +155,10 @@ public class Creator : MonoBehaviour
 
     public void OnBackBtnClick()
     {
+        if (References.accountRefer != null)
+        {
+            Account_DAO.ChangeStateOnline(References.accountRefer.ID, false);
+        }
         PhotonNetwork.Disconnect();
         PhotonNetwork.LoadLevel(Scenes.Login);
     }

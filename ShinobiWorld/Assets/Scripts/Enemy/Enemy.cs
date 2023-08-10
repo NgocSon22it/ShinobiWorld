@@ -122,6 +122,7 @@ public class Enemy : MonoBehaviourPun, IPunObservable
         {
             gameObject.SetActive(false);
         }
+
     }
 
     public void Awake()
