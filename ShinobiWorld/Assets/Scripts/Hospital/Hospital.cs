@@ -78,11 +78,11 @@ namespace Assets.Scripts.Hospital
             DiePanel.SetActive(false);
             References.accountRefer.IsDead = false;
             References.accountRefer.TimeRespawn = 0;
-            References.accountRefer.CurrentHealth = References.accountRefer.Health;
-            References.accountRefer.CurrentChakra = References.accountRefer.Chakra;
+            References.SaveCurrentHealth = References.accountRefer.Health;
+            References.SaveCurrentChakra = References.accountRefer.Chakra;
 
             if (Game_Manager.Instance.currentAreaName == CurrentAreaName.Konoha)
-            {              
+            {
                 Game_Manager.Instance.GoingOutHospital();
             }
             else
@@ -101,8 +101,11 @@ namespace Assets.Scripts.Hospital
 
         public void OnRespawnClick()
         {
-            References.accountRefer.Coin -= References.RespawnCost;
-            End();
+            if (References.accountRefer.Coin >= References.RespawnCost)
+            {
+                References.accountRefer.Coin -= References.RespawnCost;
+                End();
+            }
         }
     }
 }

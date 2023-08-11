@@ -13,6 +13,7 @@ using Unity.VisualScripting;
 using System;
 using UnityEngine.UIElements;
 using UnityEngine.Tilemaps;
+using Assets.Scripts.GameManager;
 
 public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 {
@@ -57,7 +58,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.Log("Could not resolve all firebase dependencies: " + dependencyStatus);
         }
     }
 
@@ -89,6 +89,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
     private void AutoLogin()
     {
+        if (auth == null) auth = FirebaseAuth.DefaultInstance;
         if (user != null)
         {
             if (user.IsEmailVerified)
@@ -100,7 +101,8 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                 if (isOnline)
                 {
-                    UIManager.Instance.OpenPopupPanel(Message.Logined);
+                    if( Disconnect.ReadFile() ) AutoLogin();
+                    else UIManager.Instance.OpenPopupPanel(Message.Logined);
                 }
                 else
                 {
@@ -114,8 +116,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                     }
                 }
 
-                Debug.LogFormat("{0} Successfully Auto Logged In", PhotonNetwork.NickName);
-                Debug.LogFormat("{0} Successfully Auto Logged In", user.UserId);
             }
             else
             {
@@ -138,7 +138,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
             if (!signedIn && user != null)
             {
-                Debug.Log("Signed out " + user.DisplayName);
                 UIManager.Instance.OpenLoginPanel();
             }
 
@@ -146,7 +145,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
             if (signedIn)
             {
-                Debug.Log("Signed in " + user.DisplayName);
             }
         }
     }
@@ -155,6 +153,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (UIManager.Instance.IsWiFiConnected())
         {
+            if (auth == null) auth = FirebaseAuth.DefaultInstance;
             var email = UIManager.Instance.emailLoginField.text;
             var password = UIManager.Instance.passwordLoginField.text;
             StartCoroutine(LoginAsync(email, password));
@@ -169,12 +168,10 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (email == "")
         {
-            Debug.Log("ShinobiWorld " + Message.EmailEmpty);
             UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
         }
         else if (password == "")
         {
-            Debug.Log("ShinobiWorld " + Message.PasswordEmpty);
             UIManager.Instance.OpenPopupPanel(Message.PasswordEmpty);
 
         }
@@ -186,7 +183,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
             if (loginTask.Exception != null)
             {
-                Debug.Log("ShinobiWorld " + loginTask.Exception);
 
                 FirebaseException firebaseException = loginTask.Exception.GetBaseException() as FirebaseException;
                 AuthError authError = (AuthError)firebaseException.ErrorCode;
@@ -212,7 +208,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                         failedMessage += Message.EmailNotExist;
                         break;
                     default:
-                        Debug.Log(failedMessage += authError.ToString() + "default");
                         failedMessage = Message.ErrorSystem;
                         break;
                 }
@@ -232,7 +227,12 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
                     if (isOnline)
                     {
-                        UIManager.Instance.OpenPopupPanel(Message.Logined);
+                        if (Disconnect.ReadFile())
+                        {
+                            StopAllCoroutines();
+                            Login();
+                        }
+                        else UIManager.Instance.OpenPopupPanel(Message.Logined);
                     }
                     else
                     {
@@ -245,7 +245,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                             PhotonNetwork.ConnectUsingSettings();
                         }
                     }
-                    Debug.LogFormat("{0} You Are Successfully Logged In", PhotonNetwork.NickName);
 
                 }
                 else
@@ -277,30 +276,21 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (email == "")
         {
-            Debug.Log("ShinobiWorld " + Message.EmailEmpty);
             UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
 
         }
         else if (password == "")
         {
-            Debug.Log("ShinobiWorld " + Message.PasswordEmpty);
             UIManager.Instance.OpenPopupPanel(Message.PasswordEmpty);
 
         }
         else if (password.Length < 6)
         {
-            Debug.Log("ShinobiWorld " + "Password must be at least 8 characters");
             UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
 
         }
-        //else if (password.Contains(" "))
-        //{
-        //    Debug.Log("ShinobiWorld " + "Password mustn't be space");
-        //    UIManager.Instance.OpenPopupPanel(Message.PasswordInvalid);
-        //}
         else if (password != confirmPassword)
         {
-            Debug.Log("ShinobiWorld " + Message.PasswordNotMatch);
             UIManager.Instance.OpenPopupPanel(Message.PasswordNotMatch);
         }
         else
@@ -311,7 +301,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
             if (registerTask.Exception != null)
             {
-                Debug.Log("ShinobiWorld " + registerTask.Exception);
 
                 FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
                 AuthError authError = (AuthError)firebaseException.ErrorCode;
@@ -335,7 +324,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                         failedMessage += Message.EmailAlready;
                         break;
                     default:
-                        Debug.Log(failedMessage += authError.ToString() + "default");
                         failedMessage = Message.ErrorSystem;
                         break;
                 }
@@ -345,7 +333,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.Log("Registration Sucessful Welcome " + user.DisplayName);
                 if (user.IsEmailVerified)
                 {
                     UIManager.Instance.OpenLoginPanel();
@@ -397,7 +384,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.Log("Email has successfully sent");
                 UIManager.Instance.OpenLoginPanel();
                 UIManager.Instance.OpenPopupPanel(string.Format(Message.EmailMessage, user.Email));
             }
@@ -458,14 +444,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
         {
             UIManager.Instance.OpenPopupPanel(Message.Maxplayer);
         }
-        else if (cause == DisconnectCause.ExceptionOnConnect)
-        {
-            Debug.Log("Failed to connect to Photon: Exception on connect");
-        }
-        else
-        {
-            Debug.Log("Failed to connect to Photon: " + cause.ToString());
-        }
+
     }
 
 
@@ -508,7 +487,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
     {
         if (email == "")
         {
-            Debug.Log("ShinobiWorld " + Message.EmailEmpty);
             UIManager.Instance.OpenPopupPanel(Message.EmailEmpty);
 
         }
@@ -520,7 +498,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
 
             if (resetTask.Exception != null)
             {
-                Debug.Log("ShinobiWorld " + resetTask.Exception);
 
                 FirebaseException firebaseException = resetTask.Exception.GetBaseException() as FirebaseException;
                 AuthError authError = (AuthError)firebaseException.ErrorCode;
@@ -535,7 +512,6 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                         failedMessage += Message.EmailEmpty;
                         break;
                     default:
-                        Debug.Log(failedMessage += authError.ToString() + "default");
                         failedMessage = Message.ErrorSystem;
                         break;
                 }

@@ -17,7 +17,7 @@ public class Message
     public static string EmailResetPassMessage = "Email thay đổi mật khẩu đã được gửi đến {0}";
 
     public static string PasswordEmpty = "Mật khẩu trống";
-    public static string PasswordInvalid = "Mật khẩu phải có ít nhất 8 ký tự và không được có khoảng trắng";
+    public static string PasswordInvalid = "Mật khẩu phải có ít nhất 6 ký tự và không được có khoảng trắng";
     public static string PasswordNotMatch = "Mật khẩu không khớp";
 
     public static string PasswordWrong = "Sai mật khẩu";
@@ -25,7 +25,7 @@ public class Message
     public static string VerifyEmailCanceled = "Xác minh email đã bị hủy";
     public static string VerifyEmailTooManyRequests = "Quá nhiều yêu cầu";
 
-    public static string ErrorSystem = "Lỗi hệ thống";
+    public static string ErrorSystem = "Email không hợp lệ";
     public static string Maxplayer = "Server quá tải!";
     public static string Logined= "Tài khoản đang được đăng nhập trên thiết bị khác";
 

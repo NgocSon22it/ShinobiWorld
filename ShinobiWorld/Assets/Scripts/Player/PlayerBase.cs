@@ -254,7 +254,7 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
                 PlayerAllUIInstance.GetComponent<ChatManager>().DisconnectFromChat();
                 PlayerAllUIInstance.GetComponent<ChatManager>().ConnectToChat(References.ChatServer);
 
-                InvokeRepeating(nameof(RegenStrength), 1f, 360f);
+                InvokeRepeating(nameof(RegenStrength), 360f, 360f);
             }
         }
         else
@@ -284,7 +284,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
             LoadPlayerChakraUI();
             LoadPlayerStrengthUI();
         }
-
     }
 
 
@@ -479,9 +478,11 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     public void Dead()
-    {      
+    {
+        AccountEntity.IsDead = true;
+        References.accountRefer.IsDead = true;
+        References.accountRefer.TimeRespawn = References.RespawnTime;
         OffInvoke();
-        CancelInvoke(nameof(RegenStrength));
         photonView.RPC(nameof(SetUpPlayerDie), RpcTarget.AllBuffered);
     }
 
@@ -759,7 +760,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Die");
         playerCollider.enabled = false;
-        //this.enabled = false;
     }
 
     [PunRPC]
@@ -767,7 +767,6 @@ public class PlayerBase : MonoBehaviourPunCallbacks, IPunObservable
     {
         animator.SetTrigger("Live");
         playerCollider.enabled = true;
-        //this.enabled = true;
     }
 
     public void CallRpcPlayerLive()

@@ -34,10 +34,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         Instance = this;
     }
 
-    /*private void Start()
-    {
-        ConnectToChat(ServerName);
-    }*/
 
     public void DebugReturn(DebugLevel level, string message)
     {
@@ -49,7 +45,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        Debug.Log("Kết nối đến chat thành công!");
         isConnected = true;
         chatClient.Subscribe(new string[] { ServerName });
     }
@@ -58,7 +53,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         isConnected = false;
         ChatRoom.SetActive(false);
-        Debug.Log("Roi chat");
     }
 
     public void DisconnectFromChat()
@@ -165,7 +159,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         isConnected = true;
         chatClient = new ChatClient(this);
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(References.accountRefer.Name));
-        Debug.Log("Đang kết nối");
     }
 
     public void TypeChatOnValueChange(string value)
