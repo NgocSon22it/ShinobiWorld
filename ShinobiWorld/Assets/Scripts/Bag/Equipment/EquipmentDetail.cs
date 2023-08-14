@@ -197,9 +197,12 @@ namespace Assets.Scripts.Bag.Equipment
                 DamageUpgrade.text = (BagEquipment.Damage + DamageBonus).ToString();
             }
 
+            Upgrade_Btn.interactable = true;
+
             if (References.accountRefer.Coin < int.Parse(CostUpgrade.text))
             {
                 MessageTxt.text = Message.NotEnoughMoney.ToString();
+                Upgrade_Btn.interactable = false;
             }
 
             if (BagEquipment.Level >= 30)

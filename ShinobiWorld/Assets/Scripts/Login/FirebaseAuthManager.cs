@@ -188,7 +188,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 AuthError authError = (AuthError)firebaseException.ErrorCode;
 
 
-                string failedMessage = "Login Failed! Because ";
+                string failedMessage = "";
 
                 switch (authError)
                 {
@@ -305,7 +305,7 @@ public class FirebaseAuthManager : MonoBehaviourPunCallbacks
                 FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
                 AuthError authError = (AuthError)firebaseException.ErrorCode;
 
-                string failedMessage = "Registration Failed! Becuase ";
+                string failedMessage = "";
                 switch (authError)
                 {
                     case AuthError.InvalidEmail:
