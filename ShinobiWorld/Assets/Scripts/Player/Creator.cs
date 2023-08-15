@@ -167,7 +167,6 @@ public class Creator : MonoBehaviour
     {
         if (UIManager.Instance.IsWiFiConnected())
         {
-            References.IsFirstLogin = false;
             var displayName = DisplayName.text;
             if (string.IsNullOrWhiteSpace(displayName))
             {
