@@ -31,6 +31,9 @@ namespace Assets.Scripts.Shop
         public ItemDetail ItemDetailInstance;
 
         public Intention Intention;
+
+        public GameObject reloadItem;
+
         private void Awake()
         {
             Instance = this;
@@ -124,7 +127,7 @@ namespace Assets.Scripts.Shop
             }
         }
 
-        public void GetListItem()
+        public void GetListItem(bool isReload = false, string ID = null)
         {
             References.listHasItem = HasItem_DAO.GetAllByUserID(References.accountRefer.ID);
 
@@ -134,18 +137,18 @@ namespace Assets.Scripts.Shop
             foreach (var HasItem in listHasItem)
             {
                 var item = References.listItem.Find(obj => obj.ID == HasItem.ItemID);
-                Instantiate(prefabItemBag, Content)
-                   .GetComponent<ItemBag>()
-                   .Setup(item, HasItem.Amount, ItemDetailInstance, isFirst);
+                reloadItem = Instantiate(prefabItemBag, Content);
+                reloadItem.GetComponent<ItemBag>().Setup(item, HasItem.Amount, ItemDetailInstance, isFirst);
+                if (isReload && ID == item.ID) reloadItem.GetComponent<ItemBag>().OnClick();
                 isFirst = false;
             }
         }
 
         public void GetListEquipment()
         {
-            listBagEquipment =  References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            listBagEquipment = References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
-            if(Intention == Intention.Sell) listBagEquipment = References.listBagEquipment.FindAll(obj => obj.IsUse == false);
+            if (Intention == Intention.Sell) listBagEquipment = References.listBagEquipment.FindAll(obj => obj.IsUse == false);
             var isFirst = true;
             foreach (var BagEquipment in listBagEquipment)
             {
@@ -159,7 +162,7 @@ namespace Assets.Scripts.Shop
         public void ReloadItem(string ID)
         {
             DestroyContent();
-            GetListItem();
+            GetListItem(true, ID);
             if (listHasItem.Count <= 0) { ShowMessage(); }
             else
             {
@@ -172,11 +175,12 @@ namespace Assets.Scripts.Shop
 
         public void ReloadEquipment(int ID, string EquipmentID, bool isReloadContent = false)
         {
-            if(isReloadContent)
+            if (isReloadContent)
             {
                 DestroyContent();
                 GetListEquipment();
-            }else listBagEquipment = References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
+            }
+            else listBagEquipment = References.listBagEquipment = BagEquipment_DAO.GetAllByUserID(References.accountRefer.ID);
 
             if (listBagEquipment.Count <= 0) { ShowMessage(); }
             else

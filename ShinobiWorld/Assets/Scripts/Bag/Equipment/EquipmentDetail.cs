@@ -32,6 +32,7 @@ namespace Assets.Scripts.Bag.Equipment
         public TMP_Text LevelUpgrade, HealthUpgrade, ChakraUpgrade, DamageUpgrade;
         public TMP_Text CostUpgrade;
         public TMP_Text MessageTxt;
+        public TMP_Text Upgrade_Name;
         public Button Upgrade_Btn;
         public GameObject NextLevel;
         public int HealthBonus, ChakraBonus, DamageBonus;
@@ -151,6 +152,7 @@ namespace Assets.Scripts.Bag.Equipment
         {
             UpgradePanel.SetActive(true);
 
+            Upgrade_Name.text = Name.text;
             HealthObj.SetActive(false);
             HealthUpgrade.text = string.Empty;
             HealthBonus = 0;
