@@ -368,7 +368,10 @@ public class Player_AllUIManagement : MonoBehaviour
 
     public void ShowDetailInfo()
     {
-        Player_Info.Instance.Open(References.accountRefer.ID);
+        if (Player.accountStatus == AccountStatus.Normal)
+        {
+            Player_Info.Instance.Open(References.accountRefer.ID);
+        }
     }
 
     public void ShowMission(string content)
